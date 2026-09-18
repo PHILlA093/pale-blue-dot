@@ -15,52 +15,62 @@ window.MATH_DB = {
     {
       "id": "calculus",
       "name": "函数与导数",
-      "kind": "major"
+      "kind": "major",
+      "color": "#4fc3f7"
     },
     {
       "id": "solid",
       "name": "立体几何",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ff8a65"
     },
     {
       "id": "analytic",
       "name": "解析几何",
-      "kind": "major"
+      "kind": "major",
+      "color": "#aed581"
     },
     {
       "id": "stats",
       "name": "统计与概率",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ba68c8"
     },
     {
       "id": "trig_seq",
       "name": "三角函数与数列",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ffd54f"
     },
     {
       "id": "sets",
       "name": "集合与逻辑",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#4db6ac"
     },
     {
       "id": "vector",
       "name": "向量",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#f06292"
     },
     {
       "id": "inequality",
       "name": "不等式",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#ffb74d"
     },
     {
       "id": "complex",
       "name": "复数",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#90a4ae"
     },
     {
       "id": "counting",
       "name": "排列组合与二项式定理",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#7986cb"
     }
   ],
   "points": [
