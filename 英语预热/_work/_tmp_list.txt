@@ -1,0 +1,301 @@
+1|abandon|pos=v|def=抛弃，舍弃，放弃
+2|ability|pos=n|def=能力；才能
+3|able|pos=adj|def=能够；有能力的
+4|abnormal|pos=adj|def=反常的，变态的
+5|aboard|pos=prep|def=上（船，飞机，火车，汽车等）
+6|abolish|pos=v|def=废除，废止
+7|abortion|pos=v|def=人工流产，堕胎
+8|about|pos=adv prep|def=大约；到处；四处 prep. 关于；在各处；四处
+9|above|pos=prep adj adv|def=在……上面 a. 上面的 ad. 在……之上
+10|abroad|pos=adv|def=到（在）国外
+11|abrupt|pos=adj|def=突然的，意外的，粗鲁
+12|absence|pos=n|def=不在，缺席
+13|absent|pos=adj|def=缺席， 不在
+14|absolute|pos=adj|def=完全，全部，绝对的
+15|absorb|pos=v|def=吸收，使全神贯注
+16|abstract|pos=adj n|def=/ n. 抽象的（作品）
+17|absurd|pos=adj|def=荒谬的，怪诞不经的
+18|abundant|pos=adj|def=大量,丰盛的,充裕的
+19|abuse|pos=v|def=（酗酒）滥用,虐待,恶语
+20|academic|pos=adj n|def=/ n. 学术的，教学的
+21|academy|pos=n|def=专科学院,（美）私立学校
+22|accelerate|pos=v|def=（使）加速，加快
+23|accent|pos=n|def=口音，音调
+24|accept|pos=vt|def=接受
+25|access|pos=n v|def=/ v. 通道，入径，存取（计算机文件）
+26|accessible|pos=adj|def=可到达的，可接受的，易相处的）
+27|accident|pos=n|def=事故，意外的事
+28|accommodation|pos=n|def=住宿，膳宿
+29|accompany|pos=v|def=陪同，陪伴，与…同时发生
+30|accomplish|pos=v|def=完成
+31|according to|pos=adv|def=按照，根据
+32|account|pos=n|def=账目;描述
+33|accountant|pos=n|def=会计，会计师
+34|accumulate|pos=v|def=积累，积聚
+35|accuracy|pos=n|def=准确，精确
+36|accuse|pos=v|def=正确无误的,精确的
+37|accustomed|pos=adj|def=习惯于,惯常的
+38|ache|pos=vi n|def=痛，疼痛
+39|achieve|pos=vt|def=达到，取得
+40|achievement|pos=n|def=成就,成绩,功绩
+41|acid|pos=adj|def=酸的
+42|acknowledge|pos=v|def=承认
+43|acquaintance|pos=n|def=熟人，（与某人）认识
+44|acquire|pos=v|def=获得，得到
+45|acquisition|pos=n|def=获得，得到
+46|acre|pos=n|def=英亩
+47|across|pos=prep|def=横过，穿过
+48|act|pos=n v|def=法令，条例 v. （戏）表演，扮演（角色），演出（戏）；行动，做事
+49|action|pos=n|def=行动
+50|active|pos=adj|def=积极的，主动的
+51|activity|pos=n|def=活动
+52|actor|pos=n|def=男演员
+53|actress|pos=n|def=女演员
+54|actual|pos=adj|def=实际的； 现实的
+55|ad|pos=n|def=公元
+56|adapt|pos=v|def=使适应，适合，改编
+57|adaptation|pos=n|def=适应，改编本
+58|add|pos=vt|def=添加，增加
+59|addicted|pos=adj|def=上瘾，成瘾，入迷
+60|addition|pos=n|def=增加;（算数用语）加
+61|address|pos=n|def=地址
+62|adequate|pos=adj|def=合适的，合乎需要的
+63|adjust|pos=v|def=调整,调节,适应,习惯
+64|adjustment|pos=n|def=调整，适应
+65|administration|pos=n|def=管理,行政部门
+66|admirable|pos=adj|def=值得赞赏的,可钦佩的
+67|admire|pos=v|def=钦佩；羡慕
+68|admission|pos=n|def=准入, 接纳
+69|admit|pos=vt|def=承认，准许（入场，入学，入会）
+70|adolescence|pos=n|def=青春，青春期
+71|adolescent|pos=n|def=青少年
+72|adopt|pos=v|def=收养，领养
+73|adore|pos=v|def=（不用于进行时）热爱，爱慕某人
+74|adult|pos=n|def=成年人
+75|advance|pos=v|def=推进，促进；前进
+76|advantage|pos=n|def=优点； 好处
+77|adventure|pos=n|def=冒险； 奇遇
+78|advertise|pos=vt|def=为……做广告
+79|advertisement|pos=n|def=广告
+80|advice|pos=n|def=忠告，劝告，建议
+81|advise|pos=vt|def=忠告，劝告，建议
+82|advocate|pos=v|def=拥护，支持，提倡
+83|aeroplane|pos=n|def=(英)飞机
+84|affair|pos=n|def=事，事情
+85|affect|pos=vt|def=影响
+86|affection|pos=n|def=喜爱，钟爱
+87|afford|pos=vt|def=负担得起（……的费用）；抽得出（时间）；提供
+88|afraid|pos=adj|def=害怕的；担心
+89|africa|pos=n|def=* n. 非洲
+90|african|pos=adj n|def=非洲的，非洲人的 n. 非洲人
+91|afte|pos=adv prep conj|def=在后；后来prep. 在…之后；在 后面 conj. 在…以后
+92|afternoon|pos=n|def=下午，午后；afterward(s)
+93|again|pos=adv|def=再一次；再，又
+94|against|pos=prep|def=对着，反对
+95|age|pos=n|def=年龄；时代
+96|agency|pos=n|def=代理机构
+97|agenda|pos=n|def=（会议）议程表，议事日程
+98|agent|pos=n|def=代理人，经济人
+99|aggression|pos=n|def=侵略
+100|aggressive|pos=adj|def=侵略的；咄咄逼人
+101|ago|pos=adv|def=以前
+102|agree|pos=v|def=同意；应允
+103|agreement|pos=n|def=同意，一致；协定，协议
+104|agricultural|pos=adj|def=农业的
+105|agriculture|pos=n|def=农业，农学
+106|ahead|pos=adv|def=在前，向前
+107|aid|pos=n|def=援助；救护；辅助器具
+108|aids|pos=n|def=艾滋病
+109|aim|pos=n v|def=目的；目标 v. 计划，打算；瞄准；针对
+110|air|pos=n|def=空气；大气
+111|aircraft|pos=n|def=飞机 (单复数同)
+112|airline|pos=n|def=航空公司；航空系统
+113|airmail|pos=n|def=航空邮件
+114|airplane|pos=n|def=（美）飞机
+115|airport|pos=n|def=航空站，飞机场
+116|airspace|pos=n|def=领空,（某国的）空域
+117|alarm|pos=n|def=警报
+118|album|pos=n|def=相册，影集，集邮簿
+119|alcohol|pos=n|def=含酒精饮料，酒
+120|alcoholic|pos=adj n|def=/ n. 含酒精的，酒鬼
+121|algebra|pos=n|def=代数
+122|alike|pos=adv|def=很相似地，同样地
+123|alive|pos=adj|def=活着的，存在的
+124|all|pos=adv adj pron|def=全部地 a. 全（部）;所有的;总;整 pron.全部;全体人员
+125|allergic|pos=adj|def=过敏的，厌恶
+126|alley|pos=n|def=小巷，胡同
+127|allocate|pos=v|def=拨给,划归,分配…给
+128|allow|pos=vt|def=允许，准许
+129|allowance|pos=n|def=津贴，补助
+130|almost|pos=adv|def=几乎，差不多
+131|alone|pos=adj|def=单独的，孤独的
+132|along|pos=adv prep|def=向前；和…一起；一同 prep. 沿着；顺着
+133|alongside|pos=adv|def=在…旁边,与…同时
+134|aloud|pos=adv|def=大声地
+135|alphabet|pos=n|def=字母表，字母
+136|already|pos=adv|def=已经
+137|also|pos=adv|def=也
+138|alternative|pos=adj|def=可供替代,非传统的
+139|although|pos=conj|def=虽然，尽管
+140|altitude|pos=n|def=海拔高度
+141|altogether|pos=adv|def=总共
+142|aluminium|pos=n|def=（化）铝
+143|always|pos=adv|def=总是；一直；永远
+144|am|pos=v|def=be的人称形式之一 ；ａ.m./A.M.
+145|amateur|pos=adj|def=业余爱好的
+146|amaze|pos=v|def=惊奇，惊叹；震惊
+147|amazing|pos=adj|def=惊奇,惊叹的;震惊的；ambassador (ambassadress)
+148|ambiguous|pos=adj|def=模棱两可的
+149|ambition|pos=n|def=目标,野心,雄心,抱负
+150|ambulance|pos=n|def=救护车
+151|america|pos=n|def=* n. 美国；美洲
+152|american|pos=adj n|def=美国的；美国人的n. 美国人
+153|among|pos=prep|def=在…中间；在（三个以上）之间
+154|amount|pos=n v|def=/ v. 金额，数量，总计
+155|ample|pos=adj|def=足够的，丰裕的
+156|amuse|pos=vt|def=（使人）快乐，逗乐
+157|amusement|pos=n|def=娱乐
+158|analyze|pos=v|def=分析
+159|analysis|pos=n|def=分析，分析结果
+160|ancestor|pos=n|def=祖宗； 祖先
+161|anchor|pos=v n|def=/ n. 锚，抛锚
+162|ancient|pos=adj|def=古代的，古老的
+163|and|pos=conj|def=和；又；而
+164|anecdote|pos=n|def=逸事，趣闻
+165|anger|pos=n|def=怒，愤怒
+166|angle|pos=n|def=角度
+167|angry|pos=adj|def=生气的，愤怒的
+168|animal|pos=n|def=动物
+169|ankle|pos=n|def=踝，踝关节
+170|anniversary|pos=n|def=周年纪念日
+171|announce|pos=vt|def=宣布，宣告
+172|announcement|pos=n|def=通告，通知
+173|annoy|pos=vt|def=（使）烦恼
+174|annual|pos=adj|def=每年的，年度的，一年一次的
+175|another|pos=adj pron|def=再一；另一；别的；不同的 pron. 另一个
+176|answer|pos=n v|def=回答,答复;回信;答案 v.回答,答复;回信;（作出）答案
+177|ant|pos=n|def=蚂蚁
+178|antarctic|pos=adj|def=南极的
+179|antarctica|pos=n|def=* n. 南极洲
+180|antique|pos=n|def=古董
+181|anxiety|pos=n|def=担忧，焦虑
+182|anxious|pos=adj|def=忧虑的，焦急的
+183|any|pos=pron|def=（无论）哪一个；哪些 任何的；（用于疑问句、否定句）一些；什么
+184|anybody|pos=pron|def=任何人，无论谁
+185|anyhow|pos=adv|def=不管怎样
+186|anyone|pos=pron|def=任何人，无论谁
+187|anything|pos=pron|def=什么事（物）；任何事（物）
+188|anyway|pos=adv|def=不管怎样
+189|anywhere|pos=adv|def=任何地方
+190|apart|pos=adj|def=, / a. 相隔，相距，除外
+191|apartment|pos=n|def=（美）楼中单元房，一套房间；房间
+192|apologize|pos=vi|def=道歉，谢罪
+193|apology|pos=n|def=道歉；歉意
+194|apparent|pos=adj|def=显而易见
+195|appeal|pos=v|def=上诉，申诉，吸引力
+196|appear|pos=vi|def=出现
+197|appearance|pos=n|def=出现，露面；容貌
+198|appendix|pos=n|def=附录，阑尾
+199|appetite|pos=n|def=食欲，胃口
+200|applaud|pos=v n|def=/ n. 鼓掌,赞许,赞赏
+201|apple|pos=n|def=苹果
+202|applicant|pos=n|def=申请人
+203|application|pos=n|def=申请
+204|apply|pos=v|def=申请
+205|appoint|pos=v|def=任命，委任，安排，确定（时间，地点）
+206|appointment|pos=n|def=约会
+207|appreciate|pos=v|def=欣赏； 感激
+208|appreciation|pos=n|def=欣赏,鉴定,评估
+209|approach|pos=n v|def=/ v. 靠近，接近，建议，要求
+210|appropriate|pos=adj|def=合适的，恰当的
+211|approve|pos=v|def=赞成,同意,批准,通过
+212|approximately|pos=adv|def=近似，大约
+213|apron|pos=n|def=（机场的）停机坪
+214|arbitrary|pos=adj|def=随心所欲的，独裁的，专断的
+215|arch|pos=n|def=拱，拱门
+216|architect|pos=n|def=建筑师，设计师
+217|architecture|pos=n|def=建筑学，建筑设计，风格
+218|april|pos=n|def=4月
+219|arab|pos=adj n|def=* a. 阿拉伯的 n. 阿拉伯人
+220|arabic|pos=adj n|def=阿拉伯语的 n. 阿拉伯语
+221|arctic|pos=adj|def=北极的
+222|are|pos=v|def=(be) 是
+223|area|pos=n|def=面积；地域，地方，区域；范围，领域
+224|argue|pos=vi|def=争辩， 争论
+225|argument|pos=n|def=争论，辩论；arise (arose, arisen)
+226|arithmetic|pos=n|def=算术
+227|arm|pos=n v|def=臂,支架 v. 以…装备,武装起来n. （美）武器,武力
+228|armchair|pos=n|def=扶手椅
+229|army|pos=n|def=军队
+230|around|pos=adv prep|def=在周围；在附近prep. 在……周围；大约
+231|arrange|pos=v|def=安排，布置
+232|arrangement|pos=n|def=安排，布置
+233|arrest|pos=v|def=逮捕，拘留
+234|arrival|pos=n|def=到来，到达
+235|arrive|pos=vi|def=到达；达到
+236|arrow|pos=n|def=箭；箭头
+237|art|pos=n|def=艺术，美术；技艺
+238|article|pos=n|def=文章;东西,物品;冠词
+239|artificial|pos=adj|def=人工的，人造的
+240|artist|pos=n|def=艺术家
+241|as|pos=adv conj prep|def=像……一样；如同；因为 prep. 作为，当做
+242|ash|pos=n|def=灰； 灰末
+243|ashamed|pos=adj|def=惭愧； 害臊
+244|asia|pos=n|def=* n. 亚洲
+245|asian|pos=adj n|def=亚洲（人）的n. 亚洲人
+246|aside|pos=adv|def=在旁边
+247|ask|pos=v|def=问；请求，要求；邀请
+248|asleep|pos=adj|def=睡着的，熟睡
+249|aspect|pos=n|def=方面，外观，外表
+250|assess|pos=v|def=评价,评定（性质,质量）
+251|assessment|pos=n|def=看法，评价
+252|assist|pos=v|def=帮助，协助
+253|assistance|pos=n|def=帮助，援助，支持
+254|assistant|pos=n|def=助手，助理
+255|associate|pos=v|def=联想，联系
+256|association|pos=n|def=协会，社团，联系
+257|assume|pos=v|def=假定，假设
+258|assumption|pos=n|def=假定，假设
+259|astonish|pos=vt|def=使惊讶
+260|astronaut|pos=n|def=宇航员
+261|astronomer|pos=n|def=天文学家
+262|astronomy|pos=n|def=天文学
+263|at|pos=prep|def=在（几点钟）;在（某处）
+264|athlete|pos=n|def=运动员
+265|athletic|pos=adj|def=健壮的,体育运动的
+266|athletics|pos=n|def=田径
+267|atlantic|pos=adj|def=大西洋的
+268|atmosphere|pos=n|def=大气；气氛
+269|atom|pos=n|def=原子，微粒
+270|attach|pos=v|def=把…固定，重视
+271|attack|pos=vt n|def=/ n. 攻击，袭击
+272|attain|pos=v|def=（经过努力）获得,得到
+273|attempt|pos=vt|def=试图，尝试
+274|attend|pos=v|def=看护，照料，服侍；出席，参加
+275|attention|pos=n|def=注意，关心
+276|attentively|pos=adv|def=注意地
+277|attitude|pos=n|def=态度，看法
+278|attract|pos=v|def=吸引，引起
+279|attraction|pos=n|def=吸引，爱慕
+280|attractive|pos=adj|def=迷人的，有吸引力的
+281|audience|pos=n|def=观众，听众
+282|authentic|pos=adj|def=真正的，真品的
+283|author|pos=n|def=作者，作家
+284|authority|pos=n|def=权力,权威,威信,官方
+285|automatic|pos=adj|def=自动的，机械的
+286|autonomous|pos=adj|def=自治的，自主的
+287|august|pos=n|def=8月
+288|aunt|pos=n|def=伯母；舅母；婶；姑；姨
+289|australia|pos=n|def=* n. 澳洲；澳大利亚
+290|australian|pos=adj n|def=澳洲的，澳大利亚人的 n. 澳大利亚人
+291|autumn|pos=n|def=秋天，秋季
+292|available|pos=adj|def=可获得的，有空的
+293|avenue|pos=n|def=大道
+294|average|pos=adj n|def=平均；普通的 n.平均数
+295|avoid|pos=v|def=避免，躲开，逃避；awake (awoke, awoken)
+296|award|pos=n|def=奖品，奖励
+297|aware|pos=adj|def=知道，意识到，发觉
+298|away|pos=adv|def=离开；远离
+299|awesome|pos=adj|def=令人惊叹,很困难的
+300|awful|pos=adj|def=很坏的，极讨厌的
+301|awkward|pos=adj|def=令人尴尬,使人难堪的

@@ -1,0 +1,51 @@
+{
+  "_说明": "精修覆盖: capital=无条件专名首字母大写; capitalIfMonth/capitalIfWeek=仅当释义含'月'/'星期'; posfill=空词性填充; posfix=词性纠错; deffix=释义整体替换; defrepl=释义内文字替换。",
+  "capital": {
+    "africa": "Africa", "african": "African", "america": "America", "american": "American",
+    "antarctica": "Antarctica", "arab": "Arab", "arabic": "Arabic", "asia": "Asia", "asian": "Asian",
+    "australia": "Australia", "australian": "Australian", "belgium": "Belgium", "brazil": "Brazil",
+    "britain": "Britain", "canada": "Canada", "china": "China", "chinese": "Chinese",
+    "egypt": "Egypt", "egyptian": "Egyptian", "england": "England", "english": "English",
+    "europe": "Europe", "european": "European", "france": "France", "french": "French",
+    "frenchman": "Frenchman", "germany": "Germany", "german": "German", "greece": "Greece",
+    "greek": "Greek", "india": "India", "indian": "Indian", "ireland": "Ireland", "irish": "Irish",
+    "italy": "Italy", "italian": "Italian", "japan": "Japan", "japanese": "Japanese",
+    "korea": "Korea", "korean": "Korean", "london": "London", "moscow": "Moscow",
+    "ottawa": "Ottawa", "russia": "Russia", "russian": "Russian", "scotland": "Scotland",
+    "scottish": "Scottish", "shanghai": "Shanghai", "spain": "Spain", "spanish": "Spanish",
+    "swiss": "Swiss", "switzerland": "Switzerland", "tibet": "Tibet", "tibetan": "Tibetan",
+    "tokyo": "Tokyo", "paris": "Paris", "christmas": "Christmas", "christian": "Christian"
+  },
+  "capitalIfMonth": {
+    "january": "January", "february": "February", "march": "March", "april": "April",
+    "may": "May", "june": "June", "july": "July", "august": "August", "september": "September",
+    "october": "October", "november": "November", "december": "December"
+  },
+  "capitalIfWeek": {
+    "monday": "Monday", "tuesday": "Tuesday", "wednesday": "Wednesday", "thursday": "Thursday",
+    "friday": "Friday", "saturday": "Saturday", "sunday": "Sunday"
+  },
+  "posfill": {
+    "telephone booth": "n.", "bus stop": "n.", "cage": "n.", "cd": "n.", "cheer up": "v.",
+    "christmas card": "n.", "christmas tree": "n.", "computer game": "n.", "conservation": "n.",
+    "crayon": "n.", "dvd": "n.", "family name": "n.", "fantasy": "n.", "fitting room": "n.",
+    "human being": "n.", "information desk": "n.", "junk mail": "n.", "junk food": "n.",
+    "table manners": "n.", "gold medal": "n.", "missile": "n.", "mobile phone": "n.",
+    "ouch": "int.", "possibility": "n.", "primary school": "n.", "privilege": "n.",
+    "publish": "vt.", "pump": "vt.", "raw material": "n.", "record holder": "n.",
+    "shirt": "n.", "shop assistant": "n.", "short wave": "n.", "shuttle": "n.",
+    "sport": "n.", "stainless steel": "n.", "tourist": "n.", "twentieth": "num.", "very": "adv."
+  },
+  "posfix": {
+    "abortion": "n.", "spaghettiv": "n.", "tiresomev": "adj.", "taxipayer": "n.",
+    "roller skating": "n.", "trooping": "vi.", "family name": "n.", "from mouth to mouth": "adv."
+  },
+  "deffix": {
+    "accuse": "指责，控告",
+    "abstract": "抽象的（作品）"
+  },
+  "defrepl": {
+    "agent": ["经济人", "经纪人"],
+    "announce": ["v. 宣布", "宣布"]
+  }
+}

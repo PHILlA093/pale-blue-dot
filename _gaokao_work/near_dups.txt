@@ -1,0 +1,112 @@
+DROP [agieval] 2018年高考安徽英语试卷 [passage 5, 3 items]
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2018年高考安徽英语试卷 [passage 6, 4 items]
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2018年高考安徽英语试卷 [passage 7, 4 items]
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2018年高考安徽英语试卷 [passage 8, 4 items]
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2020年高考安徽英语试卷 [passage 19, 3 items]
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2020年高考安徽英语试卷 [passage 20, 3 items]
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2020年高考安徽英语试卷 [passage 21, 4 items]
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2020年高考安徽英语试卷 [passage 22, 4 items]
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2013年广东高考英语试卷 [passage 35, 1 items]
+  == [agieval] 2013年广东高考英语试卷 [passage 34, 4 items]
+DROP [agieval] 2017年广东高考英语试卷 [passage 38, 3 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2017年广东高考英语试卷 [passage 39, 4 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2017年广东高考英语试卷 [passage 40, 4 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2017年英语高考试题全国卷3() [passage 51, 3 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [agieval] 2017年英语高考试题全国卷3() [passage 52, 4 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [agieval] 2017年英语高考试题全国卷3() [passage 53, 4 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [agieval] 2017年英语高考试题全国卷3() [passage 54, 4 items]
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [agieval] 2016年高考安徽英语试卷 [passage 60, 4 items]
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2016年高考安徽英语试卷 [passage 61, 4 items]
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2016年高考安徽英语试卷 [passage 62, 3 items]
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2016年高考安徽英语试卷 [passage 63, 4 items]
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2019年高考安徽英语试卷 [passage 64, 3 items]
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2019年高考安徽英语试卷 [passage 65, 3 items]
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2019年高考安徽英语试卷 [passage 66, 4 items]
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [agieval] 2019年高考安徽英语试卷 [passage 67, 3 items]
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 1
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 2
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 3
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 4
+  == [gkb] 2020 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 5
+  == [gkb] 2020 English 2012-2022_English_Cloze_Test (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 10
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 11
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 12
+  == [gkb] 2019 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 13
+  == [agieval] 2020年江苏省高考英语试卷 [passage 12, 3 items]
+DROP [gaokao_en] Gaokao-EN article 14
+  == [agieval] 2020年江苏省高考英语试卷 [passage 13, 4 items]
+DROP [gaokao_en] Gaokao-EN article 15
+  == [agieval] 2020年江苏省高考英语试卷 [passage 14, 6 items]
+DROP [gaokao_en] Gaokao-EN article 29
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 30
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 31
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 32
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 33
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅱ）)
+DROP [gaokao_en] Gaokao-EN article 34
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅱ）)
+DROP [gaokao_en] Gaokao-EN article 35
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅱ）)
+DROP [gaokao_en] Gaokao-EN article 36
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅱ）)
+DROP [gaokao_en] Gaokao-EN article 37
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 38
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 39
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 44
+  == [gkb] 2016 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 48
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 49
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 50
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标ⅲ）)
+DROP [gaokao_en] Gaokao-EN article 55
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 56
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 57
+  == [gkb] 2017 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 68
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 69
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标Ⅰ）)
+DROP [gaokao_en] Gaokao-EN article 71
+  == [gkb] 2018 English 2010-2022_English_Reading_Comp (（新课标ⅱ）)

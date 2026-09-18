@@ -1,0 +1,707 @@
+{
+    "meta":  {
+                 "title":  "高中语法知识 40 点",
+                 "source":  "AI整理初版(通用教学规范),待人工校对",
+                 "count":  40
+             },
+    "items":  [
+                  {
+                      "id":  "G001",
+                      "title":  "名词：数与格",
+                      "rules":  [
+                                    "可数名词有单复数：规则变化加 s/es；不规则如 man-men, child-children, foot-feet, tooth-teeth, mouse-mice",
+                                    "以 o 结尾：tomato/tomato(e)s, photo(s), piano(s)；以 f/fe 结尾变 ves：leaf-leaves, knife-knives, thief-thieves",
+                                    "不可数名词：water, advice, information, news, furniture, work 等，用 much/a little/some 修饰，不可加 s",
+                                    "复数形式表整体：people, police, cattle 作复数；集合名词 family/class/team 视整体或成员",
+                                    "名词所有格：\u0027s 用于有生命；of 用于无生命；双重所有格 a friend of my father\u0027s；时间距离单位也用 \u0027s：today\u0027s paper",
+                                    "名词作定语：用单数：apple tree, shoe shop；man/woman 复数仍随数变化：men doctors"
+                                ],
+                      "ex":  [
+                                 "Two tomatoes, three leaves and some water are on the table.",
+                                 "The news is very good. / Physics is my favourite subject."
+                             ],
+                      "note":  "主谓一致按名词单复数判定(见 G30)"
+                  },
+                  {
+                      "id":  "G002",
+                      "title":  "冠词 a/an/the 与零冠词",
+                      "rules":  [
+                                    "a 用于辅音音素前(注意读音非字母)：a university, a European；an 用于元音音素前：an hour, an honest boy",
+                                    "the 表特指/独一无二/序数词最高级前/乐器前/江河湖海专名前",
+                                    "零冠词：球类/三餐/学科前；by+交通工具；go to school/hospital/bed 等固定短语",
+                                    "第一次提及用 a/an，再次提及用 the",
+                                    "the + 形容词表一类人：the rich, the young",
+                                    "固定搭配：have a cold, in a hurry, at noon, on foot, at home"
+                                ],
+                      "ex":  [
+                                 "There is an apple and a pear on the table. The apple is red.",
+                                 "She plays the piano well and goes to school by bike."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G003",
+                      "title":  "代词体系",
+                      "rules":  [
+                                    "人称代词主格(I/you/he...)与宾格(me/you/him...)；作主语用主格，作宾语/介词宾语用宾格",
+                                    "物主代词：形容词性(my/your/his/her/its/our/their)+名词；名词性(mine/yours/his/hers/ours/theirs)单独使用",
+                                    "反身代词：myself/yourself...；固定搭配 by oneself, enjoy oneself, help oneself to, teach oneself",
+                                    "指示代词：this/these 近指，that/those 远指；that/those 可代替前面名词避免重复",
+                                    "不定代词：some/any, both/either/neither, all/none, each/every, many/much, few/a few(可数), little/a little(不可数)",
+                                    "复合不定代词：something/anything/nothing 等，形容词后置：something interesting；指人用 somebody/anybody/nobody"
+                                ],
+                      "ex":  [
+                                 "That pen is mine. Please give it to me.",
+                                 "There is nothing wrong with the machine."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G004",
+                      "title":  "it 的用法",
+                      "rules":  [
+                                    "人称代词指代动物/无生命物或前文提到的事物",
+                                    "指时间/天气/距离/环境：It is raining. It is five o\u0027clock. It is two miles away.",
+                                    "作形式主语：It is + adj/n + to do / that 从句；It takes sb time to do",
+                                    "作形式宾语：I find it difficult to learn maths well.",
+                                    "用于强调句：It is/was + 被强调部分 + that/who...",
+                                    "固定句型：It seems/appears that...; It happens that...; It is said/reported that..."
+                                ],
+                      "ex":  [
+                                 "It is important to keep healthy.",
+                                 "I think it necessary to learn a foreign language."
+                             ],
+                      "note":  "参见句型 S012-S015、S085"
+                  },
+                  {
+                      "id":  "G005",
+                      "title":  "数词与时间日期",
+                      "rules":  [
+                                    "基数词变序数词：first, second, third, fifth, eighth, ninth, twelfth, twentieth...；多数加 th",
+                                    "分数：分子基数词分母序数词，分子大于1分母加s：two thirds；一半 half",
+                                    "百分数/小数：percent 不变化；0.5 读 zero point five",
+                                    "时间：8:05 eight o five/eight five; 8:30 half past eight; 8:45 a quarter to nine",
+                                    "日期：May the fifth / the fifth of May；年份 in 2024；世纪 in the 21st century",
+                                    "hundred/thousand/million：具体数字不加s；表约数加s加of：hundreds of"
+                                ],
+                      "ex":  [
+                                 "Two thirds of the students are girls.",
+                                 "He reads English for half an hour every morning."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G006",
+                      "title":  "形容词：用法与比较等级",
+                      "rules":  [
+                                    "作定语/表语/宾补：a beautiful girl; The film is interesting; We must keep the room clean",
+                                    "只作表语的形容词：afraid, alive, asleep, awake, alone, ill",
+                                    "多个形容词排序：限定词+观点+大小+形状+年龄+颜色+产地+材料：a beautiful big new red wooden desk",
+                                    "比较级：+er/more；最高级 the + est/most；不规则：good/well-better-best, bad-worse-worst, many/much-more-most, little-less-least, far-farther/further-farthest/furthest",
+                                    "修饰比较级：much, even, a little, a lot, far；修饰最高级：by far, the second",
+                                    "倍数与同级比较：three times as big as / bigger than(见句型 S027)"
+                                ],
+                      "ex":  [
+                                 "He is much taller than his brother.",
+                                 "This is the most interesting book I have ever read."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G007",
+                      "title":  "副词",
+                      "rules":  [
+                                    "频率副词：always, usually, often, sometimes, seldom, never；放在实义动词前/be、情态、助动词后",
+                                    "方式副词多由形容词+ly：quickly, carefully；特殊：hard, fast, early, late, well 形副同形或特殊",
+                                    "程度副词：very, quite, rather, too, so, enough(后置)",
+                                    "地点/时间副词：here, there, now, then, today, yesterday；表时间的副词放句首句尾",
+                                    "enough 修饰形副后置；too...to, so...that 搭配(见句型)",
+                                    "易混：hard(努力地)-hardly(几乎不)；late(迟)-lately(最近)；deep(深)-deeply(深深地)"
+                                ],
+                      "ex":  [
+                                 "He always gets up early and works hard.",
+                                 "I have never been to Shanghai."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G008",
+                      "title":  "介词",
+                      "rules":  [
+                                    "时间介词：in(月年季节/上午下午晚上), on(具体某日/星期/节日/有修饰的早晚), at(钟点/noon/night/weekend)",
+                                    "地点介词：in(大地点/内部), on(表面/在…上), at(小地点/点), above/over, below/under, in front of, behind, between, among",
+                                    "方向介词：to, toward, into, out of, across, through, along, past, up, down",
+                                    "方式介词：by(方式/交通), with(工具/伴随), in(语言/方式：in English)",
+                                    "介词短语：be good at, be interested in, be afraid of, be proud of, agree with, listen to, look at/for/after, depend on, thanks to 等",
+                                    "动词+介词搭配须整体记忆：put on/off/up/away/down/out, take off/away, turn on/off/up/down"
+                                ],
+                      "ex":  [
+                                 "We have class on Monday morning and go to bed at ten.",
+                                 "He goes to work by bus with a bag in his hand."
+                             ],
+                      "note":  "介词搭配亦见高频词组文件"
+                  },
+                  {
+                      "id":  "G009",
+                      "title":  "连词",
+                      "rules":  [
+                                    "并列连词：and, but, or, so, while(而), for(因为); 成对连词 both...and, either...or, neither...nor, not only...but also",
+                                    "从属连词(名词性从句)：that, whether/if, what, who, which, when, where, why, how",
+                                    "时间：when, while, as, before, after, until, since, as soon as, the moment",
+                                    "条件/让步：if, unless, although/though, even if, whether, once",
+                                    "原因/结果/目的/方式/比较：because, since, as, so...that, such...that, so that, in case, as if, than, as...as",
+                                    "连词与逗号/主谓一致关系：although 不与 but 连用；because 不与 so 连用；就近原则 either...or/neither...nor/not only...but also"
+                                ],
+                      "ex":  [
+                                 "Neither you nor he is right. / Although he is old, he works hard.",
+                                 "He didn\u0027t come because he was ill."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G010",
+                      "title":  "八大时态总览",
+                      "rules":  [
+                                    "一般现在/过去/将来；现在进行；现在完成；过去进行；过去完成；过去将来(共8大常用时态)",
+                                    "一般现在：经常/真理/时刻表；主语三单动词加s",
+                                    "一般过去：过去发生；规则动词+ed；不规则词表需背",
+                                    "一般将来：will/shall do 或 be going to do；be about to do 表即将",
+                                    "现在进行：am/is/are doing；表现阶段(不一定正在发生)也可用；go/come/leave 等用进行表将来",
+                                    "现在完成：have/has done；强调影响与持续；与一般过去区分(过去式只谈过去时间)",
+                                    "过去进行：was/were doing 表过去某一时刻正在；常与 when/while 连用",
+                                    "过去完成：had done 表过去的过去；常与 by+过去时间/宾语从句连用"
+                                ],
+                      "ex":  [
+                                 "He has lived here since 2010. / By the time we arrived, the film had begun.",
+                                 "Look! The train is coming. / The plane takes off at eight."
+                             ],
+                      "note":  "详见 G11-G14"
+                  },
+                  {
+                      "id":  "G011",
+                      "title":  "一般现在与进行对比",
+                      "rules":  [
+                                    "一般现在表习惯/反复/客观事实：He often walks to school.",
+                                    "现在进行表此刻进行/阶段进行：He is reading now. / She is writing a novel these days.",
+                                    "进行时表情感：always 与进行时连用表厌烦/赞赏：He is always asking questions.",
+                                    "状态动词不用进行：know, like, love, want, believe, see, hear, smell, taste, seem, belong to",
+                                    "表计划安排的将来：come, go, leave, start, arrive 等用进行时表将来：The bus is leaving.",
+                                    "时间/条件状语从句中用一般现在表将来(主将从现)"
+                                ],
+                      "ex":  [
+                                 "If it rains tomorrow, we will stay at home.",
+                                 "He is always losing his keys.（表厌烦）"
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G012",
+                      "title":  "完成时：现在完成 vs 过去完成",
+                      "rules":  [
+                                    "现在完成：have/has+done；与 already/yet/just/ever/never/before/since/for 连用；表过去动作对现在的影响或从过去持续到现在",
+                                    "短暂动词不与 for/since 段持续连用(不能直接延续)：borrow→keep, buy→have, come→be here, leave→be away, die→be dead, open→be open, begin→be on",
+                                    "过去完成：had+done；表过去的过去：时间参照在过去；常与 by the end of last year / when/ before 引导的过去时间连用",
+                                    "It is/has been + 时间段 + since 过去时；It was + 时间段 + before 过去时",
+                                    "This is the first/second time that + 现在完成",
+                                    "hardly...when/no sooner...than 中前半用过去完成"
+                                ],
+                      "ex":  [
+                                 "He has kept the book for two weeks.(不用 has borrowed)",
+                                 "By the time I got there, he had already left."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G013",
+                      "title":  "将来时多种表达",
+                      "rules":  [
+                                    "will do：临时决定/预言；shall 用于第一人称疑问句表建议",
+                                    "be going to do：计划打算/有迹象(天要下雨)",
+                                    "be to do：按计划/规定即将发生：The meeting is to be held tomorrow.",
+                                    "be about to do：立即将发生；不与具体时间状语连用，常接 when",
+                                    "现在进行表将来：go/come/leave/start/arrive/fly 等",
+                                    "一般现在表将来：时刻表/日历：The train leaves at seven."
+                                ],
+                      "ex":  [
+                                 "Look at the clouds! It is going to rain.",
+                                 "I was about to go out when he called."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G014",
+                      "title":  "时态呼应原则",
+                      "rules":  [
+                                    "宾语从句与主句时态呼应：主句过去时，从句相应过去(一般过去/过去进行/过去完成/过去将来)",
+                                    "客观真理不受主句时态影响：The teacher said the earth goes around the sun.",
+                                    "主句现在时，从句按实际时间选择任意时态",
+                                    "间接引语转换：一般现在→一般过去，现在完成→过去完成，一般将来→过去将来，指示代词/时间地点状语相应后移(this→that, now→then, today→that day, tomorrow→the next day, yesterday→the day before, here→there)",
+                                    "注意保持情态动词与时态协调：must/can 在间接引语中常不变或改为 had to/could"
+                                ],
+                      "ex":  [
+                                 "He said he would come the next day.",
+                                 "She told me that she had finished her homework."
+                             ],
+                      "note":  "见 G36"
+                  },
+                  {
+                      "id":  "G015",
+                      "title":  "被动语态",
+                      "rules":  [
+                                    "构成：be + 过去分词；各种时态即 be 的时态变化：is done, was done, is being done, has been done, had been done, will be done, would be done",
+                                    "带情态动词：can/must/should + be done",
+                                    "双宾语变被动：He gave me a book. → I was given a book. / A book was given to me.",
+                                    "感官/使役动词被动带 to：make/see/hear sb do → be made/seen/heard to do",
+                                    "不及物动词无被动：happen, occur, take place, break out, last, belong to, cost；系动词无被动：look, sound, taste, feel, smell",
+                                    "主动表被动：need/want/require doing(=to be done); be worth doing; sell/wash/cut 等加状语表特性：The book sells well."
+                                ],
+                      "ex":  [
+                                 "The bridge was built in 2020.",
+                                 "The trees need watering. / This kind of cloth washes well."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G016",
+                      "title":  "情态动词基础",
+                      "rules":  [
+                                    "can/could 表能力/许可/可能；could 更委婉：Could you help me?",
+                                    "may/might 表许可/可能：May I come in?；might 更委婉",
+                                    "must 表必须(主观)/一定(推测)；have to 表不得不(客观)",
+                                    "should/ought to 表应该；had better (not) do 最好",
+                                    "need 作情态动词用于否定疑问：needn\u0027t do；作实义动词 need to do / need doing",
+                                    "shall 用于一三人称表征求意见：Shall I open the window?"
+                                ],
+                      "ex":  [
+                                 "You must hand in your homework today. You needn\u0027t come tomorrow.",
+                                 "You should listen to your teacher carefully."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G017",
+                      "title":  "情态动词表推测",
+                      "rules":  [
+                                    "肯定推测：must(一定) \u003e may/might(可能) \u003e could(可能)；语气递减",
+                                    "否定推测：can\u0027t/couldn\u0027t(不可能)，不用 mustn\u0027t 表推测",
+                                    "对现在推测：must/may/can\u0027t + do；对正在发生：+ be doing；对过去：+ have done",
+                                    "must have done(过去一定…)，can\u0027t have done(过去不可能…)，may/might have done(过去可能…)",
+                                    "should have done 本应该做而没做；shouldn\u0027t have done 本不该做而做了；needn\u0027t have done 本不必做却做了",
+                                    "could have done 本可以做(未做) 或表对过去的可能"
+                                ],
+                      "ex":  [
+                                 "He must be in the library now.",
+                                 "She can\u0027t have finished so much work in one day."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G018",
+                      "title":  "虚拟语气：条件句",
+                      "rules":  [
+                                    "与现在事实相反：if 从句 did/were，主句 would/could/might/should + do",
+                                    "与过去事实相反：if 从句 had done，主句 would/could/might + have done",
+                                    "与将来事实相反：if 从句 did/were to do/should do，主句 would + do",
+                                    "if 省略倒装：Were I you.../ Had I known.../ Should it rain...",
+                                    "含蓄条件：without/but for + n，主句用虚拟：Without your help, I couldn\u0027t have succeeded.",
+                                    "混合虚拟：主从句时间不一致分别处理：If you had come yesterday, you would know the truth now."
+                                ],
+                      "ex":  [
+                                 "If I were you, I would accept the offer.",
+                                 "If he had studied harder, he would have passed the exam."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G019",
+                      "title":  "虚拟语气：其他句型",
+                      "rules":  [
+                                    "wish + that 从句：与现在相反用过去时(be→were)；与过去相反用 had done；与将来相反用 would/could do",
+                                    "if only 要是…就好了：同 wish 用法",
+                                    "as if/though 从句：与事实相反用过去时/过去完成",
+                                    "It is (high) time that sb did/should do 该做…了",
+                                    "would rather that sb did/had done 宁愿某人(过去)做",
+                                    "suggest/insist/order/require/request/demand/propose 等+that 从句用 should do(可省 should)；注意 suggest 表暗示、insist 表坚持认为时不用虚拟",
+                                    "It is necessary/important/natural that sb (should) do"
+                                ],
+                      "ex":  [
+                                 "I wish I could fly like a bird.",
+                                 "He insisted that we (should) start at once."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G020",
+                      "title":  "非谓语：不定式",
+                      "rules":  [
+                                    "形式：to do / to be doing / to have done；否定 not to do",
+                                    "作主语：To learn English well needs time.（常用 it 形式主语）",
+                                    "作宾语：want/hope/wish/decide/plan/refuse/manage/afford/pretend + to do；remember/forget/stop/try/mean 后 to do 与 doing 含义不同",
+                                    "作宾补：ask/tell/want/wish/encourage/allow/force + sb to do；make/let/have + sb do(无 to)",
+                                    "作定语：the next train to arrive；抽象名词 opportunity/chance/ability/way + to do",
+                                    "作状语：表目的(in order to)、原因、结果(only to)；不定式作目的可用 so as to",
+                                    "疑问词+不定式：how to do it / what to say；be + 不定式表计划义务"
+                                ],
+                      "ex":  [
+                                 "He decided to give up smoking.",
+                                 "I don\u0027t know what to say at the meeting."
+                             ],
+                      "note":  "非谓语综合辨析见 G23"
+                  },
+                  {
+                      "id":  "G021",
+                      "title":  "非谓语：动名词",
+                      "rules":  [
+                                    "形式：doing；否定 not doing；完成式 having done",
+                                    "作主语/表语表一般抽象行为：Reading is learning. / My hobby is collecting stamps.",
+                                    "作宾语：enjoy/finish/avoid/mind/keep/practice/suggest/imagine/consider + doing；介词后接 doing",
+                                    "固定：be busy doing, be worth doing, feel like doing, give up doing, look forward to doing, pay attention to doing, get/be used to doing, devote oneself to doing",
+                                    "remember/forget/regret + doing 表已做；+ to do 表未做",
+                                    "stop to do(停下去做) vs stop doing(停止做)；try to do(努力做) vs try doing(试着做)；mean to do(打算) vs mean doing(意味着)",
+                                    "need/want/require doing = to be done 表被动需要"
+                                ],
+                      "ex":  [
+                                 "She enjoys listening to music.",
+                                 "I look forward to hearing from you soon."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G022",
+                      "title":  "非谓语：分词",
+                      "rules":  [
+                                    "现在分词 doing 表主动/进行；过去分词 done 表被动/完成",
+                                    "作定语：单个分词前置，短语后置：a broken cup; the man standing there; the house built last year",
+                                    "作表语：The story is moving. / He is excited.（人激动/物令人…）",
+                                    "作宾补：see/watch/hear/find/keep/leave sb doing/done；have sth done",
+                                    "作状语：表时间/原因/条件/伴随/结果；逻辑主语与句子主语一致：Hearing the news, she burst into tears.",
+                                    "独立主格：名词/代词+分词：Weather permitting, we will go out.",
+                                    "with 复合结构：with + n + doing/done/to do"
+                                ],
+                      "ex":  [
+                                 "Seen from the hill, the city looks beautiful.",
+                                 "The teacher came in, followed by his students."
+                             ],
+                      "note":  "现在分词与过去分词选 doing 或 done 看逻辑关系"
+                  },
+                  {
+                      "id":  "G023",
+                      "title":  "非谓语：综合辨析",
+                      "rules":  [
+                                    "判断依据：逻辑主语(句子主语)与动词的关系(主动→doing/不定式主动, 被动→done/being done/to be done)",
+                                    "表目的/将来用不定式；表进行/主动用现在分词；表被动/完成用过去分词",
+                                    "作定语时：to do 表将来、doing 表进行、done 表被动完成；被修饰名词与动词间含逻辑主谓或动宾",
+                                    "固定句型：It is + adj + of/for sb to do；be said/reported to do/have done",
+                                    "介词后一律用动名词：be good at doing, dream of doing, succeed in doing",
+                                    "不定式与动名词都可作主宾时，动名词泛指、不定式特指/具体：I like swimming but I don\u0027t like to swim today."
+                                ],
+                      "ex":  [
+                                 "The question is difficult to answer.",
+                                 "I am looking forward to seeing you again."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G024",
+                      "title":  "定语从句：关系代词",
+                      "rules":  [
+                                    "先行词为人用 who/that(作主语)/whom(作宾语可省)；为物用 which/that",
+                                    "作定语表所属用 whose(=of which/of whom)：the boy whose father is a doctor",
+                                    "只用 that 的情形：先行词为 all/everything/nothing 等不定代词；先行词被序数词/最高级/the very/the only 修饰；先行词含人和物",
+                                    "只用 which/who 的情形：非限制性定语从句(不用 that)；介词提前时用 which/whom",
+                                    "关系代词作宾语可省略(限制性)：The book (that/which) I bought is interesting.",
+                                    "主谓一致：关系代词在从句中作主语时，谓语与先行词一致"
+                                ],
+                      "ex":  [
+                                 "This is the film that we saw last week.",
+                                 "He is the only student who knows the answer."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G025",
+                      "title":  "定语从句：关系副词与介词+which",
+                      "rules":  [
+                                    "where 表地点(先行词 place/house/city 等)；when 表时间(day/time/year)；why 表原因(reason)",
+                                    "关系副词=介词+which：where=in/at which；when=at/in/on which；why=for which",
+                                    "介词+which/whom 的选择由动词搭配决定：the man with whom I talked；the pen with which I write",
+                                    "先行词 the way 后用 in which/that/省略",
+                                    "case/situation/point 等抽象地点可用 where：the situation where we are in trouble",
+                                    "区分 when/where 从句与名词性从句：看是否有先行词"
+                                ],
+                      "ex":  [
+                                 "I still remember the day when we first met.",
+                                 "This is the reason why he was late."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G026",
+                      "title":  "限制性 vs 非限制性定语从句",
+                      "rules":  [
+                                    "限制性：紧接先行词无逗号，起限定作用，不可删(删后句意不全)",
+                                    "非限制性：有逗号隔开，起补充说明，可删；不能用 that，关系代词不能省",
+                                    "which 可指代前面整个句子：He passed the exam, which made us happy.",
+                                    "as 引导非限制性：as we know/as is known to all 置于句首句中，表正如……",
+                                    "非限制性中 whose/of which 表示所属：the book, the cover of which is red",
+                                    "翻译时非限制性常译作并列句：He likes music, which is his hobby."
+                                ],
+                      "ex":  [
+                                 "Tom, who is my classmate, lives near the school.",
+                                 "As we all know, the earth goes around the sun."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G027",
+                      "title":  "名词性从句(主语/宾语/表语/同位语)",
+                      "rules":  [
+                                    "引导词：that(陈述,不可省于宾语从句外), whether/if(是否), 疑问词 what/who/which/when/where/why/how(保留疑问含义且作成分), whatever/whoever 等",
+                                    "从句一律用陈述语序：I don\u0027t know where he lives.(非 where does he live)",
+                                    "that 从句作主语用 it 形式主语：It is true that he left.",
+                                    "表语从句：The trouble is that we have no money. / 主语 reason 后表语用 that 不用 because",
+                                    "同位语从句：fact/news/idea/hope/truth/problem 后 that 从句说明内容；that 不作成分(与定语从句区分)",
+                                    "宾语从句时态呼应(见 G14)；疑问词+ever 引导名词性从句可作主宾"
+                                ],
+                      "ex":  [
+                                 "What he said at the meeting surprised everyone.",
+                                 "The news that we won the game excited all of us."
+                             ],
+                      "note":  "判断 that 从句类型：删去后句子成分是否完整"
+                  },
+                  {
+                      "id":  "G028",
+                      "title":  "状语从句：时间/地点/原因",
+                      "rules":  [
+                                    "时间：when/while/as/before/after/until/till/since/as soon as/the moment/immediately/no sooner...than/hardly...when",
+                                    "when 可表突然(见句型)；while 从句多用进行时/延续动词；until 用于否定句译作直到…才",
+                                    "地点：where/wherever：Go where you are needed.",
+                                    "原因：because(直接原因,回答 why)/since/as(既然/由于,句首)/for(并列连词,补充说明)",
+                                    "原因状语从句不跟在 because 后加 so；for 前有逗号表推断",
+                                    "since 还有表时间用法：It is three years since he left."
+                                ],
+                      "ex":  [
+                                 "Since everybody is here, let\u0027s begin.",
+                                 "He stayed up late because he had a lot of homework."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G029",
+                      "title":  "状语从句：条件/让步/结果/目的/比较/方式",
+                      "rules":  [
+                                    "条件：if/unless/once/in case/provided that；主将从现",
+                                    "让步：although/though/even if/even though/whether...or no matter+疑问词/疑问词+ever；though 可用倒装：Child as he is, ...",
+                                    "结果：so...that/such...that(句型 S020-21)",
+                                    "目的：so that/in order that(从句常用 can/could/may/might)；so as to/in order to 不定式",
+                                    "比较：than/as...as(句型 S022-27)",
+                                    "方式：as(如同), as if/as though(虚拟见 G19)",
+                                    "no matter + 疑问词=疑问词+ever 引导让步：No matter what you say, I won\u0027t change my mind."
+                                ],
+                      "ex":  [
+                                 "Whatever you do, do it well.",
+                                 "He spoke loudly so that everybody could hear him."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G030",
+                      "title":  "主谓一致",
+                      "rules":  [
+                                    "语法一致：主语单数谓语单数，复数谓语复数；动名词/不定式/从句作主语谓语单数",
+                                    "就近原则：either...or/neither...nor/not only...but also/there be：There is a pen and two books.",
+                                    "就远原则：主语+with/together with/as well as/along with/but/except+… 谓语随主语",
+                                    "集体名词：family/class/team 作整体单数、成员复数；police/people/cattle 恒复数",
+                                    "不定代词作主语：each/everyone/nothing 单数；both 复数；all 视所指",
+                                    "分数/百分数+of+名词：随 of 后名词；the number of(单) vs a number of(复)",
+                                    "学科/时间/距离/金钱作整体单数：Maths is my favourite."
+                                ],
+                      "ex":  [
+                                 "The teacher together with his students is planting trees.",
+                                 "Two thirds of the work has been done."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G031",
+                      "title":  "倒装",
+                      "rules":  [
+                                    "部分倒装(助/情态/be提前)：否定词 never/hardly/seldom/little/not only/not until/no sooner 等句首；only+状语句首",
+                                    "so/neither/nor 表也(不)句首：So am I. / Neither can he.",
+                                    "so+形/副+that：So loudly did he speak that...",
+                                    "完全倒装(谓语全提前)：here/there/out/in/up/down/away/off 等方位副词或介词短语句首且主语为名词：Here comes the bus. In came the teacher.",
+                                    "方位副词句首但主语为代词不倒装：Here he comes.",
+                                    "though/as 引导让步从句倒装表语/状语提前：Young as he is, he is very experienced.",
+                                    "虚拟条件句省略 if 的倒装：Had I known.../ Were I you..."
+                                ],
+                      "ex":  [
+                                 "Not until midnight did he stop working.",
+                                 "Only in this way can we solve the problem."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G032",
+                      "title":  "强调与省略",
+                      "rules":  [
+                                    "强调句：It is/was + 强调部分 + that/who + 其余；判断方法：去掉 It is...that 后句子仍完整",
+                                    "强调谓语：do/does/did + 动词原形：I did see him yesterday.",
+                                    "省略原则：从句与主句主语一致且含 be 时可省主+be：When (I was) young, I liked swimming.",
+                                    "状语从句常用省略：if possible, if necessary, when needed, if so/not",
+                                    "并列句中相同成分可省：He can sing and (he can) dance.",
+                                    "不定式省略：后文省略相同 to do 只留 to：—Would you like to go? —I\u0027d love to.",
+                                    "比较从句/宾语从句 that 省略等"
+                                ],
+                      "ex":  [
+                                 "It was at midnight that he got home.",
+                                 "If necessary, you can ask me for help."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G033",
+                      "title":  "反意疑问句",
+                      "rules":  [
+                                    "前肯后否/前否后肯；助动词/be/情态+主语代词：He is a student, isn\u0027t he?",
+                                    "陈述部分含 no/never/hardly/seldom/few/little/nothing 等否定词时，后用肯定",
+                                    "祈使句：Let\u0027s...→shall we?；其他祈使句→will you?；否定祈使句→will you?",
+                                    "there be 反意用 there：There is little water, is there?",
+                                    "主从复合句反意随主句：I think/believe + 从句，反意随从句(注意否定转移)：I don\u0027t think he is right, is he?",
+                                    "must 表推测：肯定反意按实际情况；mustn\u0027t 表禁止反意用 may",
+                                    "have 表拥有/助动词不同反意：He has lunch at 12, doesn\u0027t he? / He has gone, hasn\u0027t he?"
+                                ],
+                      "ex":  [
+                                 "She seldom goes out on Sundays, does she?",
+                                 "Let\u0027s have a rest, shall we?"
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G034",
+                      "title":  "句式类别：陈述/疑问/祈使/感叹",
+                      "rules":  [
+                                    "四种基本句式：陈述(肯定/否定)、疑问(一般/特殊/选择/反意)、祈使、感叹",
+                                    "一般疑问句：be/助/情态提前；回答 Yes/No",
+                                    "特殊疑问句：疑问词+一般疑问语序；疑问词作主语不倒装",
+                                    "选择疑问：or 连接；不用 Yes/No 直接回答选择项",
+                                    "祈使句否定 Don\u0027t/Never+原形；Please 可前可后；Let 开头反意 shall we/will you",
+                                    "感叹句 What/How(句型 S55-56)；What a pity 省略主谓",
+                                    "there be 句型/倒装等句式变体见句型文件"
+                                ],
+                      "ex":  [
+                                 "—Who broke the window? —Tom did.",
+                                 "What a clever boy (he is)! / How clever the boy is!"
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G035",
+                      "title":  "there be 句型与存在表达",
+                      "rules":  [
+                                    "构成：There be + n + 地点/时间；就近原则",
+                                    "时态变化：There was/were/has been/will be...",
+                                    "变体：There + 情态动词(must/may/can)/seem to/happen to/used to + be",
+                                    "否定/疑问：There isn\u0027t any.../Is there...?",
+                                    "There be + 名词 + 定语(分词/不定式/从句)：There is a man waiting for you.",
+                                    "对比：have 表所有；There be 表存在；There is no doing/point/need(句型)"
+                                ],
+                      "ex":  [
+                                 "There used to be an old temple here.",
+                                 "There is no need to worry about it."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G036",
+                      "title":  "直接引语与间接引语",
+                      "rules":  [
+                                    "转换要素：人称、时态、指示代词、时间地点状语相应变化(见 G14)",
+                                    "陈述句：that 连接：He said that he was tired.",
+                                    "一般疑问句：if/whether，语序陈述：She asked if I had finished.",
+                                    "特殊疑问句：保留疑问词：He asked me where I lived.",
+                                    "祈使句：ask/tell/order sb (not) to do：The teacher told us not to talk.",
+                                    "主句为现在时/客观真理时从句时态不变",
+                                    "say to sb 变 ask/tell；注意 can→could, may→might, must 常不变"
+                                ],
+                      "ex":  [
+                                 "“Where are you going?” he asked. → He asked where I was going.",
+                                 "“Don\u0027t open the door,” she said. → She told me not to open the door."
+                             ],
+                      "note":  ""
+                  },
+                  {
+                      "id":  "G037",
+                      "title":  "短语动词与动词搭配",
+                      "rules":  [
+                                    "动词+副词：turn on/off/up/down, put on/off/away/up, take off/away/up, give up/in/away, look up/after/for/at, come up/across, work out, carry out, find out, pick up, wake up, cheer up, set off, break down/out/in, bring up, call off/back",
+                                    "动词+介词：look after/for/at/into, listen to, wait for, depend on, rely on, belong to, agree with/to/on, deal with, refer to, apply for/to, care about/for, search for, ask for, laugh at, worry about, think of/about/over",
+                                    "动词+副词+介词：catch up with, keep up with, come up with, look forward to, put up with, get along/on with, run out of, make up for",
+                                    "固定 be+介词/形容词短语：be good at, be bad for, be interested in, be proud of, be fond of, be tired of/from, be angry with/about, be busy with, be familiar with",
+                                    "高频 to 介词短语(后接动名词)：look forward to, devote to, stick to, pay attention to, get down to, lead to, object to",
+                                    "三单/过去式/分词变化与不规则动词需系统记忆"
+                                ],
+                      "ex":  [
+                                 "Please look up the new word in the dictionary.",
+                                 "We must pay attention to protecting the environment."
+                             ],
+                      "note":  "详见高频词组文件"
+                  },
+                  {
+                      "id":  "G038",
+                      "title":  "易混词辨析原则与常见组",
+                      "rules":  [
+                                    "词义与搭配结合记忆：say(说内容)/tell(告诉, tell sb sth)/speak(说语言)/talk(交谈, talk with/to/about)",
+                                    "borrow(借入, borrow from)/lend(借出, lend to)/keep(借多久)",
+                                    "spend/cost/take/pay 四个花费(见句型 S15-17)",
+                                    "bring(带来)/take(带走)/carry(搬运,无方向)/fetch(去取来)/get",
+                                    "look/see/watch/read 视觉动词；hear/listen to 听觉",
+                                    "win(赢比赛)/beat(打败人); dress(穿衣, dress sb)/wear(穿着状态)/put on(穿上)/have on",
+                                    "lie(躺/位于 lay-lain; 说谎 lied-lied)/lay(放置/产卵 laid-laid)",
+                                    "rise(自行升起)/raise(使升起,及物); sit/seat",
+                                    "so/such; also/too/either; a few/a little; every/each; sometime/sometimes/some time/some times 等成组辨析",
+                                    "make/do 搭配：make a mistake/make progress/do homework/do harm",
+                                    "suit/fit/match；join/join in/take part in/attend 参加类"
+                                ],
+                      "ex":  [
+                                 "He lent me his bike and I borrowed a pen from him.",
+                                 "She spent two hours (in) doing the housework."
+                             ],
+                      "note":  "辨析条目为提示性初版，需逐条核对"
+                  },
+                  {
+                      "id":  "G039",
+                      "title":  "构词法：派生/合成/转化",
+                      "rules":  [
+                                    "派生(前缀)：否定 un-/im-/in-/ir-/il-/dis-/non-/mis-；其他 re-/pre-/post-/over-/under-/inter-/sub-/super-/en-/tele- 等(见词根索引-前缀表)",
+                                    "派生(后缀)：名词 -tion/-sion/-ment/-ness/-er/-or/-ist/-ian/-ity/-ance/-ence/-ship/-hood/-dom/-ure/-age；形容词 -ful/-less/-ous/-al/-ive/-able/-ible/-ic/-y/-ish/-ern；副词 -ly/-ward(s)/-wise；动词 -ize/-ise/-en/-ify；详见 spec 后缀表",
+                                    "词性变化常见组：act/action/active/activity; decide/decision; describe/description; explain/explanation; pronounce/pronunciation; succeed/success/successful; suggest/suggestion; introduce/introduction 等(见派生词族文件)",
+                                    "合成：bedroom, football, underground, handwriting, warm-hearted, good-looking, however 等",
+                                    "转化：名词变动词 water(n.水-v.浇水), hand, book, cook；动词变名词 help, walk, swim；形容词变名词 wrong, right",
+                                    "同根异义注意：economic 经济的/economical 节约的；historic 有历史意义的/historical 历史的"
+                                ],
+                      "ex":  [
+                                 "—What is your pronunciation of this word? (pronounce)",
+                                 "Failure is the mother of success. (fail→failure)"
+                             ],
+                      "note":  "词根词缀全表见根目录 spec.md 与词根检索索引"
+                  },
+                  {
+                      "id":  "G040",
+                      "title":  "句子成分与句子种类",
+                      "rules":  [
+                                    "句子成分：主语、谓语(核心)、宾语、表语、定语、状语、补语、同位语、插入语",
+                                    "谓语动词决定句型：不及物(主谓)、及物(主谓宾)、双宾、宾补、系表",
+                                    "五种基本句型(见句型 S001-005)；there be 句型",
+                                    "句子种类：按用途(陈述/疑问/祈使/感叹)；按结构(简单句/并列句/复合句)",
+                                    "并列句：并列连词连接两个简单句：and/but/or/so/while/for",
+                                    "复合句：主句+从句；从句三大类：名词性/定语/状语从句",
+                                    "分析句子步骤：找谓语→定主干→辨从句→识别非谓语成分"
+                                ],
+                      "ex":  [
+                                 "I found the book (that) he lent me very interesting.(宾补)",
+                                 "He came late because he missed the bus.(原因状语从句)"
+                             ],
+                      "note":  "综合运用：拆解长难句自此法"
+                  }
+              ]
+}

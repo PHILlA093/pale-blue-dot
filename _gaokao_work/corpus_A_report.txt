@@ -1,0 +1,10 @@
+GAOKAO ENGLISH CORPUS A -- collection report
+output: E:\workspace\穷观\_gaokao_work\corpus_A.jsonl  |  UTF-8 no BOM, 1 JSON object/line, keys=source,year,title,text
+TOTAL: 429 records | 115950 English words | year span 2008-2020 | 43 records with blank year
+src https://github.com/OpenLMLab/GAOKAO-Bench (Data/Objective_Questions + Data/Subjective_Questions) -> 333 records, years 2010-2022, 77435 words
+src https://raw.githubusercontent.com/ruixiangcui/AGIEval/main/data/v1/gaokao-english.jsonl -> 53 records, years 2008-2020, 23862 words
+src https://github.com/ZhangChengX/Gaokao-EN -> 43 records, years blank, 14653 words
+dedup: AGIEval 306 raw MCQ rows grouped to 80 unique passages; 3 exact + 56 near-duplicate records dropped across sources (AGIEval<->GAOKAO-Bench overlap was ~98% identical text)
+cleaning: Chinese-dominant lines dropped, inline CJK glosses like "property(财产)" stripped, fullwidth punctuation mapped to ASCII; 0 records retain CJK in text
+caveats: title keeps the original Chinese paper name (metadata only, never in text); residual source noise from AGIEval (irregular spacing/typos) and space-encoded gap-fill blanks remain; 3123 "_" blank markers preserved as-is
+failures: AGIEval v1_1 file is byte-identical to v1 (unused); GAOKAO-Bench has no /data path (real path is /Data); HuggingFace/parquet sources skipped - no pandas/pyarrow installed

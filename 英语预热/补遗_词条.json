@@ -1,0 +1,1702 @@
+[
+    {
+        "no":  3556,
+        "word":  "a (an)",
+        "ph":  "ə; eɪ, æn",
+        "pos":  "art.",
+        "def":  "一（个，件……）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3557,
+        "word":  "acute",
+        "ph":  "ˈækjuːt",
+        "pos":  "adj.",
+        "def":  "十分严重的；（病）急性的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3559,
+        "word":  "afterward(s)",
+        "ph":  "ˈɑːftəwəd(z)",
+        "pos":  "adv.",
+        "def":  "后来，以后",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3560,
+        "word":  "ambassador",
+        "ph":  "æmˈbæsədə(r)",
+        "pos":  "n.",
+        "def":  "大使，使节",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3561,
+        "word":  "arise",
+        "ph":  "əˈraɪz",
+        "pos":  "vi.",
+        "def":  "出现，发生；起身（arose, arisen）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3562,
+        "word":  "awake",
+        "ph":  "əˈweɪk",
+        "pos":  "v. adj.",
+        "def":  "唤醒；醒着的（awoke, awoken）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3563,
+        "word":  "ballpoint",
+        "ph":  "ˈbɔːlpɔɪnt",
+        "pos":  "n.",
+        "def":  "圆珠笔",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3564,
+        "word":  "best-seller",
+        "ph":  "ˌbestˈselə(r)",
+        "pos":  "n.",
+        "def":  "畅销书",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3565,
+        "word":  "bike",
+        "ph":  "baɪk",
+        "pos":  "n.",
+        "def":  "自行车",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3566,
+        "word":  "bite",
+        "ph":  "baɪt",
+        "pos":  "v.",
+        "def":  "咬；叮（bit, bitten）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3567,
+        "word":  "boat-race",
+        "ph":  "ˈbəʊtreɪs",
+        "pos":  "n.",
+        "def":  "划船比赛",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3568,
+        "word":  "buy",
+        "ph":  "baɪ",
+        "pos":  "vt.",
+        "def":  "买",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3569,
+        "word":  "cassette",
+        "ph":  "kəˈset",
+        "pos":  "n.",
+        "def":  "磁带",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3570,
+        "word":  "catch",
+        "ph":  "kætʃ",
+        "pos":  "vt.",
+        "def":  "接住；抓住；赶上；染上（疾病）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3571,
+        "word":  "choose",
+        "ph":  "tʃuːz",
+        "pos":  "vt.",
+        "def":  "选择",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3572,
+        "word":  "cold-blooded",
+        "ph":  "ˌkəʊldˈblʌdɪd",
+        "pos":  "adj.",
+        "def":  "（动物）冷血的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3573,
+        "word":  "commercial",
+        "ph":  "kəˈmɜːʃ(ə)l",
+        "pos":  "adj.",
+        "def":  "商业的，贸易的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3574,
+        "word":  "cost",
+        "ph":  "kɒst",
+        "pos":  "v. n.",
+        "def":  "值（多少钱）；花费 n. 费用；代价",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3575,
+        "word":  "criterion",
+        "ph":  "kraɪˈtɪəriən",
+        "pos":  "n.",
+        "def":  "标准，准则（复 criteria）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3576,
+        "word":  "dad",
+        "ph":  "dæd",
+        "pos":  "n.",
+        "def":  "（口）爸爸",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3577,
+        "word":  "disk",
+        "ph":  "dɪsk",
+        "pos":  "n.",
+        "def":  "磁盘；唱片",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3578,
+        "word":  "dream",
+        "ph":  "driːm",
+        "pos":  "n. v.",
+        "def":  "梦，梦想；做梦",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3579,
+        "word":  "e-mail",
+        "ph":  "ˈiːmeɪl",
+        "pos":  "n.",
+        "def":  "电子邮件",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(manual源)"
+    },
+    {
+        "no":  3580,
+        "word":  "exam",
+        "ph":  "ɪɡˈzæm",
+        "pos":  "n.",
+        "def":  "考试，测试",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3581,
+        "word":  "fridge",
+        "ph":  "frɪdʒ",
+        "pos":  "n.",
+        "def":  "冰箱",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3582,
+        "word":  "get-together",
+        "ph":  "ˌɡet təˈɡeðə(r)",
+        "pos":  "n.",
+        "def":  "聚会",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3583,
+        "word":  "good-bye",
+        "ph":  "ˌɡʊdˈbaɪ",
+        "pos":  "int.",
+        "def":  "再见，再会",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3584,
+        "word":  "gym",
+        "ph":  "dʒɪm",
+        "pos":  "n.",
+        "def":  "体操；体育馆；健身房",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3585,
+        "word":  "hide",
+        "ph":  "haɪd",
+        "pos":  "v.",
+        "def":  "躲藏；隐瞒（hid, hidden）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3586,
+        "word":  "ice-cream",
+        "ph":  "ˌaɪsˈkriːm",
+        "pos":  "n.",
+        "def":  "冰淇淋",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3587,
+        "word":  "kind-hearted",
+        "ph":  "ˌkaɪndˈhɑːtɪd",
+        "pos":  "adj.",
+        "def":  "好心的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3588,
+        "word":  "leave",
+        "ph":  "liːv",
+        "pos":  "v.",
+        "def":  "离开；把……留下；遗忘",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3589,
+        "word":  "left-handed",
+        "ph":  "ˌleftˈhændɪd",
+        "pos":  "adj.",
+        "def":  "惯用左手的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3590,
+        "word":  "left-wing",
+        "ph":  "ˌleftˈwɪŋ",
+        "pos":  "n. adj.",
+        "def":  "左翼（的）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3591,
+        "word":  "make",
+        "ph":  "meɪk",
+        "pos":  "vt.",
+        "def":  "制作，制造；使得；做",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3592,
+        "word":  "man-made",
+        "ph":  "ˌmænˈmeɪd",
+        "pos":  "adj.",
+        "def":  "人造的，人工的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3593,
+        "word":  "mathematics",
+        "ph":  "ˌmæθəˈmætɪks",
+        "pos":  "n.",
+        "def":  "数学",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3594,
+        "word":  "mid-autumn",
+        "ph":  "ˌmɪdˈɔːtəm",
+        "pos":  "n.",
+        "def":  "中秋",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3595,
+        "word":  "Miss.",
+        "ph":  "mɪs",
+        "pos":  "n.",
+        "def":  "小姐（对未婚女子的称呼）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3596,
+        "word":  "mom",
+        "ph":  "mɒm",
+        "pos":  "n.",
+        "def":  "（美）妈妈",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3597,
+        "word":  "Ms.",
+        "ph":  "mɪz",
+        "pos":  "n.",
+        "def":  "女士（用在婚姻状况不明的女子姓名前）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3598,
+        "word":  "night-club",
+        "ph":  "ˈnaɪtklʌb",
+        "pos":  "n.",
+        "def":  "夜总会",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3599,
+        "word":  "non-stop",
+        "ph":  "ˌnɒnˈstɒp",
+        "pos":  "adj. adv.",
+        "def":  "不停的；不断地",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3600,
+        "word":  "non-violent",
+        "ph":  "ˌnɒnˈvaɪələnt",
+        "pos":  "adj.",
+        "def":  "非暴力的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3601,
+        "word":  "Olympic",
+        "ph":  "əˈlɪmpɪk",
+        "pos":  "adj.",
+        "def":  "奥林匹克（运动会）的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3602,
+        "word":  "part-time",
+        "ph":  "ˌpɑːtˈtaɪm",
+        "pos":  "adj. adv.",
+        "def":  "兼职的；部分时间的（地）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3603,
+        "word":  "pen-friend",
+        "ph":  "ˈpenfrend",
+        "pos":  "n.",
+        "def":  "笔友",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3604,
+        "word":  "phenomenon",
+        "ph":  "fəˈnɒmɪnən",
+        "pos":  "n.",
+        "def":  "现象",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3605,
+        "word":  "phone",
+        "ph":  "fəʊn",
+        "pos":  "n. v.",
+        "def":  "电话，电话机；打电话",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3606,
+        "word":  "phone-booth",
+        "ph":  "ˈfəʊnbuːθ",
+        "pos":  "n.",
+        "def":  "公用电话亭",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3607,
+        "word":  "ping-pong",
+        "ph":  "ˈpɪŋpɒŋ",
+        "pos":  "n.",
+        "def":  "乒乓球",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3608,
+        "word":  "pop",
+        "ph":  "pɒp",
+        "pos":  "adj. n.",
+        "def":  "（口语）流行的；流行音乐（popular 的缩写）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3609,
+        "word":  "right-handed",
+        "ph":  "ˌraɪtˈhændɪd",
+        "pos":  "adj.",
+        "def":  "惯用右手的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3610,
+        "word":  "right-wing",
+        "ph":  "ˌraɪtˈwɪŋ",
+        "pos":  "n. adj.",
+        "def":  "右翼（的）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3611,
+        "word":  "ring-road",
+        "ph":  "ˈrɪŋrəʊd",
+        "pos":  "n.",
+        "def":  "环形公路",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3612,
+        "word":  "school-leaver",
+        "ph":  "ˌskuːlˈliːvə(r)",
+        "pos":  "n.",
+        "def":  "（英）学校毕业生",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3613,
+        "word":  "see-saw",
+        "ph":  "ˈsiːsɔː",
+        "pos":  "n.",
+        "def":  "跷跷板（游戏）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3614,
+        "word":  "self-service",
+        "ph":  "ˌselfˈsɜːvɪs",
+        "pos":  "n.",
+        "def":  "自助；自我服务",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3615,
+        "word":  "sell",
+        "ph":  "sel",
+        "pos":  "v.",
+        "def":  "卖，售",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3616,
+        "word":  "send",
+        "ph":  "send",
+        "pos":  "vt.",
+        "def":  "送，寄；派遣",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3617,
+        "word":  "shake",
+        "ph":  "ʃeɪk",
+        "pos":  "v.",
+        "def":  "摇动，震动；握手",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3618,
+        "word":  "shall",
+        "ph":  "ʃæl, ʃ(ə)l",
+        "pos":  "modal v.",
+        "def":  "（表示将来）将要，会；……好吗",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3619,
+        "word":  "shy",
+        "ph":  "ʃaɪ",
+        "pos":  "adj.",
+        "def":  "害羞的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3620,
+        "word":  "smoke-free",
+        "ph":  "ˌsməʊkˈfriː",
+        "pos":  "adj.",
+        "def":  "无烟的，非吸烟的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3621,
+        "word":  "so-so",
+        "ph":  "ˌsəʊˈsəʊ",
+        "pos":  "adj.",
+        "def":  "一般般的；凑合的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3622,
+        "word":  "spaghetti",
+        "ph":  "spəˈɡeti",
+        "pos":  "n.",
+        "def":  "意大利面条",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(manual源)"
+    },
+    {
+        "no":  3623,
+        "word":  "spend",
+        "ph":  "spend",
+        "pos":  "v.",
+        "def":  "花费（钱、时间）；度过",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3624,
+        "word":  "steal",
+        "ph":  "stiːl",
+        "pos":  "vt.",
+        "def":  "偷，窃取",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3625,
+        "word":  "step-mother",
+        "ph":  "ˈstepmʌðə(r)",
+        "pos":  "n.",
+        "def":  "继母",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3626,
+        "word":  "swear",
+        "ph":  "sweə(r)",
+        "pos":  "v.",
+        "def":  "发誓；咒骂",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3627,
+        "word":  "sweep",
+        "ph":  "swiːp",
+        "pos":  "v.",
+        "def":  "扫除，清扫",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3628,
+        "word":  "tax-free",
+        "ph":  "ˌtæksˈfriː",
+        "pos":  "adj.",
+        "def":  "免税的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3629,
+        "word":  "taxpayer",
+        "ph":  "ˈtækspeɪə(r)",
+        "pos":  "n.",
+        "def":  "纳税人",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(manual源)"
+    },
+    {
+        "no":  3630,
+        "word":  "throw",
+        "ph":  "θrəʊ",
+        "pos":  "v.",
+        "def":  "投，掷，扔",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3631,
+        "word":  "Tibetan",
+        "ph":  "tiˈbetən",
+        "pos":  "n.",
+        "def":  "西藏人；西藏语",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3632,
+        "word":  "tiresome",
+        "ph":  "ˈtaɪəsəm",
+        "pos":  "adj.",
+        "def":  "令人厌倦的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(manual源)"
+    },
+    {
+        "no":  3633,
+        "word":  "toward(s)",
+        "ph":  "təˈwɔːd",
+        "pos":  "prep.",
+        "def":  "向，朝，对于",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3634,
+        "word":  "T-shirt",
+        "ph":  "ˌtiːˈʃɜːt",
+        "pos":  "n.",
+        "def":  "T恤衫",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3635,
+        "word":  "VCD",
+        "ph":  "ˌviːsiːˈdiː",
+        "pos":  "n.",
+        "def":  "影碟光盘",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3636,
+        "word":  "wake",
+        "ph":  "weɪk",
+        "pos":  "v.",
+        "def":  "醒，醒来；唤醒（woke, woken）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    },
+    {
+        "no":  3637,
+        "word":  "warm-hearted",
+        "ph":  "ˌwɔːmˈhɑːtɪd",
+        "pos":  "adj.",
+        "def":  "热心的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3638,
+        "word":  "well-known",
+        "ph":  "ˌwelˈnəʊn",
+        "pos":  "adj.",
+        "def":  "出名的，众所周知的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3639,
+        "word":  "world-famous",
+        "ph":  "ˌwɜːldˈfeɪməs",
+        "pos":  "adj.",
+        "def":  "世界闻名的",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3640,
+        "word":  "X-ray",
+        "ph":  "ˌeksˈreɪ",
+        "pos":  "n.",
+        "def":  "X射线；X光",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(txt源)"
+    },
+    {
+        "no":  3558,
+        "word":  "ad",
+        "ph":  "æd",
+        "pos":  "n.",
+        "def":  "广告（advertisement 的缩写）",
+        "tags":  {
+                     "pre":  [
+
+                             ],
+                     "root":  [
+
+                              ],
+                     "suf":  [
+
+                             ]
+                 },
+        "plain":  true,
+        "note":  "补遗(curated源)"
+    }
+]

@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>谷sir · 高中英语单词复习</title>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+  :root {
+    --primary: #3b82f6;
+    --primary-dark: #2563eb;
+    --primary-light: #dbeafe;
+    --green: #10b981;
+    --green-light: #d1fae5;
+    --red: #ef4444;
+    --red-light: #fee2e2;
+    --yellow: #f59e0b;
+    --yellow-light: #fef3c7;
+    --bg: #fafafa;
+    --card: #ffffff;
+    --text: #1f2937;
+    --text-light: #6b7280;
+    --text-lighter: #9ca3af;
+    --border: #e5e7eb;
+    --tag-en2zh: #dbeafe;
+    --tag-en2zh-text: #1e40af;
+    --tag-zh2en: #d1fae5;
+    --tag-zh2en-text: #065f46;
+    --tag-cloze: #fef3c7;
+    --tag-cloze-text: #92400e;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+  .app { max-width: 560px; margin: 0 auto; min-height: 100vh; padding: 16px; display: flex; flex-direction: column; }
+
+  /* 通用按钮 */
+  .btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 16px 28px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+    font-family: inherit;
+    width: 100%;
+  }
+  .btn-primary:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(59,130,246,0.3);
+  }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: inherit;
+    width: 100%;
+  }
+  .btn-secondary:active { background: #f3f4f6; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-light);
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-ghost:active { color: var(--text); }
+
+  /* ===== 主页(单元选择) ===== */
+  .home-page { display: flex; flex-direction: column; padding: 24px 8px; }
+  .home-page.hidden { display: none; }
+
+  .brand {
+    text-align: center;
+    margin-top: 12px;
+    margin-bottom: 32px;
+  }
+  .brand-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.5px;
+  }
+  .brand-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+  .brand-tag {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .name-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .name-label {
+    font-size: 14px;
+    color: var(--text-light);
+    flex-shrink: 0;
+  }
+  .name-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text);
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .name-input::placeholder { color: var(--text-lighter); font-weight: normal; }
+
+  .section-label {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+    padding: 0 4px;
+    font-weight: 500;
+  }
+
+  .unit-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .unit-card {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .unit-card:active:not(.disabled) {
+    transform: scale(0.99);
+    border-color: var(--primary);
+    background: #f8fafc;
+  }
+  .unit-card.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+  .unit-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .unit-card.disabled .unit-icon { background: #f3f4f6; color: var(--text-lighter); }
+  .unit-info { flex: 1; min-width: 0; }
+  .unit-title-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  .unit-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .unit-count {
+    font-size: 12px;
+    color: var(--text-light);
+  }
+  .unit-subtitle {
+    font-size: 13px;
+    color: var(--text-light);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .unit-status {
+    font-size: 12px;
+    color: var(--text-light);
+    flex-shrink: 0;
+    text-align: right;
+  }
+  .unit-status .best {
+    color: var(--green);
+    font-weight: 600;
+  }
+  .unit-status .pending {
+    color: var(--text-lighter);
+  }
+  .arrow-right {
+    color: var(--text-lighter);
+    flex-shrink: 0;
+    font-size: 18px;
+  }
+  .unit-card.disabled .arrow-right { display: none; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-lighter);
+    padding: 24px 0 16px 0;
+    line-height: 1.8;
+  }
+
+  /* ===== 答题页 ===== */
+  .quiz-page { display: none; flex: 1; flex-direction: column; }
+  .quiz-page.active { display: flex; }
+
+  .quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .back-btn {
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background 0.15s;
+  }
+  .back-btn:active { background: #e5e7eb; }
+  .quiz-title {
+    font-size: 13px;
+    color: var(--text-light);
+    font-weight: 500;
+  }
+
+  .collect-header { margin-bottom: 16px; }
+  .collect-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .collect-title { font-size: 13px; color: var(--text-light); font-weight: 500; }
+  .collect-count { font-size: 14px; color: var(--text); font-weight: 600; }
+  .collect-count .num { color: var(--primary); font-size: 16px; }
+  .collect-dots {
+    display: grid;
+    gap: 4px;
+  }
+  .dot {
+    aspect-ratio: 1 / 1;
+    background: var(--border);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+  }
+  .dot.current {
+    background: var(--primary);
+    box-shadow: 0 0 0 2px rgba(59,130,246,0.3);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .dot.mastered { background: var(--green); transform: scale(1.05); }
+  .dot.failed { background: var(--red); opacity: 0.55; }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(59,130,246,0.3); }
+    50% { box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
+  }
+  .q-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .qcard {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 24px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .qtype-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .qtype-en2zh { background: var(--tag-en2zh); color: var(--tag-en2zh-text); }
+  .qtype-zh2en { background: var(--tag-zh2en); color: var(--tag-zh2en-text); }
+  .qtype-cloze { background: var(--tag-cloze); color: var(--tag-cloze-text); }
+  .review-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    background: #fef3c7;
+    color: #92400e;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .qprompt {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 8px;
+  }
+  .qtext {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .qtext.cloze { font-size: 19px; font-weight: 500; }
+  .qtext .blank {
+    display: inline-block;
+    min-width: 60px;
+    border-bottom: 2.5px solid var(--primary);
+    margin: 0 4px;
+    height: 1.2em;
+    vertical-align: bottom;
+  }
+
+  .qhint-wrap { margin-top: 14px; }
+  .qhint-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: #78350f;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 0;
+    font-family: inherit;
+    font-weight: 500;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+  .qhint-toggle:hover { opacity: 1; }
+  .qhint-toggle .arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+    font-size: 10px;
+  }
+  .qhint-toggle.open .arrow { transform: rotate(90deg); }
+  .qhint-content {
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #fffbeb;
+    color: #78350f;
+    font-size: 14px;
+    border-radius: 8px;
+    border-left: 3px solid var(--yellow);
+    display: none;
+    line-height: 1.6;
+  }
+  .qhint-content.show { display: block; }
+
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+    min-height: 56px;
+    display: flex;
+    align-items: center;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    color: var(--text);
+    word-break: break-word;
+    gap: 12px;
+  }
+  .option:active:not(.locked) {
+    transform: scale(0.98);
+    border-color: var(--primary);
+  }
+  .option-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: #f3f4f6;
+    color: var(--text-light);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: ui-monospace, monospace;
+    flex-shrink: 0;
+  }
+  .option-text { flex: 1; }
+  .option.correct { background: #d1fae5; border-color: var(--green); color: #065f46; font-weight: 600; }
+  .option.correct .option-key { background: var(--green); color: white; }
+  .option.correct .option-text::after { content: " ✓"; color: var(--green); font-weight: 700; }
+  .option.wrong { background: #fee2e2; border-color: var(--red); color: #991b1b; }
+  .option.wrong .option-key { background: var(--red); color: white; }
+  .option.wrong .option-text::after { content: " ✗"; color: var(--red); font-weight: 700; }
+  .option.locked { cursor: default; }
+  .option.dim { opacity: 0.5; }
+
+  /* 鼓励弹窗 */
+  .toast {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translateX(-50%) scale(0.9);
+    background: rgba(0,0,0,0.85);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 500;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+
+  /* 图片预览模态框 */
+  .img-modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    overflow-y: auto;
+    padding: 20px 12px;
+  }
+  .img-modal.show { display: block; }
+  .img-modal-inner {
+    max-width: 480px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .img-modal-tip {
+    color: white;
+    font-size: 14px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    line-height: 1.7;
+  }
+  .img-modal-tip strong { color: #fbbf24; }
+  .img-modal img {
+    width: 100%;
+    border-radius: 12px;
+    display: block;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .img-modal-close {
+    margin-top: 20px;
+    background: white;
+    color: var(--text);
+    border: none;
+    padding: 14px 36px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 24px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .img-modal-close:active { background: #f3f4f6; }
+
+  /* ===== 完成页 / 成绩单 ===== */
+  .result-page { display: none; flex-direction: column; padding: 16px 4px; }
+  .result-page.active { display: flex; }
+
+  /* 成绩单卡片 - 截图区域 */
+  .report-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 24px 24px 24px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    border: 1px solid var(--border);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .report-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary), #60a5fa, var(--primary));
+  }
+  .report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 4px;
+  }
+  .report-label {
+    font-size: 13px;
+    color: var(--text-light);
+    letter-spacing: 1.5px;
+    font-weight: 600;
+  }
+  .report-date {
+    font-size: 12px;
+    color: var(--text-lighter);
+    font-family: ui-monospace, monospace;
+  }
+  .report-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 2px;
+    margin-bottom: 8px;
+  }
+  .report-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .report-name {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .report-score-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-bottom: 24px;
+    padding: 16px 0;
+  }
+  .score-block { text-align: center; }
+  .score-label {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+  .score-value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: ui-monospace, "SF Mono", monospace;
+  }
+  .score-value.primary { color: var(--primary); }
+  .score-value.green { color: var(--green); }
+  .score-value.red { color: var(--red); }
+  .score-unit {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-top: 4px;
+  }
+  .score-divider {
+    width: 1px;
+    height: 40px;
+    background: var(--border);
+  }
+
+  .report-grade {
+    text-align: center;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .report-grade.excellent { background: var(--green-light); color: #065f46; }
+  .report-grade.good { background: var(--primary-light); color: var(--primary-dark); }
+  .report-grade.needwork { background: var(--yellow-light); color: #92400e; }
+
+  .todo-section { margin-bottom: 20px; }
+  .todo-title {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .todo-words {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .todo-word {
+    background: var(--red-light);
+    color: #991b1b;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .todo-empty {
+    background: var(--green-light);
+    color: #065f46;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  .report-footer {
+    text-align: center;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+    margin-top: 20px;
+  }
+  .report-footer .signature {
+    font-size: 13px;
+    color: var(--text-light);
+    letter-spacing: 1px;
+  }
+  .report-footer .signature strong {
+    color: var(--primary-dark);
+    font-weight: 700;
+  }
+
+  /* 完成页底部操作区 */
+  .result-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 4px;
+  }
+  .action-row {
+    display: flex;
+    gap: 10px;
+  }
+  .action-row button { flex: 1; }
+
+  /* 待巩固详细列表(可展开) */
+  .todo-detail-wrap { margin-top: 16px; }
+  .todo-detail-toggle {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 8px;
+    font-family: inherit;
+    width: 100%;
+  }
+  .todo-detail {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 8px;
+    display: none;
+  }
+  .todo-detail.show { display: block; }
+  .todo-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .todo-detail-item:last-child { border-bottom: none; }
+  .todo-detail-word { font-weight: 600; color: var(--text); }
+  .todo-detail-zh { color: var(--text-light); font-size: 13px; }
+
+  @media (max-width: 380px) {
+    .qtext { font-size: 20px; }
+    .qtext.cloze { font-size: 17px; }
+    .option { font-size: 15px; }
+    .score-value { font-size: 30px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ 主页 ============ -->
+  <div id="home-page" class="home-page">
+    <div class="brand">
+      <div class="brand-title">高中英语单词复习</div>
+      <div class="brand-subtitle">人 教 版 · 2 0 1 9 版</div>
+      <div class="brand-tag">谷sir · 高中英语</div>
+    </div>
+
+    <div class="name-section">
+      <span class="name-label">学生姓名</span>
+      <input id="name-input" class="name-input" type="text" placeholder="请输入姓名(选填)" maxlength="12" autocomplete="off">
+    </div>
+
+    <div class="section-label">必修第一册 · 选择单元开始练习</div>
+    <div id="unit-list" class="unit-list"></div>
+
+    <div class="footer-note">
+      每个单词需通过 3 关检测才算掌握<br>
+      看英文选释义 · 看中文选单词 · 语境填空
+    </div>
+  </div>
+
+  <!-- ============ 答题页 ============ -->
+  <div id="quiz-page" class="quiz-page">
+    <div class="quiz-header">
+      <button class="back-btn" onclick="confirmExit()">← 返回</button>
+      <span id="quiz-title-text" class="quiz-title">Unit 1</span>
+      <span style="width:48px"></span>
+    </div>
+
+    <div class="collect-header">
+      <div class="collect-stats">
+        <span class="collect-title">单词掌握进度</span>
+        <span class="collect-count"><span id="mastered-num" class="num">0</span> / <span id="total-words">25</span> 已掌握</span>
+      </div>
+      <div id="collect-dots" class="collect-dots"></div>
+      <div class="q-meta">
+        <span id="q-counter">第 1 题</span>
+        <span id="q-remaining">还剩 75 题</span>
+      </div>
+    </div>
+
+    <div class="qcard">
+      <span id="qtype-tag" class="qtype-tag"></span>
+      <span id="review-badge" class="review-badge" style="display:none;">回炉复习</span>
+      <div id="qprompt" class="qprompt"></div>
+      <div id="qtext" class="qtext"></div>
+      <div id="qhint-wrap" class="qhint-wrap" style="display:none;">
+        <button id="qhint-toggle" class="qhint-toggle" type="button" onclick="toggleHint()">
+          <span class="arrow">▶</span>
+          <span id="qhint-label">看中文翻译</span>
+        </button>
+        <div id="qhint-content" class="qhint-content"></div>
+      </div>
+    </div>
+    <div id="options" class="options"></div>
+  </div>
+
+  <!-- ============ 完成页 ============ -->
+  <div id="result-page" class="result-page">
+    <!-- 成绩单卡片(截图区域) -->
+    <div id="report-card" class="report-card">
+      <div class="report-header">
+        <div class="report-label">单元复习报告</div>
+        <div id="report-date" class="report-date"></div>
+      </div>
+      <div id="report-title" class="report-title">Unit 1</div>
+      <div class="report-subtitle">
+        <span class="report-name" id="report-name">同学</span> · <span id="report-unit-name">Teenage Life</span>
+      </div>
+
+      <div class="report-score-section">
+        <div class="score-block">
+          <div class="score-label">准确率</div>
+          <div class="score-value primary"><span id="score-accuracy">0</span></div>
+          <div class="score-unit">%</div>
+        </div>
+        <div class="score-divider"></div>
+        <div class="score-block">
+          <div class="score-label">已掌握</div>
+          <div class="score-value green"><span id="score-mastered">0</span></div>
+          <div class="score-unit">/ <span id="score-total">25</span></div>
+        </div>
+        <div class="score-divider"></div>
+        <div class="score-block">
+          <div class="score-label">待巩固</div>
+          <div class="score-value red"><span id="score-todo">0</span></div>
+          <div class="score-unit">词</div>
+        </div>
+      </div>
+
+      <div id="report-grade" class="report-grade">表现优秀</div>
+
+      <div class="todo-section">
+        <div class="todo-title">待巩固单词</div>
+        <div id="todo-words-display"></div>
+      </div>
+
+      <div class="report-footer">
+        <div class="signature">by <strong>谷sir</strong> · 高中英语教学</div>
+      </div>
+    </div>
+
+    <div class="result-actions">
+      <button class="btn-primary" onclick="saveReport()">保存成绩单图片</button>
+      <div class="action-row">
+        <button class="btn-secondary" onclick="copyTextReport()">复制文字总结</button>
+        <button class="btn-secondary" id="retry-todo-btn" onclick="retryTodo()">只练待巩固</button>
+      </div>
+      <button class="btn-ghost" onclick="goHome()">返回单元选择</button>
+    </div>
+
+    <div class="todo-detail-wrap">
+      <button id="todo-detail-toggle" class="todo-detail-toggle" onclick="toggleTodoDetail()" style="display:none;">查看待巩固单词详情 ▼</button>
+      <div id="todo-detail" class="todo-detail"></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<!-- 图片预览模态框 -->
+<div id="img-modal" class="img-modal" onclick="closeImgModal(event)">
+  <div class="img-modal-inner">
+    <div id="img-modal-tip" class="img-modal-tip"></div>
+    <img id="img-modal-pic" src="" alt="成绩单">
+    <button class="img-modal-close" onclick="closeImgModal()">关闭</button>
+  </div>
+</div>
+
+<script>
+const UNITS = [{"id": "welcome", "title": "Welcome Unit", "subtitle": "Getting to know each other · 互相认识", "available": true, "count": 18}, {"id": "u1", "title": "Unit 1", "subtitle": "Teenage Life · 青春校园", "available": true, "count": 25}, {"id": "u2", "title": "Unit 2", "subtitle": "Travelling Around · 周游世界", "available": true, "count": 25}, {"id": "u3", "title": "Unit 3", "subtitle": "Sports and Fitness · 运动与健康", "available": true, "count": 25}, {"id": "u4", "title": "Unit 4", "subtitle": "Natural Disasters · 自然灾害", "available": true, "count": 25}, {"id": "u5", "title": "Unit 5", "subtitle": "Languages · 探索语言", "available": true, "count": 25}];
+const POOLS = {"welcome": [{"word": "exchange", "pos": "n/vt", "zh": "交换；交流", "questions": [{"type": "en2zh", "q": "exchange", "options": ["注册；登记", "设计；图案", "交换；交流", "讲座；讲课"], "answer": "交换；交流"}, {"type": "zh2en", "q": "交换；交流", "options": ["design", "register", "exchange", "lecture"], "answer": "exchange"}, {"type": "cloze", "q": "I will go to the UK as an ___ student next year.", "options": ["lecture", "exchange", "register", "design"], "answer": "exchange", "hint": "明年我将作为一名___生去英国学习。"}]}, {"word": "lecture", "pos": "n/vi", "zh": "讲座；讲课", "questions": [{"type": "en2zh", "q": "lecture", "options": ["讲座；讲课", "交换；交流", "设计；图案", "校园；校区"], "answer": "讲座；讲课"}, {"type": "zh2en", "q": "讲座；讲课", "options": ["design", "exchange", "lecture", "campus"], "answer": "lecture"}, {"type": "cloze", "q": "Professor Smith will give a ___ on ancient history this Friday.", "options": ["register", "lecture", "impression", "exchange"], "answer": "lecture", "hint": "史密斯教授本周五将做一个关于古代历史的___。"}]}, {"word": "register", "pos": "v", "zh": "登记；注册", "questions": [{"type": "en2zh", "q": "register", "options": ["设计；构思", "留下印象", "集中注意力", "登记；注册"], "answer": "登记；注册"}, {"type": "zh2en", "q": "登记；注册", "options": ["register", "design", "impress", "concentrate"], "answer": "register"}, {"type": "cloze", "q": "Please ___ your name and email address on the website.", "options": ["exchange", "impress", "register", "design"], "answer": "register", "hint": "请在网站上___您的姓名和电子邮件地址。"}]}, {"word": "registration", "pos": "n", "zh": "登记；注册", "questions": [{"type": "en2zh", "q": "registration", "options": ["印象；感想", "国籍；民族", "设计；图案", "登记；注册"], "answer": "登记；注册"}, {"type": "zh2en", "q": "登记；注册", "options": ["nationality", "design", "impression", "registration"], "answer": "registration"}, {"type": "cloze", "q": "The ___ form for the conference must be completed online.", "options": ["campus", "registration", "impression", "lecture"], "answer": "registration", "hint": "会议的___表必须在线填写。"}]}, {"word": "nationality", "pos": "n", "zh": "国籍；民族", "questions": [{"type": "en2zh", "q": "nationality", "options": ["交换；交流", "校园；校区", "国籍；民族", "讲座；讲课"], "answer": "国籍；民族"}, {"type": "zh2en", "q": "国籍；民族", "options": ["lecture", "campus", "exchange", "nationality"], "answer": "nationality"}, {"type": "cloze", "q": "What is your ___? I am Chinese.", "options": ["design", "impression", "nationality", "campus"], "answer": "nationality", "hint": "你的___是什么？我是中国人。"}]}, {"word": "design", "pos": "n/vt", "zh": "设计；图案", "questions": [{"type": "en2zh", "q": "design", "options": ["设计；图案", "恼怒的；烦闷的", "焦虑的；渴望的", "正式的；正规的"], "answer": "设计；图案"}, {"type": "zh2en", "q": "设计；图案", "options": ["annoyed", "design", "anxious", "formal"], "answer": "design"}, {"type": "cloze", "q": "She wants to ___ a logo for the school magazine.", "options": ["impress", "exchange", "register", "design"], "answer": "design", "hint": "她想为校刊___一个标志。"}]}, {"word": "designer", "pos": "n", "zh": "设计师", "questions": [{"type": "en2zh", "q": "designer", "options": ["校园；校区", "讲座；讲课", "设计师", "印象；感想"], "answer": "设计师"}, {"type": "zh2en", "q": "设计师", "options": ["campus", "impression", "designer", "lecturer"], "answer": "designer"}, {"type": "cloze", "q": "Her dream is to become a famous fashion ___.", "options": ["senior", "designer", "lecturer", "junior"], "answer": "designer", "hint": "她的梦想是成为一名著名的时尚___。"}]}, {"word": "campus", "pos": "n", "zh": "校园；校区", "questions": [{"type": "en2zh", "q": "campus", "options": ["校园；校区", "讲座；讲课", "登记；注册", "国籍；民族"], "answer": "校园；校区"}, {"type": "zh2en", "q": "校园；校区", "options": ["campus", "nationality", "lecture", "register"], "answer": "campus"}, {"type": "cloze", "q": "The new library is the center of the university ___.", "options": ["design", "register", "exchange", "campus"], "answer": "campus", "hint": "新图书馆是大学___的中心。"}]}, {"word": "formal", "pos": "adj", "zh": "正式的；正规的", "questions": [{"type": "en2zh", "q": "formal", "options": ["害怕的；受惊的", "恼怒的；烦闷的", "焦虑的；渴望的", "正式的；正规的"], "answer": "正式的；正规的"}, {"type": "zh2en", "q": "正式的；正规的", "options": ["annoyed", "anxious", "frightened", "formal"], "answer": "formal"}, {"type": "cloze", "q": "You need to wear a suit for the ___ dinner tonight.", "options": ["outgoing", "annoyed", "anxious", "formal"], "answer": "formal", "hint": "今晚的___晚宴你需要穿西装。"}]}, {"word": "anxious", "pos": "adj", "zh": "焦虑的；渴望的", "questions": [{"type": "en2zh", "q": "anxious", "options": ["外向的；开朗的", "害怕的；受惊的", "焦虑的；渴望的", "恼怒的；烦闷的"], "answer": "焦虑的；渴望的"}, {"type": "zh2en", "q": "焦虑的；渴望的", "options": ["frightened", "annoyed", "anxious", "outgoing"], "answer": "anxious"}, {"type": "cloze", "q": "She felt ___ about the coming final exam.", "options": ["senior", "annoyed", "anxious", "formal"], "answer": "anxious", "hint": "她对即将到来的期末考试感到___。"}]}, {"word": "annoyed", "pos": "adj", "zh": "恼怒的；烦闷的", "questions": [{"type": "en2zh", "q": "annoyed", "options": ["焦虑的；渴望的", "恼怒的；烦闷的", "害怕的；受惊的", "正式的；正规的"], "answer": "恼怒的；烦闷的"}, {"type": "zh2en", "q": "恼怒的；烦闷的", "options": ["annoyed", "frightened", "formal", "anxious"], "answer": "annoyed"}, {"type": "cloze", "q": "He got ___ when someone interrupted him repeatedly.", "options": ["outgoing", "annoyed", "senior", "anxious"], "answer": "annoyed", "hint": "当有人反复打断他时，他变得___。"}]}, {"word": "frightened", "pos": "adj", "zh": "害怕的；受惊的", "questions": [{"type": "en2zh", "q": "frightened", "options": ["恼怒的；烦闷的", "焦虑的；渴望的", "外向的；开朗的", "害怕的；受惊的"], "answer": "害怕的；受惊的"}, {"type": "zh2en", "q": "害怕的；受惊的", "options": ["annoyed", "anxious", "frightened", "outgoing"], "answer": "frightened"}, {"type": "cloze", "q": "The little boy was ___ of the dark.", "options": ["frightened", "formal", "annoyed", "junior"], "answer": "frightened", "hint": "小男孩___黑暗。"}]}, {"word": "senior", "pos": "adj/n", "zh": "高年级的；年长的", "questions": [{"type": "en2zh", "q": "senior", "options": ["正式的；正规的", "高年级的；年长的", "低年级的；年少的", "外向的；开朗的"], "answer": "高年级的；年长的"}, {"type": "zh2en", "q": "高年级的；年长的", "options": ["outgoing", "junior", "senior", "formal"], "answer": "senior"}, {"type": "cloze", "q": "As a ___ student, he often helps freshmen on campus.", "options": ["annoyed", "junior", "senior", "anxious"], "answer": "senior", "hint": "作为一名___学生，他经常在校园里帮助新生。"}]}, {"word": "junior", "pos": "adj/n", "zh": "低年级的；年少的", "questions": [{"type": "en2zh", "q": "junior", "options": ["焦虑的；渴望的", "高年级的；年长的", "恼怒的；烦闷的", "低年级的；年少的"], "answer": "低年级的；年少的"}, {"type": "zh2en", "q": "低年级的；年少的", "options": ["junior", "anxious", "annoyed", "senior"], "answer": "junior"}, {"type": "cloze", "q": "My sister is three years ___ to me in school.", "options": ["frightened", "senior", "outgoing", "junior"], "answer": "junior", "hint": "我妹妹在学校比我低三个___。"}]}, {"word": "outgoing", "pos": "adj", "zh": "外向的；开朗的", "questions": [{"type": "en2zh", "q": "outgoing", "options": ["害怕的；受惊的", "外向的；开朗的", "恼怒的；烦闷的", "焦虑的；渴望的"], "answer": "外向的；开朗的"}, {"type": "zh2en", "q": "外向的；开朗的", "options": ["anxious", "annoyed", "outgoing", "frightened"], "answer": "outgoing"}, {"type": "cloze", "q": "Being ___ helps you make more friends at school.", "options": ["outgoing", "anxious", "formal", "senior"], "answer": "outgoing", "hint": "___能帮助你在学校结交更多朋友。"}]}, {"word": "impression", "pos": "n", "zh": "印象；感想", "questions": [{"type": "en2zh", "q": "impression", "options": ["登记；注册", "设计；图案", "讲座；讲课", "印象；感想"], "answer": "印象；感想"}, {"type": "zh2en", "q": "印象；感想", "options": ["registration", "impression", "lecture", "design"], "answer": "impression"}, {"type": "cloze", "q": "Her kindness left a deep ___ on me.", "options": ["exchange", "campus", "design", "impression"], "answer": "impression", "hint": "她的善良给我留下了深刻的___。"}]}, {"word": "impress", "pos": "vt", "zh": "使留下印象", "questions": [{"type": "en2zh", "q": "impress", "options": ["集中注意力", "交换；交流", "设计；构思", "使留下印象"], "answer": "使留下印象"}, {"type": "zh2en", "q": "使留下印象", "options": ["impress", "exchange", "design", "concentrate"], "answer": "impress"}, {"type": "cloze", "q": "He tried to ___ the interviewer with his confident answers.", "options": ["register", "exchange", "impress", "design"], "answer": "impress", "hint": "他试图用自信的回答___面试官。"}]}, {"word": "concentrate", "pos": "v", "zh": "集中注意力", "questions": [{"type": "en2zh", "q": "concentrate", "options": ["登记；注册", "集中注意力", "交换；交流", "设计；构思"], "answer": "集中注意力"}, {"type": "zh2en", "q": "集中注意力", "options": ["register", "concentrate", "design", "exchange"], "answer": "concentrate"}, {"type": "cloze", "q": "Please ___ on your homework and ignore the noise.", "options": ["design", "impress", "exchange", "concentrate"], "answer": "concentrate", "hint": "请___精力做你的作业，别理会噪音。"}]}], "u1": [{"word": "volunteer", "pos": "n/v", "zh": "志愿者；自愿", "questions": [{"type": "en2zh", "q": "volunteer", "options": ["毕业；毕业生", "注册；登记", "推荐", "志愿者；自愿"], "answer": "志愿者；自愿"}, {"type": "zh2en", "q": "志愿者；自愿", "options": ["register", "recommend", "graduate", "volunteer"], "answer": "volunteer"}, {"type": "cloze", "q": "She decided to ___ at the local animal shelter every Saturday.", "options": ["register", "recommend", "volunteer", "graduate"], "answer": "volunteer", "hint": "她决定每周六在当地的动物收容所___。"}]}, {"word": "prefer", "pos": "vt", "zh": "更喜欢", "questions": [{"type": "en2zh", "q": "prefer", "options": ["放弃；停止", "更喜欢", "集中；焦点", "推荐"], "answer": "更喜欢"}, {"type": "zh2en", "q": "更喜欢", "options": ["recommend", "focus", "quit", "prefer"], "answer": "prefer"}, {"type": "cloze", "q": "I ___ playing basketball to watching TV on weekends.", "options": ["prefer", "recommend", "focus", "quit"], "answer": "prefer", "hint": "在周末，我___打篮球而不是看电视。"}]}, {"word": "debate", "pos": "n/v", "zh": "辩论", "questions": [{"type": "en2zh", "q": "debate", "options": ["挑战", "话题", "辩论", "解决办法"], "answer": "辩论"}, {"type": "zh2en", "q": "辩论", "options": ["topic", "solution", "debate", "challenge"], "answer": "debate"}, {"type": "cloze", "q": "The two candidates had a heated ___ about education policy.", "options": ["solution", "challenge", "debate", "topic"], "answer": "debate", "hint": "两位候选人就教育政策进行了激烈的___。"}]}, {"word": "content", "pos": "adj/n", "zh": "满足的(adj)；内容(n)", "questions": [{"type": "en2zh", "q": "content", "options": ["感到困惑的", "满足的(adj)；内容(n)", "合适的", "流利的"], "answer": "满足的(adj)；内容(n)"}, {"type": "zh2en", "q": "满足的(adj)；内容(n)", "options": ["content", "suitable", "fluent", "confused"], "answer": "content"}, {"type": "cloze", "q": "She seems quite ___ with her current job and life.", "options": ["content", "fluent", "suitable", "confused"], "answer": "content", "hint": "她似乎对当前的工作和生活相当满意。"}]}, {"word": "suitable", "pos": "adj", "zh": "合适的", "questions": [{"type": "en2zh", "q": "suitable", "options": ["令人困惑的", "流利的", "明显的", "合适的"], "answer": "合适的"}, {"type": "zh2en", "q": "合适的", "options": ["fluent", "obvious", "suitable", "confusing"], "answer": "suitable"}, {"type": "cloze", "q": "This dress is not ___ for a formal wedding ceremony.", "options": ["obvious", "suitable", "fluent", "confusing"], "answer": "suitable", "hint": "这条裙子不适合正式的婚礼仪式。"}]}, {"word": "actually", "pos": "adv", "zh": "实际上", "questions": [{"type": "en2zh", "q": "actually", "options": ["立即", "显然", "通常", "实际上"], "answer": "实际上"}, {"type": "zh2en", "q": "实际上", "options": ["obviously", "usually", "immediately", "actually"], "answer": "actually"}, {"type": "cloze", "q": "He looks young, but he is ___ over 40 years old.", "options": ["actually", "immediately", "usually", "obviously"], "answer": "actually", "hint": "他看起来很年轻，但___已经40多岁了。"}]}, {"word": "challenge", "pos": "n/v", "zh": "挑战", "questions": [{"type": "en2zh", "q": "challenge", "options": ["挑战", "辩论", "解决办法", "运动；活动"], "answer": "挑战"}, {"type": "zh2en", "q": "挑战", "options": ["challenge", "debate", "movement", "solution"], "answer": "challenge"}, {"type": "cloze", "q": "Learning a new language is a difficult ___ for many people.", "options": ["movement", "solution", "challenge", "debate"], "answer": "challenge", "hint": "学习一门新语言对许多人来说是一个困难的___。"}]}, {"word": "recommend", "pos": "vt", "zh": "推荐", "questions": [{"type": "en2zh", "q": "recommend", "options": ["更喜欢", "志愿者；自愿", "注册；登记", "推荐"], "answer": "推荐"}, {"type": "zh2en", "q": "推荐", "options": ["prefer", "register", "volunteer", "recommend"], "answer": "recommend"}, {"type": "cloze", "q": "Can you ___ a good restaurant near the train station?", "options": ["recommend", "prefer", "register", "volunteer"], "answer": "recommend", "hint": "你能___火车站附近一家好的餐厅吗？"}]}, {"word": "confuse", "pos": "vt", "zh": "使困惑", "questions": [{"type": "en2zh", "q": "confuse", "options": ["使困惑", "放弃；停止", "注册；登记", "毕业；毕业生"], "answer": "使困惑"}, {"type": "zh2en", "q": "使困惑", "options": ["graduate", "register", "confuse", "quit"], "answer": "confuse"}, {"type": "cloze", "q": "The directions were so unclear that they only served to ___ me.", "options": ["register", "confuse", "quit", "graduate"], "answer": "confuse", "hint": "指示如此不清楚，只会___我。"}]}, {"word": "graduate", "pos": "v/n", "zh": "毕业；毕业生", "questions": [{"type": "en2zh", "q": "graduate", "options": ["毕业；毕业生", "注册；登记", "放弃；停止", "志愿者；自愿"], "answer": "毕业；毕业生"}, {"type": "zh2en", "q": "毕业；毕业生", "options": ["volunteer", "quit", "graduate", "register"], "answer": "graduate"}, {"type": "cloze", "q": "He will ___ from high school next June and then go to college.", "options": ["volunteer", "graduate", "quit", "register"], "answer": "graduate", "hint": "他将在明年六月从高中___，然后上大学。"}]}, {"word": "fluent", "pos": "adj", "zh": "流利的", "questions": [{"type": "en2zh", "q": "fluent", "options": ["合适的", "感到困惑的", "流利的", "令人困惑的"], "answer": "流利的"}, {"type": "zh2en", "q": "流利的", "options": ["suitable", "confusing", "confused", "fluent"], "answer": "fluent"}, {"type": "cloze", "q": "After living in France for two years, she became ___ in French.", "options": ["fluent", "suitable", "confused", "confusing"], "answer": "fluent", "hint": "在法国生活两年后，她的法语变得___了。"}]}, {"word": "register", "pos": "v", "zh": "注册；登记", "questions": [{"type": "en2zh", "q": "register", "options": ["放弃；停止", "注册；登记", "日程安排；安排", "报名"], "answer": "注册；登记"}, {"type": "zh2en", "q": "注册；登记", "options": ["quit", "schedule", "register", "sign up"], "answer": "register"}, {"type": "cloze", "q": "Don't forget to ___ for the marathon before the deadline.", "options": ["sign up", "quit", "schedule", "register"], "answer": "register", "hint": "别忘了在截止日期前___马拉松比赛。"}]}, {"word": "quit", "pos": "v", "zh": "放弃；停止", "questions": [{"type": "en2zh", "q": "quit", "options": ["推荐", "放弃；停止", "注册；登记", "毕业；毕业生"], "answer": "放弃；停止"}, {"type": "zh2en", "q": "放弃；停止", "options": ["recommend", "graduate", "register", "quit"], "answer": "quit"}, {"type": "cloze", "q": "The doctor advised him to ___ smoking for his health.", "options": ["register", "recommend", "graduate", "quit"], "answer": "quit", "hint": "医生建议他为了健康___吸烟。"}]}, {"word": "schedule", "pos": "n/v", "zh": "日程安排；安排", "questions": [{"type": "en2zh", "q": "schedule", "options": ["日程安排；安排", "挑战", "标题；头衔", "话题"], "answer": "日程安排；安排"}, {"type": "zh2en", "q": "日程安排；安排", "options": ["title", "topic", "schedule", "challenge"], "answer": "schedule"}, {"type": "cloze", "q": "Could you ___ a meeting for next Monday?", "options": ["topic", "challenge", "schedule", "title"], "answer": "schedule", "hint": "你能___下周一开个会吗？"}]}, {"word": "focus", "pos": "v/n", "zh": "集中；焦点", "questions": [{"type": "en2zh", "q": "focus", "options": ["集中；焦点", "辩论", "挑战", "更喜欢"], "answer": "集中；焦点"}, {"type": "zh2en", "q": "集中；焦点", "options": ["prefer", "focus", "debate", "challenge"], "answer": "focus"}, {"type": "cloze", "q": "You need to ___ your attention on the most important tasks first.", "options": ["challenge", "prefer", "focus", "debate"], "answer": "focus", "hint": "你需要先把注意力___在最关键的任务上。"}]}, {"word": "sign up", "pos": "phr v", "zh": "报名", "questions": [{"type": "en2zh", "q": "sign up", "options": ["报名", "志愿者；自愿", "放弃；停止", "注册；登记"], "answer": "报名"}, {"type": "zh2en", "q": "报名", "options": ["volunteer", "register", "sign up", "quit"], "answer": "sign up"}, {"type": "cloze", "q": "Many students decided to ___ for the after-school art club.", "options": ["register", "quit", "sign up", "volunteer"], "answer": "sign up", "hint": "许多学生决定___课外美术社团。"}]}, {"word": "freshman", "pos": "n", "zh": "大学新生", "questions": [{"type": "en2zh", "q": "freshman", "options": ["解决办法", "标题；头衔", "话题", "大学新生"], "answer": "大学新生"}, {"type": "zh2en", "q": "大学新生", "options": ["solution", "title", "freshman", "topic"], "answer": "freshman"}, {"type": "cloze", "q": "As a ___ , he found college life both exciting and challenging.", "options": ["freshman", "title", "topic", "solution"], "answer": "freshman", "hint": "作为一名___，他觉得大学生活既令人兴奋又充满挑战。"}]}, {"word": "title", "pos": "n", "zh": "标题；头衔", "questions": [{"type": "en2zh", "q": "title", "options": ["话题", "标题；头衔", "日程安排；安排", "运动；活动"], "answer": "标题；头衔"}, {"type": "zh2en", "q": "标题；头衔", "options": ["movement", "topic", "schedule", "title"], "answer": "title"}, {"type": "cloze", "q": "The ___ of the new movie is 'Journey to the West'.", "options": ["schedule", "title", "movement", "topic"], "answer": "title", "hint": "新电影的___是《西游记》。"}]}, {"word": "topic", "pos": "n", "zh": "话题", "questions": [{"type": "en2zh", "q": "topic", "options": ["辩论", "运动；活动", "话题", "标题；头衔"], "answer": "话题"}, {"type": "zh2en", "q": "话题", "options": ["movement", "title", "topic", "debate"], "answer": "topic"}, {"type": "cloze", "q": "The main ___ of today's discussion is environmental protection.", "options": ["debate", "title", "movement", "topic"], "answer": "topic", "hint": "今天讨论的主要___是环境保护。"}]}, {"word": "movement", "pos": "n", "zh": "运动；活动", "questions": [{"type": "en2zh", "q": "movement", "options": ["话题", "运动；活动", "标题；头衔", "挑战"], "answer": "运动；活动"}, {"type": "zh2en", "q": "运动；活动", "options": ["movement", "topic", "challenge", "title"], "answer": "movement"}, {"type": "cloze", "q": "The civil rights ___ changed American society greatly.", "options": ["challenge", "title", "movement", "topic"], "answer": "movement", "hint": "民权___极大地改变了美国社会。"}]}, {"word": "extra-curricular", "pos": "adj", "zh": "课外的", "questions": [{"type": "en2zh", "q": "extra-curricular", "options": ["合适的", "明显的", "课外的", "流利的"], "answer": "课外的"}, {"type": "zh2en", "q": "课外的", "options": ["suitable", "obvious", "extra-curricular", "fluent"], "answer": "extra-curricular"}, {"type": "cloze", "q": "Joining ___ activities can help you make new friends at school.", "options": ["obvious", "extra-curricular", "fluent", "suitable"], "answer": "extra-curricular", "hint": "参加___活动可以帮助你在学校结交新朋友。"}]}, {"word": "obviously", "pos": "adv", "zh": "显然", "questions": [{"type": "en2zh", "q": "obviously", "options": ["实际上", "通常", "立即", "显然"], "answer": "显然"}, {"type": "zh2en", "q": "显然", "options": ["immediately", "actually", "usually", "obviously"], "answer": "obviously"}, {"type": "cloze", "q": "She was ___ very tired after running the marathon.", "options": ["obviously", "immediately", "usually", "actually"], "answer": "obviously", "hint": "跑完马拉松后，她___非常疲惫。"}]}, {"word": "solution", "pos": "n", "zh": "解决办法", "questions": [{"type": "en2zh", "q": "solution", "options": ["辩论", "挑战", "解决办法", "运动；活动"], "answer": "解决办法"}, {"type": "zh2en", "q": "解决办法", "options": ["solution", "debate", "challenge", "movement"], "answer": "solution"}, {"type": "cloze", "q": "We need to find a ___ to the traffic problem in our city.", "options": ["movement", "challenge", "solution", "debate"], "answer": "solution", "hint": "我们需要找到城市交通问题的___。"}]}, {"word": "confusing", "pos": "adj", "zh": "令人困惑的", "questions": [{"type": "en2zh", "q": "confusing", "options": ["感到困惑的", "合适的", "流利的", "令人困惑的"], "answer": "令人困惑的"}, {"type": "zh2en", "q": "令人困惑的", "options": ["confused", "suitable", "fluent", "confusing"], "answer": "confusing"}, {"type": "cloze", "q": "The instructions were so ___ that nobody could follow them.", "options": ["fluent", "confused", "confusing", "suitable"], "answer": "confusing", "hint": "说明如此___，以至于没人能照着做。"}]}, {"word": "confused", "pos": "adj", "zh": "感到困惑的", "questions": [{"type": "en2zh", "q": "confused", "options": ["感到困惑的", "令人困惑的", "满足的(adj)；内容(n)", "流利的"], "answer": "感到困惑的"}, {"type": "zh2en", "q": "感到困惑的", "options": ["confused", "fluent", "content", "confusing"], "answer": "confused"}, {"type": "cloze", "q": "I felt completely ___ by his strange explanation.", "options": ["confused", "fluent", "content", "confusing"], "answer": "confused", "hint": "我被他奇怪的解释完全___了。"}]}], "u2": [{"word": "apply", "pos": "vi. & vt.", "zh": "申请；应用", "questions": [{"type": "en2zh", "q": "apply", "options": ["拒绝；否认", "完成；结束", "准备；预备", "申请；应用"], "answer": "申请；应用"}, {"type": "zh2en", "q": "申请；应用", "options": ["complete", "apply", "refuse", "prepare"], "answer": "apply"}, {"type": "cloze", "q": "You can ___ for a visa online before your trip.", "options": ["look", "wait", "ask", "apply"], "answer": "apply", "hint": "你可以先在网上___签证再去旅行。"}]}, {"word": "arrangement", "pos": "n.", "zh": "安排；筹备", "questions": [{"type": "en2zh", "q": "arrangement", "options": ["分配；分发", "同意；一致", "安排；筹备", "争论；辩论"], "answer": "安排；筹备"}, {"type": "zh2en", "q": "安排；筹备", "options": ["agreement", "arrangement", "assignment", "argument"], "answer": "arrangement"}, {"type": "cloze", "q": "We need to make an ___ for accommodation before we set off.", "options": ["arrangement", "appointment", "agreement", "assignment"], "answer": "arrangement", "hint": "我们出发之前需要为住宿做个___。"}]}, {"word": "extremely", "pos": "adv.", "zh": "极其；非常", "questions": [{"type": "en2zh", "q": "extremely", "options": ["一般地；通常地", "极其；非常", "完全；彻底地", "稍微；轻微地"], "answer": "极其；非常"}, {"type": "zh2en", "q": "极其；非常", "options": ["generally", "thoroughly", "extremely", "slightly"], "answer": "extremely"}, {"type": "cloze", "q": "The view from the top of the mountain is ___ beautiful.", "options": ["hardly", "extremely", "merely", "rarely"], "answer": "extremely", "hint": "山顶的景色___美丽。"}]}, {"word": "narrow", "pos": "adj.", "zh": "狭窄的", "questions": [{"type": "en2zh", "q": "narrow", "options": ["狭窄的", "平坦的", "弯曲的", "宽阔的"], "answer": "狭窄的"}, {"type": "zh2en", "q": "狭窄的", "options": ["flat", "narrow", "wide", "curved"], "answer": "narrow"}, {"type": "cloze", "q": "The road became too ___ for two cars to pass each other.", "options": ["narrow", "smooth", "steep", "broad"], "answer": "narrow", "hint": "这条路太___了，两辆车无法并排通行。"}]}, {"word": "flat", "pos": "adj.", "zh": "平坦的；扁平的", "questions": [{"type": "en2zh", "q": "flat", "options": ["弯曲的；弧形的", "平坦的；扁平的", "崎岖的；不平的", "陡峭的；险峻的"], "answer": "平坦的；扁平的"}, {"type": "zh2en", "q": "平坦的；扁平的", "options": ["curved", "steep", "flat", "rough"], "answer": "flat"}, {"type": "cloze", "q": "The countryside here is very ___ and good for cycling.", "options": ["rocky", "wooded", "hilly", "flat"], "answer": "flat", "hint": "这里的乡村地势很___，适合骑自行车。"}]}, {"word": "powerful", "pos": "adj.", "zh": "强有力的；强大的", "questions": [{"type": "en2zh", "q": "powerful", "options": ["普通的；平凡的", "古老的；陈旧的", "强有力的；强大的", "微弱的；无力的"], "answer": "强有力的；强大的"}, {"type": "zh2en", "q": "强有力的；强大的", "options": ["weak", "ancient", "powerful", "ordinary"], "answer": "powerful"}, {"type": "cloze", "q": "The king was one of the most ___ rulers in history.", "options": ["powerful", "gentle", "quiet", "friendly"], "answer": "powerful", "hint": "这位国王是历史上最有___的统治者之一。"}]}, {"word": "official", "pos": "adj.", "zh": "官方的；正式的", "questions": [{"type": "en2zh", "q": "official", "options": ["秘密的；隐蔽的", "私人的；个人的", "临时的；暂时的", "官方的；正式的"], "answer": "官方的；正式的"}, {"type": "zh2en", "q": "官方的；正式的", "options": ["official", "private", "temporary", "secret"], "answer": "official"}, {"type": "cloze", "q": "The ___ language of Peru is Spanish.", "options": ["local", "official", "modern", "foreign"], "answer": "official", "hint": "秘鲁的___语言是西班牙语。"}]}, {"word": "recognise", "pos": "vt.", "zh": "辨别出；承认；认可", "questions": [{"type": "en2zh", "q": "recognise", "options": ["拒绝；否定", "忽视；不理睬", "辨别出；承认；认可", "怀疑；猜测"], "answer": "辨别出；承认；认可"}, {"type": "zh2en", "q": "辨别出；承认；认可", "options": ["suspect", "recognise", "deny", "ignore"], "answer": "recognise"}, {"type": "cloze", "q": "I could hardly ___ him after ten years of separation.", "options": ["recognise", "remember", "describe", "forget"], "answer": "recognise", "hint": "分开十年后，我几乎___不出他了。"}]}, {"word": "unique", "pos": "adj.", "zh": "唯一的；独特的；特有的", "questions": [{"type": "en2zh", "q": "unique", "options": ["次要的；附属的", "相似的；类似的", "唯一的；独特的；特有的", "普通的；常见的"], "answer": "唯一的；独特的；特有的"}, {"type": "zh2en", "q": "唯一的；独特的；特有的", "options": ["unique", "minor", "similar", "common"], "answer": "unique"}, {"type": "cloze", "q": "This animal is ___ to the island and cannot be found elsewhere.", "options": ["unique", "sensitive", "familiar", "native"], "answer": "unique", "hint": "这种动物是该岛___有的，在其他地方找不到。"}]}, {"word": "destination", "pos": "n.", "zh": "目的地；终点", "questions": [{"type": "en2zh", "q": "destination", "options": ["目的地；终点", "起点；出发点", "中途；中途站", "来源；出处"], "answer": "目的地；终点"}, {"type": "zh2en", "q": "目的地；终点", "options": ["source", "stopover", "destination", "origin"], "answer": "destination"}, {"type": "cloze", "q": "After a tiring flight, we finally arrived at our ___.", "options": ["station", "destination", "position", "location"], "answer": "destination", "hint": "经过一段疲惫的飞行后，我们终于到达了___。"}]}, {"word": "contact", "pos": "vt. & n.", "zh": "联络；联系；接触", "questions": [{"type": "en2zh", "q": "contact", "options": ["吸引；引诱", "避免；回避", "联络；联系；接触", "命令；指示"], "answer": "联络；联系；接触"}, {"type": "zh2en", "q": "联络；联系；接触", "options": ["attract", "avoid", "direct", "contact"], "answer": "contact"}, {"type": "cloze", "q": "Please feel free to ___ me if you have any questions about the trip.", "options": ["contact", "refuse", "forget", "ignore"], "answer": "contact", "hint": "如果你对这次旅行有任何疑问，请随时___我。"}]}, {"word": "request", "pos": "n. & vt.", "zh": "要求；请求", "questions": [{"type": "en2zh", "q": "request", "options": ["接受；同意", "提供；供给", "要求；请求", "拒绝；谢绝"], "answer": "要求；请求"}, {"type": "zh2en", "q": "要求；请求", "options": ["refuse", "accept", "offer", "request"], "answer": "request"}, {"type": "cloze", "q": "The tour guide made a ___ for everyone to remain seated.", "options": ["suggestion", "warning", "request", "promise"], "answer": "request", "hint": "导游___大家保持就座(向大家提出___)。"}]}, {"word": "view", "pos": "n.", "zh": "视野；景色；看法", "questions": [{"type": "en2zh", "q": "view", "options": ["视野；景色；看法", "嗅觉；气味", "触觉；感觉", "听力；听觉"], "answer": "视野；景色；看法"}, {"type": "zh2en", "q": "视野；景色；看法", "options": ["hearing", "touch", "smell", "view"], "answer": "view"}, {"type": "cloze", "q": "From the top of the tower, you can get a wonderful ___ of the city.", "options": ["noise", "voice", "view", "sound"], "answer": "view", "hint": "从塔顶可以看到城市的绝佳___。"}]}, {"word": "sight", "pos": "n.", "zh": "景象；视野；视力", "questions": [{"type": "en2zh", "q": "sight", "options": ["景象；视野；视力", "触觉；质感", "味道；品味", "声音；音量"], "answer": "景象；视野；视力"}, {"type": "zh2en", "q": "景象；视野；视力", "options": ["sound", "sight", "touch", "taste"], "answer": "sight"}, {"type": "cloze", "q": "We visited many historic ___ during our trip to Rome.", "options": ["sounds", "sights", "tastes", "touches"], "answer": "sights", "hint": "在罗马旅行期间，我们参观了许多历史___。"}]}, {"word": "comment", "pos": "n. & vi. & vt.", "zh": "议论；评论；发表意见", "questions": [{"type": "en2zh", "q": "comment", "options": ["提问；询问", "建议；提议", "回答；回应", "议论；评论；发表意见"], "answer": "议论；评论；发表意见"}, {"type": "zh2en", "q": "议论；评论；发表意见", "options": ["suggest", "question", "comment", "reply"], "answer": "comment"}, {"type": "cloze", "q": "He made an interesting ___ about the local culture.", "options": ["threat", "doubt", "promise", "comment"], "answer": "comment", "hint": "他对当地文化发表了有趣的___。"}]}, {"word": "admire", "pos": "vt.", "zh": "钦佩；赞赏", "questions": [{"type": "en2zh", "q": "admire", "options": ["钦佩；赞赏", "忽略；漠视", "轻视；鄙视", "嫉妒；羡慕"], "answer": "钦佩；赞赏"}, {"type": "zh2en", "q": "钦佩；赞赏", "options": ["despise", "neglect", "admire", "envy"], "answer": "admire"}, {"type": "cloze", "q": "I really ___ the way you handled that difficult situation.", "options": ["admire", "avoid", "hate", "forget"], "answer": "admire", "hint": "我真的___你处理那个棘手问题的方式。"}]}, {"word": "architecture", "pos": "n.", "zh": "建筑设计；建筑学", "questions": [{"type": "en2zh", "q": "architecture", "options": ["绘画；图画", "建筑设计；建筑学", "雕刻；雕塑", "音乐；乐曲"], "answer": "建筑设计；建筑学"}, {"type": "zh2en", "q": "建筑设计；建筑学", "options": ["architecture", "painting", "sculpture", "music"], "answer": "architecture"}, {"type": "cloze", "q": "The ___ of this ancient city attracts millions of tourists every year.", "options": ["literature", "history", "architecture", "philosophy"], "answer": "architecture", "hint": "这座古城的___建筑每年吸引数百万游客。"}]}, {"word": "rent", "pos": "vt. & vi. & n.", "zh": "租用；出租；租金", "questions": [{"type": "en2zh", "q": "rent", "options": ["租用；出租；租金", "借用；借入", "购买；收购", "出售；售卖"], "answer": "租用；出租；租金"}, {"type": "zh2en", "q": "租用；出租；租金", "options": ["buy", "sell", "borrow", "rent"], "answer": "rent"}, {"type": "cloze", "q": "We decided to ___ a car to explore the countryside.", "options": ["sell", "rent", "keep", "buy"], "answer": "rent", "hint": "我们决定___一辆车去探索乡村。"}]}, {"word": "pack", "pos": "vi. & vt.", "zh": "收拾（行李）；包装", "questions": [{"type": "en2zh", "q": "pack", "options": ["丢弃；扔掉", "打开（包裹）；展开", "购买；采购", "收拾（行李）；包装"], "answer": "收拾（行李）；包装"}, {"type": "zh2en", "q": "收拾（行李）；包装", "options": ["discard", "unpack", "pack", "purchase"], "answer": "pack"}, {"type": "cloze", "q": "Don't forget to ___ your swimsuit for the beach trip.", "options": ["hide", "drop", "pack", "lose"], "answer": "pack", "hint": "别忘了___你的泳衣，我们要去海滩旅行。"}]}, {"word": "amazing", "pos": "adj.", "zh": "令人惊奇的；令人惊喜的", "questions": [{"type": "en2zh", "q": "amazing", "options": ["无聊的；乏味的", "令人惊奇的；令人惊喜的", "可怕的；恐怖的", "平凡的；普通的"], "answer": "令人惊奇的；令人惊喜的"}, {"type": "zh2en", "q": "令人惊奇的；令人惊喜的", "options": ["ordinary", "amazing", "boring", "terrible"], "answer": "amazing"}, {"type": "cloze", "q": "The sunset over the ocean was truly ___.", "options": ["normal", "amazing", "dull", "awful"], "answer": "amazing", "hint": "海上的日落真是___。"}]}, {"word": "economy", "pos": "n.", "zh": "经济；节约", "questions": [{"type": "en2zh", "q": "economy", "options": ["政治；政策", "教育；教学", "文化；文明", "经济；节约"], "answer": "经济；节约"}, {"type": "zh2en", "q": "经济；节约", "options": ["culture", "politics", "education", "economy"], "answer": "economy"}, {"type": "cloze", "q": "Tourism plays an important role in the local ___.", "options": ["history", "geography", "economy", "society"], "answer": "economy", "hint": "旅游业在当地___中扮演重要角色。"}]}, {"word": "transport", "pos": "n. & vt.", "zh": "交通运输系统；运输；运送", "questions": [{"type": "en2zh", "q": "transport", "options": ["通讯；通信", "交通运输系统；运输；运送", "生产；制造", "消费；消耗"], "answer": "交通运输系统；运输；运送"}, {"type": "zh2en", "q": "交通运输系统；运输；运送", "options": ["consumption", "transport", "communication", "production"], "answer": "transport"}, {"type": "cloze", "q": "Public ___ in this city is convenient and affordable.", "options": ["transport", "healthcare", "entertainment", "education"], "answer": "transport", "hint": "这座城市的公共交通___方便且价格实惠。"}]}, {"word": "source", "pos": "n.", "zh": "来源；出处", "questions": [{"type": "en2zh", "q": "source", "options": ["影响；作用", "结果；后果", "原因；理由", "来源；出处"], "answer": "来源；出处"}, {"type": "zh2en", "q": "来源；出处", "options": ["effect", "source", "cause", "result"], "answer": "source"}, {"type": "cloze", "q": "The river is the main ___ of water for the entire region.", "options": ["end", "source", "middle", "side"], "answer": "source", "hint": "这条河是整个地区的主要水源___。"}]}, {"word": "detail", "pos": "n.", "zh": "细节；详情", "questions": [{"type": "en2zh", "q": "detail", "options": ["总结；概要", "主题；话题", "目标；目的", "细节；详情"], "answer": "细节；详情"}, {"type": "zh2en", "q": "细节；详情", "options": ["detail", "summary", "topic", "goal"], "answer": "detail"}, {"type": "cloze", "q": "Please provide more ___ about your travel plans.", "options": ["purpose", "title", "outline", "detail"], "answer": "detail", "hint": "请提供更多关于你旅行计划的___。"}]}, {"word": "credit", "pos": "n.", "zh": "借款；信用；称赞；学分", "questions": [{"type": "en2zh", "q": "credit", "options": ["借款；信用；称赞；学分", "利息；红利", "现金；现款", "债务；负债"], "answer": "借款；信用；称赞；学分"}, {"type": "zh2en", "q": "借款；信用；称赞；学分", "options": ["debt", "credit", "interest", "cash"], "answer": "credit"}, {"type": "cloze", "q": "You can pay by ___ card or mobile payment when traveling.", "options": ["debt", "cash", "loan", "credit"], "answer": "credit", "hint": "旅行时你可以用___卡或移动支付付款。"}]}], "u3": [{"word": "honour", "pos": "n.&vt", "zh": "荣誉；尊敬；给予荣誉", "questions": [{"type": "en2zh", "q": "honour", "options": ["奖励；奖赏", "荣誉；尊敬；给予荣誉", "成就；功绩", "名声；名望"], "answer": "荣誉；尊敬；给予荣誉"}, {"type": "zh2en", "q": "荣誉；尊敬；给予荣誉", "options": ["reward", "achievement", "honour", "fame"], "answer": "honour"}, {"type": "cloze", "q": "It is a great ___ to represent our school at the national sports meet.", "options": ["memory", "honour", "chance", "choice"], "answer": "honour", "hint": "代表我校参加全国运动会是极大的___。"}]}, {"word": "determination", "pos": "n", "zh": "决心；坚定", "questions": [{"type": "en2zh", "q": "determination", "options": ["分心；干扰", "犹豫；迟疑", "决心；坚定", "怀疑；猜疑"], "answer": "决心；坚定"}, {"type": "zh2en", "q": "决心；坚定", "options": ["hesitation", "determination", "distraction", "doubt"], "answer": "determination"}, {"type": "cloze", "q": "With great ___ and hard work, she finally won the gold medal.", "options": ["determination", "confusion", "pressure", "excitement"], "answer": "determination", "hint": "凭借巨大的___和努力，她最终赢得了金牌。"}]}, {"word": "strength", "pos": "n", "zh": "力量；体力；长处", "questions": [{"type": "en2zh", "q": "strength", "options": ["力量；体力；长处", "弱点；缺点", "长度；距离", "宽度；广度"], "answer": "力量；体力；长处"}, {"type": "zh2en", "q": "力量；体力；长处", "options": ["weakness", "length", "strength", "width"], "answer": "strength"}, {"type": "cloze", "q": "Regular exercise can increase your muscle ___ and improve your health.", "options": ["strength", "height", "weight", "speed"], "answer": "strength", "hint": "定期锻炼可以增加你的肌肉___并改善健康。"}]}, {"word": "compete", "pos": "vi", "zh": "竞争；对抗", "questions": [{"type": "en2zh", "q": "compete", "options": ["放弃；退出", "竞争；对抗", "合作；协作", "获胜；取胜"], "answer": "竞争；对抗"}, {"type": "zh2en", "q": "竞争；对抗", "options": ["win", "quit", "compete", "cooperate"], "answer": "compete"}, {"type": "cloze", "q": "More than 200 athletes will ___ in the swimming competition tomorrow.", "options": ["appear", "train", "watch", "compete"], "answer": "compete", "hint": "超过200名运动员明天将在游泳比赛中___。"}]}, {"word": "event", "pos": "n", "zh": "事件；比赛项目", "questions": [{"type": "en2zh", "q": "event", "options": ["原因；理由", "过程；进程", "结果；后果", "事件；比赛项目"], "answer": "事件；比赛项目"}, {"type": "zh2en", "q": "事件；比赛项目", "options": ["event", "process", "result", "reason"], "answer": "event"}, {"type": "cloze", "q": "The 100-meter dash is always the most exciting ___ of the sports meeting.", "options": ["record", "plan", "event", "rule"], "answer": "event", "hint": "100米短跑总是运动会最激动人心的___。"}]}, {"word": "master", "pos": "n.&vt", "zh": "大师；主人；掌握", "questions": [{"type": "en2zh", "q": "master", "options": ["观众；旁观者", "学生；学徒", "大师；主人；掌握", "仆人；佣人"], "answer": "大师；主人；掌握"}, {"type": "zh2en", "q": "大师；主人；掌握", "options": ["student", "spectator", "master", "servant"], "answer": "master"}, {"type": "cloze", "q": "It takes years of practice to ___ the skills of this martial art.", "options": ["teach", "avoid", "master", "watch"], "answer": "master", "hint": "需要多年练习才能___这门武术的技巧。"}]}, {"word": "athlete", "pos": "n", "zh": "运动员", "questions": [{"type": "en2zh", "q": "athlete", "options": ["运动员", "观众；粉丝", "教练；指导", "裁判；评审"], "answer": "运动员"}, {"type": "zh2en", "q": "运动员", "options": ["judge", "fan", "coach", "athlete"], "answer": "athlete"}, {"type": "cloze", "q": "The young ___ broke the national record in the 5000-meter race.", "options": ["driver", "doctor", "athlete", "teacher"], "answer": "athlete", "hint": "这位年轻的___打破了5000米赛跑的全国纪录。"}]}, {"word": "medal", "pos": "n", "zh": "奖章；勋章", "questions": [{"type": "en2zh", "q": "medal", "options": ["奖章；勋章", "奖品；奖金", "奖杯；锦标赛", "证书；文凭"], "answer": "奖章；勋章"}, {"type": "zh2en", "q": "奖章；勋章", "options": ["certificate", "medal", "trophy", "prize"], "answer": "medal"}, {"type": "cloze", "q": "She cried tears of joy when she received the gold ___ on the podium.", "options": ["scholarship", "ticket", "medal", "diploma"], "answer": "medal", "hint": "当她在领奖台上获得金___时，她流下了喜悦的泪水。"}]}, {"word": "gym", "pos": "n", "zh": "健身房；体育馆", "questions": [{"type": "en2zh", "q": "gym", "options": ["操场；运动场", "健身房；体育馆", "游泳池；水池", "球场；场地"], "answer": "健身房；体育馆"}, {"type": "zh2en", "q": "健身房；体育馆", "options": ["pool", "gym", "court", "playground"], "answer": "gym"}, {"type": "cloze", "q": "I go to the ___ every morning to work out before going to school.", "options": ["library", "museum", "gym", "cinema"], "answer": "gym", "hint": "我每天早上去___锻炼后再上学。"}]}, {"word": "fitness", "pos": "n", "zh": "健康；健壮", "questions": [{"type": "en2zh", "q": "fitness", "options": ["疾病；病症", "虚弱；无力", "肥胖；臃肿", "健康；健壮"], "answer": "健康；健壮"}, {"type": "zh2en", "q": "健康；健壮", "options": ["illness", "weakness", "fitness", "obesity"], "answer": "fitness"}, {"type": "cloze", "q": "Many people join fitness clubs to improve their ___ and stay in shape.", "options": ["beauty", "wealth", "knowledge", "fitness"], "answer": "fitness", "hint": "许多人加入健身俱乐部来改善他们的___并保持体形。"}]}, {"word": "energetic", "pos": "adj", "zh": "精力充沛的", "questions": [{"type": "en2zh", "q": "energetic", "options": ["昏昏欲睡的", "疲惫不堪的", "精力充沛的", "无精打采的"], "answer": "精力充沛的"}, {"type": "zh2en", "q": "精力充沛的", "options": ["exhausted", "listless", "energetic", "sleepy"], "answer": "energetic"}, {"type": "cloze", "q": "After a good night's sleep, I felt fresh and ___ for the morning run.", "options": ["weak", "slow", "energetic", "lazy"], "answer": "energetic", "hint": "一夜好眠后，我感觉精神焕发、___地迎接晨跑。"}]}, {"word": "weight", "pos": "n", "zh": "重量；体重；重担", "questions": [{"type": "en2zh", "q": "weight", "options": ["重量；体重；重担", "宽度；幅度", "高度；海拔", "长度；尺寸"], "answer": "重量；体重；重担"}, {"type": "zh2en", "q": "重量；体重；重担", "options": ["weight", "length", "width", "height"], "answer": "weight"}, {"type": "cloze", "q": "He lifts heavy ___ at the gym to build his muscles.", "options": ["measures", "levels", "scales", "weights"], "answer": "weights", "hint": "他在健身房举___来锻炼肌肉。"}]}, {"word": "regular", "pos": "adj", "zh": "定期的；常规的", "questions": [{"type": "en2zh", "q": "regular", "options": ["偶尔的；间或的", "特殊的；异常的", "定期的；常规的", "突然的；意外的"], "answer": "定期的；常规的"}, {"type": "zh2en", "q": "定期的；常规的", "options": ["special", "sudden", "regular", "occasional"], "answer": "regular"}, {"type": "cloze", "q": "Doing ___ exercise is more effective than working out once in a while.", "options": ["quick", "easy", "strange", "regular"], "answer": "regular", "hint": "进行___锻炼比偶尔锻炼一次更有效。"}]}, {"word": "workout", "pos": "n", "zh": "锻炼；训练", "questions": [{"type": "en2zh", "q": "workout", "options": ["热身；准备", "比赛；竞赛", "锻炼；训练", "休息；放松"], "answer": "锻炼；训练"}, {"type": "zh2en", "q": "锻炼；训练", "options": ["warmup", "rest", "match", "workout"], "answer": "workout"}, {"type": "cloze", "q": "This morning's ___ included running, push-ups and sit-ups.", "options": ["class", "meeting", "workout", "meal"], "answer": "workout", "hint": "今天早上的___包括跑步、俯卧撑和仰卧起坐。"}]}, {"word": "sweat", "pos": "n.&vi", "zh": "汗水；出汗", "questions": [{"type": "en2zh", "q": "sweat", "options": ["唾液；分泌", "泪水；哭泣", "血液；流血", "汗水；出汗"], "answer": "汗水；出汗"}, {"type": "zh2en", "q": "汗水；出汗", "options": ["blood", "saliva", "sweat", "tear"], "answer": "sweat"}, {"type": "cloze", "q": "After an hour of running, his shirt was wet with ___.", "options": ["paint", "water", "sweat", "oil"], "answer": "sweat", "hint": "跑步一小时后，他的衬衫被___浸湿了。"}]}, {"word": "muscle", "pos": "n", "zh": "肌肉；力量", "questions": [{"type": "en2zh", "q": "muscle", "options": ["肌肉；力量", "骨骼；骨架", "神经；神经质", "关节；节骨"], "answer": "肌肉；力量"}, {"type": "zh2en", "q": "肌肉；力量", "options": ["bone", "muscle", "joint", "nerve"], "answer": "muscle"}, {"type": "cloze", "q": "Weight training helps build ___ and improves overall body strength.", "options": ["muscle", "speed", "skill", "balance"], "answer": "muscle", "hint": "举重训练有助于增强___并提高整体身体力量。"}]}, {"word": "injury", "pos": "n", "zh": "伤害；损伤", "questions": [{"type": "en2zh", "q": "injury", "options": ["康复；恢复", "治疗；疗法", "疾病；病症", "伤害；损伤"], "answer": "伤害；损伤"}, {"type": "zh2en", "q": "伤害；损伤", "options": ["illness", "treatment", "recovery", "injury"], "answer": "injury"}, {"type": "cloze", "q": "He had to drop out of the race due to a knee ___ he got during training.", "options": ["cough", "headache", "injury", "fever"], "answer": "injury", "hint": "由于训练中膝盖___，他不得不退出比赛。"}]}, {"word": "recover", "pos": "vi", "zh": "恢复；康复", "questions": [{"type": "en2zh", "q": "recover", "options": ["恢复；康复", "恶化；加剧", "损害；伤害", "复发；反复"], "answer": "恢复；康复"}, {"type": "zh2en", "q": "恢复；康复", "options": ["worsen", "damage", "relapse", "recover"], "answer": "recover"}, {"type": "cloze", "q": "It took her three months to fully ___ from the shoulder surgery.", "options": ["start", "stop", "recover", "fail"], "answer": "recover", "hint": "她花了三个月才从肩部手术中完全___。"}]}, {"word": "athletics", "pos": "n", "zh": "田径；体育", "questions": [{"type": "en2zh", "q": "athletics", "options": ["体操；健美", "球类；球技", "游泳；水上运动", "田径；体育"], "answer": "田径；体育"}, {"type": "zh2en", "q": "田径；体育", "options": ["swimming", "athletics", "ballgames", "gymnastics"], "answer": "athletics"}, {"type": "cloze", "q": "Our school has a strong ___ program that includes running, jumping and throwing.", "options": ["athletics", "art", "music", "drama"], "answer": "athletics", "hint": "我们学校有很强的___项目，包括跑、跳和投掷。"}]}, {"word": "champion", "pos": "n", "zh": "冠军；优胜者", "questions": [{"type": "en2zh", "q": "champion", "options": ["旁观者；观众", "亚军；第二名", "冠军；优胜者", "最后一名；垫底"], "answer": "冠军；优胜者"}, {"type": "zh2en", "q": "冠军；优胜者", "options": ["spectator", "runnerup", "loser", "champion"], "answer": "champion"}, {"type": "cloze", "q": "After years of training, she finally became the national ___ in tennis.", "options": ["champion", "reporter", "beginner", "judge"], "answer": "champion", "hint": "经过多年训练，她终于成为网球国家___。"}]}, {"word": "opponent", "pos": "n", "zh": "对手；竞争者", "questions": [{"type": "en2zh", "q": "opponent", "options": ["队友；同伙", "教练；指导", "对手；竞争者", "裁判；仲裁"], "answer": "对手；竞争者"}, {"type": "zh2en", "q": "对手；竞争者", "options": ["coach", "opponent", "referee", "teammate"], "answer": "opponent"}, {"type": "cloze", "q": "He respected his ___ even after losing the match by a narrow margin.", "options": ["relative", "friend", "stranger", "opponent"], "answer": "opponent", "hint": "即使以微弱劣势输了比赛，他仍然尊重他的___。"}]}, {"word": "audience", "pos": "n", "zh": "观众；听众", "questions": [{"type": "en2zh", "q": "audience", "options": ["演员；表演者", "观众；听众", "评论家；批评者", "导演；指挥"], "answer": "观众；听众"}, {"type": "zh2en", "q": "观众；听众", "options": ["audience", "performer", "director", "critic"], "answer": "audience"}, {"type": "cloze", "q": "The entire ___ cheered loudly when the home team scored the winning goal.", "options": ["staff", "team", "class", "audience"], "answer": "audience", "hint": "当主队攻入制胜一球时，全场___大声欢呼。"}]}, {"word": "motto", "pos": "n", "zh": "座右铭；格言", "questions": [{"type": "en2zh", "q": "motto", "options": ["诗歌；韵文", "故事；叙述", "座右铭；格言", "笑话；玩笑"], "answer": "座右铭；格言"}, {"type": "zh2en", "q": "座右铭；格言", "options": ["motto", "poem", "joke", "story"], "answer": "motto"}, {"type": "cloze", "q": "His ___ is 'No pain, no gain,' which keeps him going through tough workouts.", "options": ["plan", "motto", "secret", "dream"], "answer": "motto", "hint": "他的___是'一分耕耘，一分收获'，这让他在艰苦训练中坚持下去。"}]}, {"word": "glory", "pos": "n", "zh": "光荣；荣誉", "questions": [{"type": "en2zh", "q": "glory", "options": ["失败；挫折", "平凡；平庸", "光荣；荣誉", "耻辱；羞耻"], "answer": "光荣；荣誉"}, {"type": "zh2en", "q": "光荣；荣誉", "options": ["glory", "failure", "shame", "mediocrity"], "answer": "glory"}, {"type": "cloze", "q": "The team returned home in ___ after winning the championship for the first time.", "options": ["sorrow", "glory", "silence", "anger"], "answer": "glory", "hint": "球队首次夺冠后，凯旋而归，充满___。"}]}, {"word": "retire", "pos": "vi", "zh": "退休；退役", "questions": [{"type": "en2zh", "q": "retire", "options": ["复出；重返", "退休；退役", "调动；转岗", "晋升；提升"], "answer": "退休；退役"}, {"type": "zh2en", "q": "退休；退役", "options": ["transfer", "return", "promote", "retire"], "answer": "retire"}, {"type": "cloze", "q": "The famous basketball player announced he would ___ at the end of the season.", "options": ["retire", "struggle", "continue", "improve"], "answer": "retire", "hint": "这位著名篮球运动员宣布他将在赛季末___。"}]}], "u4": [{"word": "affect", "pos": "vt", "zh": "影响；侵袭；打动", "questions": [{"type": "en2zh", "q": "affect", "options": ["影响；侵袭；打动", "建议；推荐", "接受；承认", "保护；防御"], "answer": "影响；侵袭；打动"}, {"type": "zh2en", "q": "影响；侵袭；打动", "options": ["accept", "affect", "suggest", "admit"], "answer": "affect"}, {"type": "cloze", "q": "The earthquake severely ___ the whole city, causing great damage.", "options": ["affected", "suggested", "admitted", "accepted"], "answer": "affected", "hint": "地震严重___了整座城市，造成了巨大的破坏。"}]}, {"word": "rescue", "pos": "n & vt", "zh": "营救；救援", "questions": [{"type": "en2zh", "q": "rescue", "options": ["幸存；存活", "摧毁；毁灭", "营救；救援", "疏散；撤离"], "answer": "营救；救援"}, {"type": "zh2en", "q": "营救；救援", "options": ["evacuate", "destroy", "survive", "rescue"], "answer": "rescue"}, {"type": "cloze", "q": "The firefighters worked day and night to ___ the trapped people.", "options": ["ruin", "bury", "rescue", "ignore"], "answer": "rescue", "hint": "消防员夜以继日地工作___被困的人们。"}]}, {"word": "damage", "pos": "n & vt", "zh": "损害；损坏；破坏", "questions": [{"type": "en2zh", "q": "damage", "options": ["损害；破坏", "保护；庇护", "营救；救援", "重建；重建"], "answer": "损害；破坏"}, {"type": "zh2en", "q": "损害；破坏", "options": ["rebuild", "damage", "shelter", "rescue"], "answer": "damage"}, {"type": "cloze", "q": "The storm caused serious ___ to many buildings in the area.", "options": ["rescue", "effort", "shelter", "damage"], "answer": "damage", "hint": "暴风雨对该地区的许多建筑物造成了严重的___。"}]}, {"word": "destroy", "pos": "vt", "zh": "摧毁；毁灭", "questions": [{"type": "en2zh", "q": "destroy", "options": ["制造；建造", "保护；保存", "摧毁；毁灭", "修复；修理"], "answer": "摧毁；毁灭"}, {"type": "zh2en", "q": "摧毁；毁灭", "options": ["build", "destroy", "repair", "protect"], "answer": "destroy"}, {"type": "cloze", "q": "The earthquake completely ___ the historic city center.", "options": ["repaired", "protected", "destroyed", "built"], "answer": "destroyed", "hint": "地震完全___了这座历史悠久的市中心。"}]}, {"word": "ruin", "pos": "n & vt", "zh": "破坏；毁坏；废墟", "questions": [{"type": "en2zh", "q": "ruin", "options": ["修复", "毁坏；废墟", "营救", "保护"], "answer": "毁坏；废墟"}, {"type": "zh2en", "q": "毁坏；废墟", "options": ["repair", "rescue", "protect", "ruin"], "answer": "ruin"}, {"type": "cloze", "q": "After the war, the whole city lay in ___.", "options": ["safety", "repair", "rescue", "ruins"], "answer": "ruins", "hint": "战后，整座城市化为一片___。"}]}, {"word": "suffer", "pos": "vt & vi", "zh": "遭受；忍受；受苦", "questions": [{"type": "en2zh", "q": "suffer", "options": ["营救", "遭受；忍受", "摧毁", "幸存"], "answer": "遭受；忍受"}, {"type": "zh2en", "q": "遭受；忍受", "options": ["destroy", "rescue", "survive", "suffer"], "answer": "suffer"}, {"type": "cloze", "q": "Many people ___ from serious injuries in the earthquake.", "options": ["suffered", "rescued", "destroyed", "survived"], "answer": "suffered", "hint": "许多人在地震中___了重伤。"}]}, {"word": "survive", "pos": "vi & vt", "zh": "幸存；生存；艰难度过", "questions": [{"type": "en2zh", "q": "survive", "options": ["自杀", "幸存；生存", "屈服", "放弃"], "answer": "幸存；生存"}, {"type": "zh2en", "q": "幸存；生存", "options": ["suffer", "suicide", "survive", "surrender"], "answer": "survive"}, {"type": "cloze", "q": "Only a few passengers managed to ___ the plane crash.", "options": ["survive", "struggle", "surrender", "suffer"], "answer": "survive", "hint": "只有少数乘客设法___了坠机事故。"}]}, {"word": "strike", "pos": "vt & vi", "zh": "侵袭；突击；击打；罢工", "questions": [{"type": "en2zh", "q": "strike", "options": ["助人", "隐藏", "逃跑", "侵袭；击打；罢工"], "answer": "侵袭；击打；罢工"}, {"type": "zh2en", "q": "侵袭；击打；罢工", "options": ["strike", "escape", "help", "hide"], "answer": "strike"}, {"type": "cloze", "q": "A powerful earthquake ___ the coastal area last night.", "options": ["missed", "struck", "escaped", "avoided"], "answer": "struck", "hint": "一场强烈的地震昨夜___了沿海地区。"}]}, {"word": "bury", "pos": "vt", "zh": "埋葬；掩埋；安葬", "questions": [{"type": "en2zh", "q": "bury", "options": ["发现；找到", "埋葬；掩埋", "挖掘；挖出", "打捞；捞起"], "answer": "埋葬；掩埋"}, {"type": "zh2en", "q": "埋葬；掩埋", "options": ["recover", "dig", "discover", "bury"], "answer": "bury"}, {"type": "cloze", "q": "The victims of the disaster were ___ in a mass grave.", "options": ["buried", "found", "recovered", "dug"], "answer": "buried", "hint": "灾难的遇难者被___在集体墓穴中。"}]}, {"word": "shelter", "pos": "n & vt & vi", "zh": "避难处；庇护；掩蔽", "questions": [{"type": "en2zh", "q": "shelter", "options": ["洪水；水灾", "食物；食品", "避难处；庇护", "暴风；风暴"], "answer": "避难处；庇护"}, {"type": "zh2en", "q": "避难处；庇护", "options": ["flood", "storm", "shelter", "food"], "answer": "shelter"}, {"type": "cloze", "q": "Families without homes were provided with food and ___.", "options": ["flood", "storm", "shelter", "clothes"], "answer": "shelter", "hint": "无家可归的家庭得到了食物和___。"}]}, {"word": "power", "pos": "n", "zh": "电力；力量；权力", "questions": [{"type": "en2zh", "q": "power", "options": ["虚弱；无力", "弱点；缺点", "能源；燃料", "力量；电力；权力"], "answer": "力量；电力；权力"}, {"type": "zh2en", "q": "力量；电力；权力", "options": ["energy", "strength", "weakness", "power"], "answer": "power"}, {"type": "cloze", "q": "The earthquake cut off the ___ supply to the whole city.", "options": ["power", "food", "water", "gas"], "answer": "power", "hint": "地震切断了全城的___供应。"}]}, {"word": "shock", "pos": "n & vt", "zh": "震惊；令人震惊的事；休克", "questions": [{"type": "en2zh", "q": "shock", "options": ["震惊；休克", "悲伤", "愤怒", "恐惧"], "answer": "震惊；休克"}, {"type": "zh2en", "q": "震惊；休克", "options": ["shock", "sadness", "anger", "fear"], "answer": "shock"}, {"type": "cloze", "q": "The news came as a great ___ to everyone in the community.", "options": ["shock", "fear", "anger", "sadness"], "answer": "shock", "hint": "这个消息对社区里的每个人都是不小的___。"}]}, {"word": "effort", "pos": "n", "zh": "努力；尽力", "questions": [{"type": "en2zh", "q": "effort", "options": ["成功；胜利", "失败；倒闭", "努力；尽力", "放弃；抛弃"], "answer": "努力；尽力"}, {"type": "zh2en", "q": "努力；尽力", "options": ["abandon", "effort", "success", "failure"], "answer": "effort"}, {"type": "cloze", "q": "Rescue workers made every ___ to save the trapped miners.", "options": ["mistake", "success", "failure", "effort"], "answer": "effort", "hint": "救援人员尽了最大的___来救助被困矿工。"}]}, {"word": "wisdom", "pos": "n", "zh": "智慧；才智；明智", "questions": [{"type": "en2zh", "q": "wisdom", "options": ["勇气", "力量", "智慧；才智", "愚蠢"], "answer": "智慧；才智"}, {"type": "zh2en", "q": "智慧；才智", "options": ["strength", "foolishness", "wisdom", "courage"], "answer": "wisdom"}, {"type": "cloze", "q": "The old man's ___ is respected by everyone who knows him.", "options": ["foolishness", "weakness", "strength", "wisdom"], "answer": "wisdom", "hint": "这位老人的___受到每个认识他的人的尊敬。"}]}, {"word": "breathe", "pos": "v", "zh": "呼吸；吸气", "questions": [{"type": "en2zh", "q": "breathe", "options": ["拥抱", "奔跑", "呼吸；吸气", "踢打"], "answer": "呼吸；吸气"}, {"type": "zh2en", "q": "呼吸；吸气", "options": ["kick", "run", "hug", "breathe"], "answer": "breathe"}, {"type": "cloze", "q": "The air was so thick with dust that it was hard to ___.", "options": ["kick", "run", "hug", "breathe"], "answer": "breathe", "hint": "空气中灰尘弥漫，连___都困难。"}]}, {"word": "evacuate", "pos": "vt & vi", "zh": "疏散；撤出；撤离", "questions": [{"type": "en2zh", "q": "evacuate", "options": ["疏散；撤离", "建造；修建", "攻击；袭击", "进入；侵入"], "answer": "疏散；撤离"}, {"type": "zh2en", "q": "疏散；撤离", "options": ["attack", "enter", "evacuate", "build"], "answer": "evacuate"}, {"type": "cloze", "q": "The entire population was ordered to ___ before the hurricane hit.", "options": ["build", "enter", "attack", "evacuate"], "answer": "evacuate", "hint": "飓风来临之前，全体居民被命令___。"}]}, {"word": "disaster", "pos": "n", "zh": "灾难；灾害", "questions": [{"type": "en2zh", "q": "disaster", "options": ["机遇；机会", "幸运；好运", "灾难；灾害", "庆祝；庆典"], "answer": "灾难；灾害"}, {"type": "zh2en", "q": "灾难；灾害", "options": ["celebration", "opportunity", "disaster", "fortune"], "answer": "disaster"}, {"type": "cloze", "q": "The earthquake was the worst natural ___ in decades.", "options": ["fortune", "opportunity", "disaster", "celebration"], "answer": "disaster", "hint": "这次地震是几十年来最严重的自然___。"}]}, {"word": "crack", "pos": "n & vi & vt", "zh": "裂纹；裂缝；破裂", "questions": [{"type": "en2zh", "q": "crack", "options": ["光滑；平坦", "关闭；闭合", "全新；崭新", "裂纹；裂缝；破裂"], "answer": "裂纹；裂缝；破裂"}, {"type": "zh2en", "q": "裂纹；裂缝；破裂", "options": ["smooth", "new", "close", "crack"], "answer": "crack"}, {"type": "cloze", "q": "Deep ___ appeared in the ground during the earthquake.", "options": ["walls", "roads", "cracks", "rivers"], "answer": "cracks", "hint": "地震期间地面出现了深深的___。"}]}, {"word": "gas", "pos": "n", "zh": "气体；燃气；汽油", "questions": [{"type": "en2zh", "q": "gas", "options": ["矿物", "气体；燃气；汽油", "固体", "液体"], "answer": "气体；燃气；汽油"}, {"type": "zh2en", "q": "气体；燃气；汽油", "options": ["mineral", "liquid", "solid", "gas"], "answer": "gas"}, {"type": "cloze", "q": "A leak of ___ caused a huge explosion in the factory.", "options": ["water", "liquid", "gas", "solid"], "answer": "gas", "hint": "___泄漏导致工厂发生了大爆炸。"}]}, {"word": "percent", "pos": "n & adj", "zh": "百分之……", "questions": [{"type": "en2zh", "q": "percent", "options": ["百分之……", "千", "百", "十"], "answer": "百分之……"}, {"type": "zh2en", "q": "百分之……", "options": ["percent", "thousand", "ten", "hundred"], "answer": "percent"}, {"type": "cloze", "q": "Nearly 90 ___ of the buildings in the town were destroyed.", "options": ["number", "percent", "amount", "part"], "answer": "percent", "hint": "镇子上近90___的建筑被摧毁了。"}]}, {"word": "brick", "pos": "n", "zh": "砖；砖块", "questions": [{"type": "en2zh", "q": "brick", "options": ["木材", "钢铁", "砖；砖块", "玻璃"], "answer": "砖；砖块"}, {"type": "zh2en", "q": "砖；砖块", "options": ["wood", "steel", "brick", "glass"], "answer": "brick"}, {"type": "cloze", "q": "The house was made of ___ and had a red tile roof.", "options": ["steel", "wood", "glass", "brick"], "answer": "brick", "hint": "这座房子由___建成，有着红色的瓦屋顶。"}]}, {"word": "metal", "pos": "n", "zh": "金属", "questions": [{"type": "en2zh", "q": "metal", "options": ["橡胶", "金属", "塑料", "陶瓷"], "answer": "金属"}, {"type": "zh2en", "q": "金属", "options": ["plastic", "clay", "metal", "rubber"], "answer": "metal"}, {"type": "cloze", "q": "The frame of the building was made of strong ___.", "options": ["metal", "clay", "rubber", "plastic"], "answer": "metal", "hint": "建筑框架是由坚固的___制成的。"}]}, {"word": "tap", "pos": "vt & vi & n", "zh": "轻叩；轻敲；轻拍；水龙头", "questions": [{"type": "en2zh", "q": "tap", "options": ["重击；捶打", "包裹；包装", "推搡；推开", "轻敲；水龙头"], "answer": "轻敲；水龙头"}, {"type": "zh2en", "q": "轻敲；水龙头", "options": ["wrap", "beat", "tap", "push"], "answer": "tap"}, {"type": "cloze", "q": "He ___ on the door but nobody answered.", "options": ["beat", "tapped", "wrapped", "pushed"], "answer": "tapped", "hint": "他___门，但没人应答。"}]}, {"word": "whistle", "pos": "vi & vt & n", "zh": "吹口哨；哨子声；呼啸声", "questions": [{"type": "en2zh", "q": "whistle", "options": ["吹口哨；哨子声", "说话；讲", "唱歌；唱", "喊叫；呼喊"], "answer": "吹口哨；哨子声"}, {"type": "zh2en", "q": "吹口哨；哨子声", "options": ["whistle", "shout", "sing", "speak"], "answer": "whistle"}, {"type": "cloze", "q": "The wind ___ through the trees all night long.", "options": ["shouted", "spoke", "sang", "whistled"], "answer": "whistled", "hint": "风在林间___了一整夜。"}]}, {"word": "aid", "pos": "n & vt", "zh": "援助；帮助；救援物资", "questions": [{"type": "en2zh", "q": "aid", "options": ["阻碍；妨碍", "援助；帮助", "距离；隔开", "危害；伤害"], "answer": "援助；帮助"}, {"type": "zh2en", "q": "援助；帮助", "options": ["hinder", "distance", "harm", "aid"], "answer": "aid"}, {"type": "cloze", "q": "International ___ was sent to the region after the disaster.", "options": ["harm", "hinder", "distance", "aid"], "answer": "aid", "hint": "灾难发生后，国际___被送往该地区。"}]}], "u5": [{"word": "despite", "pos": "prep", "zh": "即使；尽管", "questions": [{"type": "en2zh", "q": "despite", "options": ["即使；尽管", "因为；由于", "关于；至于", "除非；如果不"], "answer": "即使；尽管"}, {"type": "zh2en", "q": "即使；尽管", "options": ["unless", "despite", "because", "regarding"], "answer": "despite"}, {"type": "cloze", "q": "China is widely known for its ancient civilisation, ___ the many ups and downs in its history.", "options": ["during", "despite", "because", "through"], "answer": "despite", "hint": "___历史上多次兴衰，中国仍以其古老文明而闻名。"}]}, {"word": "struggle", "pos": "n.&vi", "zh": "斗争；奋斗；搏斗", "questions": [{"type": "en2zh", "q": "struggle", "options": ["斗争；奋斗；搏斗", "成功；胜利", "休息；放松", "放弃；投降"], "answer": "斗争；奋斗；搏斗"}, {"type": "zh2en", "q": "斗争；奋斗；搏斗", "options": ["struggle", "surrender", "succeed", "relax"], "answer": "struggle"}, {"type": "cloze", "q": "The young athlete continued to ___ despite the pain in his leg.", "options": ["surrender", "succeed", "struggle", "celebrate"], "answer": "struggle", "hint": "尽管腿伤疼痛，这位年轻运动员仍继续___。"}]}, {"word": "attitude", "pos": "n", "zh": "态度；看法", "questions": [{"type": "en2zh", "q": "attitude", "options": ["能力；才能", "性格；品质", "态度；看法", "行为；举止"], "answer": "态度；看法"}, {"type": "zh2en", "q": "态度；看法", "options": ["ability", "attitude", "behavior", "character"], "answer": "attitude"}, {"type": "cloze", "q": "A positive ___ towards learning can greatly improve your academic performance.", "options": ["method", "habit", "attitude", "skill"], "answer": "attitude", "hint": "对学习持积极___可以大大提高你的学业成绩。"}]}, {"word": "means", "pos": "n", "zh": "方式；方法；途径", "questions": [{"type": "en2zh", "q": "means", "options": ["方式；方法；途径", "计划；打算", "意义；含义", "平均数；中介"], "answer": "方式；方法；途径"}, {"type": "zh2en", "q": "方式；方法；途径", "options": ["means", "meaning", "intention", "medium"], "answer": "means"}, {"type": "cloze", "q": "We need to find an efficient ___ of transporting goods to the disaster area.", "options": ["result", "means", "reason", "chance"], "answer": "means", "hint": "我们需要找到一种高效的___把物资运送到灾区。"}]}, {"word": "regard", "pos": "n.&vt", "zh": "尊重；关注；视为", "questions": [{"type": "en2zh", "q": "regard", "options": ["回忆；回想", "奖励；奖赏", "保护；保存", "尊重；关注；视为"], "answer": "尊重；关注；视为"}, {"type": "zh2en", "q": "尊重；关注；视为", "options": ["regard", "reward", "recall", "preserve"], "answer": "regard"}, {"type": "cloze", "q": "The old professor is held in high ___ by all his students.", "options": ["regard", "praise", "honor", "respect"], "answer": "regard", "hint": "这位老教授受到了所有学生的高度___。"}]}, {"word": "character", "pos": "n", "zh": "文字；符号；角色；品质", "questions": [{"type": "en2zh", "q": "character", "options": ["人物；知名人士", "特点；特征", "性格；个性", "文字；符号；角色；品质"], "answer": "文字；符号；角色；品质"}, {"type": "zh2en", "q": "文字；符号；角色；品质", "options": ["personality", "character", "feature", "celebrity"], "answer": "character"}, {"type": "cloze", "q": "Chinese ___ are a unique and important part of the world's writing systems.", "options": ["letters", "words", "signs", "characters"], "answer": "characters", "hint": "中国___是世界书写体系中独特而重要的一部分。"}]}, {"word": "appreciate", "pos": "vt", "zh": "欣赏；重视；感激", "questions": [{"type": "en2zh", "q": "appreciate", "options": ["承认；认可", "欣赏；重视；感激", "评估；评价", "理解；领会"], "answer": "欣赏；重视；感激"}, {"type": "zh2en", "q": "欣赏；重视；感激", "options": ["evaluate", "appreciate", "understand", "acknowledge"], "answer": "appreciate"}, {"type": "cloze", "q": "I would ___ it if you could send me the document by Friday.", "options": ["suggest", "prefer", "expect", "appreciate"], "answer": "appreciate", "hint": "如果你能在周五前把文件发给我，我将___。"}]}, {"word": "specific", "pos": "adj", "zh": "特定的；明确的；具体的", "questions": [{"type": "en2zh", "q": "specific", "options": ["特定的；明确的；具体的", "一般的；普遍的", "含糊的；模糊的", "抽象的；理论上的"], "answer": "特定的；明确的；具体的"}, {"type": "zh2en", "q": "特定的；明确的；具体的", "options": ["general", "abstract", "specific", "vague"], "answer": "specific"}, {"type": "cloze", "q": "The teacher gave us very ___ instructions on how to complete the project.", "options": ["quick", "simple", "specific", "easy"], "answer": "specific", "hint": "老师给了我们非常___的指导，告诉我们如何完成这个项目。"}]}, {"word": "demand", "pos": "n.&vt", "zh": "要求；需求；强烈要求", "questions": [{"type": "en2zh", "q": "demand", "options": ["请求；恳求", "命令；指令", "要求；需求；强烈要求", "供应；供给"], "answer": "要求；需求；强烈要求"}, {"type": "zh2en", "q": "要求；需求；强烈要求", "options": ["supply", "order", "beg", "demand"], "answer": "demand"}, {"type": "cloze", "q": "The workers are ___ better working conditions and higher pay.", "options": ["offering", "accepting", "demanding", "providing"], "answer": "demanding", "hint": "工人们___更好的工作条件和更高的工资。"}]}, {"word": "relate", "pos": "vt", "zh": "联系；讲述", "questions": [{"type": "en2zh", "q": "relate", "options": ["连接；结合", "联系；讲述", "分离；分开", "比较；对比"], "answer": "联系；讲述"}, {"type": "zh2en", "q": "联系；讲述", "options": ["connect", "compare", "separate", "relate"], "answer": "relate"}, {"type": "cloze", "q": "Some people find it hard to ___ to others who have had very different life experiences.", "options": ["relate", "reply", "reduce", "refer"], "answer": "relate", "hint": "有些人觉得很难与生活经历截然不同的人产生___。"}]}, {"word": "major", "pos": "adj&n&vi", "zh": "主要的；主修；主修课程", "questions": [{"type": "en2zh", "q": "major", "options": ["次要的；辅修", "主要的；主修；主修课程", "专业的；职业的", "普通的；一般的"], "answer": "主要的；主修；主修课程"}, {"type": "zh2en", "q": "主要的；主修；主修课程", "options": ["professional", "minor", "major", "ordinary"], "answer": "major"}, {"type": "cloze", "q": "He decided to ___ in computer science because of his interest in technology.", "options": ["major", "learn", "focus", "study"], "answer": "major", "hint": "由于对科技的兴趣，他决定___计算机科学专业。"}]}, {"word": "global", "pos": "adj", "zh": "全球的；全世界的", "questions": [{"type": "en2zh", "q": "global", "options": ["全球的；全世界的", "国家的；民族的", "本地的；当地的", "区域的；地区的"], "answer": "全球的；全世界的"}, {"type": "zh2en", "q": "全球的；全世界的", "options": ["regional", "national", "global", "local"], "answer": "global"}, {"type": "cloze", "q": "Climate change is a ___ problem that requires cooperation from all countries.", "options": ["global", "traditional", "temporary", "local"], "answer": "global", "hint": "气候变化是一个需要所有国家合作的___问题。"}]}, {"word": "variety", "pos": "n", "zh": "多样化；种类", "questions": [{"type": "en2zh", "q": "variety", "options": ["相似性；相同", "单一性；单调", "多样化；种类", "普遍性"], "answer": "多样化；种类"}, {"type": "zh2en", "q": "多样化；种类", "options": ["similarity", "uniformity", "variety", "universality"], "answer": "variety"}, {"type": "cloze", "q": "The supermarket sells a wide ___ of fresh fruits and vegetables.", "options": ["difficulty", "distance", "direction", "variety"], "answer": "variety", "hint": "这家超市出售种类多样化的新鲜水果和蔬菜。"}]}, {"word": "description", "pos": "n", "zh": "描写；形容", "questions": [{"type": "en2zh", "q": "description", "options": ["解释；说明", "分析；研究", "比较；对照", "描写；形容"], "answer": "描写；形容"}, {"type": "zh2en", "q": "描写；形容", "options": ["explanation", "analysis", "description", "comparison"], "answer": "description"}, {"type": "cloze", "q": "The witness gave a detailed ___ of the suspect to the police.", "options": ["reason", "story", "description", "report"], "answer": "description", "hint": "目击者向警方提供了对嫌疑人的详细___。"}]}, {"word": "refer", "pos": "vi", "zh": "提到；参考；查阅", "questions": [{"type": "en2zh", "q": "refer", "options": ["拒绝；否定", "忽视；忽略", "接受；同意", "提到；参考；查阅"], "answer": "提到；参考；查阅"}, {"type": "zh2en", "q": "提到；参考；查阅", "options": ["refer", "refuse", "accept", "ignore"], "answer": "refer"}, {"type": "cloze", "q": "If you don't know the meaning of a word, you can ___ to a dictionary.", "options": ["see", "find", "look", "refer"], "answer": "refer", "hint": "如果你不知道一个词的意思，可以___词典。"}]}, {"word": "equal", "pos": "adj", "zh": "相同的；同等的；平等的", "questions": [{"type": "en2zh", "q": "equal", "options": ["相似的；类似的", "不同的；相异的", "独特的；唯一的", "相同的；同等的；平等的"], "answer": "相同的；同等的；平等的"}, {"type": "zh2en", "q": "相同的；同等的；平等的", "options": ["equal", "similar", "unique", "different"], "answer": "equal"}, {"type": "cloze", "q": "All people are created ___ and should have the same opportunities in life.", "options": ["same", "fair", "equal", "alike"], "answer": "equal", "hint": "人生而___，在生活中应拥有同等的机会。"}]}, {"word": "system", "pos": "n", "zh": "体系；制度；系统", "questions": [{"type": "en2zh", "q": "system", "options": ["框架；结构", "体系；制度；系统", "机构；组织", "方法；步骤"], "answer": "体系；制度；系统"}, {"type": "zh2en", "q": "体系；制度；系统", "options": ["system", "institution", "framework", "method"], "answer": "system"}, {"type": "cloze", "q": "The educational ___ in this country has undergone many important reforms.", "options": ["rule", "office", "system", "plan"], "answer": "system", "hint": "这个国家的教育___经历了许多重要的改革。"}]}, {"word": "native", "pos": "adj&n", "zh": "本地的；本地人；本国的", "questions": [{"type": "en2zh", "q": "native", "options": ["本地的；本地人；本国的", "当地的；居民", "外国的；外国人", "陌生的；陌生人"], "answer": "本地的；本地人；本国的"}, {"type": "zh2en", "q": "本地的；本地人；本国的", "options": ["native", "strange", "local", "foreign"], "answer": "native"}, {"type": "cloze", "q": "She speaks English so well that people think she is a ___ speaker.", "options": ["foreign", "local", "native", "second"], "answer": "native", "hint": "她英语说得非常好，人们都以为她是___语者。"}]}, {"word": "factor", "pos": "n", "zh": "因素；要素", "questions": [{"type": "en2zh", "q": "factor", "options": ["影响；作用", "结果；后果", "原因；起因", "因素；要素"], "answer": "因素；要素"}, {"type": "zh2en", "q": "因素；要素", "options": ["result", "cause", "factor", "effect"], "answer": "factor"}, {"type": "cloze", "q": "Hard work was the key ___ in her success as a writer.", "options": ["choice", "reason", "factor", "excuse"], "answer": "factor", "hint": "勤奋是她成为作家成功的关键___。"}]}, {"word": "base", "pos": "vt&n", "zh": "以...为基础；基础；基地", "questions": [{"type": "en2zh", "q": "base", "options": ["以...为基础；基础；基地", "顶部；顶端", "边缘；边界", "中心；核心"], "answer": "以...为基础；基础；基地"}, {"type": "zh2en", "q": "以...为基础；基础；基地", "options": ["edge", "base", "center", "top"], "answer": "base"}, {"type": "cloze", "q": "The film is ___ on a true story that happened in the 1980s.", "options": ["developed", "made", "built", "based"], "answer": "based", "hint": "这部电影___一个真实发生在20世纪80年代的故事。"}]}, {"word": "affair", "pos": "n", "zh": "公共事务；事件；关系", "questions": [{"type": "en2zh", "q": "affair", "options": ["商业；交易", "公共事务；事件；关系", "个人隐私；秘密", "职业；事业"], "answer": "公共事务；事件；关系"}, {"type": "zh2en", "q": "公共事务；事件；关系", "options": ["secret", "business", "affair", "career"], "answer": "affair"}, {"type": "cloze", "q": "The minister is responsible for foreign ___ and international relations.", "options": ["actions", "secrets", "trades", "affairs"], "answer": "affairs", "hint": "这位部长负责外交___和国际关系。"}]}, {"word": "vocabulary", "pos": "n", "zh": "词汇", "questions": [{"type": "en2zh", "q": "vocabulary", "options": ["发音", "词汇", "语法", "书写"], "answer": "词汇"}, {"type": "zh2en", "q": "词汇", "options": ["grammar", "pronunciation", "vocabulary", "handwriting"], "answer": "vocabulary"}, {"type": "cloze", "q": "Reading extensively is the best way to build a rich ___ in a foreign language.", "options": ["vocabulary", "sense", "habit", "skill"], "answer": "vocabulary", "hint": "广泛阅读是构建丰富外语___的最佳方法。"}]}, {"word": "symbol", "pos": "n", "zh": "符号；象征", "questions": [{"type": "en2zh", "q": "symbol", "options": ["符号；象征", "信号；暗号", "标志；标记", "样品；范例"], "answer": "符号；象征"}, {"type": "zh2en", "q": "符号；象征", "options": ["sample", "mark", "signal", "symbol"], "answer": "symbol"}, {"type": "cloze", "q": "The dove is a universal ___ of peace and hope for the future.", "options": ["symbol", "sign", "signal", "mark"], "answer": "symbol", "hint": "鸽子是世界和平与未来希望的___。"}]}, {"word": "date back", "pos": "phrase", "zh": "追溯到", "questions": [{"type": "en2zh", "q": "date back", "options": ["结束于；终止于", "起源于；开始于", "追溯到", "跨越；持续"], "answer": "追溯到"}, {"type": "zh2en", "q": "追溯到", "options": ["originate from", "date back", "last for", "end with"], "answer": "date back"}, {"type": "cloze", "q": "This ancient temple ___ to the Tang Dynasty, almost 1,400 years ago.", "options": ["belongs to", "comes from", "returns to", "dates back"], "answer": "dates back", "hint": "这座古寺___唐代，距今近1400年。"}]}, {"word": "ups and downs", "pos": "phrase", "zh": "浮沉；兴衰；荣辱", "questions": [{"type": "en2zh", "q": "ups and downs", "options": ["成功与失败", "起起落落；波动", "浮沉；兴衰；荣辱", "上下；高低"], "answer": "浮沉；兴衰；荣辱"}, {"type": "zh2en", "q": "浮沉；兴衰；荣辱", "options": ["success and failure", "highs and lows", "rises and falls", "ups and downs"], "answer": "ups and downs"}, {"type": "cloze", "q": "Life is full of ___, but we must learn to face both with courage and calm.", "options": ["goods and bads", "ups and downs", "lefts and rights", "pros and cons"], "answer": "ups and downs", "hint": "人生充满___，但我们必须学会勇敢平静地面对两者。"}]}]};
+// === 状态 ===
+let currentUnitId = null;
+let currentPool = null;
+let queue = [];
+let qIndex = 0;
+let answers = {};
+let wordStatus = {};
+let locked = false;
+let totalFirstAttempts = 0;
+let correctFirstAttempts = 0;
+let reviewInsertedCount = 0;
+const REVIEW_INSERT_LIMIT = 15;
+
+const QTYPE_LABEL = {
+  'en2zh': '看英文 · 选释义',
+  'zh2en': '看中文 · 选单词',
+  'cloze': '语境填空'
+};
+
+const ENCOURAGE_MSGS = [
+  '已掌握 5 个，状态在线',
+  '已掌握 10 个，过半啦',
+  '已掌握 15 个，冲刺阶段',
+  '已掌握 20 个，再加把劲'
+];
+const ENCOURAGE_SHOWN = new Set();
+
+// === localStorage ===
+const LS_NAME = 'gusir_student_name';
+const LS_RECORDS = 'gusir_unit_records';  // {unitId: {bestMastered, bestAccuracy, lastDate}}
+
+function loadName() {
+  return localStorage.getItem(LS_NAME) || '';
+}
+function saveName(name) {
+  localStorage.setItem(LS_NAME, name);
+}
+function loadRecords() {
+  try { return JSON.parse(localStorage.getItem(LS_RECORDS) || '{}'); }
+  catch(e) { return {}; }
+}
+function saveRecord(unitId, mastered, accuracy) {
+  const records = loadRecords();
+  const prev = records[unitId] || {bestMastered: 0, bestAccuracy: 0};
+  const better = mastered > prev.bestMastered ||
+                 (mastered === prev.bestMastered && accuracy > prev.bestAccuracy);
+  if (better) {
+    records[unitId] = {
+      bestMastered: mastered,
+      bestAccuracy: accuracy,
+      lastDate: new Date().toISOString().slice(0,10)
+    };
+    localStorage.setItem(LS_RECORDS, JSON.stringify(records));
+  }
+}
+
+// === 工具 ===
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+function formatDate() {
+  const d = new Date();
+  return d.getFullYear() + '.' + String(d.getMonth()+1).padStart(2,'0') + '.' + String(d.getDate()).padStart(2,'0');
+}
+
+// === 主页渲染 ===
+function renderHome() {
+  // 恢复姓名
+  const input = document.getElementById('name-input');
+  input.value = loadName();
+  input.addEventListener('change', () => saveName(input.value.trim()));
+  input.addEventListener('blur', () => saveName(input.value.trim()));
+
+  const records = loadRecords();
+  const listEl = document.getElementById('unit-list');
+  listEl.innerHTML = '';
+  UNITS.forEach(u => {
+    const rec = records[u.id];
+    const card = document.createElement('div');
+    card.className = 'unit-card' + (u.available ? '' : ' disabled');
+
+    let statusHtml = '';
+    if (!u.available) {
+      statusHtml = '<span class="pending">即将上线</span>';
+    } else if (rec) {
+      statusHtml = '<span class="best">' + rec.bestMastered + '/' + u.count + '</span><div style="font-size:11px;color:var(--text-lighter);margin-top:2px;">' + rec.bestAccuracy + '% · ' + rec.lastDate + '</div>';
+    } else {
+      statusHtml = '<span class="pending">未练习</span>';
+    }
+
+    const iconText = u.id === 'welcome' ? 'W' : u.title.replace(/[^0-9]/g, '') || '·';
+    const countText = u.available ? u.count + '词' : '';
+
+    card.innerHTML =
+      '<div class="unit-icon">' + iconText + '</div>' +
+      '<div class="unit-info">' +
+        '<div class="unit-title-row"><span class="unit-title">' + u.title + '</span>' +
+        (countText ? '<span class="unit-count">' + countText + '</span>' : '') + '</div>' +
+        '<div class="unit-subtitle">' + u.subtitle + '</div>' +
+      '</div>' +
+      '<div class="unit-status">' + statusHtml + '</div>' +
+      (u.available ? '<span class="arrow-right">›</span>' : '');
+
+    if (u.available) {
+      card.onclick = () => startUnit(u.id);
+    }
+    listEl.appendChild(card);
+  });
+}
+
+// === 启动单元 ===
+function startUnit(unitId) {
+  const pool = POOLS[unitId];
+  if (!pool) { alert('该单元正在准备中'); return; }
+  const unit = UNITS.find(u => u.id === unitId);
+
+  currentUnitId = unitId;
+  currentPool = pool;
+
+  document.getElementById('quiz-title-text').textContent = unit.title + ' · ' + unit.subtitle.split('·')[0].trim();
+  document.getElementById('total-words').textContent = pool.length;
+
+  startQuizWith(pool);
+}
+
+// === 题目队列构建 ===
+function buildQuestions(wordPool) {
+  let qs = [];
+  wordPool.forEach(w => {
+    w.questions.forEach(q => {
+      qs.push({
+        wordKey: w.word,
+        wordZh: w.zh,
+        type: q.type,
+        q: q.q,
+        options: shuffle(q.options),
+        answer: q.answer,
+        hint: q.hint || '',
+        isReview: false
+      });
+    });
+  });
+
+  let result;
+  for (let tries = 0; tries < 50; tries++) {
+    result = shuffle(qs);
+    let bad = false;
+    for (let i = 1; i < result.length; i++) {
+      if (result[i].wordKey === result[i-1].wordKey) { bad = true; break; }
+    }
+    if (!bad) break;
+  }
+  for (let i = 1; i < result.length; i++) {
+    if (result[i].wordKey === result[i-1].wordKey) {
+      for (let j = i + 1; j < result.length; j++) {
+        if (result[j].wordKey !== result[i-1].wordKey &&
+            (i+1 >= result.length || result[j].wordKey !== result[i+1].wordKey)) {
+          [result[i], result[j]] = [result[j], result[i]];
+          break;
+        }
+      }
+    }
+  }
+  return result;
+}
+
+// === 收集进度点 ===
+function initCollectDots(wordPool) {
+  const dotsEl = document.getElementById('collect-dots');
+  dotsEl.innerHTML = '';
+  // 根据词数动态计算列数(每行最多25列)
+  const n = wordPool.length;
+  dotsEl.style.gridTemplateColumns = 'repeat(' + n + ', 1fr)';
+  wordStatus = {};
+  wordPool.forEach(w => {
+    wordStatus[w.word] = 'pending';
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.dataset.word = w.word;
+    dot.title = w.word + ' · ' + w.zh;
+    dotsEl.appendChild(dot);
+  });
+}
+
+function updateDot(wordKey) {
+  const dots = document.querySelectorAll('#collect-dots .dot');
+  dots.forEach(d => {
+    d.classList.remove('current', 'mastered', 'failed');
+    const w = d.dataset.word;
+    if (w === wordKey) d.classList.add('current');
+    else if (wordStatus[w] === 'mastered') d.classList.add('mastered');
+    else if (wordStatus[w] === 'failed') d.classList.add('failed');
+  });
+  const masteredCount = Object.values(wordStatus).filter(s => s === 'mastered').length;
+  document.getElementById('mastered-num').textContent = masteredCount;
+}
+
+function startQuizWith(wordPool) {
+  queue = buildQuestions(wordPool);
+  qIndex = 0;
+  answers = {};
+  totalFirstAttempts = 0;
+  correctFirstAttempts = 0;
+  reviewInsertedCount = 0;
+  ENCOURAGE_SHOWN.clear();
+
+  document.getElementById('home-page').classList.add('hidden');
+  document.getElementById('result-page').classList.remove('active');
+  document.getElementById('quiz-page').classList.add('active');
+
+  initCollectDots(wordPool);
+  renderQuestion();
+}
+
+// === 渲染题目 ===
+function renderQuestion() {
+  if (qIndex >= queue.length) { finishQuiz(); return; }
+  const q = queue[qIndex];
+  locked = false;
+
+  updateDot(q.wordKey);
+
+  document.getElementById('q-counter').textContent = '第 ' + (qIndex + 1) + ' 题';
+  document.getElementById('q-remaining').textContent = '还剩 ' + (queue.length - qIndex - 1) + ' 题';
+
+  const tag = document.getElementById('qtype-tag');
+  tag.textContent = QTYPE_LABEL[q.type];
+  tag.className = 'qtype-tag qtype-' + q.type;
+
+  document.getElementById('review-badge').style.display = q.isReview ? 'inline-block' : 'none';
+
+  const promptEl = document.getElementById('qprompt');
+  if (q.type === 'en2zh') promptEl.textContent = '下列单词的中文意思是?';
+  else if (q.type === 'zh2en') promptEl.textContent = '下列释义对应的英文单词是?';
+  else promptEl.textContent = '选择最合适的单词填入空白处';
+
+  const textEl = document.getElementById('qtext');
+  textEl.className = 'qtext';
+  if (q.type === 'cloze') {
+    textEl.classList.add('cloze');
+    textEl.innerHTML = q.q.replace(/___+/g, '<span class="blank"></span>');
+  } else {
+    textEl.textContent = q.q;
+  }
+
+  const hintWrap = document.getElementById('qhint-wrap');
+  const hintContent = document.getElementById('qhint-content');
+  const hintToggle = document.getElementById('qhint-toggle');
+  const hintLabel = document.getElementById('qhint-label');
+  if (q.type === 'cloze' && q.hint) {
+    hintContent.textContent = q.hint;
+    hintContent.classList.remove('show');
+    hintToggle.classList.remove('open');
+    hintLabel.textContent = '看中文翻译';
+    hintWrap.style.display = 'block';
+  } else {
+    hintWrap.style.display = 'none';
+  }
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  q.options.forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = '<span class="option-key">' + (idx+1) + '</span><span class="option-text">' + escapeHtml(opt) + '</span>';
+    btn.onclick = () => selectOption(btn, opt, q);
+    btn.dataset.value = opt;
+    btn.dataset.idx = idx;
+    optsEl.appendChild(btn);
+  });
+
+  window.scrollTo({top: 0, behavior: 'instant'});
+}
+
+function toggleHint() {
+  const content = document.getElementById('qhint-content');
+  const toggle = document.getElementById('qhint-toggle');
+  const label = document.getElementById('qhint-label');
+  if (content.classList.contains('show')) {
+    content.classList.remove('show');
+    toggle.classList.remove('open');
+    label.textContent = '看中文翻译';
+  } else {
+    content.classList.add('show');
+    toggle.classList.add('open');
+    label.textContent = '中文翻译';
+  }
+}
+
+// === 答题 ===
+function selectOption(btnEl, choice, q) {
+  if (locked) return;
+  locked = true;
+
+  const isCorrect = (choice === q.answer);
+
+  if (!q.isReview) {
+    if (!answers[q.wordKey]) answers[q.wordKey] = {};
+    if (!(q.type in answers[q.wordKey])) {
+      answers[q.wordKey][q.type] = isCorrect;
+      totalFirstAttempts++;
+      if (isCorrect) correctFirstAttempts++;
+
+      const a = answers[q.wordKey];
+      if (a.en2zh !== undefined && a.zh2en !== undefined && a.cloze !== undefined) {
+        if (a.en2zh && a.zh2en && a.cloze) wordStatus[q.wordKey] = 'mastered';
+        else wordStatus[q.wordKey] = 'failed';
+      }
+    }
+  }
+
+  document.querySelectorAll('.option').forEach(b => {
+    b.classList.add('locked');
+    if (b.dataset.value === q.answer) b.classList.add('correct');
+    else if (b === btnEl && !isCorrect) b.classList.add('wrong');
+    else b.classList.add('dim');
+  });
+
+  if (!isCorrect && q.type === 'cloze' && q.hint) {
+    const hintContent = document.getElementById('qhint-content');
+    const hintToggle = document.getElementById('qhint-toggle');
+    const hintLabel = document.getElementById('qhint-label');
+    if (!hintContent.classList.contains('show')) {
+      hintContent.classList.add('show');
+      hintToggle.classList.add('open');
+      hintLabel.textContent = '中文翻译';
+    }
+  }
+
+  if (!isCorrect && !q.isReview && reviewInsertedCount < REVIEW_INSERT_LIMIT) {
+    const reviewQ = Object.assign({}, q, { isReview: true, options: shuffle(q.options) });
+    const insertOffset = 5 + Math.floor(Math.random() * 4);
+    const insertPos = Math.min(qIndex + insertOffset, queue.length);
+    queue.splice(insertPos, 0, reviewQ);
+    reviewInsertedCount++;
+  }
+
+  const masteredCount = Object.values(wordStatus).filter(s => s === 'mastered').length;
+  [5, 10, 15, 20].forEach((m, idx) => {
+    if (masteredCount === m && !ENCOURAGE_SHOWN.has(m)) {
+      ENCOURAGE_SHOWN.add(m);
+      showToast(ENCOURAGE_MSGS[idx]);
+    }
+  });
+
+  updateDot(q.wordKey);
+
+  const delay = isCorrect ? 900 : 1800;
+  setTimeout(() => {
+    qIndex++;
+    renderQuestion();
+  }, delay);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+// === 完成页 ===
+function finishQuiz() {
+  document.getElementById('quiz-page').classList.remove('active');
+  document.getElementById('result-page').classList.add('active');
+
+  const accuracy = totalFirstAttempts > 0 ? Math.round(correctFirstAttempts / totalFirstAttempts * 100) : 0;
+  const mastered = [];
+  const todo = [];
+  currentPool.forEach(w => {
+    const a = answers[w.word] || {};
+    if (a.en2zh && a.zh2en && a.cloze) mastered.push(w);
+    else todo.push(w);
+  });
+
+  // 保存记录
+  saveRecord(currentUnitId, mastered.length, accuracy);
+
+  // 填充成绩单
+  const unit = UNITS.find(u => u.id === currentUnitId);
+  const name = (loadName() || '').trim() || '同学';
+  document.getElementById('report-date').textContent = formatDate();
+  document.getElementById('report-title').textContent = unit.title;
+  document.getElementById('report-name').textContent = name;
+  document.getElementById('report-unit-name').textContent = unit.subtitle.split('·')[0].trim();
+  document.getElementById('score-accuracy').textContent = accuracy;
+  document.getElementById('score-mastered').textContent = mastered.length;
+  document.getElementById('score-total').textContent = currentPool.length;
+  document.getElementById('score-todo').textContent = todo.length;
+
+  // 评级
+  const gradeEl = document.getElementById('report-grade');
+  const masterRate = mastered.length / currentPool.length;
+  if (masterRate >= 0.9) {
+    gradeEl.textContent = '表现优秀 · 单元过关';
+    gradeEl.className = 'report-grade excellent';
+  } else if (masterRate >= 0.7) {
+    gradeEl.textContent = '表现良好 · 继续巩固';
+    gradeEl.className = 'report-grade good';
+  } else {
+    gradeEl.textContent = '需要加强 · 建议复练';
+    gradeEl.className = 'report-grade needwork';
+  }
+
+  // 待巩固单词标签云
+  const todoDisplay = document.getElementById('todo-words-display');
+  if (todo.length === 0) {
+    todoDisplay.innerHTML = '<div class="todo-empty">全部单词都已掌握 🎉</div>';
+    document.getElementById('todo-detail-toggle').style.display = 'none';
+    document.getElementById('retry-todo-btn').style.display = 'none';
+  } else {
+    todoDisplay.innerHTML = '<div class="todo-words">' +
+      todo.map(w => '<span class="todo-word">' + escapeHtml(w.word) + '</span>').join('') +
+      '</div>';
+    document.getElementById('todo-detail-toggle').style.display = '';
+    document.getElementById('retry-todo-btn').style.display = '';
+    // 详细列表
+    document.getElementById('todo-detail').innerHTML = todo.map(w =>
+      '<div class="todo-detail-item"><span class="todo-detail-word">' + escapeHtml(w.word) +
+      '</span><span class="todo-detail-zh">' + escapeHtml(w.zh) + '</span></div>'
+    ).join('');
+  }
+
+  window.scrollTo({top: 0, behavior: 'instant'});
+}
+
+function toggleTodoDetail() {
+  const detail = document.getElementById('todo-detail');
+  const btn = document.getElementById('todo-detail-toggle');
+  if (detail.classList.contains('show')) {
+    detail.classList.remove('show');
+    btn.textContent = '查看待巩固单词详情 ▼';
+  } else {
+    detail.classList.add('show');
+    btn.textContent = '收起 ▲';
+  }
+}
+
+// === 截图 ===
+// 判断是否手机端
+function isMobile() {
+  return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|micromessenger/i.test(navigator.userAgent);
+}
+
+function saveReport() {
+  const card = document.getElementById('report-card');
+  showToast('生成中...');
+  setTimeout(() => {
+    html2canvas(card, {
+      backgroundColor: '#ffffff',
+      scale: 2,
+      logging: false
+    }).then(canvas => {
+      const mobile = isMobile();
+      if (mobile) {
+        // 手机端: 显示图片让用户长按保存(微信/Safari/Chrome都支持)
+        showImgModal(canvas.toDataURL('image/png'),
+          '<strong>长按图片</strong>,选择"保存到相册"或"保存图片"');
+      } else {
+        // 电脑端: 用blob下载,避免Windows安全策略拦截
+        const name = (loadName() || '').trim() || '学生';
+        const unit = UNITS.find(u => u.id === currentUnitId);
+        const filename = name + '_' + unit.title.replace(/\s/g, '') + '_' + formatDate() + '.png';
+
+        canvas.toBlob(blob => {
+          if (!blob) {
+            // toBlob失败的兜底,显示预览
+            showImgModal(canvas.toDataURL('image/png'),
+              '请<strong>右键图片</strong>选择"图片另存为"保存');
+            return;
+          }
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.download = filename;
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast('已下载到本地');
+        }, 'image/png');
+      }
+    }).catch(err => {
+      console.error(err);
+      showToast('保存失败,请手动截屏代替');
+    });
+  }, 200);
+}
+
+function showImgModal(dataUrl, tipHtml) {
+  document.getElementById('img-modal-pic').src = dataUrl;
+  document.getElementById('img-modal-tip').innerHTML = tipHtml;
+  document.getElementById('img-modal').classList.add('show');
+  // 禁止背景滚动
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImgModal(e) {
+  // 点击图片本身不关闭(让用户能长按), 只有点击背景或关闭按钮才关
+  if (e && e.target.tagName === 'IMG') return;
+  document.getElementById('img-modal').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// === 复制文字总结 ===
+function copyTextReport() {
+  const unit = UNITS.find(u => u.id === currentUnitId);
+  const name = (loadName() || '').trim() || '同学';
+  const accuracy = totalFirstAttempts > 0 ? Math.round(correctFirstAttempts / totalFirstAttempts * 100) : 0;
+  const todo = currentPool.filter(w => {
+    const a = answers[w.word] || {};
+    return !(a.en2zh && a.zh2en && a.cloze);
+  });
+  const mastered = currentPool.length - todo.length;
+
+  let text = '【单元复习报告】\n';
+  text += '学生：' + name + '\n';
+  text += '单元：必修一 ' + unit.title + ' · ' + unit.subtitle.split('·')[0].trim() + '\n';
+  text += '准确率：' + accuracy + '%\n';
+  text += '已掌握：' + mastered + ' / ' + currentPool.length + '\n';
+  if (todo.length > 0) {
+    text += '待巩固：' + todo.map(w => w.word).join(', ') + '\n';
+  } else {
+    text += '全部掌握 🎉\n';
+  }
+  text += '日期：' + formatDate() + '\n';
+  text += 'by 谷sir · 高中英语';
+
+  // 尝试用clipboard API,失败则用textarea兜底
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('已复制到剪贴板');
+    }).catch(() => fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+}
+
+function fallbackCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.left = '-9999px';
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand('copy');
+    showToast('已复制到剪贴板');
+  } catch(e) {
+    showToast('复制失败');
+  }
+  document.body.removeChild(ta);
+}
+
+// === 操作 ===
+function retryTodo() {
+  const todoWords = currentPool.filter(w => {
+    const a = answers[w.word] || {};
+    return !(a.en2zh && a.zh2en && a.cloze);
+  });
+  if (todoWords.length === 0) { goHome(); return; }
+  // 当前unit的池子临时换成待巩固单词
+  currentPool = todoWords;
+  document.getElementById('total-words').textContent = todoWords.length;
+  startQuizWith(todoWords);
+}
+
+function goHome() {
+  document.getElementById('result-page').classList.remove('active');
+  document.getElementById('quiz-page').classList.remove('active');
+  document.getElementById('home-page').classList.remove('hidden');
+  currentUnitId = null;
+  currentPool = null;
+  renderHome();  // 刷新最佳成绩
+}
+
+function confirmExit() {
+  // 如果已经做了一些题, 才需要确认
+  if (qIndex > 0) {
+    if (confirm('退出后本次练习进度将不保存,确定要退出吗?')) {
+      goHome();
+    }
+  } else {
+    // 一题都没做, 直接退
+    goHome();
+  }
+}
+
+// 键盘
+document.addEventListener('keydown', e => {
+  if (document.getElementById('quiz-page').classList.contains('active')) {
+    // ESC键退出
+    if (e.key === 'Escape') {
+      confirmExit();
+      return;
+    }
+    if (e.key === 'h' || e.key === 'H') {
+      const wrap = document.getElementById('qhint-wrap');
+      if (wrap.style.display !== 'none') { toggleHint(); return; }
+    }
+    if (!locked && e.key >= '1' && e.key <= '4') {
+      const btn = document.querySelector('.option[data-idx="' + (parseInt(e.key)-1) + '"]');
+      if (btn) btn.click();
+    }
+  }
+});
+
+// 启动
+renderHome();
+</script>
+</body>
+</html>

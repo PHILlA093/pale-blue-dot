@@ -1,0 +1,228 @@
+{"no":302,"word":"baby","ph":"ˈbeɪbɪ","pos":"n.","def":"婴儿","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":303,"word":"bachelor","ph":"ˈbætʃələ(r)","pos":"n.","def":"未婚男子，单身汉","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":304,"word":"back","ph":"bæk","pos":"adv. adj. n.","def":"回（原处）；向后 a. 后面的 n. 背后，后部；背","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":305,"word":"backache","ph":"ˈbækeɪk","pos":"n.","def":"背痛","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":306,"word":"background","ph":"ˈbækɡraʊnd","pos":"n.","def":"背景；backward(s","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":307,"word":"bacon","ph":"ˈbeɪkən","pos":"n.","def":"咸猪肉；熏猪肉 ","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":308,"word":"bacterium","ph":"bækˈtɪərɪəm","pos":"n.","def":"(复bacteria) n. 细菌；bad (worse, worst","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":309,"word":"badly","ph":"ˈbædlɪ","pos":"adv.","def":"坏，恶劣地","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":310,"word":"badminton","ph":"ˈbædmɪntən","pos":"n.","def":"羽毛球","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":311,"word":"bag","ph":"bæɡ","pos":"n.","def":"书包；提包；袋子","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":312,"word":"baggage","ph":"ˈbæɡɪdʒ","pos":"n.","def":"行李","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":313,"word":"bake","ph":"beɪk","pos":"v.","def":"烤； 烘（面包","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":314,"word":"bakery","ph":"ˈbeɪkərɪ","pos":"n.","def":"面包店","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":315,"word":"balance","ph":"ˈbæləns","pos":"n.","def":"平衡","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":316,"word":"balcony","ph":"ˈbælkənɪ","pos":"n.","def":"阳台；楼座","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":317,"word":"ball","ph":"bɔːl","pos":"n.","def":"球 n. 舞会","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":318,"word":"ballet","ph":"ˈbæleɪ","pos":"n.","def":"芭蕾舞","tags":{"pre":[],"root":[],"suf":["-et"]},"plain":false,"note":""}
+{"no":319,"word":"balloon","ph":"bəˈluːn","pos":"n.","def":"气球","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":320,"word":"bamboo","ph":"bæmˈbuː","pos":"n.","def":"竹","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":321,"word":"ban","ph":"bæn","pos":"n. v.","def":"禁令 v. 禁止；取缔","tags":{"pre":[],"root":["band"],"suf":[]},"plain":false,"note":""}
+{"no":322,"word":"banana","ph":"bəˈnɑːnə; (US) bəˈnænə","pos":"n.","def":"香蕉","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":323,"word":"band","ph":"bænd","pos":"n.","def":"乐队","tags":{"pre":[],"root":["band"],"suf":[]},"plain":false,"note":""}
+{"no":324,"word":"bandage","ph":"ˈbændɪdʒ","pos":"n.","def":"绷带","tags":{"pre":[],"root":["band"],"suf":["-age"]},"plain":false,"note":""}
+{"no":325,"word":"bang","ph":"bæŋ","pos":"int.","def":"砰","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":326,"word":"bank","ph":"bæŋk","pos":"n.","def":"（河海湖的）岸，堤 n. 银行","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":327,"word":"bank account","ph":"bæŋk əˈkaʊnt","pos":"n.","def":"银行账户","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":328,"word":"bar","ph":"bɑː(r)","pos":"n.","def":"条（长方）块，棒，横木 n.（酒店的）买酒柜台；酒吧；（卖东西的）柜台","tags":{"pre":[],"root":[],"suf":["-ar"]},"plain":false,"note":""}
+{"no":329,"word":"barbecue","ph":"ˈbɑːbɪkjuː","pos":"n.","def":"烤肉野餐","tags":{"pre":[],"root":["bar"],"suf":[]},"plain":false,"note":""}
+{"no":330,"word":"barber","ph":"ˈbɑːbə(r)","pos":"n.","def":"（为男人理发）理发师","tags":{"pre":[],"root":["bar"],"suf":["-er/-or"]},"plain":false,"note":""}
+{"no":331,"word":"barbershop","ph":"ˈbɑːbəʃɒp","pos":"n.","def":"理发店","tags":{"pre":[],"root":["bar"],"suf":[]},"plain":false,"note":"ph纠错→ˈbɑːbəʃɒp"}
+{"no":332,"word":"bare","ph":"beə(r)","pos":"adj.","def":"裸露的，光秃秃的","tags":{"pre":[],"root":["bar"],"suf":[]},"plain":false,"note":""}
+{"no":333,"word":"bargain","ph":"ˈbɑːɡɪn","pos":"n. v.","def":"（经讨价还价后）成交的商品；廉价货 v. 讨价还价","tags":{"pre":[],"root":["bar"],"suf":[]},"plain":false,"note":""}
+{"no":334,"word":"bark","ph":"bɑːk","pos":"v. n.","def":"狗叫 n. 狗叫声","tags":{"pre":[],"root":["bar"],"suf":[]},"plain":false,"note":""}
+{"no":335,"word":"barrier","ph":"ˈbærɪə","pos":"n.","def":"屏障，障碍，关卡","tags":{"pre":[],"root":["bar"],"suf":["-er/-or"]},"plain":false,"note":""}
+{"no":336,"word":"base","ph":"beɪs","pos":"n.","def":"根据地，基地（棒球）垒","tags":{"pre":[],"root":["bas"],"suf":[]},"plain":false,"note":""}
+{"no":337,"word":"baseball","ph":"ˈbeɪsbɔːl","pos":"n.","def":"棒球","tags":{"pre":[],"root":["bas"],"suf":[]},"plain":false,"note":""}
+{"no":338,"word":"basement","ph":"ˈbeɪsmənt","pos":"n.","def":"地下室","tags":{"pre":[],"root":["bas"],"suf":["-ment"]},"plain":false,"note":""}
+{"no":339,"word":"basic","ph":"ˈbeɪsɪk","pos":"adj.","def":"基本的","tags":{"pre":[],"root":["bas"],"suf":["-ic/-ical"]},"plain":false,"note":""}
+{"no":340,"word":"basin","ph":"ˈbeɪs(ə)n","pos":"n.","def":"水盆，脸盆","tags":{"pre":[],"root":["bas"],"suf":[]},"plain":false,"note":""}
+{"no":341,"word":"basis","ph":"ˈbeɪsɪs","pos":"n.","def":"原因，缘由，要素","tags":{"pre":[],"root":["bas"],"suf":[]},"plain":false,"note":""}
+{"no":342,"word":"basket","ph":"ˈbɑːskɪt; (US) ˈbæskɪt","pos":"n.","def":"篮子","tags":{"pre":[],"root":["bas"],"suf":["-et"]},"plain":false,"note":""}
+{"no":343,"word":"basketball","ph":"ˈbɑːskɪtbɔːl","pos":"n.","def":"篮球","tags":{"pre":[],"root":["bas"],"suf":[]},"plain":false,"note":""}
+{"no":344,"word":"bat","ph":"bæt","pos":"n.","def":"（棒球、板球的）球棒 n. 蝙蝠","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":345,"word":"bath","ph":"bɑːθ; (US) bæθ","pos":"n.","def":"洗澡；浴室；澡盆","tags":{"pre":[],"root":[],"suf":["-th"]},"plain":false,"note":""}
+{"no":346,"word":"bathe","ph":"beɪð","pos":"vi.","def":"洗澡；游泳","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":347,"word":"bathrobe","ph":"ˈbɑːθrəʊb","pos":"n.","def":"浴衣","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":348,"word":"bathroom","ph":"ˈbɑːθruːm","pos":"n.","def":"浴室，盥洗室","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":349,"word":"bathtub","ph":"ˈbɑːθtʌb","pos":"n.","def":"澡盆","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":350,"word":"battery","ph":"ˈbætərɪ","pos":"n.","def":"电池","tags":{"pre":[],"root":["bat"],"suf":["-y"]},"plain":false,"note":""}
+{"no":351,"word":"battle","ph":"ˈbæt(ə)l","pos":"n.","def":"战斗；战役","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":352,"word":"battleground","ph":"ˈbæt(ə)lɡraʊnd","pos":"n.","def":"战场","tags":{"pre":[],"root":["bat"],"suf":[]},"plain":false,"note":""}
+{"no":353,"word":"bay","ph":"beɪ","pos":"n.","def":"湾； 海湾","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":354,"word":"bc","ph":"ˌbiːˈsiː","pos":"n.","def":"公元前","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":355,"word":"be","ph":"biː","pos":"v.","def":"是（原形）,其人称和时态形式有(am, is, are, was, were, being, been)；成为","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":356,"word":"beach","ph":"biːtʃ","pos":"n.","def":"海滨，海滩","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":357,"word":"beam","ph":"biːm","pos":"n.","def":"平衡木","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":358,"word":"bean","ph":"biːn","pos":"n.","def":"豆，豆科植物","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":359,"word":"beancurd","ph":"ˈbiːnkəːd","pos":"n.","def":"豆腐","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":360,"word":"bear","ph":"beə(r)","pos":"v. n.","def":"承受，负担，承担；忍受；容忍 n. 熊","tags":{"pre":[],"root":[],"suf":["-ar"]},"plain":false,"note":""}
+{"no":361,"word":"beard","ph":"bɪəd","pos":"n.","def":"（下巴上的）胡须","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":362,"word":"beast","ph":"biːst","pos":"n.","def":"野兽；牲畜；beat (beat, beaten","tags":{"pre":["be-"],"root":["aster/astr/astro"],"suf":[]},"plain":false,"note":"def清理"}
+{"no":363,"word":"beautiful","ph":"ˈbjuːtɪf(ə)l","pos":"adj.","def":"美，美丽，美观的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":364,"word":"beauty","ph":"ˈbjuːtɪ","pos":"n.","def":"美丽，美人","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":365,"word":"because","ph":"bɪˈkɔz; (US) bɪˈkɔːz","pos":"conj.","def":"因为；become (became, be come","tags":{"pre":["be-"],"root":["caus/cus"],"suf":[]},"plain":false,"note":"def清理"}
+{"no":366,"word":"bed","ph":"bed","pos":"n.","def":"床","tags":{"pre":[],"root":[],"suf":["-ed"]},"plain":false,"note":""}
+{"no":367,"word":"bedclothes","ph":"ˈbedkləʊðz","pos":"n.","def":"铺盖（被褥等","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":368,"word":"beddings","ph":"ˈbedɪŋ","pos":"n.","def":"卧具，铺盖","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":369,"word":"bedroom","ph":"ˈbedruːm","pos":"n.","def":"寝室，卧室","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":370,"word":"bee","ph":"biː","pos":"n.","def":". 蜜蜂","tags":{"pre":[],"root":[],"suf":["-ee"]},"plain":false,"note":""}
+{"no":371,"word":"beef","ph":"biːf","pos":"n.","def":"牛肉","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":372,"word":"beehive","ph":"ˈbiːhaɪv","pos":"n.","def":"蜂箱","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":373,"word":"beer","ph":"bɪə(r)","pos":"n.","def":"啤酒","tags":{"pre":[],"root":[],"suf":["-er/-or"]},"plain":false,"note":""}
+{"no":374,"word":"before","ph":"bɪˈfɔː(r)","pos":"prep. adv. conj.","def":"在…以前；在…前面 ad. 以前 conj. 在…之前","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":375,"word":"beg","ph":"beɡ","pos":"v.","def":"请求，乞求，乞讨 ；begin(began,begun","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":376,"word":"beginning","ph":"bɪˈɡɪnɪŋ","pos":"n.","def":"开始，开端","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":377,"word":"behalf","ph":"bɪˈhɑːf","pos":"n.","def":"代表某人，为了某人","tags":{"pre":["be-"],"root":[],"suf":[]},"plain":false,"note":""}
+{"no":378,"word":"behave","ph":"bɪˈheɪv","pos":"v.","def":"守规矩，行为","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":379,"word":"behaviour","ph":"bɪˈheɪvjə(r)","pos":"n.","def":"行为，举止","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"ph纠错→bɪˈheɪvjə(r)"}
+{"no":380,"word":"behind","ph":"bɪˈhaɪnd","pos":"prep. adv.","def":"(表示位置)在…后面 ad. 在后面；向后","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":381,"word":"being","ph":"ˈbiːɪŋ","pos":"n.","def":"物；生物；人","tags":{"pre":[],"root":[],"suf":["-ing"]},"plain":false,"note":""}
+{"no":382,"word":"Belgium","ph":"ˈbeldʒəm","pos":"n.","def":"* n. 比利时","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"专名大写"}
+{"no":383,"word":"belief","ph":"bɪˈliːf","pos":"n.","def":"信条，信念","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":384,"word":"believe","ph":"bɪˈliːv","pos":"v.","def":"相信，认为","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":385,"word":"bell","ph":"bel","pos":"n.","def":"钟,铃;钟(铃)声;钟形物","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":386,"word":"belly","ph":"ˈbelɪ","pos":"n.","def":"肚子","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":387,"word":"belong","ph":"bɪˈlɔŋ","pos":"vi.","def":"属，附属","tags":{"pre":["be-"],"root":["long/leng"],"suf":[]},"plain":false,"note":""}
+{"no":388,"word":"below","ph":"bɪˈləʊ","pos":"prep.","def":"在……下面","tags":{"pre":["be-"],"root":[],"suf":[]},"plain":false,"note":""}
+{"no":389,"word":"belt","ph":"belt","pos":"n.","def":"（皮）带","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":390,"word":"bench","ph":"bentʃ","pos":"n.","def":"长凳；工作台；bend (bent, bent","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":391,"word":"beneath","ph":"bɪˈniːθ","pos":"prep.","def":"在…下方（面","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":392,"word":"beneficial","ph":"benɪˈfɪʃ(ə)l","pos":"adj.","def":"有利的，有帮助的，有用的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":393,"word":"benefit","ph":"ˈbenɪfɪt","pos":"n. v.","def":"/ v.优势,益处,使…受益","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":394,"word":"bent","ph":"bent","pos":"adj.","def":"弯的","tags":{"pre":[],"root":[],"suf":["-ant/-ent"]},"plain":false,"note":""}
+{"no":395,"word":"beside","ph":"bɪˈsaɪd","pos":"prep.","def":"在…旁边；靠近","tags":{"pre":["be-"],"root":["sed/sess/sid"],"suf":[]},"plain":false,"note":""}
+{"no":396,"word":"besides","ph":"bɪˈsaɪdz","pos":"prep. adv.","def":"除…以外（还有） ad. 还有，此外；best（good, well 的最 高级","tags":{"pre":["be-"],"root":["sed/sess/sid"],"suf":[]},"plain":false,"note":"def清理"}
+{"no":397,"word":"betray","ph":"bɪˈtreɪ","pos":"v.","def":"出卖,泄露（机密）,辜负","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":398,"word":"between","ph":"bɪˈtwiːn","pos":"prep.","def":"在（两者）之间；在…中间","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":399,"word":"beyond","ph":"bɪˈjɔnd","pos":"prep.","def":"(表示位置) 在…的那边","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":400,"word":"bicycle","ph":"ˈbaɪsɪk(ə)l","pos":"n.","def":"自行车","tags":{"pre":["bi-"],"root":["circ/cycl"],"suf":[]},"plain":false,"note":""}
+{"no":401,"word":"bid","ph":"bɪd","pos":"v. n.","def":"/ n. 出价，投标，向（某人）道别","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":402,"word":"big","ph":"bɪɡ","pos":"adj.","def":"大的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":403,"word":"bill","ph":"bɪl","pos":"n.","def":"账单；法案，议案； （美）钞票，纸币","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":404,"word":"billion","ph":"ˈbɪlɪən","pos":"num.","def":"十亿，百亿","tags":{"pre":[],"root":[],"suf":["-ation/-tion/-ion/-sion"]},"plain":false,"note":""}
+{"no":405,"word":"bingo","ph":"ˈbɪŋɡəʊ","pos":"n.","def":"宾戈游戏","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":406,"word":"biochemistry","ph":"ˌbaɪəʊˈkemɪstrɪ","pos":"n.","def":"生物化学","tags":{"pre":[],"root":["bio"],"suf":["-y"]},"plain":false,"note":"ph纠错→ˌbaɪəʊˈkemɪstrɪ"}
+{"no":407,"word":"biography","ph":"baɪˈɔɡrəfɪ","pos":"n.","def":"传记","tags":{"pre":["bi-"],"root":["gram/graph"],"suf":["-y"]},"plain":false,"note":""}
+{"no":408,"word":"biology","ph":"baɪˈɔlədʒɪ","pos":"n.","def":"生物（学","tags":{"pre":[],"root":["bio"],"suf":["-y"]},"plain":false,"note":"def清理"}
+{"no":409,"word":"bird","ph":"bɜːd","pos":"n.","def":"鸟","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":410,"word":"birdcage","ph":"ˈbɜːdkeɪdʒ","pos":"n.","def":"鸟笼","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":411,"word":"birth","ph":"bɜːθ","pos":"n.","def":"出生； 诞生","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":412,"word":"birthday","ph":"ˈbɜːθdeɪ","pos":"n.","def":"生日","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":413,"word":"birthplace","ph":"ˈbɜːθpleɪs","pos":"n.","def":"出生地；故乡","tags":{"pre":["bi-"],"root":["plac/pleas"],"suf":[]},"plain":false,"note":""}
+{"no":414,"word":"biscuit","ph":"ˈbɪskɪt","pos":"n.","def":"饼干","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":415,"word":"bishop","ph":"ˈbɪʃəp","pos":"n.","def":"主教","tags":{"pre":["bi-"],"root":[],"suf":[]},"plain":false,"note":""}
+{"no":416,"word":"bit","ph":"bɪt","pos":"n.","def":"一点，一些，少量的；bite (bit, bitten","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":417,"word":"bitter","ph":"ˈbɪtə(r)","pos":"adj.","def":"有苦味的；痛苦的，难过的；严酷的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":418,"word":"black","ph":"blæk","pos":"n. adj.","def":"黑色 a. 黑色的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":419,"word":"blackboard","ph":"ˈblækbɔːd","pos":"n.","def":"黑板","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":420,"word":"blame","ph":"bleɪm","pos":"n. v.","def":"责备；责怪","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":421,"word":"blank","ph":"blæŋk","pos":"n. adj.","def":"空格，空白（处）；空的；茫然无表情的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":422,"word":"blanket","ph":"ˈblæŋkɪt","pos":"n.","def":"毛毯，毯子","tags":{"pre":[],"root":[],"suf":["-et"]},"plain":false,"note":""}
+{"no":423,"word":"bleed","ph":"bliːd","pos":"vi.","def":"出血，流血","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":424,"word":"bless","ph":"bles","pos":"vt.","def":"保佑，降福","tags":{"pre":[],"root":[],"suf":["-less"]},"plain":false,"note":""}
+{"no":425,"word":"blind","ph":"blaɪnd","pos":"adj.","def":"瞎的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":426,"word":"block","ph":"blɔk","pos":"n. vt.","def":"大块；（木、石等）块；街区；路障 vt. 阻塞；阻挡","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":427,"word":"blood","ph":"blʌd","pos":"n.","def":"血，血液","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":428,"word":"blouse","ph":"blaʊz; u.S. blaʊs","pos":"n.","def":"宽罩衫；（妇女、儿童穿的）短上衣","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":429,"word":"blow","ph":"bləʊ","pos":"n.","def":"击；打击；blow (blew, blown","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":430,"word":"blue","ph":"bluː","pos":"n. adj.","def":"蓝色 a.蓝色的 a. 悲伤的；沮丧的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":431,"word":"board","ph":"bɔːd","pos":"n. v.","def":"木板；布告牌；委员会；（政府的）部 v. 上（船、火车、飞机","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":432,"word":"boat","ph":"bəʊt","pos":"n.","def":"小船，小舟","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":433,"word":"boating","ph":"ˈbəʊtɪŋ","pos":"n.","def":"划船（游玩），泛舟 body n. 身体","tags":{"pre":[],"root":[],"suf":["-ing"]},"plain":false,"note":""}
+{"no":434,"word":"boil","ph":"bɔɪl","pos":"v.","def":"沸腾；烧开；煮……","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":435,"word":"bomb","ph":"bɔm","pos":"n. v.","def":"炸弹 v. 轰炸","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":436,"word":"bond","ph":"bɔnd","pos":"n. v.","def":"/v. 纽带，联系，使牢固","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":437,"word":"bone","ph":"bəʊn","pos":"n.","def":"骨头，骨质（复数bones骨骼；骨骸","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":438,"word":"bonus","ph":"ˈbəʊnəs","pos":"n.","def":"津贴，奖金，红利","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":439,"word":"book","ph":"bʊk","pos":"n. v.","def":"书；本子 v. 预定，定（房间、车票等","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":440,"word":"bookcase","ph":"ˈbʊkkeɪs","pos":"n.","def":"书橱","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":441,"word":"bookmark","ph":"ˈbʊkmɑːk","pos":"n.","def":"书签","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":442,"word":"bookshelf","ph":"ˈbʊkʃelf","pos":"n.","def":"书架","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"ph纠错→ˈbʊkʃelf"}
+{"no":443,"word":"bookshop","ph":"ˈbʊkʃɔp","pos":"n.","def":"书店","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":444,"word":"bookstore","ph":"ˈbʊkstɔː(r)","pos":"n.","def":"书店","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":445,"word":"boom","ph":"buːm","pos":"n. v.","def":"/ v. 繁荣，轰鸣，激增","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":446,"word":"boot","ph":"buːt","pos":"n.","def":"长统靴；靴","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":447,"word":"booth","ph":"buːð","pos":"n.","def":"岗；（为某种用途而设的）亭或小隔间","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":448,"word":"telephone booth","ph":"ˈtelɪfəʊn- buːð","pos":"n.","def":"电话亭","tags":{"pre":["tele-"],"root":["phon"],"suf":["-th"]},"plain":false,"note":"词性补全"}
+{"no":449,"word":"border","ph":"ˈbɔːdə(r)","pos":"n.","def":"边缘；边境，国界","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":450,"word":"bored","ph":"bɔrd","pos":"adj.","def":"（对人，事）厌倦的，烦闷的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":451,"word":"boring","ph":"ˈbɔːrɪŋ","pos":"adj.","def":"乏味的，无聊的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"ph纠错→ˈbɔːrɪŋ"}
+{"no":452,"word":"born","ph":"bɔːn","pos":"adj.","def":"出生","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":453,"word":"borrow","ph":"ˈbɔrəʊ","pos":"v.","def":"（向别人）借用；借","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":454,"word":"boss","ph":"bɔs","pos":"n.","def":"领班；老板","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":455,"word":"botanical","ph":"bəˈtænɪk(ə)l","pos":"adj.","def":"植物学的","tags":{"pre":[],"root":[],"suf":["-ic/-ical"]},"plain":false,"note":""}
+{"no":456,"word":"botany","ph":"ˈbɔtənɪ","pos":"n.","def":"植物； 植物学","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":457,"word":"both","ph":"bəʊθ","pos":"adj. pron.","def":"两；双 pron. 两者；双方","tags":{"pre":[],"root":[],"suf":["-th"]},"plain":false,"note":""}
+{"no":458,"word":"bottle","ph":"ˈbɔt(ə)l","pos":"n.","def":"瓶子","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":459,"word":"bottom","ph":"ˈbɔtəm","pos":"n.","def":"底部；底","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":460,"word":"bounce","ph":"baʊns","pos":"v.","def":"弹起，蹦，上下晃动","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":461,"word":"bound","ph":"baʊnd","pos":"adj. v. n.","def":"被束缚的；被绑的；有义务的 v.\u0026 n. 跳跃","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":462,"word":"boundary","ph":"ˈbaʊndərɪ","pos":"n.","def":"边界，界限","tags":{"pre":[],"root":[],"suf":["-ary"]},"plain":false,"note":""}
+{"no":463,"word":"bow","ph":"bəʊ","pos":"v. n.","def":"鞠躬，弯腰行礼","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":464,"word":"bowl","ph":"bəʊl","pos":"n.","def":"碗","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":465,"word":"bowling","ph":"ˈbəʊlɪŋ","pos":"n.","def":"保龄球","tags":{"pre":[],"root":[],"suf":["-ing"]},"plain":false,"note":""}
+{"no":466,"word":"box","ph":"bɔks","pos":"n.","def":"盒子，箱子","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":467,"word":"boxing","ph":"ˈbɔksɪŋ","pos":"n.","def":"拳击（运动","tags":{"pre":[],"root":[],"suf":["-ing"]},"plain":false,"note":"def清理"}
+{"no":468,"word":"boy","ph":"bɔɪ","pos":"n.","def":"男孩","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":469,"word":"boycott","ph":"ˈbɔɪkɔt","pos":"v.","def":"拒绝购买，抵制","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":470,"word":"brain","ph":"breɪn","pos":"n.","def":"脑（子","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":471,"word":"brake","ph":"breɪk","pos":"n. vi.","def":"闸 vi. 刹车","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":472,"word":"branch","ph":"brɑːntʃ","pos":"n.","def":"树枝；分枝；分公司，分店；支部","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":473,"word":"brand","ph":"brænd","pos":"n.","def":"品牌","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":474,"word":"brave","ph":"breɪv","pos":"adj.","def":"勇敢的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":475,"word":"bravery","ph":"ˈbreɪvərɪ","pos":"n.","def":"勇气","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":476,"word":"bread","ph":"bred","pos":"n.","def":"面包","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":477,"word":"break","ph":"breɪk","pos":"n.","def":"间隙；break (broke, bro ken","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":478,"word":"breakfast","ph":"ˈbrekfəst","pos":"n.","def":"早餐","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":479,"word":"breakthrough","ph":"ˈbreɪkθruː","pos":"n.","def":"重大进展，突破","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":480,"word":"breast","ph":"brest","pos":"n.","def":"乳房，胸脯","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":481,"word":"breath","ph":"breθ","pos":"n.","def":"气息；呼吸","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":482,"word":"breathe","ph":"briːð","pos":"vi.","def":"呼吸","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":483,"word":"breathless","ph":"ˈbreθlɪs","pos":"adj.","def":"气喘吁吁的，上气不接下气的","tags":{"pre":[],"root":[],"suf":["-less"]},"plain":false,"note":""}
+{"no":484,"word":"brewery","ph":"ˈbruːərɪ","pos":"n.","def":"啤酒厂（公司","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":"def清理"}
+{"no":485,"word":"brick","ph":"brɪk","pos":"n.","def":"砖；砖块","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":486,"word":"bride","ph":"braɪd","pos":"n.","def":"新娘","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":487,"word":"bridegroom","ph":"ˈbraɪdɡruːm","pos":"n.","def":"新郎","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":488,"word":"bridge","ph":"brɪdʒ","pos":"n.","def":"桥","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":489,"word":"brief","ph":"briːf","pos":"adj.","def":"简洁的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":490,"word":"bright","ph":"braɪt","pos":"adj.","def":"明亮的；聪明的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":491,"word":"brilliant","ph":"ˈbrɪlɪənt","pos":"adj.","def":"巧妙的，使人印象深刻的，技艺高的；bring (brought, brought","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":492,"word":"Britain","ph":"ˈbrɪtən","pos":"n.","def":"* n. 英国；不列颠","tags":{"pre":[],"root":["tain/ten/tent/tin"],"suf":[]},"plain":false,"note":"专名大写"}
+{"no":493,"word":"british","ph":"ˈbrɪtɪʃ","pos":"adj.","def":"英国的；大不列颠的；英国人的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":494,"word":"broad","ph":"brɔːd","pos":"adj.","def":"宽的，宽大的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":495,"word":"broadcast","ph":"ˈbrɔːdkɑːst","pos":"n.","def":"广播节目；broadcast（broadcast, broadcast或--ed,--ed","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":496,"word":"brochure","ph":"brəʊˈʃə(r); (US) brəʊˈʃʊər","pos":"n.","def":"资料（或广告）手册","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":497,"word":"broken","ph":"ˈbrəʊkən","pos":"adj.","def":"弄坏了的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":498,"word":"broom","ph":"bruːm","pos":"n.","def":"扫帚","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":499,"word":"brother","ph":"ˈbrʌðə(r)","pos":"n.","def":"兄；弟","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":500,"word":"brotherhood","ph":"ˈbrʌðəhʊd","pos":"n.","def":"兄弟般的关系","tags":{"pre":[],"root":[],"suf":["-hood"]},"plain":false,"note":""}
+{"no":501,"word":"brown","ph":"braʊn","pos":"n. adj.","def":"褐色，棕色 a. 褐色的，棕色的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":502,"word":"brunch","ph":"ˈbrʌntʃ","pos":"n.","def":"早午饭（晚早饭","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":503,"word":"brush","ph":"brʌʃ","pos":"v. n.","def":"刷；擦 n. 刷子","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":504,"word":"bucket","ph":"ˈbʌkɪt","pos":"n.","def":"铲斗；桶","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":505,"word":"buddhism","ph":"ˈbʊdɪz(ə)m","pos":"n.","def":"佛教","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":506,"word":"buddhist","ph":"ˈbudist","pos":"n.","def":"佛教徒","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":507,"word":"budget","ph":"ˈbʌdʒɪt","pos":"n.","def":"预算","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":508,"word":"buffet","ph":"ˈbʊfeɪ; (US) bəˈfeɪ","pos":"n.","def":"自助餐；build (built, built","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":509,"word":"building","ph":"ˈbɪldɪŋ","pos":"n.","def":"建筑物；房屋；大楼","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":510,"word":"bun","ph":"bʌn","pos":"n.","def":"馒头；小甜面包","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":511,"word":"bunch","ph":"bʌntʃ","pos":"n.","def":"串,束,扎,大量,大批","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":512,"word":"bungalow","ph":"ˈbʌŋɡələʊ","pos":"n.","def":"平房","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":513,"word":"burden","ph":"ˈbɜːd(ə)n","pos":"n.","def":"（义务，责任的）重担，负担","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":514,"word":"bureaucratic","ph":"bjuəˌrəuˈkrætik","pos":"adj.","def":"官僚的","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":515,"word":"burglar","ph":"ˈbɜːɡlə(r)","pos":"n.","def":"入室窃贼","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":516,"word":"burial","ph":"ˈberɪəl","pos":"n.","def":"埋葬；burn (--ed, --ed 或 burnt, burnt","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":517,"word":"burst","ph":"ˈbɜːst","pos":"v.","def":"突然发生； 突然发作","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":518,"word":"bury","ph":"ˈberɪ","pos":"vt.","def":"埋；葬","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":519,"word":"bus","ph":"bʌs","pos":"n.","def":"公共汽车","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":520,"word":"bus stop","ph":"bʌs stɔp","pos":"n.","def":"公共汽车站","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理;词性补全"}
+{"no":521,"word":"bush","ph":"bʊʃ","pos":"n.","def":"灌木丛，矮树丛","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":522,"word":"business","ph":"ˈbɪznɪs","pos":"n.","def":"（本分）工作，职业；职责；生意，交易；事业；businessman (pl. businessmen","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":523,"word":"busy","ph":"ˈbɪzɪ","pos":"adj.","def":"忙（碌）的","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":524,"word":"but","ph":"bət","pos":"conj. prep.","def":"但是，可是 prep. 除了, 除……外","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":525,"word":"butcher","ph":"ˈbʊtʃə","pos":"n. vt.","def":"肉店；屠夫 屠宰（动物）；残杀（人","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":526,"word":"butter","ph":"ˈbʌtə(r)","pos":"n.","def":"黄油，奶油","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":""}
+{"no":527,"word":"butterfly","ph":"ˈbʌtəflaɪ","pos":"n.","def":"蝴蝶","tags":{"pre":[],"root":[],"suf":["-y"]},"plain":false,"note":""}
+{"no":528,"word":"button","ph":"ˈbʌt(ə)n","pos":"n. v.","def":"纽扣；（电铃等的）按钮 v. 扣（纽扣） ；buy (bought,bought","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}
+{"no":529,"word":"by","ph":"baɪ","pos":"prep.","def":"靠近，在…旁；在…时间；不迟于；被；用；由；乘（车","tags":{"pre":[],"root":[],"suf":[]},"plain":true,"note":"def清理"}

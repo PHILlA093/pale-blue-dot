@@ -1,0 +1,228 @@
+302|baby|ph=ˈbeɪbɪ|pos=[n]|def=婴儿
+303|bachelor|ph=ˈbætʃələ(r)|pos=[n]|def=未婚男子，单身汉
+304|back|ph=bæk|pos=[adv adj n]|def=回（原处）；向后 a. 后面的 n. 背后，后部；背
+305|backache|ph=ˈbækeɪk|pos=[n]|def=背痛
+306|background|ph=ˈbækɡraʊnd|pos=[n]|def=背景；backward(s)
+307|bacon|ph=ˈbeɪkən|pos=[n]|def=咸猪肉；熏猪肉 
+308|bacterium|ph=bækˈtɪərɪəm|pos=[n]|def=(复bacteria) n. 细菌；bad (worse, worst)
+309|badly|ph=ˈbædlɪ|pos=[adv]|def=坏，恶劣地
+310|badminton|ph=ˈbædmɪntən|pos=[n]|def=羽毛球
+311|bag|ph=bæɡ|pos=[n]|def=书包；提包；袋子
+312|baggage|ph=ˈbæɡɪdʒ|pos=[n]|def=行李
+313|bake|ph=beɪk|pos=[v]|def=烤； 烘（面包）
+314|bakery|ph=ˈbeɪkərɪ|pos=[n]|def=面包店
+315|balance|ph=ˈbæləns|pos=[n]|def=平衡
+316|balcony|ph=ˈbælkənɪ|pos=[n]|def=阳台；楼座
+317|ball|ph=bɔːl|pos=[n]|def=球 n. 舞会
+318|ballet|ph=ˈbæleɪ|pos=[n]|def=芭蕾舞
+319|balloon|ph=bəˈluːn|pos=[n]|def=气球
+320|bamboo|ph=bæmˈbuː|pos=[n]|def=竹
+321|ban|ph=bæn|pos=[n v]|def=禁令 v. 禁止；取缔
+322|banana|ph=bəˈnɑːnə; (US) bəˈnænə|pos=[n]|def=香蕉
+323|band|ph=bænd|pos=[n]|def=乐队
+324|bandage|ph=ˈbændɪdʒ|pos=[n]|def=绷带
+325|bang|ph=bæŋ|pos=[int]|def=砰
+326|bank|ph=bæŋk|pos=[n]|def=（河海湖的）岸，堤 n. 银行
+327|bank account|ph=bæŋk əˈkaʊnt|pos=[n]|def=银行账户
+328|bar|ph=bɑː(r)|pos=[n]|def=条（长方）块，棒，横木 n.（酒店的）买酒柜台；酒吧；（卖东西的）柜台
+329|barbecue|ph=ˈbɑːbɪkjuː|pos=[n]|def=烤肉野餐
+330|barber|ph=ˈbɑːbə(r)|pos=[n]|def=（为男人理发）理发师
+331|barbershop|ph=`bɑrbər|pos=[n]|def=理发店
+332|bare|ph=beə(r)|pos=[adj]|def=裸露的，光秃秃的
+333|bargain|ph=ˈbɑːɡɪn|pos=[n v]|def=（经讨价还价后）成交的商品；廉价货 v. 讨价还价
+334|bark|ph=bɑːk|pos=[v n]|def=狗叫 n. 狗叫声
+335|barrier|ph=ˈbærɪə|pos=[n]|def=屏障，障碍，关卡
+336|base|ph=beɪs|pos=[n]|def=根据地，基地（棒球）垒
+337|baseball|ph=ˈbeɪsbɔːl|pos=[n]|def=棒球
+338|basement|ph=ˈbeɪsmənt|pos=[n]|def=地下室
+339|basic|ph=ˈbeɪsɪk|pos=[adj]|def=基本的
+340|basin|ph=ˈbeɪs(ə)n|pos=[n]|def=水盆，脸盆
+341|basis|ph=ˈbeɪsɪs|pos=[n]|def=原因，缘由，要素
+342|basket|ph=ˈbɑːskɪt; (US) ˈbæskɪt|pos=[n]|def=篮子
+343|basketball|ph=ˈbɑːskɪtbɔːl|pos=[n]|def=篮球
+344|bat|ph=bæt|pos=[n]|def=（棒球、板球的）球棒 n. 蝙蝠
+345|bath|ph=bɑːθ; (US) bæθ|pos=[n]|def=洗澡；浴室；澡盆
+346|bathe|ph=beɪð|pos=[vi]|def=洗澡；游泳
+347|bathrobe|ph=ˈbɑːθrəʊb|pos=[n]|def=浴衣
+348|bathroom|ph=ˈbɑːθruːm|pos=[n]|def=浴室，盥洗室
+349|bathtub|ph=ˈbɑ:θtʌb|pos=[n]|def=澡盆
+350|battery|ph=ˈbætərɪ|pos=[n]|def=电池
+351|battle|ph=ˈbæt(ə)l|pos=[n]|def=战斗；战役
+352|battleground|ph=ˈbæt(ə)lɡraʊnd|pos=[n]|def=战场
+353|bay|ph=beɪ|pos=[n]|def=湾； 海湾
+354|bc|ph=ˌbiːˈsiː|pos=[n]|def=公元前
+355|be|ph=biː|pos=[v]|def=是（原形）,其人称和时态形式有(am, is, are, was, were, 
+356|beach|ph=biːtʃ|pos=[n]|def=海滨，海滩
+357|beam|ph=biːm|pos=[n]|def=平衡木
+358|bean|ph=biːn|pos=[n]|def=豆，豆科植物
+359|beancurd|ph=ˈbi:nkə:d|pos=[n]|def=豆腐
+360|bear|ph=beə(r)|pos=[v n]|def=承受，负担，承担；忍受；容忍 n. 熊
+361|beard|ph=bɪəd|pos=[n]|def=（下巴上的）胡须
+362|beast|ph=biːst|pos=[n]|def=野兽；牲畜；beat (beat, beaten)
+363|beautiful|ph=ˈbjuːtɪf(ə)l|pos=[adj]|def=美，美丽，美观的
+364|beauty|ph=ˈbjuːtɪ|pos=[n]|def=美丽，美人
+365|because|ph=bɪˈkɔz; (US) bɪˈkɔːz|pos=[conj]|def=因为；become (became, be come)
+366|bed|ph=bed|pos=[n]|def=床
+367|bedclothes|ph=ˈbedkləʊðz|pos=[n]|def=铺盖（被褥等）
+368|beddings|ph=ˈbedɪŋ|pos=[n]|def=卧具，铺盖
+369|bedroom|ph=ˈbedruːm|pos=[n]|def=寝室，卧室
+370|bee|ph=biː|pos=[n]|def=. 蜜蜂
+371|beef|ph=biːf|pos=[n]|def=牛肉
+372|beehive|ph=ˈbiːhaɪv|pos=[n]|def=蜂箱
+373|beer|ph=bɪə(r)|pos=[n]|def=啤酒
+374|before|ph=bɪˈfɔː(r)|pos=[prep adv conj]|def=在…以前；在…前面 ad. 以前 conj. 在…之前
+375|beg|ph=beɡ|pos=[v]|def=请求，乞求，乞讨 ；begin(began,begun)
+376|beginning|ph=bɪˈɡɪnɪŋ|pos=[n]|def=开始，开端
+377|behalf|ph=bɪˈhɑːf|pos=[n]|def=代表某人，为了某人
+378|behave|ph=bɪˈheɪv|pos=[v]|def=守规矩，行为
+379|behaviour|ph=bɪ`heɪvjər|pos=[n]|def=行为，举止
+380|behind|ph=bɪˈhaɪnd|pos=[prep adv]|def=(表示位置)在…后面 ad. 在后面；向后
+381|being|ph=ˈbiːɪŋ|pos=[n]|def=物；生物；人
+382|belgium|ph=ˈbeldʒəm|pos=[n]|def=* n. 比利时
+383|belief|ph=bɪˈliːf|pos=[n]|def=信条，信念
+384|believe|ph=bɪˈliːv|pos=[v]|def=相信，认为
+385|bell|ph=bel|pos=[n]|def=钟,铃;钟(铃)声;钟形物
+386|belly|ph=ˈbelɪ|pos=[n]|def=肚子
+387|belong|ph=bɪˈlɔŋ|pos=[vi]|def=属，附属
+388|below|ph=bɪˈləʊ|pos=[prep]|def=在……下面
+389|belt|ph=belt|pos=[n]|def=（皮）带
+390|bench|ph=bentʃ|pos=[n]|def=长凳；工作台；bend (bent, bent)
+391|beneath|ph=bɪˈniːθ|pos=[prep]|def=在…下方（面）
+392|beneficial|ph=benɪˈfɪʃ(ə)l|pos=[adj]|def=有利的，有帮助的，有用的
+393|benefit|ph=ˈbenɪfɪt|pos=[n v]|def=/ v.优势,益处,使…受益
+394|bent|ph=bent|pos=[adj]|def=弯的
+395|beside|ph=bɪˈsaɪd|pos=[prep]|def=在…旁边；靠近
+396|besides|ph=bɪˈsaɪdz|pos=[prep adv]|def=除…以外（还有） ad. 还有，此外；best（good, well 的最 高级
+397|betray|ph=bɪˈtreɪ|pos=[v]|def=出卖,泄露（机密）,辜负
+398|between|ph=bɪˈtwiːn|pos=[prep]|def=在（两者）之间；在…中间
+399|beyond|ph=bɪˈjɔnd|pos=[prep]|def=(表示位置) 在…的那边
+400|bicycle|ph=ˈbaɪsɪk(ə)l|pos=[n]|def=自行车
+401|bid|ph=bɪd|pos=[v n]|def=/ n. 出价，投标，向（某人）道别
+402|big|ph=bɪɡ|pos=[adj]|def=大的
+403|bill|ph=bɪl|pos=[n]|def=账单；法案，议案； （美）钞票，纸币
+404|billion|ph=ˈbɪlɪən|pos=[num]|def=十亿，百亿
+405|bingo|ph=ˈbɪŋɡəʊ|pos=[n]|def=宾戈游戏
+406|biochemistry|ph=.baiәu'kemistri|pos=[n]|def=生物化学
+407|biography|ph=baɪˈɔɡrəfɪ|pos=[n]|def=传记
+408|biology|ph=baɪˈɔlədʒɪ|pos=[n]|def=生物（学）
+409|bird|ph=bɜːd|pos=[n]|def=鸟
+410|birdcage|ph=ˈbɜːdkeɪdʒ|pos=[n]|def=鸟笼
+411|birth|ph=bɜːθ|pos=[n]|def=出生； 诞生
+412|birthday|ph=ˈbɜːθdeɪ|pos=[n]|def=生日
+413|birthplace|ph=ˈbɜːθpleɪs|pos=[n]|def=出生地；故乡
+414|biscuit|ph=ˈbɪskɪt|pos=[n]|def=饼干
+415|bishop|ph=ˈbɪʃəp|pos=[n]|def=主教
+416|bit|ph=bɪt|pos=[n]|def=一点，一些，少量的；bite (bit, bitten)
+417|bitter|ph=ˈbɪtə(r)|pos=[adj]|def=有苦味的；痛苦的，难过的；严酷的
+418|black|ph=blæk|pos=[n adj]|def=黑色 a. 黑色的
+419|blackboard|ph=ˈblækbɔːd|pos=[n]|def=黑板
+420|blame|ph=bleɪm|pos=[n v]|def=责备；责怪
+421|blank|ph=blæŋk|pos=[n adj]|def=空格，空白（处）；空的；茫然无表情的
+422|blanket|ph=ˈblæŋkɪt|pos=[n]|def=毛毯，毯子
+423|bleed|ph=bliːd|pos=[vi]|def=出血，流血
+424|bless|ph=bles|pos=[vt]|def=保佑，降福
+425|blind|ph=blaɪnd|pos=[adj]|def=瞎的
+426|block|ph=blɔk|pos=[n vt]|def=大块；（木、石等）块；街区；路障 vt. 阻塞；阻挡
+427|blood|ph=blʌd|pos=[n]|def=血，血液
+428|blouse|ph=blaʊz; u.S. blaʊs|pos=[n]|def=宽罩衫；（妇女、儿童穿的）短上衣
+429|blow|ph=bləʊ|pos=[n]|def=击；打击；blow (blew, blown)
+430|blue|ph=bluː|pos=[n adj]|def=蓝色 a.蓝色的 a. 悲伤的；沮丧的
+431|board|ph=bɔːd|pos=[n v]|def=木板；布告牌；委员会；（政府的）部 v. 上（船、火车、飞机）
+432|boat|ph=bəʊt|pos=[n]|def=小船，小舟
+433|boating|ph=ˈbəʊtɪŋ|pos=[n]|def=划船（游玩），泛舟 body n. 身体
+434|boil|ph=bɔɪl|pos=[v]|def=沸腾；烧开；煮……
+435|bomb|ph=bɔm|pos=[n v]|def=炸弹 v. 轰炸
+436|bond|ph=bɔnd|pos=[n v]|def=/v. 纽带，联系，使牢固
+437|bone|ph=bəʊn|pos=[n]|def=骨头，骨质（复数bones骨骼；骨骸）
+438|bonus|ph=ˈbəʊnəs|pos=[n]|def=津贴，奖金，红利
+439|book|ph=bʊk|pos=[n v]|def=书；本子 v. 预定，定（房间、车票等）
+440|bookcase|ph=ˈbʊkkeɪs|pos=[n]|def=书橱
+441|bookmark|ph=ˈbʊkmɑːk|pos=[n]|def=书签
+442|bookshelf|ph=`bʊk|pos=[n]|def=书架
+443|bookshop|ph=ˈbʊkʃɔp|pos=[n]|def=书店
+444|bookstore|ph=ˈbʊkstɔː(r)|pos=[n]|def=书店
+445|boom|ph=buːm|pos=[n v]|def=/ v. 繁荣，轰鸣，激增
+446|boot|ph=buːt|pos=[n]|def=长统靴；靴
+447|booth|ph=buːð|pos=[n]|def=岗；（为某种用途而设的）亭或小隔间
+448|telephone booth|ph=ˈtelɪfəʊn- buːð|pos=[]|def=电话亭
+449|border|ph=ˈbɔːdə(r)|pos=[n]|def=边缘；边境，国界
+450|bored|ph=bɔrd|pos=[adj]|def=（对人，事）厌倦的，烦闷的
+451|boring|ph=`bɔrɪŋ|pos=[adj]|def=乏味的，无聊的
+452|born|ph=bɔːn|pos=[adj]|def=出生
+453|borrow|ph=ˈbɔrəʊ|pos=[v]|def=（向别人）借用；借
+454|boss|ph=bɔs|pos=[n]|def=领班；老板
+455|botanical|ph=bəˈtænɪk(ə)l|pos=[adj]|def=植物学的
+456|botany|ph=ˈbɔtənɪ|pos=[n]|def=植物； 植物学
+457|both|ph=bəʊθ|pos=[adj pron]|def=两；双 pron. 两者；双方
+458|bottle|ph=ˈbɔt(ə)l|pos=[n]|def=瓶子
+459|bottom|ph=ˈbɔtəm|pos=[n]|def=底部；底
+460|bounce|ph=baʊns|pos=[v]|def=弹起，蹦，上下晃动
+461|bound|ph=baʊnd|pos=[adj v n]|def=被束缚的；被绑的；有义务的 v.& n. 跳跃
+462|boundary|ph=ˈbaʊndərɪ|pos=[n]|def=边界，界限
+463|bow|ph=bəʊ|pos=[v n]|def=鞠躬，弯腰行礼
+464|bowl|ph=bəʊl|pos=[n]|def=碗
+465|bowling|ph=ˈbəʊlɪŋ|pos=[n]|def=保龄球
+466|box|ph=bɔks|pos=[n]|def=盒子，箱子
+467|boxing|ph=ˈbɔksɪŋ|pos=[n]|def=拳击（运动）
+468|boy|ph=bɔɪ|pos=[n]|def=男孩
+469|boycott|ph=ˈbɔɪkɔt|pos=[v]|def=拒绝购买，抵制
+470|brain|ph=breɪn|pos=[n]|def=脑（子）
+471|brake|ph=breɪk|pos=[n vi]|def=闸 vi. 刹车
+472|branch|ph=brɑːntʃ|pos=[n]|def=树枝；分枝；分公司，分店；支部
+473|brand|ph=brænd|pos=[n]|def=品牌
+474|brave|ph=breɪv|pos=[adj]|def=勇敢的
+475|bravery|ph=ˈbreɪvərɪ|pos=[n]|def=勇气
+476|bread|ph=bred|pos=[n]|def=面包
+477|break|ph=breɪk|pos=[n]|def=间隙；break (broke, bro ken)
+478|breakfast|ph=ˈbrekfəst|pos=[n]|def=早餐
+479|breakthrough|ph=ˈbreɪkθruː|pos=[n]|def=重大进展，突破
+480|breast|ph=brest|pos=[n]|def=乳房，胸脯
+481|breath|ph=breθ|pos=[n]|def=气息；呼吸
+482|breathe|ph=briːð|pos=[vi]|def=呼吸
+483|breathless|ph=ˈbreθlɪs|pos=[adj]|def=气喘吁吁的，上气不接下气的
+484|brewery|ph=ˈbruːərɪ|pos=[n]|def=啤酒厂（公司）
+485|brick|ph=brɪk|pos=[n]|def=砖；砖块
+486|bride|ph=braɪd|pos=[n]|def=新娘
+487|bridegroom|ph=ˈbraɪdɡruːm|pos=[n]|def=新郎
+488|bridge|ph=brɪdʒ|pos=[n]|def=桥
+489|brief|ph=briːf|pos=[adj]|def=简洁的
+490|bright|ph=braɪt|pos=[adj]|def=明亮的；聪明的
+491|brilliant|ph=ˈbrɪlɪənt|pos=[adj]|def=巧妙的，使人印象深刻的，技艺高的；bring (brought, brought
+492|britain|ph=ˈbrɪtən|pos=[n]|def=* n. 英国；不列颠
+493|british|ph=ˈbrɪtɪʃ|pos=[adj]|def=英国的；大不列颠的；英国人的
+494|broad|ph=brɔːd|pos=[adj]|def=宽的，宽大的
+495|broadcast|ph=ˈbrɔːdkɑːst|pos=[n]|def=广播节目；broadcast（broadcast, broadcast或--ed
+496|brochure|ph=brəʊˈʃə(r); (US) brəʊˈʃʊər|pos=[n]|def=资料（或广告）手册
+497|broken|ph=ˈbrəʊkən|pos=[adj]|def=弄坏了的
+498|broom|ph=bruːm|pos=[n]|def=扫帚
+499|brother|ph=ˈbrʌðə(r)|pos=[n]|def=兄；弟
+500|brotherhood|ph=ˈbrʌðəhʊd|pos=[n]|def=兄弟般的关系
+501|brown|ph=braʊn|pos=[n adj]|def=褐色，棕色 a. 褐色的，棕色的
+502|brunch|ph=ˈbrʌntʃ|pos=[n]|def=早午饭（晚早饭）
+503|brush|ph=brʌʃ|pos=[v n]|def=刷；擦 n. 刷子
+504|bucket|ph=ˈbʌkɪt|pos=[n]|def=铲斗；桶
+505|buddhism|ph=ˈbʊdɪz(ə)m|pos=[n]|def=佛教
+506|buddhist|ph=ˈbudist|pos=[n]|def=佛教徒
+507|budget|ph=ˈbʌdʒɪt|pos=[n]|def=预算
+508|buffet|ph=ˈbʊfeɪ; (US) bəˈfeɪ|pos=[n]|def=自助餐；build (built, built)
+509|building|ph=ˈbɪldɪŋ|pos=[n]|def=建筑物；房屋；大楼
+510|bun|ph=bʌn|pos=[n]|def=馒头；小甜面包
+511|bunch|ph=bʌntʃ|pos=[n]|def=串,束,扎,大量,大批
+512|bungalow|ph=ˈbʌŋɡələʊ|pos=[n]|def=平房
+513|burden|ph=ˈbɜːd(ə)n|pos=[n]|def=（义务，责任的）重担，负担
+514|bureaucratic|ph=bjuəˌrəuˈkrætik|pos=[adj]|def=官僚的
+515|burglar|ph=ˈbɜːɡlə(r)|pos=[n]|def=入室窃贼
+516|burial|ph=ˈberɪəl|pos=[n]|def=埋葬；burn (--ed, --ed 或 burnt, burnt)
+517|burst|ph=ˈbɜːst|pos=[v]|def=突然发生； 突然发作
+518|bury|ph=ˈberɪ|pos=[vt]|def=埋；葬
+519|bus|ph=bʌs|pos=[n]|def=公共汽车
+520|bus stop|ph=bʌs stɔp|pos=[]|def=。公共汽车站
+521|bush|ph=bʊʃ|pos=[n]|def=灌木丛，矮树丛
+522|business|ph=ˈbɪznɪs|pos=[n]|def=（本分）工作，职业；职责；生意，交易；事业；businessman (pl. b
+523|busy|ph=ˈbɪzɪ|pos=[adj]|def=忙（碌）的
+524|but|ph=bət|pos=[conj prep]|def=但是，可是 prep. 除了, 除……外
+525|butcher|ph=ˈbʊtʃə|pos=[n vt]|def=肉店；屠夫 屠宰（动物）；残杀（人）
+526|butter|ph=ˈbʌtə(r)|pos=[n]|def=黄油，奶油
+527|butterfly|ph=ˈbʌtəflaɪ|pos=[n]|def=蝴蝶
+528|button|ph=ˈbʌt(ə)n|pos=[n v]|def=纽扣；（电铃等的）按钮 v. 扣（纽扣） ；buy (bought,bough
+529|by|ph=baɪ|pos=[prep]|def=靠近，在…旁；在…时间；不迟于；被；用；由；乘（车）

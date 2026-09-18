@@ -1,0 +1,151 @@
+{
+  "description": "人教版英语词库：小学（三年级起点）+ 初中 + 高中 2019",
+  "stages": [
+    "primary",
+    "junior",
+    "senior"
+  ],
+  "generatedAt": "2026-07-15T17:31:42.496Z",
+  "books": [
+    {
+      "id": "pep-primary-g3-s1",
+      "title": "人教版小学英语 · 三年级上",
+      "stage": "primary",
+      "words": 64,
+      "units": 4
+    },
+    {
+      "id": "pep-primary-g3-s2",
+      "title": "人教版小学英语 · 三年级下",
+      "stage": "primary",
+      "words": 71,
+      "units": 4
+    },
+    {
+      "id": "pep-primary-g4-s1",
+      "title": "人教版小学英语 · 四年级上",
+      "stage": "primary",
+      "words": 84,
+      "units": 4
+    },
+    {
+      "id": "pep-primary-g4-s2",
+      "title": "人教版小学英语 · 四年级下",
+      "stage": "primary",
+      "words": 104,
+      "units": 4
+    },
+    {
+      "id": "pep-primary-g5-s1",
+      "title": "人教版小学英语 · 五年级上",
+      "stage": "primary",
+      "words": 133,
+      "units": 6
+    },
+    {
+      "id": "pep-primary-g5-s2",
+      "title": "人教版小学英语 · 五年级下",
+      "stage": "primary",
+      "words": 156,
+      "units": 6
+    },
+    {
+      "id": "pep-primary-g6-s1",
+      "title": "人教版小学英语 · 六年级上",
+      "stage": "primary",
+      "words": 147,
+      "units": 6
+    },
+    {
+      "id": "pep-primary-g6-s2",
+      "title": "人教版小学英语 · 六年级下",
+      "stage": "primary",
+      "words": 92,
+      "units": 6
+    },
+    {
+      "id": "pep-junior-g7-s1",
+      "title": "人教版初中英语 · 七年级上册",
+      "stage": "junior",
+      "words": 432,
+      "units": 9
+    },
+    {
+      "id": "pep-junior-g7-s2",
+      "title": "人教版初中英语 · 七年级下册",
+      "stage": "junior",
+      "words": 536,
+      "units": 9
+    },
+    {
+      "id": "pep-junior-g8-s1",
+      "title": "人教版初中英语 · 八年级上册",
+      "stage": "junior",
+      "words": 463,
+      "units": 10
+    },
+    {
+      "id": "pep-junior-g8-s2",
+      "title": "人教版初中英语 · 八年级下册",
+      "stage": "junior",
+      "words": 540,
+      "units": 10
+    },
+    {
+      "id": "pep-junior-g9",
+      "title": "人教版初中英语 · 九年级全册",
+      "stage": "junior",
+      "words": 671,
+      "units": 14
+    },
+    {
+      "id": "pep2019-compulsory-1",
+      "title": "人教版高中英语（2019）· 必修第一册",
+      "stage": "senior",
+      "words": 387,
+      "units": 6
+    },
+    {
+      "id": "pep2019-compulsory-2",
+      "title": "人教版高中英语（2019）· 必修第二册",
+      "stage": "senior",
+      "words": 407,
+      "units": 5
+    },
+    {
+      "id": "pep2019-compulsory-3",
+      "title": "人教版高中英语（2019）· 必修第三册",
+      "stage": "senior",
+      "words": 471,
+      "units": 5
+    },
+    {
+      "id": "pep2019-optional-1",
+      "title": "人教版高中英语（2019）· 选择性必修第一册",
+      "stage": "senior",
+      "words": 379,
+      "units": 5
+    },
+    {
+      "id": "pep2019-optional-2",
+      "title": "人教版高中英语（2019）· 选择性必修第二册",
+      "stage": "senior",
+      "words": 382,
+      "units": 5
+    },
+    {
+      "id": "pep2019-optional-3",
+      "title": "人教版高中英语（2019）· 选择性必修第三册",
+      "stage": "senior",
+      "words": 357,
+      "units": 5
+    },
+    {
+      "id": "pep2019-optional-4",
+      "title": "人教版高中英语（2019）· 选择性必修第四册",
+      "stage": "senior",
+      "words": 348,
+      "units": 5
+    }
+  ]
+}

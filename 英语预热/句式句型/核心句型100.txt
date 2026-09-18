@@ -1,0 +1,590 @@
+高中核心句型 100 条（AI整理初版·待人工校对）
+
+【S001】主系表
+公式: 主语 + be/系动词 + 表语
+例  : He is a doctor. / The flowers look beautiful.
+译  : 他是医生。／这些花看起来很美。
+提示: 系动词: be, look, seem, feel, sound, taste, smell, become, get, turn, grow, keep, stay
+
+【S002】主谓
+公式: 主语 + 不及物动词
+例  : The sun rises in the east.
+译  : 太阳从东方升起。
+提示: 不及物动词后不可直接接宾语
+
+【S003】主谓宾
+公式: 主语 + 及物动词 + 宾语
+例  : She is reading an English book.
+译  : 她正在读一本英语书。
+
+【S004】主谓双宾
+公式: 主语 + 及物动词 + 间接宾语 + 直接宾语
+例  : My father bought me a new bike.
+译  : 爸爸给我买了一辆新自行车。
+提示: buy/give/pass/send/show/tell/teach 等;也可改 for/to sb
+
+【S005】主谓宾宾补
+公式: 主语 + 及物动词 + 宾语 + 宾语补足语
+例  : We keep our classroom clean.
+译  : 我们保持教室干净。
+提示: make/keep/find/see/watch/hear/let/have 等
+
+【S006】There be 存在句
+公式: There + be + 名词 + 地点/时间
+例  : There is a computer on the desk.
+译  : 桌上有一台电脑。
+提示: 就近原则; 可接 be going to/happens to/must be 等
+
+【S007】一般现在时
+公式: 主语 + do/does + 其他
+例  : I go to school by bus every day.
+译  : 我每天坐公交车上学。
+提示: 表经常性/习惯性/客观真理
+
+【S008】现在进行时
+公式: 主语 + am/is/are + doing
+例  : Look! The children are playing football.
+译  : 看！孩子们正在踢足球。
+提示: 表正在进行或现阶段
+
+【S009】现在完成时
+公式: 主语 + have/has + done
+例  : I have finished my homework already.
+译  : 我已经完成作业了。
+提示: already/yet/just/ever/never/since/for
+
+【S010】一般过去时
+公式: 主语 + did + 其他
+例  : We visited the museum yesterday.
+译  : 我们昨天参观了博物馆。
+提示: yesterday/ago/last night/in 2020
+
+【S011】一般将来时
+公式: 主语 + will/be going to + do
+例  : It will rain tomorrow. / We are going to have a picnic.
+译  : 明天会下雨。／我们打算去野餐。
+提示: will 表临时决定; be going to 表计划
+
+【S012】It is + adj + to do
+公式: It is + 形容词 + to do sth
+例  : It is important to learn English well.
+译  : 学好英语很重要。
+提示: It is + adj + for/of sb + to do; dangerous/necessary/possible/useful
+
+【S013】It is + adj + that 从句
+公式: It is + 形容词 + that 从句
+例  : It is certain that he will pass the exam.
+译  : 他一定会通过考试。
+提示: certain/clear/true/wonderful/strange/necessary
+
+【S014】It is + n + that/to do
+公式: It is + 名词 + that 从句 / to do
+例  : It is a good idea to go swimming. / It is a pity that you missed it.
+译  : 去游泳是个好主意。／你错过了真可惜。
+提示: pity/shame/pleasure/honor/idea
+
+【S015】It takes sb time to do
+公式: It takes/took sb + 时间 + to do sth
+例  : It took me two hours to finish the work.
+译  : 我花了两个小时完成这项工作。
+提示: spend/cost 句型见 S016-S017
+
+【S016】sb spend time doing/on
+公式: sb + spend 时间/金钱 + (in) doing sth / on sth
+例  : He spends two hours (in) reading every day.
+译  : 他每天花两小时读书。
+提示: pay/cost 表花费见 S017
+
+【S017】sth cost / sb pay
+公式: sth cost(s) sb 钱 / sb pay(s) 钱 for sth
+例  : The book cost me 30 yuan. / I paid 30 yuan for the book.
+译  : 这本书花了我三十元。／我花了三十元买这本书。
+
+【S018】too...to...
+公式: 主语 + be + too + 形容词/副词 + to do
+例  : The box is too heavy for me to carry.
+译  : 这个箱子太重了，我搬不动。
+提示: 表否定结果; too ready/anxious/eager to 表肯定
+
+【S019】...enough to...
+公式: 主语 + be + 形容词 + enough + (for sb) to do
+例  : He is old enough to go to school.
+译  : 他到了上学的年龄了。
+提示: enough 放形容词/副词后
+
+【S020】so...that...
+公式: so + 形容词/副词 + that 从句
+例  : The problem is so difficult that nobody can work it out.
+译  : 这个问题太难了，没人能解出来。
+提示: so...that 可换 such...that/too...to
+
+【S021】such...that...
+公式: such + (a/an)+形容词+名词 + that 从句
+例  : It is such an interesting film that we all like it.
+译  : 这是一部如此有趣的电影，我们都喜欢。
+提示: such...that 与 so...that 互换规则
+
+【S022】as...as 同级比较
+公式: as + 形容词/副词原级 + as ... / not as(so)...as
+例  : Tom is as tall as Jack. / He does not run so fast as me.
+译  : 汤姆和杰克一样高。／他跑得不如我快。
+提示: 倍数+as...as 见 S027
+
+【S023】比较级+than
+公式: A + be/实义动词 + 比较级 + than B
+例  : This picture is more beautiful than that one.
+译  : 这幅画比那幅更美。
+提示: much/even/a little/far 修饰比较级
+
+【S024】the+比较级, the+比较级
+公式: The + 比较级..., the + 比较级...
+例  : The more you read, the more you learn.
+译  : 你读得越多，学得越多。
+提示: 越……就越……
+
+【S025】比较级 and 比较级
+公式: 比较级 + and + 比较级
+例  : Our country is becoming stronger and stronger.
+译  : 我们的国家变得越来越强大。
+提示: 多音节: more and more beautiful
+
+【S026】最高级
+公式: the + 最高级 + in/of/among ...
+例  : He is the tallest student in our class.
+译  : 他是我们班最高的学生。
+提示: one of the + 最高级 + 复数名词
+
+【S027】倍数表达
+公式: A is 倍数 + as...as B / 倍数+比较级+than B
+例  : This room is twice as large as that one.
+译  : 这个房间是那个的两倍大。
+提示: twice/three times 等
+
+【S028】not...until...
+公式: not...until 直到……才……
+例  : He did not go to bed until his mother came back.
+译  : 直到妈妈回来他才上床睡觉。
+提示: 倒装句 Not until 从句 did+主语 见语法点
+
+【S029】hardly...when / no sooner...than
+公式: hardly + 过去完成 + when ... / no sooner + 过去完成 + than ...
+例  : Hardly had I got home when it began to rain.
+译  : 我刚到家就开始下雨了。
+提示: 一……就……; 前句需倒装
+
+【S030】as soon as 一……就……
+公式: As soon as + 从句, 主句
+例  : As soon as he arrived, we started the meeting.
+译  : 他一到，我们就开会了。
+提示: 可换 the moment/immediately/instantly
+
+【S031】be about to do...when...
+公式: sb + be about to do + when 从句(突然)
+例  : I was about to leave when the telephone rang.
+译  : 我正要离开，电话铃响了。
+提示: when 前常用过去进行/be about to
+
+【S032】be doing...when...
+公式: sb + be doing + when 从句(突然)
+例  : We were watching TV when the light went out.
+译  : 我们正在看电视，突然灯灭了。
+
+【S033】had better do
+公式: sb + had better (not) do sth
+例  : You had better go to bed early.
+译  : 你最好早点睡。
+提示: 后接动词原形
+
+【S034】would rather do than do
+公式: would rather do A than do B
+例  : I would rather stay at home than go out.
+译  : 我宁愿待在家里也不愿出去。
+提示: prefer to do rather than do 同义
+
+【S035】prefer doing to doing
+公式: prefer A to B / prefer doing A to doing B
+例  : She prefers singing to dancing.
+译  : 她宁愿唱歌而不愿跳舞。
+
+【S036】used to do
+公式: sb used to do sth (过去常常)
+例  : I used to get up late.
+译  : 我过去常常晚起。
+提示: 否定 didn't use to / used not to; 与 be used to doing 区分
+
+【S037】be used to doing
+公式: sb + be/get used to + doing sth (习惯)
+例  : He is used to living in the countryside.
+译  : 他习惯住在乡下。
+提示: to 后接名词/动名词
+
+【S038】be worth doing
+公式: sth + be worth + doing
+例  : The book is well worth reading.
+译  : 这本书很值得一读。
+提示: 值得做; worthy of / It is worthwhile to do
+
+【S039】be busy doing
+公式: sb + be busy doing sth / be busy with sth
+例  : The students are busy preparing for the exam.
+译  : 学生们正忙着备考。
+
+【S040】keep/stop/prevent sb from doing
+公式: keep/stop/prevent sb from doing sth
+例  : The rain prevented us from going out.
+译  : 雨使我们无法外出。
+提示: stop/prevent 可省 from 后接动名词? 通常保留
+
+【S041】make sb do
+公式: make/let/have sb do sth
+例  : The teacher made us read the text aloud.
+译  : 老师让我们大声朗读课文。
+提示: 被动: be made to do; 感官动词见 S042
+
+【S042】see/watch/hear sb do/doing
+公式: see/watch/hear/notice sb do sth 或 doing sth
+例  : I saw him cross the street. / I saw him crossing the street.
+译  : 我看见他过了街。／我看见他正在过街。
+提示: do 表全过程, doing 表正在进行; 被动 to do
+
+【S043】have sth done
+公式: have/get sth done
+例  : I had my bike repaired yesterday.
+译  : 我昨天请人修了自行车。
+提示: 表请人做/遭遇; have sb do; have sth doing
+
+【S044】get sb to do
+公式: get sb to do sth / get sth doing
+例  : He got his friend to help him.
+译  : 他让朋友帮他。
+提示: get 后宾补用 to do, have/make 用 do
+
+【S045】It is said/reported that...
+公式: It is said/reported/believed that 从句
+例  : It is said that he has gone abroad.
+译  : 据说他出国了。
+提示: 可换 sb is said to do/have done
+
+【S046】sb be said to do
+公式: sb + be said/reported/believed + to do / to have done
+例  : He is said to be a famous writer.
+译  : 据说他是一位著名作家。
+提示: 表据说/据报道
+
+【S047】There is no doubt that...
+公式: There is no doubt that 从句
+例  : There is no doubt that he will win.
+译  : 毫无疑问他会赢。
+提示: There is no need to do; There is no point doing
+
+【S048】It is (high) time that...
+公式: It is (high) time that sb did/should do sth
+例  : It is time that we went to bed.
+译  : 我们该睡觉了。
+提示: 从句用过去时或 should do(虚拟)
+
+【S049】It occurs to sb that...
+公式: It occurs/occurred to sb that 从句
+例  : It occurred to me that I had left my keys at home.
+译  : 我突然想起把钥匙落在家里了。
+提示: 某人突然想到
+
+【S050】What if...
+公式: What if + 句子?
+例  : What if it rains tomorrow?
+译  : 明天下雨怎么办？
+提示: How about/What about + n/doing
+
+【S051】It is + 一段时间 + since 从句
+公式: It is/has been + 时间段 + since sb did sth
+例  : It is three years since he left home.
+译  : 他离开家已经三年了。
+提示: since 从句用一般过去时
+
+【S052】since 现在完成主句
+公式: 主句(现在完成) + since 从句
+例  : We have known each other since we were children.
+译  : 我们从小就认识。
+
+【S053】现在完成 + for 时间段
+公式: 主语 + have/has done ... for + 时间段
+例  : She has taught English for ten years.
+译  : 她教英语十年了。
+提示: for 表持续, since 表起点
+
+【S054】It is the first time that...
+公式: It is/was the first time that 从句(现在完成/过去完成)
+例  : It is the first time that I have visited Beijing.
+译  : 这是我第一次游览北京。
+提示: This/That is the + 序数词 + time that...
+
+【S055】感叹句 What
+公式: What + (a/an) + 形容词 + 名词 + (主+谓)!
+例  : What a beautiful day (it is)!
+译  : 多么美好的一天啊！
+提示: What + 复数/不可数名词时不用 a/an
+
+【S056】感叹句 How
+公式: How + 形容词/副词 + (主+谓)!
+例  : How fast the boy runs!
+译  : 这男孩跑得多快啊！
+提示: How + adj + a/an + n + 主谓!
+
+【S057】祈使句
+公式: 动词原形...(否定 Don't/ Never + 动词原形)
+例  : Please close the door. / Don't be late.
+译  : 请关门。／别迟到。
+提示: Let's 后接 shall we; 肯定祈使句反意用 will you
+
+【S058】反意疑问句
+公式: 陈述句, 简短问句?
+例  : He has finished his work, hasn't he?
+译  : 他完成工作了，不是吗？
+提示: 前肯后否/前否后肯; 祈使句、there be 等特殊反意
+
+【S059】选择疑问句
+公式: 一般疑问句 + or + 另一选项?
+例  : Do you want tea or coffee?
+译  : 你要茶还是咖啡？
+
+【S060】特殊疑问句
+公式: 疑问词 + 一般疑问句?
+例  : Where are you going? / Why did you say that?
+译  : 你要去哪儿？／你为什么那么说？
+提示: 疑问词作主语时语序不倒装: Who told you?
+
+【S061】So do I 类倒装
+公式: So + 助动词 + 主语 (也……)
+例  : I like music. So does my sister.
+译  : 我喜欢音乐，我妹妹也喜欢。
+提示: 否定用 Neither/Nor + 助动词 + 主语
+
+【S062】either...or... / neither...nor...
+公式: either A or B / neither A nor B / not only A but also B + 谓语(就近)
+例  : Either you or he is wrong.
+译  : 要么你错，要么他错。
+提示: 就近原则; not only 位于句首倒装见语法
+
+【S063】both...and...
+公式: both A and B + 复数谓语
+例  : Both Tom and Jack are good at English.
+译  : 汤姆和杰克都擅长英语。
+提示: not...but...; whether...or...
+
+【S064】as if 从句
+公式: 主句 + as if + 从句(陈述/虚拟)
+例  : He talks as if he knew everything.
+译  : 他说起话来好像什么都知道。
+提示: 与事实相反用虚拟(过去时/过去完成)
+
+【S065】even if / even though
+公式: Even if/though + 从句, 主句
+例  : Even if it rains, we will go on with the work.
+译  : 即使下雨，我们也会继续工作。
+提示: 即使; 让步状语从句
+
+【S066】although/though 让步
+公式: Although/Though + 从句, 主句
+例  : Although he is old, he works hard.
+译  : 虽然年纪大了，他仍然努力工作。
+提示: 不与 but 连用, 可与 yet 连用
+
+【S067】if 条件句(主将从现)
+公式: If + 一般现在时, 主句(将来时/祈使/情态)
+例  : If it is fine tomorrow, we will go climbing.
+译  : 如果明天天气好，我们就去爬山。
+提示: 主将从现; 主句不可用将来时的从句除外
+
+【S068】unless 除非
+公式: 主句 + unless + 从句(=if...not)
+例  : You will fail the exam unless you work hard.
+译  : 除非你努力，否则考试会不及格。
+
+【S069】because/since/as 原因
+公式: Because/Since/As + 原因从句, 主句
+例  : Because it rained, we stayed at home.
+译  : 因为下雨，我们待在家里。
+提示: because 语气最强; 不与 so 连用
+
+【S070】so that 目的/结果
+公式: 主句 + so that + 从句
+例  : He got up early so that he could catch the bus.
+译  : 他起得很早以便能赶上公交车。
+提示: 目的从句常用 can/could/may/might
+
+【S071】so...that 结果(复习)
+公式: so + 形/副 + that 从句
+例  : She was so tired that she fell asleep at once.
+译  : 她太累了，马上就睡着了。
+提示: 见 S020
+
+【S072】where 地点状语从句
+公式: 主句 + where 从句
+例  : Put the book where it was.
+译  : 把书放回原处。
+提示: 与定语从句区分: 缺先行词
+
+【S073】when/while/as 时间
+公式: When/While/As + 时间从句, 主句
+例  : While I was reading, my mother came in.
+译  : 我读书时，妈妈进来了。
+提示: while+进行/持续性动词
+
+【S074】before/after 时间
+公式: 主句 + before/after + 从句
+例  : Think it over before you answer.
+译  : 回答之前先想清楚。
+提示: before 常译作 才/还没来得及
+
+【S075】宾语从句
+公式: 主语 + 谓语 + that/if/whether/疑问词 + 从句
+例  : I don't know whether he will come.
+译  : 我不知道他是否会来。
+提示: 陈述语序; 时态呼应
+
+【S076】主语从句
+公式: That/Whether/疑问词 + 从句 + 谓语 / It is...that...
+例  : What he said is true.
+译  : 他说的是真的。
+提示: 常用 it 作形式主语
+
+【S077】表语从句
+公式: 主语 + be + 连接词 + 从句
+例  : The reason is that he was ill.
+译  : 原因是他病了。
+提示: because 引导表语从句表原因
+
+【S078】同位语从句
+公式: 名词(fact/news/idea/hope...) + that 从句
+例  : The news that our team won made us happy.
+译  : 我们队获胜的消息让我们高兴。
+提示: 与定语从句区分: that 不充当成分
+
+【S079】定语从句(关系代词)
+公式: 先行词 + who/whom/which/that/whose + 从句
+例  : The girl who is singing is my sister.
+译  : 正在唱歌的女孩是我妹妹。
+提示: who 人/which 物/that 均可; whose 表所属
+
+【S080】定语从句(关系副词)
+公式: 先行词 + where/when/why + 从句
+例  : This is the house where I lived.
+译  : 这是我住过的房子。
+提示: where 地点/when 时间/why 原因
+
+【S081】非限制性定语从句
+公式: 先行词, + who/which/whose/... + 从句
+例  : My father, who is a doctor, works very hard.
+译  : 我爸爸是医生，工作非常努力。
+提示: 逗号隔开; 不用 that; which 可指整句
+
+【S082】the way + 定语
+公式: the way (that/in which) + 从句
+例  : I don't like the way he talks.
+译  : 我不喜欢他说话的方式。
+
+【S083】with 复合结构
+公式: with + 宾语 + 宾补(形/副/介/doing/done/to do)
+例  : He fell asleep with the light on.
+译  : 他开着灯睡着了。
+提示: 独立主格结构类似: 名词+分词
+
+【S084】so/neither 简短反应
+公式: So it is with sb / It is the same with sb
+例  : Tom likes sports, and so it is with Jim.
+译  : 汤姆喜欢运动，吉姆也一样。
+提示: 混合肯定否定时用 So it is with...
+
+【S085】强调句
+公式: It is/was + 被强调部分 + that/who + 其余
+例  : It was in Beijing that we met.
+译  : 我们是在北京相遇的。
+提示: 强调人可用 who; 不可强调谓语(谓语用 do/does/did)
+
+【S086】do/does/did 强调谓语
+公式: 主语 + do/does/did + 动词原形
+例  : I do believe that he is honest.
+译  : 我确实相信他是诚实的。
+提示: 只用于一般现在/过去时肯定句
+
+【S087】not only...but also... 倒装
+公式: Not only + 从句(倒装) but also 主句
+例  : Not only did he come, but also he helped us.
+译  : 他不仅来了，还帮了我们。
+提示: 位于句首从句倒装
+
+【S088】only + 状语 倒装
+公式: Only + 状语/状语从句 + 部分倒装
+例  : Only by working hard can you succeed.
+译  : 只有努力工作你才能成功。
+提示: only+主语不倒装
+
+【S089】否定词位于句首倒装
+公式: Never/Hardly/Seldom/Not only/Not until + 部分倒装
+例  : Never have I seen such a beautiful place.
+译  : 我从未见过这么美的地方。
+提示: 详见语法点-倒装
+
+【S090】there be 变体
+公式: There + 情态动词/be going to/happen to/seem to + be
+例  : There used to be a tree in front of the house.
+译  : 房子前面过去有一棵树。
+
+【S091】抽象名词代替从句
+公式: sb + 动词 + 抽象名词(idea/fact/point) + that 从句
+例  : The fact that he failed surprised us.
+译  : 他失败的事实让我们惊讶。
+提示: 参见 S078
+
+【S092】in order to / so as to
+公式: 主句 + in order to / so as to + 动词原形
+例  : He studies hard in order to go to college.
+译  : 他努力学习以便上大学。
+提示: so as to 不放句首
+
+【S093】regardless of / despite
+公式: 主句 + regardless of / despite/in spite of + 名词
+例  : He went out despite the heavy rain.
+译  : 尽管下大雨，他还是出去了。
+提示: 后接名词/动名词
+
+【S094】thanks to / due to / owing to
+公式: Thanks to/Owing to + 名词, 主句
+例  : Thanks to your help, I finished the task.
+译  : 多亏你的帮助，我完成了任务。
+提示: 表原因; 句首句尾皆可
+
+【S095】when it comes to
+公式: When it comes to + 名词/doing
+例  : When it comes to learning English, practice is the key.
+译  : 说到学英语，练习是关键。
+
+【S096】as far as I know
+公式: As far as I know, ...
+例  : As far as I know, he has never been abroad.
+译  : 据我所知，他从没出过国。
+提示: 就我所知
+
+【S097】in my opinion 观点句
+公式: In my opinion, ... / I think that...
+例  : In my opinion, we should protect the environment.
+译  : 依我看，我们应该保护环境。
+提示: 表达观点常用句型
+
+【S098】It seems/appears that...
+公式: It seems/appears that 从句 / sb seems to do
+例  : It seems that he is very happy.
+译  : 他似乎很开心。
+提示: 可换 He seems to be very happy.
+
+【S099】there is no doing
+公式: There is no doing sth (不可能/没法……)
+例  : There is no knowing what will happen.
+译  : 没法知道会发生什么。
+提示: There is no point/use/good doing 亦常见
+
+【S100】It depends on 等口头句型
+公式: It (all) depends. / That depends on...
+例  : Whether we go depends on the weather.
+译  : 我们去不去取决于天气。
+提示: 口语常用; depend on 后接名词/从句

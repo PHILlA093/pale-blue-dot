@@ -1,0 +1,1764 @@
+{
+  "id": "pep2019-optional-3",
+  "title": "人教版高中英语（2019）· 选择性必修第三册",
+  "stage": "senior",
+  "edition": "PEP 2019",
+  "source": "lilinji/English 人教版 xlsx",
+  "units": [
+    {
+      "id": "u1",
+      "title": "Unit 1",
+      "words": [
+        {
+          "en": "precise",
+          "zh": "adj. 精确的；明确的；严格的",
+          "phonetic": "/prɪˈsaɪs/"
+        },
+        {
+          "en": "precisely",
+          "zh": "adv. 精确地；恰恰",
+          "phonetic": "/prɪˈsaɪsli/"
+        },
+        {
+          "en": "Christianity",
+          "zh": "n. 基督教；基督教精神，基督教教义",
+          "phonetic": "/ˌkrɪstiˈænəti/"
+        },
+        {
+          "en": "realistic",
+          "zh": "adj. 现实的；现实主义的；逼真的；实在论的",
+          "phonetic": "/ˌriːəˈlɪstɪk/"
+        },
+        {
+          "en": "realism",
+          "zh": "n. 现实主义；实在论；现实主义的态度和行为",
+          "phonetic": "/ˈriːəlɪzəm/"
+        },
+        {
+          "en": "realist",
+          "zh": "n. 现实主义者；实在论者",
+          "phonetic": "/ˈriːəlɪst/"
+        },
+        {
+          "en": "primitive",
+          "zh": "n. 原始人；adj. 原始的，远古的；简单的，粗糙的",
+          "phonetic": "/ˈprɪmətɪv/"
+        },
+        {
+          "en": "two-dimensional",
+          "zh": "adj. 二维的；缺乏深度的",
+          "phonetic": "/ˌtuː daɪˈmenʃənlˌˌtuː dɪˈmenʃənl/"
+        },
+        {
+          "en": "dimension",
+          "zh": "n. 方面;[数] 维；尺寸；次元；容积 vt. 标出尺寸；adj. 规格的",
+          "phonetic": "/daɪˈmenʃn; dɪˈmenʃn/"
+        },
+        {
+          "en": "in particular",
+          "zh": "na. 特别；一一"
+        },
+        {
+          "en": "set apart from",
+          "zh": "分开；区别；把……区分开"
+        },
+        {
+          "en": "humanistic",
+          "zh": "adj. 人文主义的；人道主义的",
+          "phonetic": "/ˌhjuːməˈnɪstɪk/"
+        },
+        {
+          "en": "humanity",
+          "zh": "n. 人类；人道；仁慈；人文学科",
+          "phonetic": "/hjuːˈmænəti/"
+        },
+        {
+          "en": "breakthrough",
+          "zh": "n. 突破；突破性进展",
+          "phonetic": "/ˈbreɪkθruː/"
+        },
+        {
+          "en": "influential",
+          "zh": "adj. 有影响的；有势力的；n. 有影响力的人物",
+          "phonetic": "/ˌɪnfluˈenʃl/"
+        },
+        {
+          "en": "reputation",
+          "zh": "n. 名声，名誉；声望",
+          "phonetic": "/ˌrepjuˈteɪʃn/"
+        },
+        {
+          "en": "noble",
+          "zh": "adj. 高尚的；贵族的；惰性的；宏伟的；n. 贵族；vt. 抓住；逮捕",
+          "phonetic": "/ˈnoʊbl/"
+        },
+        {
+          "en": "rank",
+          "zh": "n. 排；等级；军衔；队列；adj. 讨厌的；恶臭的；繁茂的；vt. 排列；把…分等；vi. 列为；列队",
+          "phonetic": "/ræŋk/"
+        },
+        {
+          "en": "purchase",
+          "zh": "n. 购买；紧握；起重装置；vt. 购买；赢得；vi. 购买东西",
+          "phonetic": "/ˈpɜːrtʃəs/"
+        },
+        {
+          "en": "mythology",
+          "zh": "n. 神话；神话学；神话集",
+          "phonetic": "/mɪˈθɑːlədʒi/"
+        },
+        {
+          "en": "client",
+          "zh": "n. [经] 客户；顾客；委托人",
+          "phonetic": "/ˈklaɪənt/"
+        },
+        {
+          "en": "photography",
+          "zh": "n. 摄影；摄影术",
+          "phonetic": "/fəˈtɑːɡrəfi/"
+        },
+        {
+          "en": "emerge",
+          "zh": "vi. 浮现；摆脱；暴露",
+          "phonetic": "/ɪˈmɜːrdʒ/"
+        },
+        {
+          "en": "sunrise",
+          "zh": "n. 日出；黎明",
+          "phonetic": "/ˈsʌnraɪz/"
+        },
+        {
+          "en": "convey",
+          "zh": "vt. 传达；运输；让与",
+          "phonetic": "/kənˈveɪ/"
+        },
+        {
+          "en": "subjective",
+          "zh": "adj. 主观的；个人的；自觉的",
+          "phonetic": "/səbˈdʒektɪv/"
+        },
+        {
+          "en": "outer",
+          "zh": "adj. 外面的，外部的；远离中心的；n. 环外命中",
+          "phonetic": "/ˈaʊtər/"
+        },
+        {
+          "en": "subsequent",
+          "zh": "adj. 后来的，随后的",
+          "phonetic": "/ˈsʌbsɪkwənt/"
+        },
+        {
+          "en": "fond",
+          "zh": "adj. 喜欢的；温柔的；宠爱的",
+          "phonetic": "/fɑːnd/"
+        },
+        {
+          "en": "be fond of",
+          "zh": "v. 爱好"
+        },
+        {
+          "en": "fine art",
+          "zh": "n. 【艺】艺术(尤指绘画及雕塑)"
+        },
+        {
+          "en": "sculpture",
+          "zh": "n. 雕塑；雕刻；刻蚀；vt. 雕塑；雕刻；刻蚀；vi. 从事雕刻",
+          "phonetic": "/ˈskʌlptʃər/"
+        },
+        {
+          "en": "sculptor",
+          "zh": "n. 雕刻家",
+          "phonetic": "/ˈskʌlptər/"
+        },
+        {
+          "en": "visual",
+          "zh": "adj. 视觉的，视力的；栩栩如生的",
+          "phonetic": "/ˈvɪʒuəl/"
+        },
+        {
+          "en": "water lily",
+          "zh": "n. 睡莲"
+        },
+        {
+          "en": "pond",
+          "zh": "n. 池塘；vt. 筑成池塘；vi. 筑成池塘",
+          "phonetic": "/pɑːnd/"
+        },
+        {
+          "en": "arched",
+          "zh": "adj. 拱形的；有拱的；弓形结构的；v. 成弓形弯曲；成弓形（arch的过去分词形式）",
+          "phonetic": "/ɑːrtʃt/"
+        },
+        {
+          "en": "arch",
+          "zh": "n. 弓形，拱形；拱门；adj. 主要的；vt. 使…弯成弓形；用拱连接；vi. 拱起；成为弓形",
+          "phonetic": "/ɑːrtʃ/"
+        },
+        {
+          "en": "investment",
+          "zh": "n. 投资；投入；封锁",
+          "phonetic": "/ɪnˈvestmənt/"
+        },
+        {
+          "en": "bride",
+          "zh": "n. 新娘；姑娘，女朋友",
+          "phonetic": "/braɪd/"
+        },
+        {
+          "en": "permanent",
+          "zh": "n. 烫发（等于permanent wave）；adj. 永久的，永恒的；不变的",
+          "phonetic": "/ˈpɜːrmənənt/"
+        },
+        {
+          "en": "memorial",
+          "zh": "n. 纪念碑，纪念馆；纪念仪式；纪念物；adj. 记忆的；纪念的，追悼的",
+          "phonetic": "/məˈmɔːriəl/"
+        },
+        {
+          "en": "humble",
+          "zh": "adj. 谦逊的；简陋的；（级别或地位）低下的；不大的；vt. 使谦恭；轻松打败（尤指强大的对手）；低声下气",
+          "phonetic": "/ˈhʌmbl/"
+        },
+        {
+          "en": "criticise",
+          "zh": "vt. 批评；吹毛求疵；非难；vi. 批评；吹毛求疵；非难",
+          "phonetic": "/ˈkrɪtɪsaɪz/"
+        },
+        {
+          "en": "criticize",
+          "zh": "vi. 批评；评论；苛求；vt. 批评；评论；非难",
+          "phonetic": "/ˈkrɪtɪsaɪz/"
+        },
+        {
+          "en": "criticism",
+          "zh": "n. 批评；考证；苛求",
+          "phonetic": "/ˈkrɪtɪsɪzəm/"
+        },
+        {
+          "en": "representative",
+          "zh": "n. 代表；典型；众议员；adj. 典型的，有代表性的；代议制的",
+          "phonetic": "/ˌreprɪˈzentətɪv/"
+        },
+        {
+          "en": "ink",
+          "zh": "n. 墨水，墨汁；油墨；vt. 签署；涂墨水于",
+          "phonetic": "/ɪŋk/"
+        },
+        {
+          "en": "animation",
+          "zh": "n. 活泼，生气；激励；卡通片绘制",
+          "phonetic": "/ˌænɪˈmeɪʃ(ə)n/"
+        },
+        {
+          "en": "frame",
+          "zh": "n. 框架；结构；[电影] 画面；adj. 有木架的；有构架的；vt. 设计；建造；陷害；使…适合；vi. 有成功希望",
+          "phonetic": "/freɪm/"
+        },
+        {
+          "en": "symphony",
+          "zh": "n. 交响乐；谐声，和声",
+          "phonetic": "/ˈsɪmfəni/"
+        },
+        {
+          "en": "decline",
+          "zh": "n. 下降；衰退；斜面；vt. 谢绝；婉拒；vi. 下降；衰落；谢绝",
+          "phonetic": "/dɪˈklaɪn/"
+        },
+        {
+          "en": "exhibition",
+          "zh": "n. 展览，显示；展览会；展览品",
+          "phonetic": "/ˌeksɪˈbɪʃn/"
+        },
+        {
+          "en": "bronze",
+          "zh": "n. 青铜；古铜色；青铜制品；adj. 青铜色的；青铜制的；vt. 镀青铜于；vi. 变成青铜色，被晒黑",
+          "phonetic": "/brɑːnz/"
+        },
+        {
+          "en": "ceramic",
+          "zh": "n. 陶瓷；陶瓷制品；adj. 陶瓷的；陶器的；制陶艺术的",
+          "phonetic": "/səˈræmɪk/"
+        },
+        {
+          "en": "vase",
+          "zh": "n. 瓶；花瓶",
+          "phonetic": "/veɪs; veɪz/"
+        },
+        {
+          "en": "artistic",
+          "zh": "adj. 艺术的；风雅的；有美感的",
+          "phonetic": "/ɑːrˈtɪstɪk/"
+        },
+        {
+          "en": "entry",
+          "zh": "n. 进入；入口；条目；登记；报关手续；对土地的侵占",
+          "phonetic": "/ˈentri/"
+        },
+        {
+          "en": "civil",
+          "zh": "adj. 公民的；民间的；文职的；有礼貌的；根据民法的",
+          "phonetic": "/ˈsɪvl/"
+        },
+        {
+          "en": "recognition",
+          "zh": "n. 识别；承认，认出；重视；赞誉；公认",
+          "phonetic": "/ˌrekəɡˈnɪʃn/"
+        },
+        {
+          "en": "Buddhist",
+          "zh": "n. 佛教徒；adj. 佛教的",
+          "phonetic": "/ˈbuːdɪst/"
+        },
+        {
+          "en": "Buddhism",
+          "zh": "n. 佛教",
+          "phonetic": "/ˈbuːdɪzəm/"
+        },
+        {
+          "en": "expansion",
+          "zh": "n. 膨胀；阐述；扩张物",
+          "phonetic": "/ɪkˈspænʃn/"
+        },
+        {
+          "en": "bring ... to life",
+          "zh": "na. 使苏醒"
+        },
+        {
+          "en": "guarantee",
+          "zh": "n. 保证；担保；保证人；保证书；抵押品；vt. 保证；担保",
+          "phonetic": "/ˌɡærənˈtiː/"
+        },
+        {
+          "en": "contemporary",
+          "zh": "n. 同时代的人；同时期的东西；adj. 当代的；同时代的；属于同一时期的",
+          "phonetic": "/kənˈtempəreri/"
+        },
+        {
+          "en": "worthy",
+          "zh": "n. 杰出人物；知名人士；adj. 值得的；有价值的；配得上的，相称的；可尊敬的；应…的",
+          "phonetic": "/ˈwɜːrði/"
+        },
+        {
+          "en": "be worthy of",
+          "zh": "值得；配得上；对得起"
+        },
+        {
+          "en": "The Middle Ages",
+          "zh": "n. 中世纪（欧洲历史上从公元 1000 年到 1450 年）"
+        },
+        {
+          "en": "Giotto di Bondone",
+          "zh": "乔托（意大利文艺复兴初期的画家和雕塑家）"
+        },
+        {
+          "en": "the Renaissance",
+          "zh": "文艺复兴；文艺复兴时期；文艺复兴运动"
+        },
+        {
+          "en": "Masaccio",
+          "zh": "n. 马萨乔（意大利画家）",
+          "phonetic": "/mɑ:'sɑ:ttʃɔ:/"
+        }
+      ]
+    },
+    {
+      "id": "u2",
+      "title": "Unit 2",
+      "words": [
+        {
+          "en": "Leonardo da Vinci",
+          "zh": "(达)芬奇(1452-1519, 意大利文艺复兴时期伟大画家, 雕刻家, 建筑学家)"
+        },
+        {
+          "en": "Michelangelo",
+          "zh": "n. 米开朗基罗（意大利文艺复兴时期成就卓著的科学家，艺术家）",
+          "phonetic": "/ˌmaɪkəlˈændʒəˌləʊ/"
+        },
+        {
+          "en": "Raphael",
+          "zh": "n. 拉斐尔（姓氏）；拉斐尔（意大利画家、建筑学家）",
+          "phonetic": "/ˈræfeɪəl/"
+        },
+        {
+          "en": "Rembrandt",
+          "zh": "伦布兰特(van Rijn [Ryn], 1609-1669, 荷兰画家)"
+        },
+        {
+          "en": "Impressionism",
+          "zh": "n. 印象派，印象主义",
+          "phonetic": "/ɪmˈpreʃənɪzəm/"
+        },
+        {
+          "en": "Claude Monet",
+          "zh": "莫内；莫奈；克劳德·莫奈"
+        },
+        {
+          "en": "Renoir",
+          "zh": "n. 雷诺阿（人名）",
+          "phonetic": "/rə'nwa:/"
+        },
+        {
+          "en": "Picasso",
+          "zh": "n. 毕加索(法国画家)",
+          "phonetic": "/pi'kæsəu/"
+        },
+        {
+          "en": "Cubism",
+          "zh": "n. 立体派；立体主义",
+          "phonetic": "/ˈkjuːbɪzəm/"
+        },
+        {
+          "en": "Giverny",
+          "zh": "吉维尼；纪梵尼；吉凡尼"
+        },
+        {
+          "en": "Tadpoles Searching for Mother",
+          "zh": "无"
+        },
+        {
+          "en": "The Cowboy's Flute",
+          "zh": "无"
+        },
+        {
+          "en": "Feeling from Mountain and Water",
+          "zh": "无"
+        },
+        {
+          "en": "Clearing After Snow on a Mountain Pass",
+          "zh": "无"
+        },
+        {
+          "en": "tobacco",
+          "zh": "n. 烟草，烟叶；烟草制品；抽烟",
+          "phonetic": "/təˈbækoʊ/"
+        },
+        {
+          "en": "alcohol",
+          "zh": "n. 酒精，乙醇",
+          "phonetic": "/ˈælkəhɔːl/"
+        },
+        {
+          "en": "abuse",
+          "zh": "n. 滥用；虐待；辱骂；弊端；恶习，陋习；vt. 滥用；虐待；辱骂",
+          "phonetic": "/əˈbjuːs/"
+        },
+        {
+          "en": "physical",
+          "zh": "n. 体格检查；adj. [物] 物理的；身体的；物质的；根据自然规律的，符合自然法则的",
+          "phonetic": "/ˈfɪzɪkl/"
+        },
+        {
+          "en": "dominate",
+          "zh": "vt. 控制；支配；占优势；在…中占主要地位；vi. 占优势；处于支配地位",
+          "phonetic": "/ˈdɑːmɪneɪt/"
+        },
+        {
+          "en": "repeatedly",
+          "zh": "adv. 反复地；再三地；屡次地",
+          "phonetic": "/rɪˈpiːtɪdli/"
+        },
+        {
+          "en": "psychology",
+          "zh": "n. 心理学；心理状态",
+          "phonetic": "/saɪˈkɑːlədʒi/"
+        },
+        {
+          "en": "cue",
+          "zh": "n. 提示，暗示；线索；vt. 给…暗示",
+          "phonetic": "/kjuː/"
+        },
+        {
+          "en": "in response to",
+          "zh": "na. 应…而"
+        },
+        {
+          "en": "reward",
+          "zh": "n. [劳经] 报酬；报答；酬谢；vt. [劳经] 奖励；奖赏",
+          "phonetic": "/rɪˈwɔːrd/"
+        },
+        {
+          "en": "rely",
+          "zh": "vi. 依靠；信赖",
+          "phonetic": "/rɪˈlaɪ/"
+        },
+        {
+          "en": "rely on",
+          "zh": "v. 依靠；信赖"
+        },
+        {
+          "en": "facilitate",
+          "zh": "vt. 促进；帮助；使容易",
+          "phonetic": "/fəˈsɪlɪteɪt/"
+        },
+        {
+          "en": "examine",
+          "zh": "vt. 检查；调查； 检测；考试；vi. 检查；调查",
+          "phonetic": "/ɪɡˈzæmɪn/"
+        },
+        {
+          "en": "negative",
+          "zh": "adj. [数] 负的；消极的；否定的；阴性的；n. 否定；负数；[摄] 底片；vt. 否定；拒绝",
+          "phonetic": "/ˈneɡətɪv/"
+        },
+        {
+          "en": "escalator",
+          "zh": "n. （美）自动扶梯；电动扶梯",
+          "phonetic": "/ˈeskəleɪtər/"
+        },
+        {
+          "en": "straight away",
+          "zh": "adv. 马上"
+        },
+        {
+          "en": "pessimistic",
+          "zh": "adj. 悲观的，厌世的；悲观主义的",
+          "phonetic": "/ˌpesɪˈmɪstɪk/"
+        },
+        {
+          "en": "discipline",
+          "zh": "n. 学科；纪律；训练；惩罚；vt. 训练，训导；惩戒",
+          "phonetic": "/ˈdɪsəplɪn/"
+        },
+        {
+          "en": "pill",
+          "zh": "n. 药丸；弹丸，子弹；口服避孕药；vt. 把…制成丸剂；使服用药丸；抢劫，掠夺（古语）；vi. 做成药丸；服药丸",
+          "phonetic": "/pɪl/"
+        },
+        {
+          "en": "delete",
+          "zh": "vt. 删除",
+          "phonetic": "/dɪˈliːt/"
+        },
+        {
+          "en": "decide on",
+          "zh": "na. 决心"
+        },
+        {
+          "en": "make up one's mind",
+          "zh": "na. 决心 (to do)"
+        },
+        {
+          "en": "compose",
+          "zh": "vt. 构成；写作；使平静；排…的版；vi. 组成；作曲；排字",
+          "phonetic": "/kəmˈpoʊz/"
+        },
+        {
+          "en": "be composed of",
+          "zh": "na. 由…组成"
+        },
+        {
+          "en": "surgeon",
+          "zh": "n. 外科医生",
+          "phonetic": "/ˈsɜːrdʒən/"
+        },
+        {
+          "en": "surgery",
+          "zh": "n. 外科；外科手术；手术室；诊疗室",
+          "phonetic": "/ˈsɜːrdʒəri/"
+        },
+        {
+          "en": "liberation",
+          "zh": "n. 释放，解放",
+          "phonetic": "/ˌlɪbəˈreɪʃn/"
+        },
+        {
+          "en": "shave",
+          "zh": "vi. 剃须，剃毛；vt. 剃，削去；修剪；切成薄片；掠；n. 刮脸，剃胡子；修面；<口>侥幸逃过，幸免；剃刀，刮刀",
+          "phonetic": "/ʃeɪv/"
+        },
+        {
+          "en": "shave off",
+          "zh": "na. 剃掉；削去"
+        },
+        {
+          "en": "beard",
+          "zh": "n. 胡须；颌毛；vt. 公然反对；抓…的胡须；vi. 充当掩护；充当男随员",
+          "phonetic": "/bɪrd/"
+        },
+        {
+          "en": "disturb",
+          "zh": "vt. 打扰；妨碍；使不安；弄乱；使恼怒；vi. 打扰；妨碍",
+          "phonetic": "/dɪˈstɜːrb/"
+        },
+        {
+          "en": "cigarette",
+          "zh": "n. 香烟；纸烟",
+          "phonetic": "/ˈsɪɡəret/"
+        },
+        {
+          "en": "specialist",
+          "zh": "n. 专家；专门医师；adj. 专家的；专业的",
+          "phonetic": "/ˈspeʃəlɪst/"
+        },
+        {
+          "en": "consultant",
+          "zh": "n. 顾问；咨询者；会诊医生",
+          "phonetic": "/kənˈsʌltənt/"
+        },
+        {
+          "en": "drug",
+          "zh": "n. 药；毒品；麻醉药；滞销货；vt. 使服麻醉药；使服毒品；掺麻醉药于；vi. 吸毒",
+          "phonetic": "/drʌɡ/"
+        },
+        {
+          "en": "skip",
+          "zh": "n. 跳跃；跳读；vt. 跳过；遗漏；vi. 跳跃；跳绳；遗漏；跳读",
+          "phonetic": "/skɪp/"
+        },
+        {
+          "en": "dizzy",
+          "zh": "adj. 晕眩的；使人头晕的；昏乱的；心不在焉的；愚蠢的；vt. 使头晕眼花；使混乱；使茫然",
+          "phonetic": "/ˈdɪzi/"
+        },
+        {
+          "en": "flu",
+          "zh": "n. 流感",
+          "phonetic": "/fluː/"
+        },
+        {
+          "en": "stimulate",
+          "zh": "vi. 起刺激作用；起促进作用；vt. 刺激；鼓舞，激励",
+          "phonetic": "/ˈstɪmjuleɪt/"
+        },
+        {
+          "en": "dentist",
+          "zh": "n. 牙科医生；牙医诊所",
+          "phonetic": "/ˈdentɪst/"
+        },
+        {
+          "en": "sugary",
+          "zh": "adj. 含糖的；甜的；糖状的；甜言蜜语的",
+          "phonetic": "/ˈʃʊɡəri/"
+        },
+        {
+          "en": "nut",
+          "zh": "n. 螺母，螺帽；坚果；难对付的人，难解的问题；vi. 采坚果",
+          "phonetic": "/nʌt/"
+        },
+        {
+          "en": "skateboard",
+          "zh": "n. 溜冰板；vi. 用滑板滑行",
+          "phonetic": "/ˈskeɪtbɔːrd/"
+        },
+        {
+          "en": "dynamic",
+          "zh": "n. 动态；动力；adj. 动态的；动力的；动力学的；有活力的",
+          "phonetic": "/daɪˈnæmɪk/"
+        },
+        {
+          "en": "stressed out",
+          "zh": "v. “stress”的过去式和过去分词"
+        },
+        {
+          "en": "worn out",
+          "zh": "adj. 破烂不堪的；废旧的；疲惫不堪；精疲力竭"
+        },
+        {
+          "en": "bowling",
+          "zh": "n. 滚木球戏；保龄球戏；v. 打保龄球（bowl的现在分词）",
+          "phonetic": "/ˈboʊlɪŋ/"
+        },
+        {
+          "en": "comedy",
+          "zh": "n. 喜剧；喜剧性；有趣的事情",
+          "phonetic": "/ˈkɑːmədi/"
+        },
+        {
+          "en": "monthly",
+          "zh": "adj. 每月的，每月一次的；有效期为一个月的；n. 月刊；adv. 每月，每月一次",
+          "phonetic": "/ˈmʌnθli/"
+        },
+        {
+          "en": "enhance",
+          "zh": "vt. 提高；加强；增加",
+          "phonetic": "/ɪnˈhæns/"
+        },
+        {
+          "en": "refresh",
+          "zh": "vt. 更新；使……恢复；使……清新；消除……的疲劳；vi. 恢复精神；喝饮料，吃点心；补充给养",
+          "phonetic": "/rɪˈfreʃ/"
+        },
+        {
+          "en": "absorb",
+          "zh": "vt. 吸收；吸引；承受；理解；使…全神贯注",
+          "phonetic": "/əbˈzɔːrb; əbˈsɔːrb/"
+        },
+        {
+          "en": "Aristotle",
+          "zh": "n. 亚里士多德",
+          "phonetic": "/ˈærɪˌstɑːtl/"
+        },
+        {
+          "en": "People's Liberation Army",
+          "zh": "中国人民解放军；中国人民解放军海军；中国人民解放军总部"
+        },
+        {
+          "en": "PLA",
+          "zh": "abbr. 中国人民解放军（Chinese People's Liberation Army）；原生质树脂活动（plasma resin activity）"
+        },
+        {
+          "en": "Lao Zi",
+          "zh": "老子；太上老君点化六诏；李耳"
+        },
+        {
+          "en": "graph",
+          "zh": "n. 图表；曲线图；vt. 用曲线图表示",
+          "phonetic": "/ɡræf/"
+        }
+      ]
+    },
+    {
+      "id": "u3",
+      "title": "Unit 3",
+      "words": [
+        {
+          "en": "emission",
+          "zh": "n. （光、热等的）发射，散发；喷射；发行",
+          "phonetic": "/ɪˈmɪʃn/"
+        },
+        {
+          "en": "melt",
+          "zh": "vi. 熔化，溶解；渐混；vt. 使融化；使熔化；使软化；使感动；n. 熔化；熔化物",
+          "phonetic": "/melt/"
+        },
+        {
+          "en": "starve",
+          "zh": "vi. 饿死；挨饿；渴望；vt. 使饿死；使挨饿",
+          "phonetic": "/stɑːrv/"
+        },
+        {
+          "en": "seal",
+          "zh": "n. 密封；印章；海豹；封条；标志；vt. 密封；盖章；vi. 猎海豹",
+          "phonetic": "/siːl/"
+        },
+        {
+          "en": "ecology",
+          "zh": "n. 生态学；社会生态学",
+          "phonetic": "/iˈkɑːlədʒi/"
+        },
+        {
+          "en": "release",
+          "zh": "n. 释放；发布；让与；vt. 释放；发射；让与；允许发表",
+          "phonetic": "/rɪˈliːs/"
+        },
+        {
+          "en": "methane",
+          "zh": "n. [有化] 甲烷；[能源] 沼气",
+          "phonetic": "/ˈmeθeɪn/"
+        },
+        {
+          "en": "carbon",
+          "zh": "n. [化学] 碳；碳棒；复写纸；adj. 碳的；碳处理的",
+          "phonetic": "/ˈkɑːrbən/"
+        },
+        {
+          "en": "dioxide",
+          "zh": "n. 二氧化物",
+          "phonetic": "/daɪˈɑːksaɪd/"
+        },
+        {
+          "en": "carbon dioxide",
+          "zh": "n. 二氧化碳"
+        },
+        {
+          "en": "habitable",
+          "zh": "adj. 可居住的；适于居住的",
+          "phonetic": "/ˈhæbɪtəbl/"
+        },
+        {
+          "en": "sustain",
+          "zh": "vt. 维持；支撑，承担；忍受；供养；证实",
+          "phonetic": "/səˈsteɪn/"
+        },
+        {
+          "en": "sustainable",
+          "zh": "adj. 可以忍受的；足可支撑的；养得起的；可持续的",
+          "phonetic": "/səˈsteɪnəb(ə)l/"
+        },
+        {
+          "en": "fossil",
+          "zh": "n. 化石；僵化的事物；顽固不化的人；adj. 化石的；陈腐的，守旧的",
+          "phonetic": "/ˈfɑːsl/"
+        },
+        {
+          "en": "fuel",
+          "zh": "n. 燃料；刺激因素；vt. 供以燃料，加燃料；vi. 得到燃料",
+          "phonetic": "/ˈfjuːəl/"
+        },
+        {
+          "en": "fossil fuel",
+          "zh": "n. 化石燃料（如煤或石油）"
+        },
+        {
+          "en": "comprehensive",
+          "zh": "n. 综合学校；专业综合测验；adj. 综合的；广泛的；有理解力的",
+          "phonetic": "/ˌkɑːmprɪˈhensɪv/"
+        },
+        {
+          "en": "worldwide",
+          "zh": "adj. 全世界的；adv. 在世界各地",
+          "phonetic": "/ˌwɜːrldˈwaɪd/"
+        },
+        {
+          "en": "trend",
+          "zh": "n. 趋势，倾向；走向；vt. 使…趋向；vi. 趋向，伸向",
+          "phonetic": "/trend/"
+        },
+        {
+          "en": "frequently",
+          "zh": "adv. 频繁地，经常地；时常，屡次",
+          "phonetic": "/ˈfriːkwəntli/"
+        },
+        {
+          "en": "broadcast",
+          "zh": "n. 广播；播音；广播节目；adj. 广播的；vt. 播送，播放；（无线电或电视）广播；播撒（种子）；vi. 广播，播送；播放",
+          "phonetic": "/ˈbrɔːdkæst/"
+        },
+        {
+          "en": "policy",
+          "zh": "n. 政策，方针；保险单",
+          "phonetic": "/ˈpɑːləsi/"
+        },
+        {
+          "en": "footprint",
+          "zh": "n. 足迹；脚印",
+          "phonetic": "/ˈfʊtprɪnt/"
+        },
+        {
+          "en": "restrict",
+          "zh": "vt. 限制；约束；限定",
+          "phonetic": "/rɪˈstrɪkt/"
+        },
+        {
+          "en": "restriction",
+          "zh": "n. 限制；约束；束缚",
+          "phonetic": "/rɪˈstrɪkʃn/"
+        },
+        {
+          "en": "seize",
+          "zh": "vt. 抓住；夺取；理解；逮捕；vi. 抓住；利用；（机器）卡住",
+          "phonetic": "/siːz/"
+        },
+        {
+          "en": "basin",
+          "zh": "n. 水池；流域；盆地；盆",
+          "phonetic": "/ˈbeɪsn/"
+        },
+        {
+          "en": "penguin",
+          "zh": "n. 企鹅；空军地勤人员",
+          "phonetic": "/ˈpeŋɡwɪn/"
+        },
+        {
+          "en": "reform",
+          "zh": "n. 改革，改良；改正；adj. 改革的；改革教会的；vt. 改革，革新；重新组成；vi. 重组；改过",
+          "phonetic": "/rɪˈfɔːrm/"
+        },
+        {
+          "en": "undergo",
+          "zh": "vt. 经历，经受；忍受",
+          "phonetic": "/ˌʌndərˈɡoʊ/"
+        },
+        {
+          "en": "underwent",
+          "zh": "v. 经验；遭遇（undergo的过去式）",
+          "phonetic": "/ˌʌndərˈwent/"
+        },
+        {
+          "en": "undergone",
+          "zh": "v. 经历（undergo的过去分词）"
+        },
+        {
+          "en": "implement",
+          "zh": "n. 工具，器具；手段；vt. 实施，执行；实现，使生效",
+          "phonetic": "/ˈɪmplɪmənt; ˈɪmpləˌment/"
+        },
+        {
+          "en": "harmonious",
+          "zh": "adj. 和谐的，和睦的；协调的；悦耳的",
+          "phonetic": "/hɑːrˈmoʊniəs/"
+        },
+        {
+          "en": "moderate",
+          "zh": "adj. 稳健的，温和的；适度的，中等的；有节制的；vi. 变缓和，变弱；vt. 节制；减轻",
+          "phonetic": "/ˈmɑːdərət/"
+        },
+        {
+          "en": "submit",
+          "zh": "vi. 提交；服从；vt. 使服从；主张；呈递",
+          "phonetic": "/səbˈmɪt/"
+        },
+        {
+          "en": "annual",
+          "zh": "n. 年刊，年鉴；一年生植物；adj. 年度的；每年的",
+          "phonetic": "/ˈænjuəl/"
+        },
+        {
+          "en": "tropical",
+          "zh": "adj. 热带的；热情的；酷热的",
+          "phonetic": "/ˈtrɑːpɪkl/"
+        },
+        {
+          "en": "chaos",
+          "zh": "n. 混沌，混乱",
+          "phonetic": "/ˈkeɪɑːs/"
+        },
+        {
+          "en": "on behalf",
+          "zh": "代取件业务；代订；代为"
+        },
+        {
+          "en": "on behalf of",
+          "zh": "na. 替；为…的利益"
+        },
+        {
+          "en": "nuclear",
+          "zh": "adj. 原子能的；[细胞] 细胞核的；中心的；原子核的",
+          "phonetic": "/ˈnuːkliər/"
+        },
+        {
+          "en": "sensitive",
+          "zh": "adj. 敏感的；感觉的；[仪] 灵敏的；感光的；易受伤害的；易受影响的；n. 敏感的人；有灵异能力的人",
+          "phonetic": "/ˈsensətɪv/"
+        },
+        {
+          "en": "jungle",
+          "zh": "n. 丛林，密林；危险地带；adj. 丛林的；蛮荒的",
+          "phonetic": "/ˈdʒʌŋɡl/"
+        },
+        {
+          "en": "smog",
+          "zh": "n. 烟雾",
+          "phonetic": "/smɑːɡ/"
+        },
+        {
+          "en": "originate",
+          "zh": "vt. 引起；创作；vi. 发源；发生；起航",
+          "phonetic": "/əˈrɪdʒɪneɪt/"
+        },
+        {
+          "en": "volume",
+          "zh": "n. 量；体积；卷；音量；大量；册；adj. 大量的；vt. 把…收集成卷；vi. 成团卷起",
+          "phonetic": "/ˈvɑːljuːmˌˈvɑːljəm/"
+        },
+        {
+          "en": "garbage",
+          "zh": "n. 垃圾；废物",
+          "phonetic": "/ˈɡɑːrbɪdʒ/"
+        },
+        {
+          "en": "enterprise",
+          "zh": "n. 企业；事业；进取心；事业心",
+          "phonetic": "/ˈentərpraɪz/"
+        },
+        {
+          "en": "restore",
+          "zh": "vi. 恢复；还原；vt. 恢复；修复；归还",
+          "phonetic": "/rɪˈstɔːr/"
+        },
+        {
+          "en": "conservation",
+          "zh": "n. 保存，保持；保护",
+          "phonetic": "/ˌkɑːnsərˈveɪʃn/"
+        },
+        {
+          "en": "dozen",
+          "zh": "n. 十二个，一打；adj. 一打的",
+          "phonetic": "/ˈdʌzn/"
+        },
+        {
+          "en": "dozens of",
+          "zh": "adj. 许多"
+        },
+        {
+          "en": "regulation",
+          "zh": "n. 管理；规则；校准；adj. 规定的；平常的",
+          "phonetic": "/ˌreɡjuˈleɪʃn/"
+        },
+        {
+          "en": "disposal",
+          "zh": "n. 处理；支配；清理；安排",
+          "phonetic": "/dɪˈspoʊzl/"
+        },
+        {
+          "en": "inspection",
+          "zh": "n. 视察，检查",
+          "phonetic": "/ɪnˈspekʃn/"
+        },
+        {
+          "en": "fine",
+          "zh": "n. 罚款；adj. 好的；优良的；细小的，精美的；健康的；晴朗的；vt. 罚款；澄清；adv. 很好地；精巧地",
+          "phonetic": "/faɪn/"
+        },
+        {
+          "en": "campaign",
+          "zh": "n. 运动；活动；战役；vi. 作战；参加竞选；参加活动",
+          "phonetic": "/kæmˈpeɪn/"
+        },
+        {
+          "en": "waterway",
+          "zh": "n. 航道；水路；排水沟",
+          "phonetic": "/ˈwɔːtərweɪ/"
+        },
+        {
+          "en": "tolerate",
+          "zh": "vt. 忍受；默许；宽恕",
+          "phonetic": "/ˈtɑːləreɪt/"
+        },
+        {
+          "en": "agenda",
+          "zh": "n. 议程；日常工作事项；日程表",
+          "phonetic": "/əˈdʒendə/"
+        },
+        {
+          "en": "Norway",
+          "zh": "n. 挪威（北欧国家名）",
+          "phonetic": "/ˈnɔːrweɪ/"
+        },
+        {
+          "en": "Svalbard",
+          "zh": "斯瓦尔巴特群岛[挪威]",
+          "phonetic": "/'svɑ:lbɑ:/"
+        },
+        {
+          "en": "Hurricane Katrina",
+          "zh": "卡崔娜飓风；卡特里娜飓风；飓风卡特里娜"
+        },
+        {
+          "en": "adversity",
+          "zh": "n. 逆境；不幸；灾难；灾祸",
+          "phonetic": "/ədˈvɜːrsəti/"
+        },
+        {
+          "en": "wage",
+          "zh": "n. 工资；代价；报偿；vt. 进行；开展；vi. 进行；发动；从事",
+          "phonetic": "/weɪdʒ/"
+        },
+        {
+          "en": "bitter",
+          "zh": "n. 苦味；苦啤酒；adj. 苦的；痛苦的；尖刻的；充满仇恨的；vt. 使变苦；adv. 激烈地；严寒刺骨地",
+          "phonetic": "/ˈbɪtər/"
+        },
+        {
+          "en": "expedition",
+          "zh": "n. 远征；探险队；迅速",
+          "phonetic": "/ˌekspəˈdɪʃn/"
+        },
+        {
+          "en": "endurance",
+          "zh": "n. 忍耐力；忍耐；持久；耐久",
+          "phonetic": "/ɪnˈdʊrəns/"
+        },
+        {
+          "en": "vigour",
+          "zh": "n. 活力；气势",
+          "phonetic": "/ˈvɪɡər/"
+        },
+        {
+          "en": "turn sb. down",
+          "zh": "na. 翻下(衣领等)；扭小(灯火等)拒绝考虑；拒绝(某人)"
+        }
+      ]
+    },
+    {
+      "id": "u4",
+      "title": "Unit 4",
+      "words": [
+        {
+          "en": "qualified",
+          "zh": "v. 限制（qualify的过去分词）；描述；授权予；adj. 合格的；有资格的",
+          "phonetic": "/ˈkwɑːlɪfaɪd/"
+        },
+        {
+          "en": "enthusiastic",
+          "zh": "adj. 热情的；热心的；狂热的",
+          "phonetic": "/ɪnˌθuːziˈæstɪk/"
+        },
+        {
+          "en": "aboard",
+          "zh": "prep. 在…上；adv. 在飞机上；[船] 在船上；在火车上",
+          "phonetic": "/əˈbɔːrd/"
+        },
+        {
+          "en": "cupboard",
+          "zh": "n. 碗柜；食橱",
+          "phonetic": "/ˈkʌbərd/"
+        },
+        {
+          "en": "assign",
+          "zh": "vt. 分配；指派；[计][数] 赋值；vi. 将财产过户（尤指过户给债权人）",
+          "phonetic": "/əˈsaɪn/"
+        },
+        {
+          "en": "steward",
+          "zh": "n. 管家；乘务员；膳务员；工会管事；vi. 当服务员；当管事；vt. 管理",
+          "phonetic": "/ˈstuːərd/"
+        },
+        {
+          "en": "envy",
+          "zh": "n. 嫉妒，妒忌；羡慕；vt. 嫉妒，妒忌；羡慕；vi. 感到妒忌；显示出妒忌",
+          "phonetic": "/ˈenvi/"
+        },
+        {
+          "en": "crush",
+          "zh": "n. 粉碎；迷恋；压榨；拥挤的人群；vt. 压碎；弄皱，变形；使…挤入；vi. 挤；被压碎",
+          "phonetic": "/krʌʃ/"
+        },
+        {
+          "en": "sink",
+          "zh": "n. 水槽；洗涤槽；污水坑；vi. 下沉；消沉；渗透；vt. 使下沉；挖掘；使低落",
+          "phonetic": "/sɪŋk/"
+        },
+        {
+          "en": "abandon",
+          "zh": "n. 放任；狂热；vt. 遗弃；放弃",
+          "phonetic": "/əˈbændən/"
+        },
+        {
+          "en": "stove",
+          "zh": "n. 火炉；窑；温室；vt. 用火炉烤",
+          "phonetic": "/stoʊv/"
+        },
+        {
+          "en": "blanket",
+          "zh": "n. 毛毯，毯子；毯状物，覆盖层；adj. 总括的，全体的；没有限制的；vt. 覆盖，掩盖；用毯覆盖",
+          "phonetic": "/ˈblæŋkɪt/"
+        },
+        {
+          "en": "belongings",
+          "zh": "n. [经] 财产，所有物；亲戚",
+          "phonetic": "/bɪˈlɔːŋɪŋz/"
+        },
+        {
+          "en": "banjo",
+          "zh": "n. 班卓琴；五弦琴",
+          "phonetic": "/ˈbændʒoʊ/"
+        },
+        {
+          "en": "miserable",
+          "zh": "adj. 悲惨的；痛苦的；卑鄙的",
+          "phonetic": "/ˈmɪzrəbl/"
+        },
+        {
+          "en": "voyage",
+          "zh": "n. 航行；航程；旅行记；vt. 飞过；渡过；vi. 航行；航海",
+          "phonetic": "/ˈvɔɪɪdʒ/"
+        },
+        {
+          "en": "navy",
+          "zh": "n. 海军；深蓝色的",
+          "phonetic": "/ˈneɪvi/"
+        },
+        {
+          "en": "decent",
+          "zh": "adj. 正派的；得体的；相当好的",
+          "phonetic": "/ˈdiːsnt/"
+        },
+        {
+          "en": "cosy",
+          "zh": "n. 保温罩；adj. 舒适的；惬意的",
+          "phonetic": "/ˈkoʊzi/"
+        },
+        {
+          "en": "selfish",
+          "zh": "adj. 自私的；利己主义的",
+          "phonetic": "/ˈselfɪʃ/"
+        },
+        {
+          "en": "good-tempered",
+          "zh": "adj. 宽容的；和蔼的；脾气好的",
+          "phonetic": "/ˌɡʊd ˈtempərd/"
+        },
+        {
+          "en": "bad-tempered",
+          "zh": "adj. 脾气不好的；易怒的",
+          "phonetic": "/ˌbæd ˈtempərd/"
+        },
+        {
+          "en": "genuine",
+          "zh": "adj. 真实的，真正的；诚恳的",
+          "phonetic": "/ˈdʒenjuɪn/"
+        },
+        {
+          "en": "perseverance",
+          "zh": "n. 坚持不懈；不屈不挠；n. 耐性；毅力",
+          "phonetic": "/ˌpɜːrsəˈvɪrəns/"
+        },
+        {
+          "en": "persevere",
+          "zh": "vi. 坚持；不屈不挠；固执己见（在辩论中）",
+          "phonetic": "/ˌpɜːrsəˈvɪr/"
+        },
+        {
+          "en": "resolve",
+          "zh": "n. 坚决；决定要做的事；vt. 决定；溶解；使…分解；决心要做…；vi. 解决；决心；分解",
+          "phonetic": "/rɪˈzɑːlv/"
+        },
+        {
+          "en": "resolution",
+          "zh": "n. [物] 分辨率；决议；解决；决心",
+          "phonetic": "/ˌrezəˈluːʃn/"
+        },
+        {
+          "en": "crew",
+          "zh": "n. 队，组；全体人员，全体船员；vt. 使当船员；vi. 一起工作",
+          "phonetic": "/kruː/"
+        },
+        {
+          "en": "cruel",
+          "zh": "adj. 残酷的，残忍的；使人痛苦的，让人受难的；无情的，严酷的",
+          "phonetic": "/ˈkruːəl/"
+        },
+        {
+          "en": "thorough",
+          "zh": "adj. 彻底的；十分的；周密的",
+          "phonetic": "/ˈθɜːroʊ/"
+        },
+        {
+          "en": "furniture",
+          "zh": "n. 家具；设备；储藏物",
+          "phonetic": "/ˈfɜːrnɪtʃər/"
+        },
+        {
+          "en": "unfortunately",
+          "zh": "adv. 不幸地",
+          "phonetic": "/ʌnˈfɔːrtʃənətli/"
+        },
+        {
+          "en": "fortunately",
+          "zh": "adv. 幸运地",
+          "phonetic": "/ˈfɔːrtʃənətli/"
+        },
+        {
+          "en": "bark",
+          "zh": "n. 树皮；深青棕色；毛皮；皮肤；狗叫；vt. 狗叫；尖叫；剥皮",
+          "phonetic": "/bɑːrk/"
+        },
+        {
+          "en": "rugby",
+          "zh": "n. 英式橄榄球；拉格比（英格兰中部的城市）",
+          "phonetic": "/ˈrʌɡbi/"
+        },
+        {
+          "en": "bat",
+          "zh": "n. 蝙蝠；球棒；球拍；批处理文件的扩展名；vt. 用球棒击球；击球率达…；vi. 轮到击球；用球棒击球",
+          "phonetic": "/bæt/"
+        },
+        {
+          "en": "damp",
+          "zh": "n. 潮湿，湿气；adj. 潮湿的；vt. 使潮湿；使阻尼；使沮丧，抑制；vi. 减幅，阻尼；变潮湿",
+          "phonetic": "/dæmp/"
+        },
+        {
+          "en": "recreation",
+          "zh": "n. 娱乐；消遣；休养",
+          "phonetic": "/ˌriːkriˈeɪʃn/"
+        },
+        {
+          "en": "guidance",
+          "zh": "n. 指导，引导；领导",
+          "phonetic": "/ˈɡaɪdns/"
+        },
+        {
+          "en": "nephew",
+          "zh": "n. 侄子；外甥",
+          "phonetic": "/ˈnefjuː; ˈnevjuː/"
+        },
+        {
+          "en": "advertising",
+          "zh": "n. 广告；广告业；登广告；adj. 广告的；广告业的；v. 公告；为…做广告（advertise的ing形式）",
+          "phonetic": "/ˈædvərtaɪzɪŋ/"
+        },
+        {
+          "en": "advertise",
+          "zh": "vt. 通知；为…做广告；使突出；vi. 做广告，登广告；作宣传",
+          "phonetic": "/ˈædvərtaɪz/"
+        },
+        {
+          "en": "corporate",
+          "zh": "adj. 法人的；共同的，全体的；社团的；公司的；企业的",
+          "phonetic": "/ˈkɔːrpərət/"
+        },
+        {
+          "en": "rough",
+          "zh": "n. 艰苦；高低不平的地面；未经加工的材料；粗糙的部分；adj. 粗糙的；粗略的；粗野的；艰苦的；未经加工的；vt. 使粗糙；粗暴对待；草拟；adv. 粗糙地；粗略地；粗暴地；vi. 举止粗野",
+          "phonetic": "/rʌf/"
+        },
+        {
+          "en": "navigator",
+          "zh": "n. 航海家；领航员；驾驶员",
+          "phonetic": "/ˈnævɪɡeɪtər/"
+        },
+        {
+          "en": "loyal",
+          "zh": "adj. 忠诚的，忠心的；忠贞的；n. 效忠的臣民；忠实信徒",
+          "phonetic": "/ˈlɔɪəl/"
+        },
+        {
+          "en": "motor",
+          "zh": "n. 发动机，马达；汽车；adj. 汽车的；机动的；vi. 乘汽车；vt. 以汽车载运",
+          "phonetic": "/ˈmoʊtər/"
+        },
+        {
+          "en": "candidate",
+          "zh": "n. 候选人，候补者；应试者",
+          "phonetic": "/ˈkændɪdət; ˈkændɪdeɪt/"
+        },
+        {
+          "en": "make fire",
+          "zh": "生火；点火；造火"
+        },
+        {
+          "en": "give off",
+          "zh": "na. 发散(水蒸气等)"
+        },
+        {
+          "en": "episode",
+          "zh": "n. 插曲；一段情节；插话；有趣的事件",
+          "phonetic": "/ˈepɪsoʊd/"
+        },
+        {
+          "en": "commitment",
+          "zh": "n. 承诺，保证；委托；承担义务；献身",
+          "phonetic": "/kəˈmɪtmənt/"
+        },
+        {
+          "en": "motive",
+          "zh": "n. 动机，目的；主题；adj. 发动的；成为动机的；vt. 使产生动机，激起",
+          "phonetic": "/ˈməʊtɪv/"
+        },
+        {
+          "en": "Confucianism",
+          "zh": "n. 孔子学说；儒家思想",
+          "phonetic": "/kənˈfjuːʃənɪzəm/"
+        },
+        {
+          "en": "Ernest Shackleton",
+          "zh": "n. 欧内斯特·沙克尔顿"
+        },
+        {
+          "en": "Perce Blackborow",
+          "zh": "无"
+        },
+        {
+          "en": "Antarctica",
+          "zh": "n. 南极洲",
+          "phonetic": "/ænˈtɑːrktɪkə/"
+        },
+        {
+          "en": "the Antarctic",
+          "zh": "n. 南极地区"
+        },
+        {
+          "en": "the South Pole",
+          "zh": "na. 南极"
+        },
+        {
+          "en": "South Georgia Island",
+          "zh": "无"
+        },
+        {
+          "en": "Frank Wild",
+          "zh": "无"
+        },
+        {
+          "en": "Thomas Orde-Lees",
+          "zh": "无"
+        },
+        {
+          "en": "Frank Worsley",
+          "zh": "无"
+        },
+        {
+          "en": "Tom Crean",
+          "zh": "无"
+        },
+        {
+          "en": "Hubert Hudson",
+          "zh": "无"
+        },
+        {
+          "en": "Lionel Greenstreet",
+          "zh": "无"
+        },
+        {
+          "en": "drama",
+          "zh": "n. 戏剧，戏剧艺术；剧本；戏剧性事件",
+          "phonetic": "/ˈdrɑːmə/"
+        },
+        {
+          "en": "sorrow",
+          "zh": "n. 悲伤；懊悔；伤心事；vt. 为…悲痛；vi. 懊悔；遗憾；感到悲伤",
+          "phonetic": "/ˈsɑːroʊ/"
+        },
+        {
+          "en": "imagery",
+          "zh": "n. 像；意象；比喻；形象化",
+          "phonetic": "/ˈɪmɪdʒəri/"
+        },
+        {
+          "en": "literary",
+          "zh": "adj. 文学的；书面的；精通文学的",
+          "phonetic": "/ˈlɪtəreri/"
+        },
+        {
+          "en": "rhyme",
+          "zh": "n. 韵律；韵脚；韵文；押韵词；vt. 使押韵；用韵诗表达；把…写作诗；vi. 押韵；作押韵诗",
+          "phonetic": "/raɪm/"
+        }
+      ]
+    },
+    {
+      "id": "u5",
+      "title": "Unit 5",
+      "words": [
+        {
+          "en": "rhythm",
+          "zh": "n. 节奏；韵律",
+          "phonetic": "/ˈrɪðəm/"
+        },
+        {
+          "en": "nursery",
+          "zh": "n. 苗圃；托儿所；温床",
+          "phonetic": "/ˈnɜːrsəri/"
+        },
+        {
+          "en": "nursery rhyme",
+          "zh": "n. 童谣；儿歌"
+        },
+        {
+          "en": "folk",
+          "zh": "n. 民族；人们；亲属（复数）；adj. 民间的",
+          "phonetic": "/foʊk/"
+        },
+        {
+          "en": "mockingbird",
+          "zh": "n. 模仿鸟；嘲鸫属鸣禽；蓝嘲鸫（等于mocking thrush）",
+          "phonetic": "/ˈmɑːkɪŋbɜːrd/"
+        },
+        {
+          "en": "diamond",
+          "zh": "n. 钻石，金刚石；菱形；方块牌；adj. 菱形的；金刚钻的",
+          "phonetic": "/ˈdaɪmənd/"
+        },
+        {
+          "en": "brass",
+          "zh": "n. 黄铜；黄铜制品；铜管乐器；厚脸皮",
+          "phonetic": "/bræs/"
+        },
+        {
+          "en": "billy goat",
+          "zh": "n. 公山羊",
+          "phonetic": "/ˈbɪli ɡəʊt/"
+        },
+        {
+          "en": "bull",
+          "zh": "n. 公牛；看好股市者；粗壮如牛的人；胡说八道；印玺；adj. 大型的；公牛似的；雄性的；vt. 企图抬高证券价格；吓唬；强力实现；vi. 价格上涨；走运；猛推；吹牛",
+          "phonetic": "/bʊl/"
+        },
+        {
+          "en": "recite",
+          "zh": "vt. 背诵；叙述；列举；vi. 背诵；叙述",
+          "phonetic": "/rɪˈsaɪt/"
+        },
+        {
+          "en": "bee",
+          "zh": "n. 蜜蜂，蜂；勤劳的人",
+          "phonetic": "/biː/"
+        },
+        {
+          "en": "dewdrop",
+          "zh": "n. 露珠；露滴",
+          "phonetic": "/ˈduːdrɑːp/"
+        },
+        {
+          "en": "dawn",
+          "zh": "n. 黎明；开端；vt. 破晓；出现；被领悟",
+          "phonetic": "/dɔːn/"
+        },
+        {
+          "en": "clover",
+          "zh": "n. [植] 三叶草；苜蓿；红花草",
+          "phonetic": "/ˈkloʊvər/"
+        },
+        {
+          "en": "butterfly",
+          "zh": "n. 蝴蝶；蝶泳；举止轻浮的人；追求享乐的人",
+          "phonetic": "/ˈbʌtərflaɪ/"
+        },
+        {
+          "en": "lawn",
+          "zh": "n. 草地；草坪",
+          "phonetic": "/lɔːn/"
+        },
+        {
+          "en": "amateur",
+          "zh": "n. 爱好者；业余爱好者；外行；adj. 业余的；外行的",
+          "phonetic": "/ˈæmətər; ˈæmətʃər/"
+        },
+        {
+          "en": "cinquain",
+          "zh": "n. 五个的一组，五行诗",
+          "phonetic": "/sɪŋˈkeɪn/"
+        },
+        {
+          "en": "be made up of",
+          "zh": "由…构成；组成；由…组成"
+        },
+        {
+          "en": "mood",
+          "zh": "n. 情绪，语气；心境；气氛",
+          "phonetic": "/muːd/"
+        },
+        {
+          "en": "tease",
+          "zh": "vt. 取笑；戏弄；梳理；欺负；强求；使起毛；n. 戏弄；爱纠缠的小孩；挑逗者；卖弄风骚的女孩；vi. 取笑",
+          "phonetic": "/tiːz/"
+        },
+        {
+          "en": "haiku",
+          "zh": "n. 俳句；三行俳句诗",
+          "phonetic": "/ˈhaɪkuː/"
+        },
+        {
+          "en": "syllable",
+          "zh": "n. 音节；vt. 划分音节；vi. 按音节发音；讲话",
+          "phonetic": "/ˈsɪləbl/"
+        },
+        {
+          "en": "format",
+          "zh": "n. 格式；版式；开本；vt. 使格式化；规定…的格式；vi. 设计版式",
+          "phonetic": "/ˈfɔːrmæt/"
+        },
+        {
+          "en": "respectively",
+          "zh": "adv. 分别地；各自地，独自地",
+          "phonetic": "/rɪˈspektɪvli/"
+        },
+        {
+          "en": "respective",
+          "zh": "adj. 分别的，各自的",
+          "phonetic": "/rɪˈspektɪv/"
+        },
+        {
+          "en": "blossom",
+          "zh": "n. 花；开花期；兴旺期；花开的状态；vi. 开花；兴旺；发展成",
+          "phonetic": "/ˈblɑːsəm/"
+        },
+        {
+          "en": "delicate",
+          "zh": "adj. 微妙的；精美的，雅致的；柔和的；易碎的；纤弱的；清淡可口的",
+          "phonetic": "/ˈdelɪkət/"
+        },
+        {
+          "en": "await",
+          "zh": "vt. 等候，等待；期待",
+          "phonetic": "/əˈweɪt/"
+        },
+        {
+          "en": "revolve",
+          "zh": "n. 旋转；循环；旋转舞台；vt. 使…旋转；使…循环；反复考虑；vi. 旋转；循环出现；反复考虑",
+          "phonetic": "/rɪˈvɑːlv/"
+        },
+        {
+          "en": "utter",
+          "zh": "adj. 完全的；彻底的；无条件的；vt. 发出，表达；发射",
+          "phonetic": "/ˈʌtər/"
+        },
+        {
+          "en": "comprehension",
+          "zh": "n. 理解；包含",
+          "phonetic": "/ˌkɑːmprɪˈhenʃn/"
+        },
+        {
+          "en": "shelf",
+          "zh": "n. 架子；搁板；搁板状物；暗礁",
+          "phonetic": "/ʃelf/"
+        },
+        {
+          "en": "core",
+          "zh": "n. 核心；要点；果心；[计] 磁心；vt. 挖...的核",
+          "phonetic": "/kɔːr/"
+        },
+        {
+          "en": "cherry",
+          "zh": "n. 樱桃；樱桃树；如樱桃的鲜红色；处女膜，处女",
+          "phonetic": "/ˈtʃeri/"
+        },
+        {
+          "en": "cherry blossom",
+          "zh": "n. 樱花"
+        },
+        {
+          "en": "blank",
+          "zh": "n. 空白；空虚；空白表格；adj. 空白的；空虚的；单调的；vt. 使…无效；使…模糊；封锁；vi. 消失；成为空白",
+          "phonetic": "/blæŋk/"
+        },
+        {
+          "en": "verse",
+          "zh": "n. 诗，诗篇；韵文；诗节；vi. 作诗；vt. 使熟练，使精通",
+          "phonetic": "/vɜːrs/"
+        },
+        {
+          "en": "civilian",
+          "zh": "n. 平民，百姓；adj. 民用的；百姓的，平民的",
+          "phonetic": "/səˈvɪliən/"
+        },
+        {
+          "en": "prose",
+          "zh": "n. 散文；单调；adj. 散文的；平凡的；乏味的；vt. 把…写成散文；vi. 写散文；乏味地讲话",
+          "phonetic": "/proʊz/"
+        },
+        {
+          "en": "sympathetic",
+          "zh": "n. 交感神经；容易感受的人；adj. 同情的；交感神经的；共鸣的；赞同的；和谐的；合意的",
+          "phonetic": "/ˌsɪmpəˈθetɪk/"
+        },
+        {
+          "en": "sympathy",
+          "zh": "n. 同情；慰问；赞同",
+          "phonetic": "/ˈsɪmpəθi/"
+        },
+        {
+          "en": "version",
+          "zh": "n. 版本；译文；倒转术",
+          "phonetic": "/ˈvɜːrʒn/"
+        },
+        {
+          "en": "innocence",
+          "zh": "n. 清白，无罪；天真无邪",
+          "phonetic": "/ˈɪnəsns/"
+        },
+        {
+          "en": "innocent",
+          "zh": "n. 天真的人；笨蛋；adj. 无辜的；无罪的；无知的",
+          "phonetic": "/ˈɪnəsnt/"
+        },
+        {
+          "en": "era",
+          "zh": "n. 时代；年代；纪元",
+          "phonetic": "/ˈɪrə; ˈerə/"
+        },
+        {
+          "en": "correspondence",
+          "zh": "n. 通信；一致；相当",
+          "phonetic": "/ˌkɔːrəˈspɑːndəns/"
+        },
+        {
+          "en": "correspond",
+          "zh": "vi. 符合，一致；相应；通信",
+          "phonetic": "/ˌkɔːrəˈspɑːnd/"
+        },
+        {
+          "en": "sow",
+          "zh": "n. 母猪；vt. 播种；散布；使密布；vi. 播种",
+          "phonetic": "/soʊ/"
+        },
+        {
+          "en": "seed",
+          "zh": "n. 种子；根据；精液；萌芽；子孙；原由；vt. 播种；结实；成熟；去…籽；vi. 播种；（植物）结实",
+          "phonetic": "/siːd/"
+        },
+        {
+          "en": "dominant",
+          "zh": "n. 显性；adj. 显性的；占优势的；支配的，统治的",
+          "phonetic": "/ˈdɑːmɪnənt/"
+        },
+        {
+          "en": "sonnet",
+          "zh": "n. 十四行诗；商籁诗",
+          "phonetic": "/ˈsɑːnɪt/"
+        },
+        {
+          "en": "deadline",
+          "zh": "n. 截止期限，最后期限",
+          "phonetic": "/ˈdedlaɪn/"
+        },
+        {
+          "en": "contest",
+          "zh": "n. 竞赛；争夺；争论；vt. 争辩；质疑；vi. 竞争；争辩",
+          "phonetic": "/ˈkɑːntest/"
+        },
+        {
+          "en": "polish",
+          "zh": "n. 磨光，擦亮；上光剂，擦亮剂；优雅，精良；vi. 擦亮，变光滑；vt. 磨光，使发亮；adj. 波兰的",
+          "phonetic": "/ˈpoʊlɪʃ/"
+        },
+        {
+          "en": "string",
+          "zh": "n. 线，弦，细绳；一串，一行",
+          "phonetic": "/strɪŋ/"
+        },
+        {
+          "en": "wherever",
+          "zh": "conj. 无论在哪里；无论什么情况下；adv. 无论什么地方；究竟在哪里",
+          "phonetic": "/werˈevər/"
+        },
+        {
+          "en": "barren",
+          "zh": "n. 荒地；adj. 贫瘠的；不生育的；无益的；沉闷无趣的；空洞的",
+          "phonetic": "/ˈbærən/"
+        },
+        {
+          "en": "grief",
+          "zh": "n. 悲痛；忧伤；不幸",
+          "phonetic": "/ɡriːf/"
+        },
+        {
+          "en": "complicated",
+          "zh": "adj. 难懂的，复杂的",
+          "phonetic": "/ˈkɑːmplɪkeɪtɪd/"
+        },
+        {
+          "en": "variation",
+          "zh": "n. 变化；[生物] 变异，变种",
+          "phonetic": "/ˌveriˈeɪʃn/"
+        },
+        {
+          "en": "racial",
+          "zh": "adj. 种族的；人种的",
+          "phonetic": "/ˈreɪʃl/"
+        },
+        {
+          "en": "prejudice",
+          "zh": "n. 偏见；侵害；vt. 损害；使有偏见",
+          "phonetic": "/ˈpredʒudɪs/"
+        },
+        {
+          "en": "Shakespeare",
+          "zh": "n. 莎士比亚（1564-1616，英国诗人、剧作家）",
+          "phonetic": "/ˈʃeɪkspɪr/"
+        },
+        {
+          "en": "The Crescent Moon",
+          "zh": "无"
+        },
+        {
+          "en": "Tagore",
+          "zh": "n. 泰戈尔（印度诗人，曾获1913年诺贝尔文学奖，1861-1941）",
+          "phonetic": "/tə'gɔ:/"
+        },
+        {
+          "en": "Elizabeth Barrett Browning",
+          "zh": "伊丽莎白·勃朗宁；白朗宁；勃朗宁夫人"
+        },
+        {
+          "en": "Robert Browning",
+          "zh": "布朗宁；勃朗宁；罗伯特·布朗宁"
+        },
+        {
+          "en": "the Victorian era",
+          "zh": "无"
+        },
+        {
+          "en": "Sonnets from the Portuguese",
+          "zh": "无"
+        },
+        {
+          "en": "Langston Hughes",
+          "zh": "兰斯顿休斯；蓝斯顿休斯；朗斯顿•休斯"
+        }
+      ]
+    }
+  ]
+}

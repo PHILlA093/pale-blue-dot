@@ -1,0 +1,247 @@
+1752	lack	læk	n vt	缺乏，缺少
+1753	ladder	ˈlædə(r)	n	梯子
+1754	lady	ˈleɪdɪ	n	女士，夫人
+1755	lake	leɪk	n	湖
+1756	lamb	læm	n	羔羊
+1757	lame	leɪm	adj	跛的，瘸的，残废的
+1758	lamp	læmp	n	灯，油灯；光源
+1759	land	lænd	n v	陆地,土地v.登岸(陆)降落
+1760	language	ˈlæŋɡwɪdʒ	n	语言
+1761	lantern	ˈlæntən	n	灯笼；提灯
+1762	lap	læp	n	(人坐时)膝部.(跑道的)一圈
+1763	large	lɑːdʒ	adj	大的；巨大的
+1764	laser	ˈleɪzə(r)	n	激光
+1765	last	lɑːst; (US) læst	adj adv n v	最近刚过去;最后的ad.最近刚过去;最后地 n.最后v.持续
+1766	late	leɪt	adj adv	晚的,迟的ad.晚地,迟地
+1767	lately	ˈleɪtlɪ	adv	最近，不久前
+1768	later	ˈleɪtə(r)	adj	晚些的，迟些的
+1769	latest	ˈleɪtɪst	adj	最近，最新的；最晚的
+1770	latter	ˈlætə(r)	n	（两者之中的）后者
+1771	laugh	lɑːf	n v	笑，大笑；嘲笑
+1772	laughter	ˈlɑːftə(r); (US) ˈlæftər	n	笑； 笑声
+1773	laundry	ˈlɔːndrɪ	n	洗衣店;要洗的衣服
+1774	lavatory	ˈlævətrɪ; (US) ˈlævətɔːrɪ	n	便所，厕所
+1775	law	lɔː	n	法律，法令；定律
+1776	lawyer	ˈlɔːjə(r)	n	律师；lay (laid, laid)
+1777	lazy	ˈleɪzɪ	adj	懒惰的；lead (led, led)
+1778	leader	ˈliːdə(r)	n	领袖，领导人
+1779	leading	ˈliːdɪŋ	adj	最主要的，第一位的；leaf (复 leaves)
+1780	league	liːɡ	n	联盟，社团
+1781	leak	liːk	vi	漏； 渗；learn (learnt, learnt；--ed --ed)
+1782	learned	ˈlɜːnɪd	adj	有才华的；博学的
+1783	least	liːst	n	最少，最少量
+1784	leather	ˈleðə(r)	n	皮革；leave (left, left)
+1785	lecture	ˈlektʃə(r)	n	讲课，演讲
+1786	left	left	adj adv n	左边的 ad.向左 n.左,左边
+1787	leftover	ˈleftˌəuvə	adj n	剩余,剩下的n.剩饭菜
+1788	leg	leɡ	n	腿；腿脚；支柱
+1789	legal	ˈliːɡ(ə)l	adj	与法律有关的，法律的
+1790	lemon	ˈlemən	n adj	柠檬 a. 柠檬色(味)的
+1791	lemonade	leməˈneɪd	n	柠檬水；lend (lent, lent)
+1792	length	leŋθ	n	长，长度，段，节；less（little的比较级）
+1793	lesson	ˈles(ə)n	n	课；功课；教训；let (let, let)
+1794	letter	ˈletə(r)	n	信；字母
+1795	level	ˈlev(ə)l	n	水平线，水平
+1796	liberty	ˈlɪbətɪ	n	自由
+1797	liberate	ˈlɪbəreɪt	vt	解放，使获自由
+1798	liberation	lɪbəˈreɪʃ(ə)n	n	解放
+1799	librarian	laɪˈbreərɪən	n	图书管理员；（西方的）图书馆馆长
+1800	library	ˈlaɪbrərɪ; (US) ˈlaɪbrerɪ	n	图书馆，图书室
+1801	license	ˈlaɪsəns	n	执照，许可证
+1802	lid	lɪd	n	盖子；lie (lay, lain)
+1803	lifetime	ˈlaɪftaɪm	n	一生，终生
+1804	lift	lɪft	v n	举起，抬起；（云、烟等）消散 n. （英）电梯
+1805	light	laɪt	n vt adj	光，光亮；灯，灯光 vt. 点（火），点燃 a. 明亮的；轻的；浅色的
+1806	lightning	ˈlaɪtnɪŋ	n	闪电
+1807	like	laɪk	prep vt	像，跟…一样 vt. 喜欢，喜爱
+1808	likely	ˈlaɪklɪ	adj	很可能的
+1809	limit	ˈlɪmɪt	vt	限制；减少
+1810	line	laɪn	n v	绳索，线，排，行，线路 v. 画线于，（使）成行
+1811	link	lɪŋk	v	连接； 联系
+1812	lion	ˈlaɪən	n	狮子
+1813	lip	lɪp	n	嘴唇
+1814	liquid	ˈlɪkwɪd	n adj	液体；液体的
+1815	list	lɪst	n	一览表，清单
+1816	listen	ˈlɪs(ə)n	vi	听,仔细听
+1817	literature	ˈlɪtərətʃə(r); (US) ˈlɪtrətʃʊər	n	文学
+1818	literary	ˈlɪtərərɪ; (US) ˈlɪtərerɪ	adj	文学的；litre (美liter)
+1819	litter	ˈlɪtə(r)	v	乱丢杂物；little (less, least)
+1820	live	lɪv	vi adj	生活;居住;活着 a. 活的,活着的;实况,现场（直播）的
+1821	lively	ˈlaɪvlɪ	adj	活泼的;充满生气的
+1822	living	ˈlɪvɪŋ	adj n	活着的 n. 生计
+1823	load	ləʊd	n	担子，货物
+1824	loaf	ləʊf	n	一个面包
+1825	local	ˈləʊk(ə)l	adj	当地的；地方的
+1826	lock	lɔk	n vt	锁 vt. 锁，锁上
+1827	locust	ˈləʊkəst	n	蝗虫
+1828	london	ˈlʌnd(ə)n	n	伦敦
+1829	lonely	ˈləʊnlɪ	adj	孤独的，寂寞的
+1830	long	lɔŋ; (US) lɔːŋ	adj adv	长的，远 ad. 长久
+1831	look	lʊk	n v	看，瞧 v. 看，观看 v. link 看起来
+1832	loose	luːs	adj	松散的； 宽松的
+1833	lorry	ˈlɔrɪ; (US) ˈlɔːrɪ	n	（英）运货汽车，卡车
+1834	loss	lɔs; (US) lɔːs	n	丧失；损耗；lose (lost, lost)
+1835	lot	lɔt	n	许多，好些
+1836	loud	laʊd	adj	大声的
+1837	loudly	laʊdlɪ	adv	大声地
+1838	loudspeaker	laʊdˈspiːkə(r)	n	扬声器，喇叭
+1839	lounge	laʊndʒ	n	休息厅；休息室
+1840	love	lʌv	n vt	爱；热爱;很喜欢
+1841	lovely	ˈlʌvlɪ	adj	美好的，可爱的
+1842	low	ləʊ	adj adv	低；矮
+1843	luck	lʌk	n	运气，好运
+1844	lucky	ˈlʌkɪ	adj	运气好，侥幸
+1845	luggage	ˈlʌɡɪdʒ	n	(总称)行李
+1846	lunch	lʌntʃ	n	午餐，午饭
+1847	lung	lʌŋ	n	肺；肺脏
+1848	machine	məˈʃiːn	n	机器
+1849	mad	mæd	adj	发疯的；生气的
+1850	magazine	mæɡəˈziːn	n	杂志
+1851	magic	ˈmædʒɪk	adj	有魔力的
+1852	maid	meɪd	n	女仆；侍女
+1853	mail	meɪl	n v	邮政,邮递 v. (美)邮寄
+1854	mailbox	ˈmeɪlbɒks	n	邮筒；邮箱
+1855	main	meɪn	adj	主要的
+1856	mainland	ˈmeɪnlənd	n	大陆
+1857	major	ˈmeɪdʒə(r)	adj	较大的；主要的
+1858	majority	məˈdʒɔrɪtɪ	n	大多数 ；make (made,made)
+1859	male	meɪl	adj	男（性）的；雄的；man (复men)
+1860	manage	ˈmænɪdʒ	v	管理；设法对付
+1861	manager	ˈmænɪdʒə(r)	n	经理
+1862	mankind	mænˈkaɪnd	n	人类;（总称）人
+1863	manner	ˈmænə(r)	n	方式，态度，举止
+1864	table manners	ˈteɪb(ə)l ˈmænə(r) z		餐桌礼节，用餐的规矩；many (more, most)
+1865	map	mæp	n	地图
+1866	maple	ˈmeɪp(ə)l	n	枫树
+1867	marathon	ˈmærəθ(ə)n	n	马拉松
+1868	marble	ˈmɑːb(ə)l	n	大理石；玻璃弹子
+1869	march	mɑːtʃ	n	游行，行进
+1870	mark	mɑːk	n vt	标记 vt.标明,作记号于
+1871	market	ˈmɑːkɪt	n	市场，集市
+1872	marriage	ˈmærɪdʒ	n	结婚，婚姻
+1873	married	ˈmærɪd	adj	已婚的
+1874	marry	ˈmærɪ	v	（使）成婚，结婚
+1875	mask	mɑːsk; (US) mæsk	n v	口罩；面罩(具)；遮盖物 v. 戴面具；掩饰；伪装
+1876	mass	mæs	n	众多;大量;（复）群众
+1877	master	ˈmɑːstə(r); (US) ˈmæstər	vt	精通，掌握
+1878	mat	mæt	n	垫子
+1879	match	mætʃ	vt n	使相配，使成对 n. 比赛，竞赛 n. 火柴
+1880	material	məˈtɪərɪəl	n	材料，原料
+1881	matter	ˈmætə(r)	n vi	要紧事，要紧, 事情；问题 vi. 要紧，有重大关系
+1882	mature	məˈtjʊə(r); (US) məˈtʊər	adj	成熟的
+1883	maximum	ˈmæksɪməm	adj n	最大量(的)； 最大限度(的)
+1884	may	meɪ	n	5月
+1885	maybe	ˈmeɪbiː	adv	可能，大概，也许
+1886	me	miː	pron	我（宾格）
+1887	meal	miːl	n	一餐（饭） ；mean(meant,meant)
+1888	meaning	ˈmiːnɪŋ	n	意思，含意
+1889	means	miːnz	n	方法，手段；财产
+1890	meanwhile	ˈmiːnwaɪl; (US) ˈmɪnhwaɪl	adv	同时
+1891	measure	ˈmeʒə(r)	v	量
+1892	meat	miːt	n	（猪、牛、羊等的）肉
+1893	medal	ˈmed(ə)l	n	奖牌
+1894	gold medal	ɡəʊld ˈmed(ə)l		金牌
+1895	media	ˈmiːdɪə	n	大众传播媒介
+1896	medical	ˈmedɪk(ə)l	adj	医学的，医疗的
+1897	medicine	ˈmeds(ə)n; (US) ˈmedɪsn	n	药
+1898	medium	ˈmiːdɪəm	n	媒体,中间的,中等的；meet (met, met)
+1899	meeting	ˈmiːtɪŋ	n	会,集会,会见,汇合点
+1900	melon	ˈmelən	n	（甜）瓜；瓜状物
+1901	member	ˈmembə(r)	n	成员，会员
+1902	memorial	mɪˈmɔːrɪəl	n	纪念馆
+1903	memory	ˈmemərɪ	n	回忆，记忆
+1904	memorize	ˈmeməraɪz	v	记忆
+1905	mend	mend	v	修理，修补
+1906	mental	ˈment(ə)l	adj	精神的；脑力的
+1907	mentally	ˈmentəlɪ	adv	精神上；智力上
+1908	mention	ˈmenʃ(ə)n	n vt	提及；记载 vt. 提到，说起；提名表扬
+1909	menu	ˈmenʃ(ə)n	n	菜单
+1910	merchant	ˈmɜːtʃənt	adj n	商业的；商人的 n. 商人；生意人
+1911	merciful	ˈmɜːsɪfʊl	adj	仁慈的；宽大的
+1912	mercy	ˈmɜːsɪ	n	怜悯
+1913	merely	ˈmɪəlɪ	adv	仅仅，只不过
+1914	merry	ˈmerɪ	adj	高兴的，愉快的
+1915	mess	mes	n	凌乱
+1916	message	ˈmesɪdʒ	n	消息，音信
+1917	messy	ˈmesɪ	adj	乱七八糟的
+1918	metal	ˈmet(ə)l	n adj	金属 a. 金属制成的
+1919	method	ˈmeθəd	n	方法，办法；metre (美meter)
+1920	mexican	ˈmeksɪkən	adj	墨西哥的
+1921	mexico	ˈmeksɪkəʊ	n	* n. 墨西哥
+1922	microcomputer	ˈmaɪkrəʊkəmpjuːtə(r)	n	微机
+1923	microscope	ˈmaɪkrəskəʊp	n	显微镜
+1924	microwave	ˈmaɪkrəʊweɪv	n	微波
+1925	midday	ˈmɪddeɪ	n	中午, 正午
+1926	middle	ˈmɪd(ə)l	n	中间;当中;中级的
+1927	midnight	ˈmɪdnaɪt	n	午夜
+1928	might	maɪt	v aux	(may的过去式，助动词) 可能，也许，或许
+1929	mild	maɪld	adj	温和,暖和的,凉爽的
+1930	mile	maɪl	n	英里
+1931	milk	mɪlk	n vt	牛奶 vt. 挤奶
+1932	million	ˈmɪlɪən	num n	百万 n. 百万个（人或物）
+1933	millionaire	mɪljəˈneə(r)	n	百万富翁
+1934	mind	maɪnd	n v	思想,想法 v.介意,关心
+1935	mine	maɪn	n vt pron	矿藏,矿山vt.开采(矿物) pron. 我的
+1936	mineral	ˈmɪnər(ə)l	n	矿物质，矿物
+1937	minibus	ˈmɪnɪbʌs	n	小型公共汽车
+1938	minimum	ˈmɪnɪməm	adj	最小的
+1939	miniskirt	ˈmɪnɪskɜːt	n	超短裙
+1940	minister	ˈmɪnɪstə(r)	n	部长；牧师
+1941	ministry	ˈmɪnɪstrɪ	n	（政府的）部
+1942	minority	maɪˈnɔrɪtɪ; (US) -ˈnɔːr-	n	少数；少数民族
+1943	minus	ˈmaɪnəs	prep adj	负的，减去的
+1944	minute	ˈmɪnɪt	n	分钟;一会儿，瞬间
+1945	mirror	ˈmɪrə(r)	n	镜子
+1946	miss	mɪs	vt	失去，错过，缺；Miss.
+1947	missile	ˈmɪsaɪl		导弹
+1948	mist	mɪst	n	雾；mistake (mistook, mistaken)
+1949	mistaken	mɪsˈteɪkən	adj	错误的；misunderstand (-stood, -stood)
+1950	mix	mɪks	v	混合，搅拌
+1951	mixture	ˈmɪkstʃə(r)	n	混合物；mm (缩) = millimetre
+1952	mobile	ˈməʊbaɪl; (US) məʊbl	adj	活动的，可移动的
+1953	mobile phone	ˈməʊbaɪl fəʊn		手提电话，手机
+1954	model	ˈmɔd(ə)l	n	模型,原形,范例,模范
+1955	modem	ˈməʊdem	n	调制解调器
+1956	modern	ˈmɔd(ə)n	adj	现代的
+1957	modest	ˈmɔdɪst	adj	谦虚的；谦逊的
+1958	moment	ˈməʊmənt	n	片刻，瞬间
+1959	monday	ˈmʌndeɪ	n	星期一
+1960	money	ˈmʌnɪ	n	钱；货币
+1961	monitor	ˈmɔnɪtə(r)	n	（班级内的）班长；纠察生；监视器
+1962	monkey	ˈmʌŋkɪ	n	猴子
+1963	month	mʌnθ	n	月，月份
+1964	monument	ˈmɔnjʊmənt	n	纪念碑，纪念物
+1965	moon	muːn	n	月球；月光；月状物
+1966	mop	mɔp	n v	/ v. 拖把 拖地
+1967	moral	ˈmɔr(ə)l; (US) ˈmɔːrəl	adj n	道德的 n.寓意,道德启示；more（much或many 的比较级）
+1968	morning	ˈmɔːnɪŋ	n	早晨，上午
+1969	moscow	ˈmɔskəʊ	n	莫斯科
+1970	moslem	ˈmɔzləm	n	伊斯兰教徒,回教徒
+1971	mosquito	məˈskiːtəʊ	n	蚊子；most (much或many 的最高级)
+1972	mother	ˈmʌðə(r)	n	母亲
+1973	motherland	ˈmʌðəlænd	n	祖国
+1974	motivation	məʊtɪˈveɪʃn	n	（做事的）动机
+1975	motor	ˈməʊtə(r)	n	发动机，马达
+1976	motorbike	ˈməʊtəbaɪk	n	摩托车
+1977	motorcycle	ˈməʊtəsaikl	n	摩托车
+1978	motto	ˈmɔtəʊ	n	箴言，格言；mountain(s)
+1979	mountainous	ˈmaʊntɪnəs	adj	多山的
+1980	mourn	mɔːn	vt	哀痛； 哀悼；mouse (复mice)
+1981	moustache	məsˈtɑ:ʃ	n	小胡子
+1982	mouth	maʊθ	n	嘴，口
+1983	mouthful	ˈmaʊθfʊl	n	满口，一口
+1984	from mouth to mouth		adv	口口相传；人传人地
+1985	move	muːv	v	移动，搬动，搬家
+1986	movement	ˈmuːvmənt	n	运动，活动
+1987	movie	ˈmuːvɪ	n	（口语）电影；Mr. (mister)
+1988	mud	mʌd	n	泥, 泥浆
+1989	muddy	ˈmʌdɪ	adj	泥泞的
+1990	multiply	ˈmʌltɪplaɪ	vt	乘；使相乘
+1991	murder	ˈmɜːdə(r)	vt	谋杀
+1992	museum	mjuːˈzɪəm	n	博物馆，博物院
+1993	mushroom	ˈmʌʃrʊm	n	蘑菇
+1994	music	ˈmjuːzɪk	n	音乐，乐曲
+1995	musical	ˈmjuːzɪk(ə)l	adj n	音乐的，爱好音乐的 n. 音乐片
+1996	musician	mjuːˈzɪʃ(ə)n	n	音乐家，乐师
+1997	mustard	ˈmʌstəd	n	芥末，芥子粉
+1998	mutton	ˈmʌt(ə)n	n	羊肉

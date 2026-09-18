@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" class=""><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>穷观 V1.2.0 · 高中化学知识网络</title>
+<link rel="stylesheet" href="css/style.css">
+<style type="text/css">.CtxtMenu_InfoClose {  top:.2em; right:.2em;}
+.CtxtMenu_InfoContent {  overflow:auto; text-align:left; font-size:80%;  padding:.4em .6em; border:1px inset; margin:1em 0px;  max-height:20em; max-width:30em; background-color:#EEEEEE;  white-space:normal;}
+.CtxtMenu_Info.CtxtMenu_MousePost {outline:none;}
+.CtxtMenu_Info {  position:fixed; left:50%; width:auto; text-align:center;  border:3px outset; padding:1em 2em; background-color:#DDDDDD;  color:black;  cursor:default; font-family:message-box; font-size:120%;  font-style:normal; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 15px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius:15px;               /* Safari and Chrome */  -moz-border-radius:15px;                  /* Firefox */  -khtml-border-radius:15px;                /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */  filter:progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color="gray", Positive="true"); /* IE */}
+</style><style type="text/css">.CtxtMenu_MenuClose {  position:absolute;  cursor:pointer;  display:inline-block;  border:2px solid #AAA;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  font-family: "Courier New", Courier;  font-size:24px;  color:#F0F0F0}
+.CtxtMenu_MenuClose span {  display:block; background-color:#AAA; border:1.5px solid;  border-radius:18px;  -webkit-border-radius: 18px;             /* Safari and Chrome */  -moz-border-radius: 18px;                /* Firefox */  -khtml-border-radius: 18px;              /* Konqueror */  line-height:0;  padding:8px 0 6px     /* may need to be browser-specific */}
+.CtxtMenu_MenuClose:hover {  color:white!important;  border:2px solid #CCC!important}
+.CtxtMenu_MenuClose:hover span {  background-color:#CCC!important}
+.CtxtMenu_MenuClose:hover:focus {  outline:none}
+</style><style type="text/css">.CtxtMenu_Menu {  position:absolute;  background-color:white;  color:black;  width:auto; padding:5px 0px;  border:1px solid #CCCCCC; margin:0; cursor:default;  font: menu; text-align:left; text-indent:0; text-transform:none;  line-height:normal; letter-spacing:normal; word-spacing:normal;  word-wrap:normal; white-space:nowrap; float:none; z-index:201;  border-radius: 5px;                     /* Opera 10.5 and IE9 */  -webkit-border-radius: 5px;             /* Safari and Chrome */  -moz-border-radius: 5px;                /* Firefox */  -khtml-border-radius: 5px;              /* Konqueror */  box-shadow:0px 10px 20px #808080;         /* Opera 10.5 and IE9 */  -webkit-box-shadow:0px 10px 20px #808080; /* Safari 3 & Chrome */  -moz-box-shadow:0px 10px 20px #808080;    /* Forefox 3.5 */  -khtml-box-shadow:0px 10px 20px #808080;  /* Konqueror */}
+.CtxtMenu_MenuItem {  padding: 1px 2em;  background:transparent;}
+.CtxtMenu_MenuArrow {  position:absolute; right:.5em; padding-top:.25em; color:#666666;  font-family: null; font-size: .75em}
+.CtxtMenu_MenuActive .CtxtMenu_MenuArrow {color:white}
+.CtxtMenu_MenuArrow.CtxtMenu_RTL {left:.5em; right:auto}
+.CtxtMenu_MenuCheck {  position:absolute; left:.7em;  font-family: null}
+.CtxtMenu_MenuCheck.CtxtMenu_RTL { right:.7em; left:auto }
+.CtxtMenu_MenuRadioCheck {  position:absolute; left: .7em;}
+.CtxtMenu_MenuRadioCheck.CtxtMenu_RTL {  right: .7em; left:auto}
+.CtxtMenu_MenuInputBox {  padding-left: 1em; right:.5em; color:#666666;  font-family: null;}
+.CtxtMenu_MenuInputBox.CtxtMenu_RTL {  left: .1em;}
+.CtxtMenu_MenuComboBox {  left:.1em; padding-bottom:.5em;}
+.CtxtMenu_MenuSlider {  left: .1em;}
+.CtxtMenu_SliderValue {  position:absolute; right:.1em; padding-top:.25em; color:#333333;  font-size: .75em}
+.CtxtMenu_SliderBar {  outline: none; background: #d3d3d3}
+.CtxtMenu_MenuLabel {  padding: 1px 2em 3px 1.33em;  font-style:italic}
+.CtxtMenu_MenuRule {  border-top: 1px solid #DDDDDD;  margin: 4px 3px;}
+.CtxtMenu_MenuDisabled {  color:GrayText}
+.CtxtMenu_MenuActive {  background-color: #606872;  color: white;}
+.CtxtMenu_MenuDisabled:focus {  background-color: #E8E8E8}
+.CtxtMenu_MenuLabel:focus {  background-color: #E8E8E8}
+.CtxtMenu_ContextMenu:focus {  outline:none}
+.CtxtMenu_ContextMenu .CtxtMenu_MenuItem:focus {  outline:none}
+.CtxtMenu_SelectionMenu {  position:relative; float:left;  border-bottom: none; -webkit-box-shadow:none; -webkit-border-radius:0px; }
+.CtxtMenu_SelectionItem {  padding-right: 1em;}
+.CtxtMenu_Selection {  right: 40%; width:50%; }
+.CtxtMenu_SelectionBox {  padding: 0em; max-height:20em; max-width: none;  background-color:#FFFFFF;}
+.CtxtMenu_SelectionDivider {  clear: both; border-top: 2px solid #000000;}
+.CtxtMenu_Menu .CtxtMenu_MenuClose {  top:-10px; left:-10px}
+</style></head>
+<body>
+
+<!-- 开场画面:先黑屏 → 渐变浮现标题与白线 → 淡出揭示主界面 -->
+<div id="intro" style="display: none;">
+  <div class="intro-sky"></div>
+  <div class="intro-inner">
+    <h1 class="intro-title">穷观<span class="ver">V1.2.0</span></h1>
+    <p class="intro-quote">知识理应流通与分享</p>
+    <div class="intro-line"></div>
+    <p class="intro-hint">按任意键进入</p>
+  </div>
+</div>
+
+<div id="app" class="reveal" style="transition: opacity 0.8s;">
+
+  <!-- 顶栏:侧栏开关 + 学科切换 + 标题 + 关键词搜索 -->
+  <header id="topbar">
+    <button id="sideToggle" type="button" title="打开 / 关闭侧边栏" aria-label="侧边栏">
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+        <path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"></path>
+      </svg>
+    </button>
+
+    <!-- 学科切换:按钮形式,六科可选(数学 / 化学已开放,其余建设中) -->
+    <div id="subjectWrap">
+      <button id="subjectBtn" type="button" title="切换学科">
+        <span id="subjectLabel">化学</span>
+        <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"></path>
+        </svg>
+      </button>
+      <div id="subjectMenu" hidden="">
+        <button type="button" data-sub="chinese">语文</button>
+        <button type="button" data-sub="math" class="">数学</button>
+        <button type="button" data-sub="english">英语</button>
+        <button type="button" data-sub="physics">物理</button>
+        <button type="button" data-sub="chemistry" class="active">化学</button>
+        <button type="button" data-sub="biology">生物</button>
+      </div>
+    </div>
+
+    <div class="brand">
+      <span class="logo">🧠</span>
+      <div class="brand-text">
+        <h1>弹性网络知识库</h1>
+        <span class="sub">高中化学 · 3D 知识网络</span>
+      </div>
+    </div>
+    <div id="searchBox">
+      <input id="searchInput" type="text" placeholder="关键词搜索,如:氧化还原 / 阿伏伽德罗常数 / 盐类水解 / 官能团 / 晶胞 …" autocomplete="off">
+      <button id="searchBtn">搜索</button>
+      <button id="searchClear" title="清除搜索">✕</button>
+      <div id="searchResults" hidden=""></div>
+    </div>
+    <div id="statBar">节点 86 · 关联 219</div>
+  </header>
+
+  <!-- 中央 3D 画布(通栏) -->
+  <main id="canvasWrap">
+    <canvas id="scene" width="1576" height="750"></canvas>
+    <div id="glError" hidden=""></div>
+    <div id="tip">🖱️ 拖拽旋转 · 滚轮缩放 · <b>单击光点</b>弹出知识点详情 · 双击聚焦 · 搜索后点击结果跳转</div>
+  </main>
+
+</div>
+
+<!-- 左侧抽屉:可折叠分栏(抽屉与各分栏均默认收起) -->
+<aside id="leftPanel">
+  <section class="side-sec collapsed">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">📚 板块筛选</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <div id="boardList"><label class="board-item"><input type="checkbox" value="foundation"><span class="b-dot" style="background: rgb(38, 166, 154);"></span><span class="b-name">基础化学</span><span class="b-kind major">大板块</span></label><label class="board-item"><input type="checkbox" value="structure"><span class="b-dot" style="background: rgb(126, 87, 194);"></span><span class="b-name">结构化学</span><span class="b-kind major">大板块</span></label><label class="board-item"><input type="checkbox" value="principle"><span class="b-dot" style="background: rgb(239, 83, 80);"></span><span class="b-name">化学反应原理</span><span class="b-kind major">大板块</span></label><label class="board-item"><input type="checkbox" value="organic"><span class="b-dot" style="background: rgb(255, 167, 38);"></span><span class="b-name">有机化学</span><span class="b-kind major">大板块</span></label><label class="board-item"><input type="checkbox" value="lab"><span class="b-dot" style="background: rgb(92, 107, 192);"></span><span class="b-name">化学实验</span><span class="b-kind">小板块</span></label><label class="board-item"><input type="checkbox" value="notation"><span class="b-dot" style="background: rgb(141, 110, 99);"></span><span class="b-name">化学用语</span><span class="b-kind">小板块</span></label><label class="board-item"><input type="checkbox" value="life"><span class="b-dot" style="background: rgb(156, 204, 101);"></span><span class="b-name">化学与生活</span><span class="b-kind">小板块</span></label><label class="board-item"><input type="checkbox" value="avogadro"><span class="b-dot" style="background: rgb(38, 198, 218);"></span><span class="b-name">阿伏伽德罗常数</span><span class="b-kind">小板块</span></label></div>
+    </div>
+  </section>
+  <section class="side-sec collapsed">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">🧭 坐标解读</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <ul class="legend">
+        <li><b>Y 高度</b>:重要度(越高越总体)</li>
+        <li><b>XZ 散布</b>:无中心知识云,相关知识点彼此更近</li>
+        <li><b>选中</b>:相关知识保持明亮,其余变暗</li>
+        <li><b>颜色</b>:板块 · <b>大小</b>:重要度</li>
+        <li><b>蓝色细线</b>:知识点相关性</li>
+      </ul>
+    </div>
+  </section>
+  <section class="side-sec collapsed" id="newNodeSec">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">✏️ 定义新知识点</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <form id="newNodeForm" autocomplete="off">
+        <label class="nn-label">所属板块(<span id="nnBoardTip">底层分类始终为该科目固定的 8 个板块</span>)
+          <select id="nnBoard"><optgroup label="大板块"><option value="foundation">基础化学</option><option value="structure">结构化学</option><option value="principle">化学反应原理</option><option value="organic">有机化学</option></optgroup><optgroup label="小板块"><option value="lab">化学实验</option><option value="notation">化学用语</option><option value="life">化学与生活</option><option value="avogadro">阿伏伽德罗常数</option></optgroup></select>
+        </label>
+        <label class="nn-label">光点颜色
+          <span class="color-row">
+            <input type="color" id="nnColor" value="#4fc3f7" title="自定义 RGB 颜色">
+            <span id="nnColorText" class="color-text">#26a69a</span>
+          </span>
+          <span id="nnColorTip" class="nn-tip">也可点下方色块直接选用该科目各板块的固有颜色</span>
+          <span class="swatches" id="nnSwatches"><button type="button" class="swatch" title="基础化学(板块固有颜色)" data-board="foundation" style="background: rgb(38, 166, 154);"></button><button type="button" class="swatch" title="结构化学(板块固有颜色)" data-board="structure" style="background: rgb(126, 87, 194);"></button><button type="button" class="swatch" title="化学反应原理(板块固有颜色)" data-board="principle" style="background: rgb(239, 83, 80);"></button><button type="button" class="swatch" title="有机化学(板块固有颜色)" data-board="organic" style="background: rgb(255, 167, 38);"></button><button type="button" class="swatch" title="化学实验(板块固有颜色)" data-board="lab" style="background: rgb(92, 107, 192);"></button><button type="button" class="swatch" title="化学用语(板块固有颜色)" data-board="notation" style="background: rgb(141, 110, 99);"></button><button type="button" class="swatch" title="化学与生活(板块固有颜色)" data-board="life" style="background: rgb(156, 204, 101);"></button><button type="button" class="swatch" title="阿伏伽德罗常数(板块固有颜色)" data-board="avogadro" style="background: rgb(38, 198, 218);"></button></span>
+        </label>
+        <label class="nn-label">知识点名称
+          <input type="text" id="nnName" placeholder="如:圆锥曲线的光学性质" maxlength="30">
+        </label>
+        <label class="nn-label">重要度 <span class="imp-row">
+          <input type="range" id="nnImp" min="1" max="5" step="1" value="3">
+          <span id="nnImpVal">3 / 5</span>
+        </span></label>
+        <label class="nn-label">关键词(逗号分隔)
+          <input type="text" id="nnKeys" placeholder="如:光学性质,焦点,准线">
+        </label>
+        <label class="nn-label">关联知识点(输入名称检索后点击添加)
+          <input type="text" id="nnLinkInput" placeholder="输入名称或关键词检索">
+          <span id="nnLinkHint" class="link-hint"></span>
+          <span id="nnLinkChips" class="link-chips"></span>
+        </label>
+        <label class="nn-label">详细信息(支持 **加粗** 与 $公式$)
+          <textarea id="nnContent" rows="6" placeholder="概念定位、核心公式、方法与常考要点…"></textarea>
+        </label>
+        <button type="button" id="nnSubmit">加入知识云</button>
+        <div id="nnMsg" class="nn-msg"></div>
+      </form>
+    </div>
+  </section>
+</aside>
+
+<!-- 右侧:知识点详情(选中 / 聚焦时弹出) -->
+<aside id="detailPanel">
+  <div class="detail-head">
+    <div class="detail-title-wrap">
+      <span class="detail-eyebrow">知识点详情</span>
+      <h2 id="dName"></h2>
+    </div>
+    <button id="detailClose" type="button" title="关闭(退出聚焦)" aria-label="关闭">✕</button>
+  </div>
+  <div class="detail-scroll">
+    <div id="dMeta"></div>
+    <div id="dContent"></div>
+    <div id="dKeywords"></div>
+    <h3>🔗 相关知识</h3>
+    <ul id="dLinks"></ul>
+    <button id="dFocus">🎯 在网中聚焦</button>
+  </div>
+</aside>
+
+<!-- 轻提示 -->
+<div id="toast" hidden=""></div>
+
+<!-- 学科切换过渡遮罩:淡出→整页装载→淡入(不重放开场动画) -->
+<div id="xmask" aria-hidden="true" style="transition: opacity 0.7s; opacity: 0;"></div>
+
+<!-- 公式排版引擎(MathJax,离线内嵌;仅在详情卡手动触发排版) -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="vendor/mathjax-tex-svg.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<script src="js/data.js"></script>
+<script src="js/data_chem.js"></script>
+<script src="js/app.js"></script>
+
+
+</body></html>

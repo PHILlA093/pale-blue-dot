@@ -1,0 +1,31 @@
+规范词表条目:3823
+  citu wordlist 成员:3395
+  我们词表成员:3640
+  教科书词条(记录数 0,去重后 0)
+  有音标:3703  有释义:3813  两缺:10
+
+核心功能词覆盖:
+  have     Y  [] v. 有; 吃; 喝; 进行; 经受  来源:citu-wordlist+citu_words
+  go       Y  [] v. 离去, 走, 进行, 变成, 求  来源:citu-wordlist+citu_words
+  do       Y  [dʊ, duː] v. aux. &；做，干（用以构成疑问句及否定  来源:citu-wordlist+ckaorceu_words+citu_words
+  can      Y  [ken, kæn] v. 可能；能够；可以 不能 n.（美  来源:citu-wordlist+ckaorceu_words
+  say      Y  [] v. 说, 讲  来源:citu-wordlist+citu_words
+  get      Y  [] v. 成为; 得到; 具有; 到达  来源:citu-wordlist+citu_words
+  take     Y  [] v. 拿, 拿走, 取, 抓, 占领;  来源:citu-wordlist+citu_words
+  come     Y  [] v. 来, 来到  来源:citu-wordlist+citu_words
+  see      Y  [] v. 看见, 看到; 领会; 拜会  来源:citu-wordlist+citu_words
+  know     Y  []  知道, 了解; 认识; 懂得  来源:citu-wordlist+citu_words
+  think    Y  [] v. 想; 认为; 考虑  来源:citu-wordlist+citu_words
+  give     Y  [] v. 给; 递给; 付出  来源:citu-wordlist+citu_words
+  tell     Y  [] v. 告诉; 讲述; 吩咐; 断定,   来源:citu-wordlist+citu_words
+  many     Y  [] pron. 许多人（或物） 许多的  来源:citu-wordlist+citu_words
+  much     -
+  more     Y  [mɔː(r)] a. n. / ad.另外的；附加的；较多的  来源:citu-wordlist+ckaorceu_words+citu_words
+  most     -
+  little   Y  [] adj. 小的, 少的  来源:citu-wordlist+citu_words
+  toward   Y  [təˈwɔːd] prep. 向，朝，对于  来源:citu-wordlist+qg3500+ckaorceu_words+citu_words
+  could    Y  [] modal v. （can的过去式）可以, 可能；  来源:citu-wordlist+citu_words
+  must     Y  [] modal v. 必须, 应当; 必定是  来源:citu-wordlist+citu_words
+  make     Y  [meɪk] vt. 制作，制造；使得；做  来源:citu-wordlist+qg3500
+  will     Y  [wɪl] n. 意志, 遗嘱；will (wou  来源:citu-wordlist+qg3500+ckaorceu_words+citu_words+lazuli
+  would    Y  [wəd] v. （will的过去时）将会，打算，  来源:citu-wordlist+qg3500+ckaorceu_words+citu_words+lazuli

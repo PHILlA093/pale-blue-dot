@@ -1,0 +1,3555 @@
+0001 abandon /əˈbændən/ v. 抛弃，舍弃，放弃　【前缀:a-；词根:band】
+0002 ability /əˈbɪlɪtɪ/ n. 能力；才能　【基础词】
+0003 able /ˈeɪb(ə)l/ adj. 能够；有能力的　【基础词】
+0004 abnormal /æbˈnɔːm(ə)l/ adj. 反常的，变态的　【前缀:ab-；词根:norm；后缀:-al】
+0005 aboard /əˈbɔːd/ prep. 上（船，飞机，火车，汽车等　【前缀:a-】
+0006 abolish /əˈbɔlɪʃ/ v. 废除，废止　【基础词】
+0007 abortion /əˈbɔːʃ(ə)n/ n. 人工流产，堕胎　【基础词】
+0008 about /əˈbaʊt/ adv. prep. 大约；到处；四处 prep. 关于；在各处；四处　【前缀:ab-】
+0009 above /əˈbʌv/ prep. adj. adv. 在……上面 a. 上面的 ad. 在……之上　【基础词】
+0010 abroad /əˈbrɔːd/ adv. 到（在）国外　【前缀:ab-】
+0011 abrupt /əˈbrʌpt/ adj. 突然的，意外的，粗鲁　【前缀:ab-；词根:ru/rupt】
+0012 absence /ˈæbsəns/ n. 不在，缺席　【前缀:ab-；词根:sen】
+0013 absent /ˈæbsənt/ adj. 缺席， 不在　【前缀:ab-；词根:sen】
+0014 absolute /ˈæbsəluːt/ adj. 完全，全部，绝对的　【前缀:ab-；词根:sol】
+0015 absorb /əbˈsɔːb/ v. 吸收，使全神贯注　【基础词】
+0016 abstract /ˈæbstrækt/ adj. n. 抽象的（作品）　【前缀:ab-；词根:tract】
+0017 absurd /əbˈsɜːd/ adj. 荒谬的，怪诞不经的　【基础词】
+0018 abundant /əˈbʌndənt/ adj. 大量,丰盛的,充裕的　【基础词】
+0019 abuse /əˈbjuːz/ v. （酗酒）滥用,虐待,恶语　【前缀:ab-】
+0020 academic /ækəˈdemɪk/ adj. n. / n. 学术的，教学的　【前缀:a-；词根:cad/cas/cid；后缀:-ic/-ical】
+0021 academy /əˈkædəmɪ/ n. 专科学院,（美）私立学校　【前缀:a-；词根:cad/cas/cid；后缀:-y】
+0022 accelerate /əkˈseləreɪt/ v. （使）加速，加快　【基础词】
+0023 accent /ˈæksənt/ n. 口音，音调　【前缀:a-；词根:cent】
+0024 accept /əkˈsept/ vt. 接受　【前缀:a-；词根:cap/cept/ceive/cip】
+0025 access /ˈækses/ n. v. / v. 通道，入径，存取（计算机文件　【前缀:a-；词根:ced/ceed/cess】
+0026 accessible /əkˈsesɪb(ə)l/ adj. 可到达的，可接受的，易相处的　【前缀:a-；词根:ced/ceed/cess；后缀:-able/-ible】
+0027 accident /ˈæksɪdənt/ n. 事故，意外的事　【基础词】
+0028 accommodation /əkɔməˈdeɪʃ(ə)n/ n. 住宿，膳宿　【基础词】
+0029 accompany /əˈkʌmpənɪ/ v. 陪同，陪伴，与…同时发生　【后缀:-y】
+0030 accomplish /əˈkʌmplɪʃ/ v. 完成　【基础词】
+0031 according to /əˈkɔːdɪŋ tʊ/ adv. 按照，根据　【前缀:a-；词根:card/cord】
+0032 account /əˈkaʊnt/ n. 账目;描述　【基础词】
+0033 accountant /əˈkaʊnt(ə)nt/ n. 会计，会计师　【后缀:-ant/-ent】
+0034 accumulate /əˈkjuːmjʊleɪt/ v. 积累，积聚　【基础词】
+0035 accuracy /ˈækjʊrəsɪ/ n. 准确，精确　【后缀:-y】
+0036 accuse /əˈkjuːz/ v. 指责，控告　【基础词】
+0037 accustomed /əˈkʌstəmd/ adj. 习惯于,惯常的　【基础词】
+0038 ache /eɪk/ vi. n. 痛，疼痛　【基础词】
+0039 achieve /əˈtʃiːv/ vt. 达到，取得　【基础词】
+0040 achievement /əˈtʃiːvmənt/ n. 成就,成绩,功绩　【后缀:-ment】
+0041 acid /ˈæsɪd/ adj. 酸的　【前缀:a-；词根:cad/cas/cid】
+0042 acknowledge /əkˈnɔlɪdʒ/ v. 承认　【基础词】
+0043 acquaintance /əˈkweɪntəns/ n. 熟人，（与某人）认识　【基础词】
+0044 acquire /əˈkwaɪə(r)/ v. 获得，得到　【前缀:a-；词根:quest/quir/quis】
+0045 acquisition /ækwɪˈzɪʃ(ə)n/ n. 获得，得到　【前缀:a-；词根:quest/quir/quis；后缀:-ation/-tion/-ion/-sion】
+0046 acre /ˈeɪkə(r)/ n. 英亩　【前缀:a-；词根:cre/creas/cresc】
+0047 across /əˈkrɔs/ prep. 横过，穿过　【前缀:a-】
+0048 act /ækt/ n. v. 法令，条例 v. （戏）表演，扮演（角色），演出（戏）；行动，做事　【词根:ag/act】
+0049 action /ˈækʃ(ə)n/ n. 行动　【词根:ag/act；后缀:-ation/-tion/-ion/-sion】
+0050 active /ˈæktɪv/ adj. 积极的，主动的　【词根:ag/act；后缀:-ive】
+0051 activity /ækˈtɪvɪtɪ/ n. 活动　【词根:ag/act；后缀:-ity/-ty】
+0052 actor /ˈæktə(r)/ n. 男演员　【词根:ag/act；后缀:-er/-or】
+0053 actress /ˈæktrɪs/ n. 女演员　【词根:ag/act；后缀:-ess】
+0054 actual /ˈæktʃʊəl/ adj. 实际的； 现实的　【词根:ag/act；后缀:-al】
+0055 AD /ˌeɪˈdiː/ n. 公元　【基础词】
+0056 adapt /əˈdæpt/ v. 使适应，适合，改编　【基础词】
+0057 adaptation /ədæpˈteɪʃ(ə)n/ n. 适应，改编本　【后缀:-ation/-tion/-ion/-sion】
+0058 add /æd/ vt. 添加，增加　【基础词】
+0059 addicted /əˈdɪktɪd/ adj. 上瘾，成瘾，入迷　【前缀:ad-；词根:dic/dict；后缀:-ed】
+0060 addition /əˈdɪʃ(ə)n/ n. 增加;（算数用语）加　【基础词】
+0061 address /əˈdres/ n. 地址　【前缀:ad-】
+0062 adequate /ˈædɪkwət/ adj. 合适的，合乎需要的　【前缀:ad-；词根:equ】
+0063 adjust /əˈdʒʌst/ v. 调整,调节,适应,习惯　【前缀:ad-；词根:jud/jur/jus】
+0064 adjustment /əˈdʒʌstmənt/ n. 调整，适应　【前缀:ad-；词根:jud/jur/jus；后缀:-ment】
+0065 administration /ədmɪnɪˈstreɪʃ(ə)n/ n. 管理,行政部门　【前缀:ad-；词根:min】
+0066 admirable /ˈædmərəb(ə)l/ adj. 值得赞赏的,可钦佩的　【前缀:ad-；词根:mir；后缀:-able/-ible】
+0067 admire /ədˈmaɪə(r)/ v. 钦佩；羡慕　【前缀:ad-；词根:mir】
+0068 admission /ədˈmɪʃ(ə)n/ n. 准入, 接纳　【前缀:ad-；词根:miss/mit；后缀:-ation/-tion/-ion/-sion】
+0069 admit /ədˈmɪt/ vt. 承认，准许（入场，入学，入会　【前缀:ad-；词根:miss/mit】
+0070 adolescence /ædəʊˈlesns/ n. 青春，青春期　【基础词】
+0071 adolescent /ædəˈlesənt/ n. 青少年　【前缀:ad-；词根:cent】
+0072 adopt /əˈdɔpt/ v. 收养，领养　【前缀:ad-；词根:opt】
+0073 adore /əˈdɔː(r)/ v. （不用于进行时）热爱，爱慕某人　【基础词】
+0074 adult /ˈædʌlt/ n. 成年人　【基础词】
+0075 advance /ədˈvɑːns; (US) ədˈvæns/ v. 推进，促进；前进　【基础词】
+0076 advantage /ədˈvɑːntɪdʒ/ n. 优点； 好处　【基础词】
+0077 adventure /ədˈventʃə(r)/ n. 冒险； 奇遇　【前缀:ad-；词根:ven/vent；后缀:-ure】
+0078 advertise /ˈædvətaɪz/ vt. 为……做广告　【前缀:ad-；词根:vers/vert；后缀:-ize/-ise】
+0079 advertisement /ədˈvɜːtɪsmənt/ n. 广告　【前缀:ad-；词根:vers/vert；后缀:-ment】
+0080 advice /ədˈvaɪs/ n. 忠告，劝告，建议　【前缀:ad-】
+0081 advise /ədˈvaɪz/ vt. 忠告，劝告，建议　【前缀:ad-；词根:vid/vis】
+0082 advocate /ˈædvəkət/ v. 拥护，支持，提倡　【前缀:ad-；词根:voc/vok】
+0083 aeroplane /ˈeərəpleɪn/ n. (英)飞机　【词根:aer/aero】
+0084 affair /əˈfeə(r)/ n. 事，事情　【基础词】
+0085 affect /əˈfekt/ vt. 影响　【前缀:a-；词根:fac/fact/fect/fic】
+0086 affection /əˈfekʃ(ə)n/ n. 喜爱，钟爱　【前缀:a-；词根:fac/fact/fect/fic；后缀:-ation/-tion/-ion/-sion】
+0087 afford /əˈfɔːd/ vt. 负担得起（……的费用）；抽得出（时间）；提供　【基础词】
+0088 afraid /əˈfreɪd/ adj. 害怕的；担心　【基础词】
+0089 Africa /ˈæfrɪkə/ n. * n. 非洲　【基础词】
+0090 African /ˈæfrɪkən/ adj. n. 非洲的，非洲人的 n. 非洲人　【基础词】
+0091 after /ˈɑːftə(r)/ adv. prep. conj. 在后；后来prep. 在…之后；在 后面 conj. 在…以后　【基础词】
+0092 afternoon /ɑːftəˈnuːn/ n. 下午，午后；afterward(s　【基础词】
+0093 again /əˈɡeɪn/ adv. 再一次；再，又　【前缀:a-】
+0094 against /əˈɡeɪnst/ prep. 对着，反对　【基础词】
+0095 age /eɪdʒ/ n. 年龄；时代　【基础词】
+0096 agency /ˈeɪdʒənsɪ/ n. 代理机构　【后缀:-ancy/-ency】
+0097 agenda /əˈdʒendə/ n. （会议）议程表，议事日程　【前缀:a-；词根:gen/gener】
+0098 agent /ˈeɪdʒənt/ n. 代理人，经纪人　【后缀:-ant/-ent】
+0099 aggression /ˈəɡreʃ(ə)n/ n. 侵略　【前缀:a-；词根:grad/gress；后缀:-ation/-tion/-ion/-sion】
+0100 aggressive /ˈəɡresɪv/ adj. 侵略的；咄咄逼人　【前缀:a-；词根:grad/gress；后缀:-ive】
+0101 ago /əˈɡəʊ/ adv. 以前　【基础词】
+0102 agree /əˈɡriː/ v. 同意；应允　【基础词】
+0103 agreement /əˈɡriːmənt/ n. 同意，一致；协定，协议　【后缀:-ment】
+0104 agricultural /æɡrɪˈkʌltʃər(ə)l/ adj. 农业的　【后缀:-al】
+0105 agriculture /ˈæɡrɪkʌltʃə(r)/ n. 农业，农学　【基础词】
+0106 ahead /əˈhed/ adv. 在前，向前　【前缀:a-】
+0107 aid /eɪd/ n. 援助；救护；辅助器具　【基础词】
+0108 aids /eɪdz/ n. 艾滋病　【基础词】
+0109 aim /eɪm/ n. v. 目的；目标 v. 计划，打算；瞄准；针对　【基础词】
+0110 air /eə(r)/ n. 空气；大气　【基础词】
+0111 aircraft /ˈeəkrɑːft/ n. 飞机 (单复数同　【基础词】
+0112 airline /ˈeəlaɪn/ n. 航空公司；航空系统　【基础词】
+0113 airmail /ˈeəmeɪl/ n. 航空邮件　【基础词】
+0114 airplane /ˈeəpleɪn/ n. （美）飞机　【基础词】
+0115 airport /ˈeəpɔːt/ n. 航空站，飞机场　【前缀:a-；词根:port】
+0116 airspace /ˈeəspeɪs/ n. 领空,（某国的）空域　【基础词】
+0117 alarm /əˈlɑːm/ n. 警报　【基础词】
+0118 album /ˈælbəm/ n. 相册，影集，集邮簿　【基础词】
+0119 alcohol /ˈælkəhɔl/ n. 含酒精饮料，酒　【基础词】
+0120 alcoholic /ælkəˈhɔlɪk/ adj. n. / n. 含酒精的，酒鬼　【后缀:-ic/-ical】
+0121 algebra /ˈældʒɪbrə/ n. 代数　【基础词】
+0122 alike /əˈlaɪk/ adv. 很相似地，同样地　【前缀:a-】
+0123 alive /əˈlaɪv/ adj. 活着的，存在的　【前缀:a-】
+0124 all /ɔːl/ adv. adj. pron. 全部地 a. 全（部）;所有的;总;整 pron.全部;全体人员　【基础词】
+0125 allergic /əˈlɜːdʒɪk/ adj. 过敏的，厌恶　【基础词】
+0126 alley /ˈælɪ/ n. 小巷，胡同　【后缀:-y】
+0127 allocate /ˈæləkeɪt/ v. 拨给,划归,分配…给　【基础词】
+0128 allow /əˈlaʊ/ vt. 允许，准许　【基础词】
+0129 allowance /əˈlaʊəns/ n. 津贴，补助　【后缀:-ance/-ence】
+0130 almost /ˈɔːlməʊst/ adv. 几乎，差不多　【基础词】
+0131 alone /əˈləʊn/ adj. 单独的，孤独的　【基础词】
+0132 along /əˈlɔŋ; (US) əˈlɔŋ/ adv. prep. 向前；和…一起；一同 prep. 沿着；顺着　【前缀:a-；词根:long/leng】
+0133 alongside /əlɔŋˈsaɪd; (US) əlɔːŋˈsaɪd/ adv. 在…旁边,与…同时　【前缀:a-；词根:long/leng】
+0134 aloud /əˈlaʊd/ adv. 大声地　【前缀:a-】
+0135 alphabet /ˈælfəbet/ n. 字母表，字母　【基础词】
+0136 already /ɔːlˈredɪ/ adv. 已经　【后缀:-y】
+0137 also /ˈɔːlsəʊ/ adv. 也　【基础词】
+0138 alternative /ɔːlˈtɜːnətɪv/ adj. 可供替代,非传统的　【词根:alt；后缀:-ive】
+0139 although /ɔːlˈðəʊ/ conj. 虽然，尽管　【词根:alt】
+0140 altitude /ˈæltɪtjuːd; (US) ælˈtɪtuːd/ n. 海拔高度　【词根:alt】
+0141 altogether /ɔːltəˈɡeðə(r)/ adv. 总共　【词根:alt；后缀:-er/-or】
+0142 aluminium /æljʊˈmɪnɪəm/ n. （化）铝　【基础词】
+0143 always /ˈɔːlweɪz/ adv. 总是；一直；永远　【基础词】
+0144 am /æm/ v. be的人称形式之一 ；ａ.m./A.M.　【基础词】
+0145 amateur /ˈæmətə(r)/ adj. 业余爱好的　【前缀:a-；词根:mat/mater】
+0146 amaze /əˈmeɪz/ v. 惊奇，惊叹；震惊　【基础词】
+0147 amazing /əˈmeɪzɪŋ/ adj. 惊奇,惊叹的;震惊的；ambassador (ambassadress　【后缀:-ing】
+0148 ambiguous /æmˈbɪɡjʊəs/ adj. 模棱两可的　【基础词】
+0149 ambition /æmˈbɪʃ(ə)n/ n. 目标,野心,雄心,抱负　【基础词】
+0150 ambulance /ˈæmbjʊləns/ n. 救护车　【词根:ambul；后缀:-ance/-ence】
+0151 America /əˈmerɪkə/ n. * n. 美国；美洲　【基础词】
+0152 American /əˈmerɪkən/ adj. n. 美国的；美国人的n. 美国人　【基础词】
+0153 among /əˈmʌŋ/ prep. 在…中间；在（三个以上）之间　【前缀:a-；词根:mon/monit】
+0154 amount /əˈmaʊnt/ n. v. / v. 金额，数量，总计　【前缀:a-；词根:mons/mount】
+0155 ample /ˈæmp(ə)l/ adj. 足够的，丰裕的　【基础词】
+0156 amuse /əˈmjuːz/ vt. （使人）快乐，逗乐　【基础词】
+0157 amusement /əˈmjuːzmənt/ n. 娱乐　【后缀:-ment】
+0158 analyze /ˈænəlaɪz/ v. 分析　【基础词】
+0159 analysis /əˈnæləsɪs/ n. 分析，分析结果　【基础词】
+0160 ancestor /ˈænsəstə(r)/ n. 祖宗； 祖先　【基础词】
+0161 anchor /ˈæŋkə(r)/ v. n. / n. 锚，抛锚　【基础词】
+0162 ancient /ˈeɪnʃənt/ adj. 古代的，古老的　【基础词】
+0163 and /ənd/ conj. 和；又；而　【基础词】
+0164 anecdote /ˈænɪkdəʊt/ n. 逸事，趣闻　【基础词】
+0165 anger /ˈæŋɡə(r)/ n. 怒，愤怒　【基础词】
+0166 angle /ˈæŋɡ(ə)l/ n. 角度　【基础词】
+0167 angry /ˈænɡrɪ/ adj. 生气的，愤怒的　【后缀:-y】
+0168 animal /ˈænɪm(ə)l/ n. 动物　【词根:anim；后缀:-al】
+0169 ankle /ˈæŋk(ə)l/ n. 踝，踝关节　【基础词】
+0170 anniversary /ænɪˈvɜːsərɪ/ n. 周年纪念日　【前缀:a-；词根:vers/vert；后缀:-ary】
+0171 announce /əˈnaʊns/ vt. 宣布，宣告　【前缀:a-；词根:nounce/nunci】
+0172 announcement /əˈnaʊnsmənt/ n. 通告，通知　【前缀:a-；词根:nounce/nunci；后缀:-ment】
+0173 annoy /əˈnɔɪ/ vt. （使）烦恼　【词根:ann/enn；后缀:-y】
+0174 annual /ˈænjʊəl/ adj. 每年的，年度的，一年一次的　【词根:ann/enn；后缀:-al】
+0175 another /əˈnʌðə(r)/ adj. pron. 再一；另一；别的；不同的 pron. 另一个　【前缀:a-；词根:not】
+0176 answer /ˈɑːnsə(r); (US) ˈænsər/ n. v. 回答,答复;回信;答案 v.回答,答复;回信;（作出）答案　【基础词】
+0177 ant /ænt/ n. 蚂蚁　【基础词】
+0178 antarctic /ænˈtɑːktɪk/ adj. 南极的　【基础词】
+0179 Antarctica /ænˈtɑːktikə/ n. * n. 南极洲　【基础词】
+0180 antique /ænˈtiːk/ n. 古董　【前缀:anti-；词根:quest/quir/quis】
+0181 anxiety /æŋˈzaɪətɪ/ n. 担忧，焦虑　【后缀:-y】
+0182 anxious /ˈæŋkʃəs/ adj. 忧虑的，焦急的　【基础词】
+0183 any /ˈenɪ/ pron. （无论）哪一个；哪些 任何的；（用于疑问句、否定句）一些；什么　【后缀:-y】
+0184 anybody /ˈenɪbɔdɪ/ pron. 任何人，无论谁　【后缀:-y】
+0185 anyhow /ˈenɪhaʊ/ adv. 不管怎样　【基础词】
+0186 anyone /ˈenɪwʌn/ pron. 任何人，无论谁　【基础词】
+0187 anything /ˈenɪθɪŋ/ pron. 什么事（物）；任何事（物　【基础词】
+0188 anyway /ˈenɪweɪ/ adv. 不管怎样　【后缀:-y】
+0189 anywhere /ˈenɪweə(r)/ adv. 任何地方　【基础词】
+0190 apart /əˈpɑːt/ adj. , / a. 相隔，相距，除外　【前缀:a-；词根:part】
+0191 apartment /əˈpɑːtmənt/ n. （美）楼中单元房，一套房间；房间　【前缀:a-；词根:part；后缀:-ment】
+0192 apologize /əˈpɔlədʒaɪz/ vi. 道歉，谢罪　【前缀:a-；词根:pol/polis；后缀:-ize/-ise】
+0193 apology /əˈpɔlədʒɪ/ n. 道歉；歉意　【前缀:a-；词根:pol/polis；后缀:-y】
+0194 apparent /əˈpærənt/ adj. 显而易见　【基础词】
+0195 appeal /əˈpiːl/ v. 上诉，申诉，吸引力　【基础词】
+0196 appear /əˈpɪə(r)/ vi. 出现　【基础词】
+0197 appearance /əˈpɪərəns/ n. 出现，露面；容貌　【后缀:-ance/-ence】
+0198 appendix /əˈpendɪks/ n. 附录，阑尾　【前缀:a-；词根:pend/pens】
+0199 appetite /ˈæpɪtaɪt/ n. 食欲，胃口　【基础词】
+0200 applaud /əˈplɔːd/ v. n. / n. 鼓掌,赞许,赞赏　【基础词】
+0201 apple /ˈæp(ə)l/ n. 苹果　【基础词】
+0202 applicant /ˈæplɪkənt/ n. 申请人　【前缀:a-；词根:plex/plic/ply；后缀:-ant/-ent】
+0203 application /æplɪˈkeɪʃ(ə)n/ n. 申请　【前缀:a-；词根:plex/plic/ply；后缀:-ation/-tion/-ion/-sion】
+0204 apply /əˈplaɪ/ v. 申请　【后缀:-y】
+0205 appoint /əˈpɔɪnt/ v. 任命，委任，安排，确定（时间，地点　【前缀:a-；词根:point/punct】
+0206 appointment /əˈpɔɪntmənt/ n. 约会　【前缀:a-；词根:point/punct；后缀:-ment】
+0207 appreciate /əˈpriːʃɪeɪt/ v. 欣赏； 感激　【前缀:a-；词根:preci；后缀:-ate】
+0208 appreciation /əpriːʃɪˈeɪʃ(ə)n/ n. 欣赏,鉴定,评估　【前缀:a-；词根:preci；后缀:-ation/-tion/-ion/-sion】
+0209 approach /əˈprəʊtʃ/ n. v. / v. 靠近，接近，建议，要求　【基础词】
+0210 appropriate /əˈprəʊprɪət/ adj. 合适的，恰当的　【前缀:a-；词根:proper/propri；后缀:-ate】
+0211 approve /əˈpruːv/ v. 赞成,同意,批准,通过　【前缀:a-；词根:prob/prov】
+0212 approximately /əprɔksɪˈmətlɪ/ adv. 近似，大约　【后缀:-y】
+0213 apron /ˈeɪprən/ n. （机场的）停机坪　【基础词】
+0214 arbitrary /ˈɑːbɪtrərɪ; (US) ˈɑːrbɪtrerɪ/ adj. 随心所欲的，独裁的，专断的　【后缀:-y】
+0215 arch /ɑːtʃ/ n. 拱，拱门　【词根:arch】
+0216 architect /ˈɑːkɪtekt/ n. 建筑师，设计师　【前缀:a-；词根:tect】
+0217 architecture /ˈɑːkɪtektʃə(r)/ n. 建筑学，建筑设计，风格　【前缀:a-；词根:tect；后缀:-ure】
+0218 April /ˈeɪpr(ə)l/ n. 4月　【基础词】
+0219 Arab /ˈærəb/ adj. n. * a. 阿拉伯的 n. 阿拉伯人　【基础词】
+0220 Arabic /ˈærəbɪk/ adj. n. 阿拉伯语的 n. 阿拉伯语　【后缀:-ic/-ical】
+0221 arctic /ˈɑːktɪk/ adj. 北极的　【基础词】
+0222 are /ɑː(r)/ v. (be) 是　【基础词】
+0223 area /ˈeərɪə/ n. 面积；地域，地方，区域；范围，领域　【基础词】
+0224 argue /ˈɑːɡjuː/ vi. 争辩， 争论　【基础词】
+0225 argument /ˈɑːɡjʊmənt/ n. 争论，辩论；arise (arose, arisen　【后缀:-ment】
+0226 arithmetic /əˈrɪθmətɪk/ n. 算术　【基础词】
+0227 arm /ɑːm/ n. v. 臂,支架 v. 以…装备,武装起来n. （美）武器,武力　【词根:arm】
+0228 armchair /ɑːmˈtʃeə(r)/ n. 扶手椅　【词根:arm】
+0229 army /ˈɑːmɪ/ n. 军队　【词根:arm；后缀:-y】
+0230 around /əˈraʊnd/ adv. prep. 在周围；在附近prep. 在……周围；大约　【前缀:a-】
+0231 arrange /əˈreɪndʒ/ v. 安排，布置　【基础词】
+0232 arrangement /əˈreɪndʒmənt/ n. 安排，布置　【后缀:-ment】
+0233 arrest /əˈrest/ v. 逮捕，拘留　【基础词】
+0234 arrival /əˈraɪv(ə)l/ n. 到来，到达　【后缀:-al】
+0235 arrive /əˈraɪv/ vi. 到达；达到　【基础词】
+0236 arrow /ˈærəʊ/ n. 箭；箭头　【基础词】
+0237 art /ɑːt/ n. 艺术，美术；技艺　【词根:art】
+0238 article /ˈɑːtɪk(ə)l/ n. 文章;东西,物品;冠词　【词根:art】
+0239 artificial /ɑːtɪˈfɪʃ(ə)l/ adj. 人工的，人造的　【词根:art；后缀:-al】
+0240 artist /ˈɑːtɪst/ n. 艺术家　【词根:art；后缀:-ist】
+0241 as /əz/ adv. conj. prep. 像……一样；如同；因为 prep. 作为，当做　【基础词】
+0242 ash /æʃ/ n. 灰； 灰末　【基础词】
+0243 ashamed /əˈʃeɪmd/ adj. 惭愧； 害臊　【基础词】
+0244 Asia /ˈeɪʃə/ n. * n. 亚洲　【基础词】
+0245 Asian /ˈeɪʃ(ə)n/ adj. n. 亚洲（人）的n. 亚洲人　【后缀:-ian】
+0246 aside /əˈsaɪd/ adv. 在旁边　【前缀:a-；词根:sed/sess/sid】
+0247 ask /ɑːsk/ v. 问；请求，要求；邀请　【基础词】
+0248 asleep /əˈsliːp/ adj. 睡着的，熟睡　【前缀:a-】
+0249 aspect /ˈæspekt/ n. 方面，外观，外表　【前缀:a-；词根:spec/spect/spic】
+0250 assess /əˈses/ v. 评价,评定（性质,质量　【前缀:a-；词根:sed/sess/sid】
+0251 assessment /əˈsesmənt/ n. 看法，评价　【前缀:a-；词根:sed/sess/sid；后缀:-ment】
+0252 assist /əˈsɪst/ v. 帮助，协助　【前缀:a-；词根:sist】
+0253 assistance /əˈsɪst(ə)ns/ n. 帮助，援助，支持　【前缀:a-；词根:sist；后缀:-ance/-ence】
+0254 assistant /əˈsɪst(ə)nt/ n. 助手，助理　【前缀:a-；词根:sist；后缀:-ant/-ent】
+0255 associate /əˈsəʊʃɪeɪt/ v. 联想，联系　【前缀:a-；词根:soci；后缀:-ate】
+0256 association /əsəʊsɪˈeɪʃ(ə)n/ n. 协会，社团，联系　【前缀:a-；词根:soci；后缀:-ation/-tion/-ion/-sion】
+0257 assume /əˈsjuːm; (US) əˈsuːm/ v. 假定，假设　【基础词】
+0258 assumption /əˈsʌmpʃ(ə)n/ n. 假定，假设　【基础词】
+0259 astonish /əˈstɔnɪʃ/ vt. 使惊讶　【基础词】
+0260 astronaut /ˈæstrənɔːt/ n. 宇航员　【词根:aster/astr/astro】
+0261 astronomer /əˈstrɔnəmə(r)/ n. 天文学家　【词根:aster/astr/astro；后缀:-er/-or】
+0262 astronomy /əˈstrɔnəmɪ/ n. 天文学　【词根:aster/astr/astro；后缀:-y】
+0263 at /æt/ prep. 在（几点钟）;在（某处　【基础词】
+0264 athlete /ˈæθliːt/ n. 运动员　【基础词】
+0265 athletic /æθˈletɪk/ adj. 健壮的,体育运动的　【后缀:-ic/-ical】
+0266 athletics /æθˈletɪks/ n. 田径　【基础词】
+0267 atlantic /ətˈlæntɪk/ adj. 大西洋的　【基础词】
+0268 atmosphere /ˈætməsfɪə(r)/ n. 大气；气氛　【基础词】
+0269 atom /ˈætəm/ n. 原子，微粒　【前缀:a-；词根:tom】
+0270 attach /əˈtætʃ/ v. 把…固定，重视　【基础词】
+0271 attack /əˈtæk/ vt. n. / n. 攻击，袭击　【基础词】
+0272 attain /əˈteɪn/ v. （经过努力）获得,得到　【前缀:a-；词根:tain/ten/tent/tin】
+0273 attempt /əˈtempt/ vt. 试图，尝试　【基础词】
+0274 attend /əˈtend/ v. 看护，照料，服侍；出席，参加　【前缀:a-；词根:tend/tens/tent】
+0275 attention /əˈtenʃ(ə)n/ n. 注意，关心　【前缀:a-；词根:tain/ten/tent/tin；后缀:-ation/-tion/-ion/-sion】
+0276 attentively /əˈtentivli/ adv. 注意地　【前缀:a-；词根:tain/ten/tent/tin；后缀:-ly】
+0277 attitude /ˈætɪtjuːd; (US) ˈætɪtud/ n. 态度，看法　【基础词】
+0278 attract /əˈtrækt/ v. 吸引，引起　【前缀:a-；词根:tract】
+0279 attraction /əˈtrækʃ(ə)n/ n. 吸引，爱慕　【前缀:a-；词根:tract；后缀:-ation/-tion/-ion/-sion】
+0280 attractive /əˈtræktɪv/ adj. 迷人的，有吸引力的　【前缀:a-；词根:tract；后缀:-ive】
+0281 audience /ˈɔːdɪəns/ n. 观众，听众　【词根:aud/audi；后缀:-ance/-ence】
+0282 authentic /ɜːˈθentɪk/ adj. 真正的，真品的　【基础词】
+0283 author /ˈɔːθə(r)/ n. 作者，作家　【基础词】
+0284 authority /ɔːˈθɔrɪtɪ/ n. 权力,权威,威信,官方　【后缀:-ity/-ty】
+0285 automatic /ɔːtəˈmætɪk/ adj. 自动的，机械的　【前缀:auto-；词根:mat/mater】
+0286 autonomous /ɔːˈtɔnəməs/ adj. 自治的，自主的　【基础词】
+0287 August /ˈɔːɡəst/ n. 8月　【基础词】
+0288 aunt /ɑːnt; (US) ænt/ n. 伯母；舅母；婶；姑；姨　【基础词】
+0289 Australia /ɔˈstreɪljə/ n. * n. 澳洲；澳大利亚　【基础词】
+0290 Australian /ɔˈstreɪlɪən/ adj. n. 澳洲的，澳大利亚人的 n. 澳大利亚人　【基础词】
+0291 autumn /ˈɔːtəm/ n. 秋天，秋季　【基础词】
+0292 available /əˈveɪləbl/ adj. 可获得的，有空的　【基础词】
+0293 avenue /ˈævənjuːˈævənuː/ n. 大道　【前缀:a-；词根:ven/vent】
+0294 average /ˈævərɪdʒ/ adj. n. 平均；普通的 n.平均数　【基础词】
+0295 avoid /əˈvɔɪd/ v. 避免，躲开，逃避；awake (awoke, awoken　【前缀:a-；词根:void】
+0296 award /wɔːd/ n. 奖品，奖励　【前缀:a-】
+0297 aware /əˈweə(r)/ adj. 知道，意识到，发觉　【基础词】
+0298 away /əˈweɪ/ adv. 离开；远离　【前缀:a-；后缀:-y】
+0299 awesome /ˈɔːsəm/ adj. 令人惊叹,很困难的　【基础词】
+0300 awful /ˈɔːfʊl/ adj. 很坏的，极讨厌的　【基础词】
+0301 awkward /ˈɔːkwəd/ adj. 令人尴尬,使人难堪的　【基础词】
+0302 baby /ˈbeɪbɪ/ n. 婴儿　【后缀:-y】
+0303 bachelor /ˈbætʃələ(r)/ n. 未婚男子，单身汉　【基础词】
+0304 back /bæk/ adv. adj. n. 回（原处）；向后 a. 后面的 n. 背后，后部；背　【基础词】
+0305 backache /ˈbækeɪk/ n. 背痛　【基础词】
+0306 background /ˈbækɡraʊnd/ n. 背景；backward(s　【基础词】
+0307 bacon /ˈbeɪkən/ n. 咸猪肉；熏猪肉 　【基础词】
+0308 bacterium /bækˈtɪərɪəm/ n. (复bacteria) n. 细菌；bad (worse, worst　【基础词】
+0309 badly /ˈbædlɪ/ adv. 坏，恶劣地　【后缀:-y】
+0310 badminton /ˈbædmɪntən/ n. 羽毛球　【基础词】
+0311 bag /bæɡ/ n. 书包；提包；袋子　【基础词】
+0312 baggage /ˈbæɡɪdʒ/ n. 行李　【基础词】
+0313 bake /beɪk/ v. 烤； 烘（面包　【基础词】
+0314 bakery /ˈbeɪkərɪ/ n. 面包店　【后缀:-y】
+0315 balance /ˈbæləns/ n. 平衡　【基础词】
+0316 balcony /ˈbælkənɪ/ n. 阳台；楼座　【后缀:-y】
+0317 ball /bɔːl/ n. 球 n. 舞会　【基础词】
+0318 ballet /ˈbæleɪ/ n. 芭蕾舞　【后缀:-et】
+0319 balloon /bəˈluːn/ n. 气球　【基础词】
+0320 bamboo /bæmˈbuː/ n. 竹　【基础词】
+0321 ban /bæn/ n. v. 禁令 v. 禁止；取缔　【词根:band】
+0322 banana /bəˈnɑːnə; (US) bəˈnænə/ n. 香蕉　【基础词】
+0323 band /bænd/ n. 乐队　【词根:band】
+0324 bandage /ˈbændɪdʒ/ n. 绷带　【词根:band；后缀:-age】
+0325 bang /bæŋ/ int. 砰　【基础词】
+0326 bank /bæŋk/ n. （河海湖的）岸，堤 n. 银行　【基础词】
+0327 bank account /bæŋk əˈkaʊnt/ n. 银行账户　【基础词】
+0328 bar /bɑː(r)/ n. 条（长方）块，棒，横木 n.（酒店的）买酒柜台；酒吧；（卖东西的）柜台　【后缀:-ar】
+0329 barbecue /ˈbɑːbɪkjuː/ n. 烤肉野餐　【词根:bar】
+0330 barber /ˈbɑːbə(r)/ n. （为男人理发）理发师　【词根:bar；后缀:-er/-or】
+0331 barbershop /ˈbɑːbəʃɒp/ n. 理发店　【词根:bar】
+0332 bare /beə(r)/ adj. 裸露的，光秃秃的　【词根:bar】
+0333 bargain /ˈbɑːɡɪn/ n. v. （经讨价还价后）成交的商品；廉价货 v. 讨价还价　【词根:bar】
+0334 bark /bɑːk/ v. n. 狗叫 n. 狗叫声　【词根:bar】
+0335 barrier /ˈbærɪə/ n. 屏障，障碍，关卡　【词根:bar；后缀:-er/-or】
+0336 base /beɪs/ n. 根据地，基地（棒球）垒　【词根:bas】
+0337 baseball /ˈbeɪsbɔːl/ n. 棒球　【词根:bas】
+0338 basement /ˈbeɪsmənt/ n. 地下室　【词根:bas；后缀:-ment】
+0339 basic /ˈbeɪsɪk/ adj. 基本的　【词根:bas；后缀:-ic/-ical】
+0340 basin /ˈbeɪs(ə)n/ n. 水盆，脸盆　【词根:bas】
+0341 basis /ˈbeɪsɪs/ n. 原因，缘由，要素　【词根:bas】
+0342 basket /ˈbɑːskɪt; (US) ˈbæskɪt/ n. 篮子　【词根:bas；后缀:-et】
+0343 basketball /ˈbɑːskɪtbɔːl/ n. 篮球　【词根:bas】
+0344 bat /bæt/ n. （棒球、板球的）球棒 n. 蝙蝠　【词根:bat】
+0345 bath /bɑːθ; (US) bæθ/ n. 洗澡；浴室；澡盆　【后缀:-th】
+0346 bathe /beɪð/ vi. 洗澡；游泳　【词根:bat】
+0347 bathrobe /ˈbɑːθrəʊb/ n. 浴衣　【词根:bat】
+0348 bathroom /ˈbɑːθruːm/ n. 浴室，盥洗室　【词根:bat】
+0349 bathtub /ˈbɑːθtʌb/ n. 澡盆　【词根:bat】
+0350 battery /ˈbætərɪ/ n. 电池　【词根:bat；后缀:-y】
+0351 battle /ˈbæt(ə)l/ n. 战斗；战役　【词根:bat】
+0352 battleground /ˈbæt(ə)lɡraʊnd/ n. 战场　【词根:bat】
+0353 bay /beɪ/ n. 湾； 海湾　【后缀:-y】
+0354 bc /ˌbiːˈsiː/ n. 公元前　【基础词】
+0355 be /biː/ v. 是（原形）,其人称和时态形式有(am, is, are, was, were, being, been)；成为　【基础词】
+0356 beach /biːtʃ/ n. 海滨，海滩　【基础词】
+0357 beam /biːm/ n. 平衡木　【基础词】
+0358 bean /biːn/ n. 豆，豆科植物　【基础词】
+0359 beancurd /ˈbiːnkəːd/ n. 豆腐　【基础词】
+0360 bear /beə(r)/ v. n. 承受，负担，承担；忍受；容忍 n. 熊　【后缀:-ar】
+0361 beard /bɪəd/ n. （下巴上的）胡须　【基础词】
+0362 beast /biːst/ n. 野兽；牲畜；beat (beat, beaten　【前缀:be-；词根:aster/astr/astro】
+0363 beautiful /ˈbjuːtɪf(ə)l/ adj. 美，美丽，美观的　【基础词】
+0364 beauty /ˈbjuːtɪ/ n. 美丽，美人　【后缀:-y】
+0365 because /bɪˈkɔz; (US) bɪˈkɔːz/ conj. 因为；become (became, be come　【前缀:be-；词根:caus/cus】
+0366 bed /bed/ n. 床　【后缀:-ed】
+0367 bedclothes /ˈbedkləʊðz/ n. 铺盖（被褥等　【基础词】
+0368 beddings /ˈbedɪŋ/ n. 卧具，铺盖　【基础词】
+0369 bedroom /ˈbedruːm/ n. 寝室，卧室　【基础词】
+0370 bee /biː/ n. . 蜜蜂　【后缀:-ee】
+0371 beef /biːf/ n. 牛肉　【基础词】
+0372 beehive /ˈbiːhaɪv/ n. 蜂箱　【基础词】
+0373 beer /bɪə(r)/ n. 啤酒　【后缀:-er/-or】
+0374 before /bɪˈfɔː(r)/ prep. adv. conj. 在…以前；在…前面 ad. 以前 conj. 在…之前　【基础词】
+0375 beg /beɡ/ v. 请求，乞求，乞讨 ；begin(began,begun　【基础词】
+0376 beginning /bɪˈɡɪnɪŋ/ n. 开始，开端　【基础词】
+0377 behalf /bɪˈhɑːf/ n. 代表某人，为了某人　【前缀:be-】
+0378 behave /bɪˈheɪv/ v. 守规矩，行为　【基础词】
+0379 behaviour /bɪˈheɪvjə(r)/ n. 行为，举止　【基础词】
+0380 behind /bɪˈhaɪnd/ prep. adv. (表示位置)在…后面 ad. 在后面；向后　【基础词】
+0381 being /ˈbiːɪŋ/ n. 物；生物；人　【后缀:-ing】
+0382 Belgium /ˈbeldʒəm/ n. * n. 比利时　【基础词】
+0383 belief /bɪˈliːf/ n. 信条，信念　【基础词】
+0384 believe /bɪˈliːv/ v. 相信，认为　【基础词】
+0385 bell /bel/ n. 钟,铃;钟(铃)声;钟形物　【基础词】
+0386 belly /ˈbelɪ/ n. 肚子　【后缀:-y】
+0387 belong /bɪˈlɔŋ/ vi. 属，附属　【前缀:be-；词根:long/leng】
+0388 below /bɪˈləʊ/ prep. 在……下面　【前缀:be-】
+0389 belt /belt/ n. （皮）带　【基础词】
+0390 bench /bentʃ/ n. 长凳；工作台；bend (bent, bent　【基础词】
+0391 beneath /bɪˈniːθ/ prep. 在…下方（面　【基础词】
+0392 beneficial /benɪˈfɪʃ(ə)l/ adj. 有利的，有帮助的，有用的　【基础词】
+0393 benefit /ˈbenɪfɪt/ n. v. / v.优势,益处,使…受益　【基础词】
+0394 bent /bent/ adj. 弯的　【后缀:-ant/-ent】
+0395 beside /bɪˈsaɪd/ prep. 在…旁边；靠近　【前缀:be-；词根:sed/sess/sid】
+0396 besides /bɪˈsaɪdz/ prep. adv. 除…以外（还有） ad. 还有，此外；best（good, well 的最 高级　【前缀:be-；词根:sed/sess/sid】
+0397 betray /bɪˈtreɪ/ v. 出卖,泄露（机密）,辜负　【后缀:-y】
+0398 between /bɪˈtwiːn/ prep. 在（两者）之间；在…中间　【基础词】
+0399 beyond /bɪˈjɔnd/ prep. (表示位置) 在…的那边　【基础词】
+0400 bicycle /ˈbaɪsɪk(ə)l/ n. 自行车　【前缀:bi-；词根:circ/cycl】
+0401 bid /bɪd/ v. n. / n. 出价，投标，向（某人）道别　【基础词】
+0402 big /bɪɡ/ adj. 大的　【基础词】
+0403 bill /bɪl/ n. 账单；法案，议案； （美）钞票，纸币　【基础词】
+0404 billion /ˈbɪlɪən/ num. 十亿，百亿　【后缀:-ation/-tion/-ion/-sion】
+0405 bingo /ˈbɪŋɡəʊ/ n. 宾戈游戏　【基础词】
+0406 biochemistry /ˌbaɪəʊˈkemɪstrɪ/ n. 生物化学　【词根:bio；后缀:-y】
+0407 biography /baɪˈɔɡrəfɪ/ n. 传记　【前缀:bi-；词根:gram/graph；后缀:-y】
+0408 biology /baɪˈɔlədʒɪ/ n. 生物（学　【词根:bio；后缀:-y】
+0409 bird /bɜːd/ n. 鸟　【基础词】
+0410 birdcage /ˈbɜːdkeɪdʒ/ n. 鸟笼　【基础词】
+0411 birth /bɜːθ/ n. 出生； 诞生　【基础词】
+0412 birthday /ˈbɜːθdeɪ/ n. 生日　【后缀:-y】
+0413 birthplace /ˈbɜːθpleɪs/ n. 出生地；故乡　【前缀:bi-；词根:plac/pleas】
+0414 biscuit /ˈbɪskɪt/ n. 饼干　【基础词】
+0415 bishop /ˈbɪʃəp/ n. 主教　【前缀:bi-】
+0416 bit /bɪt/ n. 一点，一些，少量的；bite (bit, bitten　【基础词】
+0417 bitter /ˈbɪtə(r)/ adj. 有苦味的；痛苦的，难过的；严酷的　【基础词】
+0418 black /blæk/ n. adj. 黑色 a. 黑色的　【基础词】
+0419 blackboard /ˈblækbɔːd/ n. 黑板　【基础词】
+0420 blame /bleɪm/ n. v. 责备；责怪　【基础词】
+0421 blank /blæŋk/ n. adj. 空格，空白（处）；空的；茫然无表情的　【基础词】
+0422 blanket /ˈblæŋkɪt/ n. 毛毯，毯子　【后缀:-et】
+0423 bleed /bliːd/ vi. 出血，流血　【基础词】
+0424 bless /bles/ vt. 保佑，降福　【后缀:-less】
+0425 blind /blaɪnd/ adj. 瞎的　【基础词】
+0426 block /blɔk/ n. vt. 大块；（木、石等）块；街区；路障 vt. 阻塞；阻挡　【基础词】
+0427 blood /blʌd/ n. 血，血液　【基础词】
+0428 blouse /blaʊz; u.S. blaʊs/ n. 宽罩衫；（妇女、儿童穿的）短上衣　【基础词】
+0429 blow /bləʊ/ n. 击；打击；blow (blew, blown　【基础词】
+0430 blue /bluː/ n. adj. 蓝色 a.蓝色的 a. 悲伤的；沮丧的　【基础词】
+0431 board /bɔːd/ n. v. 木板；布告牌；委员会；（政府的）部 v. 上（船、火车、飞机　【基础词】
+0432 boat /bəʊt/ n. 小船，小舟　【基础词】
+0433 boating /ˈbəʊtɪŋ/ n. 划船（游玩），泛舟 body n. 身体　【后缀:-ing】
+0434 boil /bɔɪl/ v. 沸腾；烧开；煮……　【基础词】
+0435 bomb /bɔm/ n. v. 炸弹 v. 轰炸　【基础词】
+0436 bond /bɔnd/ n. v. /v. 纽带，联系，使牢固　【基础词】
+0437 bone /bəʊn/ n. 骨头，骨质（复数bones骨骼；骨骸　【基础词】
+0438 bonus /ˈbəʊnəs/ n. 津贴，奖金，红利　【基础词】
+0439 book /bʊk/ n. v. 书；本子 v. 预定，定（房间、车票等　【基础词】
+0440 bookcase /ˈbʊkkeɪs/ n. 书橱　【基础词】
+0441 bookmark /ˈbʊkmɑːk/ n. 书签　【基础词】
+0442 bookshelf /ˈbʊkʃelf/ n. 书架　【基础词】
+0443 bookshop /ˈbʊkʃɔp/ n. 书店　【基础词】
+0444 bookstore /ˈbʊkstɔː(r)/ n. 书店　【基础词】
+0445 boom /buːm/ n. v. / v. 繁荣，轰鸣，激增　【基础词】
+0446 boot /buːt/ n. 长统靴；靴　【基础词】
+0447 booth /buːð/ n. 岗；（为某种用途而设的）亭或小隔间　【基础词】
+0448 telephone booth /ˈtelɪfəʊn- buːð/ n. 电话亭　【前缀:tele-；词根:phon；后缀:-th】
+0449 border /ˈbɔːdə(r)/ n. 边缘；边境，国界　【基础词】
+0450 bored /bɔrd/ adj. （对人，事）厌倦的，烦闷的　【基础词】
+0451 boring /ˈbɔːrɪŋ/ adj. 乏味的，无聊的　【基础词】
+0452 born /bɔːn/ adj. 出生　【基础词】
+0453 borrow /ˈbɔrəʊ/ v. （向别人）借用；借　【基础词】
+0454 boss /bɔs/ n. 领班；老板　【基础词】
+0455 botanical /bəˈtænɪk(ə)l/ adj. 植物学的　【后缀:-ic/-ical】
+0456 botany /ˈbɔtənɪ/ n. 植物； 植物学　【后缀:-y】
+0457 both /bəʊθ/ adj. pron. 两；双 pron. 两者；双方　【后缀:-th】
+0458 bottle /ˈbɔt(ə)l/ n. 瓶子　【基础词】
+0459 bottom /ˈbɔtəm/ n. 底部；底　【基础词】
+0460 bounce /baʊns/ v. 弹起，蹦，上下晃动　【基础词】
+0461 bound /baʊnd/ adj. v. n. 被束缚的；被绑的；有义务的 v.& n. 跳跃　【基础词】
+0462 boundary /ˈbaʊndərɪ/ n. 边界，界限　【后缀:-ary】
+0463 bow /bəʊ/ v. n. 鞠躬，弯腰行礼　【基础词】
+0464 bowl /bəʊl/ n. 碗　【基础词】
+0465 bowling /ˈbəʊlɪŋ/ n. 保龄球　【后缀:-ing】
+0466 box /bɔks/ n. 盒子，箱子　【基础词】
+0467 boxing /ˈbɔksɪŋ/ n. 拳击（运动　【后缀:-ing】
+0468 boy /bɔɪ/ n. 男孩　【后缀:-y】
+0469 boycott /ˈbɔɪkɔt/ v. 拒绝购买，抵制　【基础词】
+0470 brain /breɪn/ n. 脑（子　【基础词】
+0471 brake /breɪk/ n. vi. 闸 vi. 刹车　【基础词】
+0472 branch /brɑːntʃ/ n. 树枝；分枝；分公司，分店；支部　【基础词】
+0473 brand /brænd/ n. 品牌　【基础词】
+0474 brave /breɪv/ adj. 勇敢的　【基础词】
+0475 bravery /ˈbreɪvərɪ/ n. 勇气　【后缀:-y】
+0476 bread /bred/ n. 面包　【基础词】
+0477 break /breɪk/ n. 间隙；break (broke, bro ken　【基础词】
+0478 breakfast /ˈbrekfəst/ n. 早餐　【基础词】
+0479 breakthrough /ˈbreɪkθruː/ n. 重大进展，突破　【基础词】
+0480 breast /brest/ n. 乳房，胸脯　【基础词】
+0481 breath /breθ/ n. 气息；呼吸　【基础词】
+0482 breathe /briːð/ vi. 呼吸　【基础词】
+0483 breathless /ˈbreθlɪs/ adj. 气喘吁吁的，上气不接下气的　【后缀:-less】
+0484 brewery /ˈbruːərɪ/ n. 啤酒厂（公司　【后缀:-y】
+0485 brick /brɪk/ n. 砖；砖块　【基础词】
+0486 bride /braɪd/ n. 新娘　【基础词】
+0487 bridegroom /ˈbraɪdɡruːm/ n. 新郎　【基础词】
+0488 bridge /brɪdʒ/ n. 桥　【基础词】
+0489 brief /briːf/ adj. 简洁的　【基础词】
+0490 bright /braɪt/ adj. 明亮的；聪明的　【基础词】
+0491 brilliant /ˈbrɪlɪənt/ adj. 巧妙的，使人印象深刻的，技艺高的；bring (brought, brought　【基础词】
+0492 Britain /ˈbrɪtən/ n. * n. 英国；不列颠　【词根:tain/ten/tent/tin】
+0493 british /ˈbrɪtɪʃ/ adj. 英国的；大不列颠的；英国人的　【基础词】
+0494 broad /brɔːd/ adj. 宽的，宽大的　【基础词】
+0495 broadcast /ˈbrɔːdkɑːst/ n. 广播节目；broadcast（broadcast, broadcast或--ed,--ed　【基础词】
+0496 brochure /brəʊˈʃə(r); (US) brəʊˈʃʊər/ n. 资料（或广告）手册　【基础词】
+0497 broken /ˈbrəʊkən/ adj. 弄坏了的　【基础词】
+0498 broom /bruːm/ n. 扫帚　【基础词】
+0499 brother /ˈbrʌðə(r)/ n. 兄；弟　【基础词】
+0500 brotherhood /ˈbrʌðəhʊd/ n. 兄弟般的关系　【后缀:-hood】
+0501 brown /braʊn/ n. adj. 褐色，棕色 a. 褐色的，棕色的　【基础词】
+0502 brunch /ˈbrʌntʃ/ n. 早午饭（晚早饭　【基础词】
+0503 brush /brʌʃ/ v. n. 刷；擦 n. 刷子　【基础词】
+0504 bucket /ˈbʌkɪt/ n. 铲斗；桶　【基础词】
+0505 buddhism /ˈbʊdɪz(ə)m/ n. 佛教　【基础词】
+0506 buddhist /ˈbudist/ n. 佛教徒　【基础词】
+0507 budget /ˈbʌdʒɪt/ n. 预算　【基础词】
+0508 buffet /ˈbʊfeɪ; (US) bəˈfeɪ/ n. 自助餐；build (built, built　【基础词】
+0509 building /ˈbɪldɪŋ/ n. 建筑物；房屋；大楼　【基础词】
+0510 bun /bʌn/ n. 馒头；小甜面包　【基础词】
+0511 bunch /bʌntʃ/ n. 串,束,扎,大量,大批　【基础词】
+0512 bungalow /ˈbʌŋɡələʊ/ n. 平房　【基础词】
+0513 burden /ˈbɜːd(ə)n/ n. （义务，责任的）重担，负担　【基础词】
+0514 bureaucratic /bjuəˌrəuˈkrætik/ adj. 官僚的　【基础词】
+0515 burglar /ˈbɜːɡlə(r)/ n. 入室窃贼　【基础词】
+0516 burial /ˈberɪəl/ n. 埋葬；burn (--ed, --ed 或 burnt, burnt　【基础词】
+0517 burst /ˈbɜːst/ v. 突然发生； 突然发作　【基础词】
+0518 bury /ˈberɪ/ vt. 埋；葬　【后缀:-y】
+0519 bus /bʌs/ n. 公共汽车　【基础词】
+0520 bus stop /bʌs stɔp/ n. 公共汽车站　【基础词】
+0521 bush /bʊʃ/ n. 灌木丛，矮树丛　【基础词】
+0522 business /ˈbɪznɪs/ n. （本分）工作，职业；职责；生意，交易；事业；businessman (pl. businessmen　【基础词】
+0523 busy /ˈbɪzɪ/ adj. 忙（碌）的　【后缀:-y】
+0524 but /bət/ conj. prep. 但是，可是 prep. 除了, 除……外　【基础词】
+0525 butcher /ˈbʊtʃə/ n. vt. 肉店；屠夫 屠宰（动物）；残杀（人　【基础词】
+0526 butter /ˈbʌtə(r)/ n. 黄油，奶油　【基础词】
+0527 butterfly /ˈbʌtəflaɪ/ n. 蝴蝶　【后缀:-y】
+0528 button /ˈbʌt(ə)n/ n. v. 纽扣；（电铃等的）按钮 v. 扣（纽扣） ；buy (bought,bought　【基础词】
+0529 by /baɪ/ prep. 靠近，在…旁；在…时间；不迟于；被；用；由；乘（车　【基础词】
+0530 bye /baɪ/ int. 再见　【基础词】
+0531 cab /kæb/ n. （美）出租车　【基础词】
+0532 cabbage /ˈkæbɪdʒ/ n. 卷心菜，洋白菜　【基础词】
+0533 cafeteria /kæfɪˈtɪərɪə/ n. 自助餐厅　【基础词】
+0534 cage /keɪdʒ/ n. 笼；鸟笼　【基础词】
+0535 calculate /ˈkælkjʊleɪt/ v. 计算，核算，推测　【基础词】
+0536 cake /keɪk/ n. 蛋糕，糕点；饼　【基础词】
+0537 call /kɔːl/ n. v. 喊，叫；电话，通话 v. 称呼；呼唤；喊，叫　【基础词】
+0538 calm /kɑːm; (US) kɑːlm/ adj. v. 镇静,沉着的 v.镇静沉着　【基础词】
+0539 camel /ˈkæm(ə)l/ n. 骆驼　【基础词】
+0540 camera /ˈkæmərə/ n. 照相机；摄像机　【基础词】
+0541 camp /kæmp/ n. vi. （夏令）营 vi.野营,宿营　【基础词】
+0542 campaign /kæmˈpeɪn/ n. 运动，战役；can (could) canˈt = can not modal　【基础词】
+0543 Canada /ˈkænədə/ n. * n. 加拿大　【基础词】
+0544 canadian /kəˈneɪdɪən/ adj. n. 加拿大的；加拿大人的 n. 加拿大人　【基础词】
+0545 canal /kəˈnæl/ n. 运河；水道　【基础词】
+0546 cancel /ˈkæns(ə)l/ vt. 取消　【基础词】
+0547 cancer /ˈkænsə(r)/ n. 癌　【基础词】
+0548 candidate /ˈkændɪdət; (US) ˈkændɪdeɪt/ n. 候选人，申请人　【基础词】
+0549 candle /ˈkænd(ə)l/ n. 蜡烛　【基础词】
+0550 candy /ˈkændɪ/ n. 糖果　【后缀:-y】
+0551 canteen /kænˈtiːn/ n. 餐厅；食堂　【基础词】
+0552 cap /kæp/ n. （无檐的或仅在前面有檐的）帽子；（瓶子的）盖；（钢笔等的）笔套　【词根:cap】
+0553 capital /ˈkæpɪt(ə)l/ n. 首都.省会.大写；资本　【词根:cap；后缀:-al】
+0554 capsule /ˈkæpsjuːl; (US) ˈkæpsl/ n. （药）胶囊　【词根:cap】
+0555 captain /ˈkæptɪn/ n. （海军）上校；船长，舰长；队长　【词根:cap】
+0556 caption /ˈkæpʃ(ə)n/ n. （图片，漫画等的）说明文字　【词根:cap；后缀:-ation/-tion/-ion/-sion】
+0557 car /kɑː(r)/ n. 汽车，小卧车　【词根:card/cord】
+0558 carbon /ˈkɑːbən/ n. 碳　【基础词】
+0559 card /kɑːd/ n. 卡片；名片；纸牌　【词根:card/cord】
+0560 care /keə(r)/ n. v. 照料，保护；小心v. 介意……，在乎；关心　【基础词】
+0561 careful /ˈkeəfʊl/ adj. 小心，仔细，谨慎的　【后缀:-ful】
+0562 careless /ˈkeəlɪs/ adj. 粗心的，漫不经心的　【后缀:-less】
+0563 carpenter /ˈkɑːpɪntə(r)/ n. 木工，木匠　【基础词】
+0564 carpet /ˈkɑːpɪt/ n. 地毯　【基础词】
+0565 carriage /ˈkærɪdʒ/ n. 四轮马车;（火车）客车厢　【基础词】
+0566 carrier /ˈkærɪə(r)/ n. 搬运者；媒介;（自行车等的）置物架；（车的）货架　【基础词】
+0567 carrot /ˈkærət/ n. 胡萝卜　【基础词】
+0568 carry /ˈkærɪ/ vt. 拿，搬，带，提，抬，背，抱，运等　【后缀:-y】
+0569 cartoon /kɑːˈtuːn/ n. 动画片，卡通；漫画　【基础词】
+0570 carve /kɑːv/ vt. 刻；雕刻　【基础词】
+0571 case /keɪs/ n. 情况；病例；案件；真相 n. 箱；盒；容器　【词根:cad/cas/cid】
+0572 cash /kæʃ/ n. v. 现金，现钞 v. 兑现　【词根:cad/cas/cid】
+0573 castle /ˈkɑːs(ə)l; (US) ˈkæsl/ n. 城堡　【词根:cad/cas/cid】
+0574 casual /ˈkæʒʊəl/ adj. 漫不经心的，不经意的，非正式的　【词根:cad/cas/cid；后缀:-al】
+0575 cat /kæt/ n. 猫 　【基础词】
+0576 catalogue /ˈkætəlɔg/ n. 目录　【基础词】
+0577 catastrophe /kəˈtæstrəfɪ/ n. 灾难，灾祸，不幸事件；catch(caught,caught　【词根:aster/astr/astro】
+0578 category /ˈkætɪɡərɪ/ n. 类别，种类　【后缀:-y】
+0579 cater /ˈkeɪtə(r)/ v. 提供饮食，承办酒席　【后缀:-er/-or】
+0580 catholic /ˈkæθəlɪk/ adj. 天主教的　【基础词】
+0581 cathedral /kəˈθiːdr(ə)l/ n. 大教堂（天主教　【基础词】
+0582 cattle /ˈkæt(ə)l/ n. 牛（总称），家畜　【基础词】
+0583 cause /kɔːz/ n. vt. 原因，起因 vt. 促使，引起，使发生　【词根:caus/cus】
+0584 caution /ˈkɔːʃ(ə)n/ n. 谨慎，小心，警告　【词根:caus/cus；后缀:-ation/-tion/-ion/-sion】
+0585 cautious /ˈkɔːʃəs/ adj. 小心的，谨慎的　【基础词】
+0586 cave /keɪv/ n. 洞，穴；地窖　【基础词】
+0587 cd /ˌsiːˈdiː/ n. 光盘 (compact disk的缩写　【基础词】
+0588 ceiling /ˈsiːlɪŋ/ n. 天花板，顶棚　【基础词】
+0589 celebrate /ˈselɪbreɪt/ v. 庆祝　【基础词】
+0590 celebration /selɪˈbreɪʃ(ə)n/ n. 庆祝；庆祝会　【后缀:-ation/-tion/-ion/-sion】
+0591 cell /sel/ n. （监狱的）单人牢房；（修道院等的）单人小室；（蜂巢的）小蜂窝，蜂房；［生物］ 细胞　【基础词】
+0592 cellar /ˈselə(r)/ n. 地窖；地下储藏室　【后缀:-ar】
+0593 cent /sent/ n. 美分（100 cents = 1 dollar　【词根:cent】
+0594 centigrade /ˈsentɪɡreɪd/ adj. 摄氏的　【词根:cent】
+0595 centimetre /ˈsentiˌmiːtə(r)/ n. (美 centimeter) n. 公分，厘米　【词根:cent】
+0596 central /ˈsentr(ə)l/ adj. 中心，中央；主要的；centre (美 center　【词根:cent；后缀:-al】
+0597 century /ˈsentʃərɪ/ n. 世纪，百年　【词根:cent；后缀:-y】
+0598 ceremony /ˈserɪmənɪ/ n. 典礼，仪式，礼节　【后缀:-y】
+0599 certain /ˈsɜːt(ə)n/ adj. （未指明真实名称的）某…；确定的，无疑的；一定会…　【词根:cern/cert】
+0600 certainly /ˈsɜːtənlɪ/ adv. 当然；一定，无疑　【词根:cern/cert；后缀:-ly】
+0601 certificate /səˈtɪfɪkət/ n. 证明，证明书　【词根:cern/cert；后缀:-ate】
+0602 chain /tʃeɪn/ n. 链； 链条；chain store(s　【基础词】
+0603 chair /tʃeə(r)/ n. 椅子　【基础词】
+0604 chairman /ˈtʃeəmən/ n. (pl. chairmen) n. 主席，会长；议长；chairwoman (pl. chairwomen　【基础词】
+0605 chalk /tʃɔːk/ n. 粉笔　【基础词】
+0606 challenge /ˈtʃælɪndʒ/ n. 挑战(性　【词根:long/leng】
+0607 challenging /ˈtʃælɪndʒɪŋ/ adj. 具有挑战性的　【词根:long/leng；后缀:-ing】
+0608 champion /ˈtʃæmpɪən/ n. 冠军，优胜者　【基础词】
+0609 chance /tʃɑːns; (US) tʃæns/ n. 机会，可能性　【基础词】
+0610 changeable /ˈtʃeɪndʒəb(ə)l/ adj. 易变的，变化无常的　【后缀:-able/-ible】
+0611 change /tʃeɪndʒ/ n. v. 零钱；找头v. 改变，变化；更换；兑换　【基础词】
+0612 channel /ˈtʃæn(ə)l/ n. 频道；通道；水渠　【基础词】
+0613 chant /tʃɑːnt/ v. n. / n.反复呼喊　【基础词】
+0614 chaos /ˈkeɪɔs/ n. 混乱，杂乱，紊乱　【基础词】
+0615 character /ˈkærɪktə(r)/ n. （汉）字.字体；品格　【基础词】
+0616 characteristic /kærɪktəˈrɪstɪk/ adj. 典型的，独特的　【基础词】
+0617 charge /tʃɑːdʒ/ v. n. 要求收费；索价；将(电池)充电 n. 费用；价钱　【基础词】
+0618 chapter /ˈtʃæptə(r)/ n. 章　【基础词】
+0619 chart /tʃɑːt/ n. 图表；航海图　【基础词】
+0620 chat /tʃæt/ n. vi. n. & vi. 聊天，闲谈　【基础词】
+0621 cheap /tʃiːp/ adj. 便宜的，贱　【基础词】
+0622 cheat /tʃiːt/ n. v. 骗取，哄骗；作弊　【基础词】
+0623 check /tʃek/ n. vt. 检查；批改 vt. 校对，核对； 检查；批改　【基础词】
+0624 cheek /tʃiːk/ n. 面颊，脸蛋　【基础词】
+0625 cheer /tʃɪə(r)/ n. vi. 欢呼； 喝彩　【基础词】
+0626 cheer up /tʃɪə(r)-ʌp/ v. 振作起来！提起精神！　【基础词】
+0627 cheerful /ˈtʃɪəfʊl/ adj. 兴高采烈的，快活的　【后缀:-ful】
+0628 cheers /tʃɪə(r)/ int. 干杯，(口)谢谢，再见　【基础词】
+0629 cheese /tʃiːz/ n. 奶酪　【基础词】
+0630 chef /ʃef/ n. 厨师长，主厨　【基础词】
+0631 chemical /ˈkemɪk(ə)l/ adj. n. 化学的 n. 化学品　【基础词】
+0632 chemist /ˈkemɪst/ n. 药剂师；化学家　【基础词】
+0633 chemistry /ˈkemɪstrɪ/ n. 化学　【后缀:-y】
+0634 cheque /tʃek/ n. (美check) n. 支票　【基础词】
+0635 chess /tʃes/ n. 棋　【基础词】
+0636 chest /tʃest/ n. 箱子；盒子；胸部　【基础词】
+0637 chew /tʃuː/ vt. 咀嚼　【基础词】
+0638 chick /tʃɪk/ n. 小鸡　【基础词】
+0639 chicken /ˈtʃɪkən/ n. 鸡；鸡肉　【后缀:-en】
+0640 chief /tʃiːf/ adj. n. 主要,首要的 n.领导，头；child (复children　【基础词】
+0641 childhood /ˈtʃaɪldhʊd/ n. 幼年时代，童年　【基础词】
+0642 chimney /ˈtʃɪmnɪ/ n. 烟囱，烟筒　【后缀:-y】
+0643 China /ˈtʃaɪnə/ n. * n. 中国　【基础词】
+0644 Chinese /tʃaɪˈniːz/ adj. n. 中国的；中国人的；中国话的，汉语的 n.中国人；中国话，汉语，中文　【基础词】
+0645 chips /tʃɪp/ n. (pl.)炸土豆条（片　【基础词】
+0646 chocolate /ˈtʃɔklət/ n. 巧克力　【基础词】
+0647 choice /tʃɔɪs/ n. 选择；抉择　【基础词】
+0648 choir /ˈkwaɪə(r)/ n. 合唱团，教堂的唱诗班　【基础词】
+0649 choke /tʃəʊk/ n. v. 窒息；choose (chose, chosen　【基础词】
+0650 chopsticks /ˈtʃɔpstɪks/ n. 筷子　【基础词】
+0651 chorus /ˈkɔːrəs/ n. 合唱曲，歌咏队　【基础词】
+0652 Christian /ˈkrɪstɪən/ n. 基督教徒和天主教徒的总称　【基础词】
+0653 Christmas /ˈkrɪsməs/ n. 圣诞节（12月25日　【基础词】
+0654 christmas card /ˈkrɪsməs kɑːd/ n. 圣诞卡　【词根:card/cord】
+0655 christmas tree /ˈkrɪsməs triː/ n. 圣诞树　【基础词】
+0656 church /tʃɜːtʃ/ n. 教堂；教会　【基础词】
+0657 cigar /sɪˈɡɑː(r)/ n. 雪茄烟　【基础词】
+0658 cigarette /sɪɡəˈret/ n. 纸烟，香烟　【基础词】
+0659 cinema /ˈsɪnəmə/ n. 电影院；电影　【基础词】
+0660 circle /ˈsɜːk(ə)l/ n. vt. /vt. 圆圈 将…圈起来　【词根:circ/cycl】
+0661 circuit /ˈsɜːkɪt/ n. 环形路线，巡回赛　【词根:circ/cycl】
+0662 circulate /ˈsɜːkjʊleɪt/ v. （液体或气体）环流，循环　【词根:circ/cycl；后缀:-ate】
+0663 circumstance /ˈsɜːkəmstəns/ n. 条件,环境,状况　【词根:circ/cycl；后缀:-ance/-ence】
+0664 circus /ˈsɜːkəs/ n. 马戏团　【词根:circ/cycl】
+0665 citizen /ˈsɪtɪz(ə)n/ n. 公民；居民　【词根:cit；后缀:-en】
+0666 city /ˈsɪtɪ/ n. 市，城市，都市　【词根:cit】
+0667 civil /ˈsɪv(ə)l/ adj. 国内的；平民（非军人）的；民用的　【基础词】
+0668 civilian /sɪˈvɪlɪən/ n. 平民，老百姓　【后缀:-ian】
+0669 civilization /sɪvɪlaɪˈzeɪʃ(ə)n; (US) sɪvəlɪˈzeɪʃən/ n. 文明　【基础词】
+0670 clap /klæp/ vi. 拍手；鼓掌　【基础词】
+0671 clarify /ˈklærɪfaɪ/ v. 澄清，阐明　【后缀:-y】
+0672 class /klɑːs; (US) klæs/ n. （学校的）班；年级；课　【基础词】
+0673 classic /ˈklæsɪk/ adj. 一流的，典型的，有代表性的　【后缀:-ic/-ical】
+0674 classical /ˈklæsɪk(ə)l/ adj. 传统的；古典的　【后缀:-ic/-ical】
+0675 classify /ˈklæsɪfaɪ/ v. 分类，归类　【后缀:-fy/-ify】
+0676 classmate /ˈklɑːsmeɪt/ n. 同班同学　【基础词】
+0677 classroom /ˈklɑːsruːm/ n. 教室　【基础词】
+0678 claw /klɔː/ n. 爪　【基础词】
+0679 clay /kleɪ/ n. 黏土，陶土　【后缀:-y】
+0680 clean /kliːn/ vt. adj. 弄干净，擦干净 a. 清洁的，干净的　【基础词】
+0681 cleaner /kliːnə(r)/ n. 清洁工.,清洁器.,清洁剂　【后缀:-er/-or】
+0682 clear /klɪə(r)/ adj. 清晰；明亮的；清楚的　【基础词】
+0683 clearly /ˈklɪəlɪ/ adv. 清楚地，无疑地　【后缀:-ly】
+0684 clerk /klɑːk; (US) klərk/ n. 书记员；办事员；职员　【基础词】
+0685 clever /ˈklevə(r)/ adj. 聪明的，伶俐的　【基础词】
+0686 click /klɪk/ v. 点击（计算机用语　【基础词】
+0687 climate /ˈklaɪmɪt/ n. 气候　【基础词】
+0688 climb /klaɪm/ v. 爬，攀登　【基础词】
+0689 clinic /ˈklɪnɪk/ n. 诊所　【基础词】
+0690 clock /klɔk/ n. 钟　【基础词】
+0691 clone /kləʊn/ n. 克隆（无性繁殖出来的有机体群　【基础词】
+0692 close /kləʊz/ adj. adv. vt. 亲密的；近，靠近 ad. 近，靠近 vt. 关，关闭　【词根:clud/clus/clos】
+0693 cloth /klɔθ; (US) klɔθ/ n. 布　【词根:clud/clus/clos；后缀:-th】
+0694 clothes /klɔðz; (US) kləʊz/ n. 衣服；各种衣物　【基础词】
+0695 clothing /ˈkləʊðɪŋ/ n. (总称) 衣服　【后缀:-ing】
+0696 cloud /ˈkləʊðɪŋ/ n. 云；云状物；阴影　【基础词】
+0697 cloudy /ˈklaʊdɪ/ adj. 多云的，阴天的　【后缀:-y】
+0698 club /klʌb/ n. 俱乐部；纸牌中的梅花　【基础词】
+0699 clumsy /ˈklʌmzɪ/ adj. 笨拙的，不灵巧的　【后缀:-y】
+0700 coach /kəʊtʃ/ n. 教练；马车；长途车　【基础词】
+0701 coal /kəʊl/ n. 煤；煤块　【基础词】
+0702 coast /kəʊst/ n. 海岸；海滨　【前缀:co-/col-/com-/con-/cor-；词根:aster/astr/astro】
+0703 coat /kəʊt/ n. vt. 外套；涂层；表皮；皮毛 vt. 给……穿外套；涂上　【基础词】
+0704 cock /kɔk/ n. 公鸡　【基础词】
+0705 cocoa /ˈkəʊkəʊ/ n. 可可粉　【基础词】
+0706 coffee /ˈkɔfɪ; (US) ˈkɔːfɪ/ n. 咖啡　【基础词】
+0707 coin /kɔɪn/ n. 硬币　【基础词】
+0708 coincidence /kəʊɪnˈsɪdəns/ n. 巧合，巧事　【基础词】
+0709 coke /kəʊk/ n. 可口可乐　【基础词】
+0710 cold /kəʊld/ adj. n. 冷的，寒的 n. 寒冷；感冒，伤风　【基础词】
+0711 collar /ˈkɔlə(r)/ n. 衣领； 硬领　【基础词】
+0712 colleague /ˈkɔliːɡ/ n. 同事　【前缀:co-/col-/com-/con-/cor-】
+0713 collect /kəˈlekt/ vt. 收集，搜集　【前缀:co-/col-/com-/con-/cor-；词根:lect/leg/lig】
+0714 collection /kəˈlekʃ(ə)n/ n. 收藏品，收集物　【前缀:co-/col-/com-/con-/cor-；词根:lect/leg/lig；后缀:-ation/-tion/-ion/-sion】
+0715 college /ˈkɔlɪdʒ/ n. 学院；专科学校　【前缀:co-/col-/com-/con-/cor-；词根:lect/leg/lig】
+0716 collision /kəˈlɪʒ(ə)n/ n. 碰撞事故；colour (美color　【基础词】
+0717 comb /kəʊm/ n. v. 梳子 v. 梳　【基础词】
+0718 combine /kəmˈbaɪn/ vt. 使联合；使结合；come (came, come　【基础词】
+0719 comedy /ˈkɔmədɪ/ n. 喜剧　【前缀:co-/col-/com-/con-/cor-；词根:med；后缀:-y】
+0720 comfort /ˈkʌmfət/ n. 安慰； 慰问　【前缀:co-/col-/com-/con-/cor-；词根:fort/forc】
+0721 comfortable /ˈkʌmfətəb(ə)l; (US) ˈkʌmfərtəbl/ adj. 舒服的；安逸的；舒服自在的　【前缀:co-/col-/com-/con-/cor-；词根:fort/forc；后缀:-able/-ible】
+0722 comma /ˈkɔmə/ n. 逗号　【基础词】
+0723 command /kəˈmɑːnd; (US) kəˈmænd/ n. v. 命令　【前缀:co-/col-/com-/con-/cor-；词根:man/manu】
+0724 comment /ˈkɔment/ n. 评论　【前缀:co-/col-/com-/con-/cor-；词根:ment】
+0725 commit /kəˈmɪt/ v. 犯（罪，错），自杀　【前缀:co-/col-/com-/con-/cor-；词根:miss/mit】
+0726 commitment /kəˈmɪtmənt/ n. 承诺,允诺,承担　【前缀:co-/col-/com-/con-/cor-；词根:miss/mit；后缀:-ment】
+0727 committee /kəˈmɪtɪ/ n. 委员会　【前缀:co-/col-/com-/con-/cor-；词根:miss/mit】
+0728 common /ˈkɔmən/ adj. 普通，一般；共有的　【前缀:co-/col-/com-/con-/cor-；词根:mon/monit】
+0729 communicate /kəˈmjuːnɪkeɪt/ v. 交际；传达（感情，信息等　【基础词】
+0730 communication /kəmjuːnɪˈkeɪʃ(ə)n/ n. 交际,交往;通讯　【后缀:-ation/-tion/-ion/-sion】
+0731 communism /ˈkɔmjʊnɪz(ə)m/ n. 共产主义　【基础词】
+0732 communist /ˈkɔmjuːnɪst/ n. adj. 共产主义者 a. 共产党的；共产主义的　【基础词】
+0733 companion /kəmˈpænɪən/ n. 同伴；同事　【后缀:-ation/-tion/-ion/-sion】
+0734 company /ˈkʌmpənɪ/ n. 公司　【后缀:-y】
+0735 compare /kəmˈpeə(r)/ vt. 比较，对照　【基础词】
+0736 compass /ˈkʌmpəs/ n. 罗盘，指南针　【前缀:co-/col-/com-/con-/cor-；词根:pass】
+0737 compensate /ˈkɔmpenseɪt/ v. 补偿，弥补　【前缀:co-/col-/com-/con-/cor-；词根:pen/pun；后缀:-ate】
+0738 compete /kəmˈpiːt/ vi. 比赛，竞赛　【前缀:co-/col-/com-/con-/cor-；词根:pet】
+0739 competence /ˈkɔmpətəns/ n. 能力,胜任,管辖权　【前缀:co-/col-/com-/con-/cor-；词根:pet；后缀:-ance/-ence】
+0740 competition /kɔmpəˈtɪʃ(ə)n/ n. 比赛，竞赛　【前缀:co-/col-/com-/con-/cor-；词根:pet】
+0741 competitor /kəmˈpetɪtə(r)/ n. 竞赛者，比赛者　【前缀:co-/col-/com-/con-/cor-；词根:pet】
+0742 complete /kəmˈpliːt/ adj. vt. 完成vt. 完成，结束　【前缀:co-/col-/com-/con-/cor-；词根:ple/plet/pli】
+0743 complex /ˈkɔmpleks/ adj. n. / n. 复杂的，建筑群　【前缀:co-/col-/com-/con-/cor-；词根:ple/plet/pli】
+0744 component /kəmˈpəʊnənt/ n. 组成部分，部件　【前缀:co-/col-/com-/con-/cor-；词根:pon/pos/posit】
+0745 composition /kɔmpəˈzɪʃ(ə)n/ n. 作文；作曲　【前缀:co-/col-/com-/con-/cor-；词根:pon/pos/posit；后缀:-ation/-tion/-ion/-sion】
+0746 comprehension /kɔmprɪˈhenʃ(ə)n/ n. 理解　【基础词】
+0747 compromise /ˈkɔmprəmaɪz/ v. 妥协,折中,让步　【前缀:co-/col-/com-/con-/cor-】
+0748 compulsory /kəmˈpʌlsərɪ/ adj. 强制的,必须做的　【前缀:co-/col-/com-/con-/cor-；词根:pel/puls；后缀:-y】
+0749 computer /kəmˈpjuːtə(r)/ n. 电子计算机　【基础词】
+0750 computer game /kəmˈpjuːtə(r) ɡeɪm/ n. 电子游戏　【基础词】
+0751 comrade /ˈkɔmrɪd; (US) ˈkɑmræd/ n. 同志　【基础词】
+0752 concentrate /ˈkɔnsəntreɪt/ v. 聚精会神　【前缀:co-/col-/com-/con-/cor-；词根:cent；后缀:-ate】
+0753 concept /ˈkɔnsept/ n. 概念　【前缀:co-/col-/com-/con-/cor-；词根:cap/cept/ceive/cip】
+0754 concern /kənˈsɜːn/ v. n. / n. 涉及，关心　【前缀:co-/col-/com-/con-/cor-；词根:cern/cert】
+0755 concert /ˈkɔnsət/ n. 音乐会；演奏会　【前缀:co-/col-/com-/con-/cor-；词根:cern/cert】
+0756 conclude /kənˈkluːd/ v. 完成，结束　【前缀:co-/col-/com-/con-/cor-；词根:clud/clus/clos】
+0757 conclusion /kənˈkluːʒ(ə)n/ n. 结论；结束　【前缀:co-/col-/com-/con-/cor-；词根:clud/clus/clos；后缀:-ation/-tion/-ion/-sion】
+0758 concrete /ˈkɔŋkriːt/ adj. 混凝土制的　【前缀:co-/col-/com-/con-/cor-；词根:cre/creas/cresc】
+0759 condition /kənˈdɪʃ(ə)n/ n. 条件，状况　【基础词】
+0760 condemn /kənˈdem/ v. 谴责，指责，宣判　【基础词】
+0761 conduct /ˈkɔndʌkt/ vt. 引导，带领　【前缀:co-/col-/com-/con-/cor-；词根:duc/duct】
+0762 conductor /kənˈdʌktə(r)/ n. 管理人；指导者；（车上的）售票员，列车员；乐队指挥　【前缀:co-/col-/com-/con-/cor-；词根:duc/duct；后缀:-er/-or】
+0763 confident /ˈkɔnfɪdənt/ adj. 自信的　【前缀:co-/col-/com-/con-/cor-；词根:fid】
+0764 confidential /kɔnfɪˈdenʃ(ə)l/ adj. 机密的，保密的　【前缀:co-/col-/com-/con-/cor-；词根:fid】
+0765 conference /ˈkɔnfərəns/ n. (正式的)会议；讨论　【前缀:co-/col-/com-/con-/cor-；词根:fer】
+0766 confirm /kənˈfɜːm/ v. 证实，证明，确认　【前缀:co-/col-/com-/con-/cor-；词根:firm】
+0767 conflict /ˈkɔnflɪkt/ n. 冲突，争执，争论　【基础词】
+0768 confuse /kənˈfjuːz/ v. 使迷惑，混淆　【前缀:co-/col-/com-/con-/cor-；词根:fus】
+0769 congratulate /kənˈɡrætjʊleɪt/ vt. 祝贺　【前缀:co-/col-/com-/con-/cor-；词根:grat；后缀:-ate】
+0770 congratulation /kənɡrætjʊˈleɪʃ(ə)n/ n. 祝贺，庆贺　【前缀:co-/col-/com-/con-/cor-；词根:grat；后缀:-ation/-tion/-ion/-sion】
+0771 connect /kəˈnekt/ v. 连接，把…联系起来　【基础词】
+0772 connection /kəˈnekʃ(ə)n/ n. 连接物;接触,联系　【后缀:-ation/-tion/-ion/-sion】
+0773 conscience /ˈkɔnʃəns/ n. 良心，良知，内疚　【前缀:co-/col-/com-/con-/cor-；词根:sci】
+0774 consensus /kənˈsensəs/ n. 一致的意见，共识　【前缀:co-/col-/com-/con-/cor-；词根:sen】
+0775 consequence /ˈkɔnsɪkwəns; (US) ˈkɔnsɪkwens/ n. 结果，后果　【基础词】
+0776 conservation /kɔnsəˈveɪʃ(ə)n/ n. 保存；（自然资源的）保护，管理　【前缀:co-/col-/com-/con-/cor-；词根:serv；后缀:-ation/-tion/-ion/-sion】
+0777 conservative /kənˈsɜːvətɪv/ adj. n. 保守的，守旧的；保守主义的；谨慎的 n.保守的人，保守主义　【前缀:co-/col-/com-/con-/cor-；词根:serv；后缀:-ive】
+0778 consider /kənˈsɪdə(r)/ vt. 考虑　【前缀:co-/col-/com-/con-/cor-；词根:sed/sess/sid】
+0779 considerate /kənˈsɪdərət/ adj. 体贴的　【前缀:co-/col-/com-/con-/cor-；词根:sed/sess/sid；后缀:-ate】
+0780 consideration /kənsɪdəˈreɪʃ(ə)n/ n. 考虑；关心　【前缀:co-/col-/com-/con-/cor-；词根:sed/sess/sid；后缀:-ation/-tion/-ion/-sion】
+0781 consist /kənˈsɪst/ v. 包含，组成，构成　【前缀:co-/col-/com-/con-/cor-；词根:sist】
+0782 consistent /kənˈsɪst(ə)nt/ adj. 一致的，始终如一的，连续的　【前缀:co-/col-/com-/con-/cor-；词根:sist；后缀:-ant/-ent】
+0783 constant /ˈkɔnstənt/ adj. 经常的，不断的　【前缀:co-/col-/com-/con-/cor-；词根:st/sta/stat】
+0784 constitution /kɔnstɪˈtjuːʃ(ə)n; (US) kɔnstəˈtuːʃən/ n. 宪法，章程，身体素质　【基础词】
+0785 construct /kənˈstrʌkt/ v. 构筑；建造，建设　【前缀:co-/col-/com-/con-/cor-；词根:struct】
+0786 construction /kənˈstrʌkʃ(ə)n/ n. 建造,建设,建筑物　【前缀:co-/col-/com-/con-/cor-；词根:struct；后缀:-ation/-tion/-ion/-sion】
+0787 consult /kənˈsʌlt/ v. 咨询，商量　【基础词】
+0788 consultant /kənˈsʌltənt/ n. 顾问　【后缀:-ant/-ent】
+0789 consume /kənˈsʌltənt/ v. 消耗，耗费（燃料，能量，时间等　【前缀:co-/col-/com-/con-/cor-；词根:sum】
+0790 contain /kənˈteɪn/ v. 包含；包括；能容纳　【前缀:co-/col-/com-/con-/cor-；词根:tain/ten/tent/tin】
+0791 container /kənˈteɪnə(r)/ n. 容器　【前缀:co-/col-/com-/con-/cor-；词根:tain/ten/tent/tin；后缀:-er/-or】
+0792 contemporary /kənˈtempərərɪ; (US) kənˈtempərerɪ/ adj. 属同时期的，同一时代的　【前缀:co-/col-/com-/con-/cor-；词根:tempor；后缀:-ary】
+0793 content /kənˈtent/ adj. n. 甘愿的,满意的 n.内容　【前缀:co-/col-/com-/con-/cor-；词根:tain/ten/tent/tin】
+0794 continent /ˈkɔntɪnənt/ n. 大陆，大洲；陆地　【前缀:co-/col-/com-/con-/cor-；词根:tain/ten/tent/tin】
+0795 continue /kənˈtɪnjuː/ vi. 继续　【前缀:co-/col-/com-/con-/cor-；词根:tain/ten/tent/tin】
+0796 contradict /kɔntrəˈdɪkt/ v. 反驳，驳斥，批驳　【前缀:contra-；词根:dic/dict】
+0797 contradictory /ˌkɔntrəˈdiktəri/ adj. 相互矛盾,对立的　【前缀:contra-；词根:dic/dict；后缀:-y】
+0798 contrary /ˈkɔntrərɪ; (US) ˈkɔntrerɪ/ n. adj. / a. 相反 相反的　【后缀:-y】
+0799 contribute /kənˈtrɪbjuːt/ v. 贡献　【前缀:co-/col-/com-/con-/cor-；词根:tribut】
+0800 contribution /kɔnˈtrɪbjuːt/ n. 贡献　【前缀:co-/col-/com-/con-/cor-；词根:tribut；后缀:-ation/-tion/-ion/-sion】
+0801 control /kənˈtrol/ vt. n. 控制　【基础词】
+0802 controversial /kɔntrəˈvɜːʃ(ə)l/ adj. 引起争论的,有争议的　【前缀:co-/col-/com-/con-/cor-；词根:vers/vert；后缀:-al】
+0803 convenience /kənˈviːnɪəns/ n. 便利　【前缀:co-/col-/com-/con-/cor-；词根:ven/vent】
+0804 convenient /kənˈviːnɪənt/ adj. 便利的，方便的　【前缀:co-/col-/com-/con-/cor-；词根:ven/vent】
+0805 conventional /kənˈvenʃən(ə)l/ adj. 依照惯例的，习惯的　【前缀:co-/col-/com-/con-/cor-；词根:ven/vent；后缀:-al】
+0806 conversation /kɔnvəˈseɪʃ(ə)n/ n. 谈话，交谈　【前缀:co-/col-/com-/con-/cor-；词根:vers/vert；后缀:-ation/-tion/-ion/-sion】
+0807 convey /kənˈveɪ/ v. 表达，传递（思想，感情等　【后缀:-y】
+0808 convince /kənˈvɪns/ v. 使确信，使信服　【前缀:co-/col-/com-/con-/cor-；词根:vict/vinc】
+0809 cook /kʊk/ n. v. 炊事员,厨师 v.烹调,做饭　【基础词】
+0810 cooker /ˈkʊkə(r)/ n. 炊具(锅、炉灶、烤炉等　【后缀:-er/-or】
+0811 cookie /ˈkʊkɪ/ n. 小甜饼　【基础词】
+0812 cool /kuːl/ adj. 凉的，凉爽的；酷　【基础词】
+0813 copy /ˈkɔpɪ/ n. v. 抄本，副本；一本（份，册……） v. 抄写；复印；（计算机用语）拷（备 份盘　【后缀:-y】
+0814 coral /ˈkɔr(ə)l; (US) ˈkɔːrəl/ n. 珊瑚；珊瑚虫　【词根:card/cord；后缀:-al】
+0815 cordless /ˈkɔːdlɪs/ adj. 无线的　【词根:card/cord；后缀:-less】
+0816 corn /kɔːn/ n. 玉米，谷物　【基础词】
+0817 corner /ˈkɔːnə(r)/ n. 角；角落；拐角　【后缀:-er/-or】
+0818 corporation /kɔːpəˈreɪʃ(ə)n/ n. （大）公司　【基础词】
+0819 correct /kəˈrekt/ v. adj. 改正；纠正 a. 正确的，对的；恰当的　【前缀:co-/col-/com-/con-/cor-；词根:rect】
+0820 correction /kəˈrekʃ(ə)n/ n. 改正　【前缀:co-/col-/com-/con-/cor-；词根:rect；后缀:-ation/-tion/-ion/-sion】
+0821 correspond /kɔrɪˈspɔnd; (US) kɔːrəˈspɔnd/ vi. 一致；与……相当；(与人)通信，有书信往来　【前缀:co-/col-/com-/con-/cor-；词根:spond/spons】
+0822 corrupt /kəˈrʌpt/ adj. v. / v. 贪污的，腐败的，使腐化，堕落；cost (cost, cost　【前缀:co-/col-/com-/con-/cor-；词根:ru/rupt】
+0823 cosy /ˈkəuzi/ adj. 暖和舒适的,亲密无间的　【后缀:-y】
+0824 cottage /ˈkɔtɪdʒ/ n. (郊外)小屋,村舍,别墅　【基础词】
+0825 cotton /ˈkɔt(ə)n/ n. adj. 棉花 a. 棉花的　【基础词】
+0826 cough /kɔf; (US) kɔːf/ n. vi. 咳嗽　【基础词】
+0827 count /kaʊnt/ vt. 数，点数　【基础词】
+0828 counter /ˈkaʊntə(r)/ n. 柜台，结账处　【后缀:-er/-or】
+0829 country /ˈkʌntrɪ/ n. 国家；农村，乡下　【后缀:-y】
+0830 countryside /ˈkʌntrɪsaɪd/ n. 乡下，农村　【基础词】
+0831 couple /ˈkʌp(ə)l/ n. 夫妇，一对　【基础词】
+0832 courage /ˈkʌrɪdʒ/ n. 勇气； 胆略　【词根:cur/curs/cour；后缀:-age】
+0833 course /kɔːs/ n. 过程；经过；课程　【词根:cur/curs/cour】
+0834 court /kɔːt/ n. 法庭；法院　【词根:cur/curs/cour】
+0835 courtyard /ˈkɔːtjɑːd/ n. 庭院，院子　【词根:cur/curs/cour】
+0836 cousin /ˈkʌz(ə)n/ n. 堂（表）兄弟，堂（表）姐妹　【基础词】
+0837 cover /ˈkʌvə(r)/ n. v. 盖子；罩 v. 覆盖，遮盖；掩盖　【前缀:co-/col-/com-/con-/cor-；词根:vers/vert】
+0838 cow /kaʊ/ n. 母牛，奶牛　【基础词】
+0839 cowboy /ˈkaʊbɔɪ/ n. （美国）牛仔;牧场骑士　【后缀:-y】
+0840 crash /kræʃ/ v. n. / n. 碰撞，撞击　【基础词】
+0841 crayon /ˈkreɪən/ n. 蜡笔；蜡笔画　【基础词】
+0842 crazy /ˈkreɪzɪ/ adj. 疯狂的　【后缀:-y】
+0843 cream /kriːm/ n. 奶油，乳脂　【词根:cre/creas/cresc】
+0844 create /kriːˈeɪt/ vt. 创造； 造成　【词根:cre/creas/cresc；后缀:-ate】
+0845 creature /ˈkriːtʃə(r)/ n. 生物，动物　【词根:cre/creas/cresc；后缀:-ure】
+0846 credit /ˈkredɪt/ n. 信用；信赖；信誉　【词根:cre/creas/cresc】
+0847 crime /kraɪm/ n. （法律上的）罪，犯罪　【基础词】
+0848 criminal /ˈkrɪmɪn(ə)l/ n. 罪犯　【基础词】
+0849 crew /kruː/ n. 全体船员；criterion (pl. criteria　【词根:cre/creas/cresc】
+0850 crop /krɔp/ n. 庄稼；收成　【基础词】
+0851 cross /krɔs/ adj. n. vt. 脾气不好的，易怒的 n. 十字形的东西 vt. 越过；穿过　【基础词】
+0852 crossing /ˈkrɔsɪŋ/ n. 十字路口，人行横道　【后缀:-ing】
+0853 crossroads /ˈkrɔsrəʊd/ n. 交叉路口　【基础词】
+0854 crowd /kraʊd/ n. vt. 人群 vt. 拥挤，群聚　【基础词】
+0855 crowded /ˈkraʊdɪd/ adj. 拥挤的　【后缀:-ed】
+0856 cruel /ˈkruːəl/ adj. 残忍的，残酷的；无情的　【基础词】
+0857 cry /kraɪ/ n. v. 叫喊；哭声 v. 喊叫；哭　【后缀:-y】
+0858 cube /kjuːb/ n. 立方体　【基础词】
+0859 cubic /ˈkjuːbɪk/ adj. 立方体的，立方形的　【后缀:-ic/-ical】
+0860 cuisine /kwɪˈziːn/ n. 饭菜，佳肴　【基础词】
+0861 culture /ˈkʌltʃə(r)/ n. 文化　【基础词】
+0862 cup /kʌp/ n. 茶杯　【基础词】
+0863 cupboard /ˈkʌbəd/ n. 碗柜；橱柜　【基础词】
+0864 cure /kjʊə(r)/ n. vt. 治疗；医好　【词根:cur/curs/cour】
+0865 curious /ˈkjʊərɪəs/ adj. 好奇的；奇异的　【词根:cur/curs/cour；后缀:-ous】
+0866 currency /ˈkʌrənsɪ/ n. 货币；现金　【词根:cur/curs/cour；后缀:-ancy/-ency】
+0867 curriculum /kəˈrɪkjʊləm/ n. （学校的）全部课程　【词根:cur/curs/cour】
+0868 curtain /ˈkɜːt(ə)n/ n. 窗帘　【词根:cur/curs/cour】
+0869 cushion /ˈkʊʃ(ə)n/ n. 垫子　【词根:caus/cus；后缀:-ation/-tion/-ion/-sion】
+0870 custom /ˈkʌstəm/ n. 习惯，习俗，风俗习惯　【词根:caus/cus】
+0871 customer /ˈkʌstəmə(r)/ n. （商店）顾客，主顾　【词根:caus/cus；后缀:-er/-or】
+0872 customs /ˈkʌstəm/ n. 海关，关税；cut (cut, cut　【词根:caus/cus】
+0873 cycle /ˈsaɪk(ə)l/ vi. 骑自行车　【词根:circ/cycl】
+0874 cyclist /ˈsaɪklɪst/ n. 骑自行车的人　【词根:circ/cycl；后缀:-ist】
+0875 daily /ˈdeɪlɪ/ adj. adv. n. 每日的；日常的 ad. 每天 n. 日报　【后缀:-y】
+0876 dam /dæm/ n. 水坝，堰堤　【基础词】
+0877 damage /ˈdæmɪdʒ/ n. vt. 毁坏，损害　【后缀:-age】
+0878 damp /dæmp/ adj. n. 潮湿（的　【基础词】
+0879 dance /dɑːns; (US) dæns/ n. vi. 跳舞　【基础词】
+0880 danger /ˈdeɪndʒə(r)/ n. 危险　【基础词】
+0881 dangerous /ˈdeɪndʒərəs/ adj. 危险的　【后缀:-ous】
+0882 dare /deə(r)/ v. aux. .（后接不带to的不定式；主要用于疑问，否定或条件句）敢，敢于　【基础词】
+0883 dark /dɑːk/ n. adj. 黑暗；暗处；日暮 a. 黑暗的；暗淡的；深色的　【基础词】
+0884 darkness /ˈdɑːknɪs/ n. 黑暗，阴暗　【后缀:-ness】
+0885 dash /dæʃ/ v. n. 快跑，冲刺，短跑　【基础词】
+0886 data /ˈdeɪtə/ n. 资料，数据　【基础词】
+0887 database /ˈdeɪtbeɪs/ n. 资料库，数据库　【基础词】
+0888 date /deɪt/ n. 日期；约会 n.枣　【基础词】
+0889 daughter /ˈdɔːtə(r)/ n. 女儿　【基础词】
+0890 dawn /dɔːn/ n. 黎明，拂晓　【基础词】
+0891 day /deɪ/ n. （一）天，（一）日；白天　【后缀:-y】
+0892 daylight /ˈdeɪlaɪt/ n. 日光，白昼； 黎明　【基础词】
+0893 dead /ded/ adj. 死的；无生命的　【基础词】
+0894 deadline /ˈdedlaɪn/ n. 最后期限，截止日期　【基础词】
+0895 deaf /def/ adj. 聋的　【基础词】
+0896 deal /diːl/ n. 量，数额；交易　【基础词】
+0897 dear /dɪə(r)/ int. adj. （表示惊愕）哎呀！唷！ a. 亲爱的；贵的　【基础词】
+0898 death /deθ/ n. 死　【基础词】
+0899 debate /dɪˈbeɪt/ n. v. 讨论，辩论　【前缀:de-；词根:bat】
+0900 debt /det/ n. 债务；欠款　【基础词】
+0901 decade /ˈdekeɪd/ n. 十年期　【前缀:de-；词根:cad/cas/cid】
+0902 December /dɪˈsembə(r)/ n. 12月　【基础词】
+0903 decide /dɪˈsaɪd/ v. 决定；下决心　【前缀:de-；词根:cad/cas/cid】
+0904 decision /dɪˈsɪʒ(ə)n/ n. 决定；决心　【基础词】
+0905 declare /dɪˈkleə(r)/ vt. 声明；断言　【基础词】
+0906 decline /dɪˈklaɪn/ v. 减少,下降,衰退,谢绝　【基础词】
+0907 decorate /ˈdekəreɪt/ vt. 装饰…，修饰…　【基础词】
+0908 decoration /dekəˈreɪʃ(ə)n/ n. 装饰，修饰　【后缀:-ation/-tion/-ion/-sion】
+0909 decrease /dɪˈkriːs/ v. 减少，减小，降低　【前缀:de-；词根:cre/creas/cresc】
+0910 deed /diːd/ n. 行为；事迹　【基础词】
+0911 deep /diːp/ adj. adv. 深 ad. 深；深厚　【基础词】
+0912 deeply /ˈdiːplɪ/ adv. 深深地　【后缀:-ly】
+0913 deer /dɪə(r)/ n. 鹿　【基础词】
+0914 defeat /dɪˈfiːt/ vt. 击败；战胜；defence (美defense　【基础词】
+0915 defend /dɪˈfend/ vt. 防守；保卫　【基础词】
+0916 degree /dɪˈɡriː/ n. 程度；度数；学位　【基础词】
+0917 delay /dɪˈleɪ/ v. n. 拖延，延误，延迟，延期；耽搁　【后缀:-y】
+0918 delete /dɪˈliːt/ v. 删去　【基础词】
+0919 deliberately /dɪˈlɪbərətlɪ/ adv. 故意,蓄意,存心　【前缀:de-；词根:liber；后缀:-ly】
+0920 delicate /ˈdelɪkət/ adj. 易损的，易碎的　【前缀:de-；词根:lic】
+0921 delicious /dɪˈlɪʃəs/ adj. 美味的，可口的　【前缀:de-；词根:lic】
+0922 delight /dɪˈlaɪt/ n. 快乐；乐事　【前缀:de-；词根:lect/leg/lig】
+0923 delighted /diˈlaitid/ adj. 高兴的，快乐的　【前缀:de-；词根:lect/leg/lig；后缀:-ed】
+0924 deliver /dɪˈlɪvə(r)/ vt. 投递（信件，邮包等　【基础词】
+0925 demand /dɪˈmɑːnd; (US) dɪˈmænd/ vt. 要求　【前缀:de-；词根:man/manu】
+0926 dentist /ˈdentɪst/ n. 牙科医生 ；department(缩Dept.　【基础词】
+0927 departure /dɪˈpɑːtʃə(r)/ n. 离开，启程　【前缀:de-；词根:part；后缀:-ure】
+0928 depend /dɪˈpend/ vi. 依靠，依赖，指望；取决于　【前缀:de-；词根:pen/pun】
+0929 deposit /dɪˈpɔzɪt/ v. n. / n. 订金，押金，放下，放置，储存　【前缀:de-；词根:pon/pos/posit】
+0930 depth /depθ/ n. 深，深度　【基础词】
+0931 describe /dɪˈskraɪb/ vt. 描写，叙述　【基础词】
+0932 description /dɪˈskrɪpʃ(ə)n/ n. 描述，描写　【基础词】
+0933 desert /dɪˈzɜːt/ n. vt. 沙漠 vt. 舍弃； 遗弃　【基础词】
+0934 deserve /dɪˈzɜːv/ v. （不用于进行时态）应得，应受　【前缀:de-；词根:serv】
+0935 design /dɪˈzaɪn/ n. vt. 设计，策划 图案，图样，样式　【前缀:de-；词根:sign】
+0936 desire /dɪˈzaɪə(r)/ vt. n. 要求；期望　【基础词】
+0937 desk /desk/ n. 书桌，写字台　【基础词】
+0938 desperate /ˈdespərət/ adj. （因绝望而）不惜冒险的，不顾一切的，拼命的　【基础词】
+0939 dessert /dɪˈzɜːt/ n. 甜点　【基础词】
+0940 destination /destɪˈneɪʃ(ə)n/ n. 目的地，终点　【基础词】
+0941 destroy /dɪˈstrɔɪ/ vt. 破坏，毁坏　【后缀:-y】
+0942 detective /dɪˈtektɪv/ n. 侦探　【前缀:de-；词根:tect；后缀:-ive】
+0943 determination /dɪtɜːmɪˈneɪʃ(ə)n/ n. 决心　【前缀:de-；词根:term；后缀:-ation/-tion/-ion/-sion】
+0944 determine /dɪˈtɜːmɪn/ vt. 决定；决心　【前缀:de-；词根:term】
+0945 develop /dɪˈveləp/ v. vt. （使）发展；（使）发达；（使）发育；开发 vt. 冲洗（照片　【基础词】
+0946 development /dɪˈveləpmənt/ n. 发展，发达，发育，开发　【后缀:-ment】
+0947 devote /dɪˈvəʊt/ vt. 把…奉献, 把…专用（于　【前缀:de-；词根:vot】
+0948 devotion /dɪˈvəʊʃ(ə)n/ n. 奉献，奉献精神　【前缀:de-；词根:vot；后缀:-ation/-tion/-ion/-sion】
+0949 diagram /ˈdaɪəɡræm/ n. 图表，图样　【词根:gram/graph】
+0950 dial /ˈdaɪ(ə)l/ vt. 拨（电话号码）；dialogue (美 dialog　【后缀:-al】
+0951 diamond /ˈdaɪəmənd/ n. 钻石，金刚石；纸牌中的方块　【基础词】
+0952 diary /ˈdaɪərɪ/ n. 日记；日记簿　【后缀:-ary】
+0953 dictation /dɪkˈteɪʃ(ə)n/ n. 听写　【词根:dic/dict；后缀:-ation/-tion/-ion/-sion】
+0954 dictionary /ˈdɪkʃənərɪ; (US) ˈdɪkʃənerɪ/ n. 词典，字典　【词根:dic/dict；后缀:-ary】
+0955 die /daɪ/ v. 死　【基础词】
+0956 diet /daɪ/ n. 饮食　【后缀:-et】
+0957 differ /ˈdɪfə(r)/ v. 相异，有区别　【基础词】
+0958 difference /ˈdɪfrəns/ n. 不同　【后缀:-ance/-ence】
+0959 different /ˈdɪfrənt/ adj. 不同的，有差异的　【后缀:-ant/-ent】
+0960 difficult /ˈdɪfɪkəlt/ adj. 难；艰难；不易相处　【基础词】
+0961 difficulty /ˈdɪfɪkəltɪ/ n. 困难，费力；dig (dug, dug　【后缀:-y】
+0962 digest /dɪˈdʒest/ v. 消化, 领会　【词根:ger/gest】
+0963 digital /ˈdɪdʒɪt(ə)l/ adj. .数字的，数码的　【基础词】
+0964 dignity /ˈdɪɡnɪtɪ/ n. 庄重，庄严，尊严。尊贵，高尚　【基础词】
+0965 dilemma /daɪˈlemə/ n. （进退两难的）窘境，困境　【基础词】
+0966 dimension /dɪˈmenʃ(ə)n/ n. 量度，尺寸，面积，程度，范围　【基础词】
+0967 dine /daɪn/ v. 吃饭；（指正式）进餐　【基础词】
+0968 dinner /ˈdɪnə(r)/ n. 正餐，宴会　【基础词】
+0969 dinosaur /ˈdaɪnəsɔː(r)/ n. 恐龙　【基础词】
+0970 dioxide /daɪˈɔksaɪd/ n. 二氧化物　【基础词】
+0971 dip /dɪp/ vt. 浸，蘸；把…放入又取出　【基础词】
+0972 diploma /dɪˈpləʊmə/ n. 毕业文凭；学位证书　【基础词】
+0973 direct /dɪˈrekt/ adj. vt. / vt. 直接的；直达的；直截了当的 指挥；指导；监督；管理；指挥（演奏）；导演（电影　【词根:rect】
+0974 direction /dɪˈrekʃ(ə)n/ n. 方向；方位　【词根:rect；后缀:-ation/-tion/-ion/-sion】
+0975 director /dɪˈrektə(r)/ n. 所长，处长，主任；董事；导演　【词根:rect；后缀:-er/-or】
+0976 directory /dɪˈrektərɪ/ n. 姓名地址录　【词根:rect；后缀:-y】
+0977 dirt /dɜːt/ n. 污物；脏物　【基础词】
+0978 dirty /ˈdɜːtɪ/ adj. 脏的　【后缀:-y】
+0979 disability /dɪsəˈbɪlɪtɪ/ n. . 残疾；无能　【前缀:dis-】
+0980 disabled /dɪsˈeɪb(ə)ld/ adj. 残废的，残疾的　【基础词】
+0981 disadvantage /dɪsədˈvɑːntɪdʒ/ n. 不利条件；弱点　【前缀:dis-】
+0982 disagree /dɪsəˈɡriː/ vi. 意见不一致，持不同意见　【前缀:dis-】
+0983 disagreement /dɪsəˈɡriːmənt/ n. 意见不一致；相违；争论　【前缀:dis-；后缀:-ment】
+0984 disappear /dɪsəˈpɪə(r)/ vi. 消失　【前缀:dis-】
+0985 disappoint /dɪsəˈpɔɪnt/ vt. 使失望　【前缀:dis-；词根:point/punct】
+0986 disappointment /dɪsəˈpɔɪntmənt/ n. 失望；沮丧　【前缀:dis-；词根:point/punct；后缀:-ment】
+0987 disaster /dɪˈzɑːstə(r); (US) dɪzˈæstər/ n. 灾难；祸患　【前缀:dis-；词根:aster/astr/astro】
+0988 discount /ˈdɪskaʊnt/ n. 折扣　【前缀:dis-】
+0989 discourage /dɪˈskʌrɪdʒ/ vt. （使）气馁；打消（做…的念头　【前缀:dis-；词根:cur/curs/cour；后缀:-age】
+0990 discover /dɪˈskʌvə(r)/ vt. 发现　【前缀:dis-】
+0991 discovery /dɪˈskʌvərɪ/ n. 发现　【前缀:dis-；后缀:-y】
+0992 discrimination /dɪskrɪmɪˈneɪʃ(ə)n/ n. 歧视　【基础词】
+0993 discuss /dɪsˈkʌs/ vt. 讨论，议论　【前缀:dis-；词根:caus/cus】
+0994 discussion /dɪsˈkʌʃ(ə)n/ n. 讨论，辩论　【前缀:dis-；词根:caus/cus；后缀:-ation/-tion/-ion/-sion】
+0995 disease /dɪˈziːz/ n. 病，疾病　【前缀:dis-】
+0996 disgusting /dɪsˈɡʌstɪŋ/ adj. 极糟的，令人不快的，令人厌恶的　【基础词】
+0997 dish /dɪʃ/ n. 盘，碟；盘装菜；盘形物　【基础词】
+0998 dislike /dɪsˈlaɪk/ vt. 不喜爱；厌恶　【前缀:dis-】
+0999 dismiss /dɪsˈmɪs/ vt. 让……离开；遣散；解散；解雇　【前缀:dis-；词根:miss/mit】
+1000 disobey /dɪsəˈbeɪ/ vt. 不服从　【前缀:dis-；后缀:-y】
+1001 distance /ˈdɪstəns/ n. 距离　【基础词】
+1002 distant /ˈdɪst(ə)nt/ adj. 远的，遥远的　【基础词】
+1003 distinction /dɪˈstɪŋkʃ(ə)n/ n. 差别,区别,优秀,卓越　【前缀:dis-；词根:tain/ten/tent/tin】
+1004 distinguish /dɪˈstɪŋɡwɪʃ/ v. 区分，辨别，分清　【前缀:dis-；词根:tain/ten/tent/tin】
+1005 distribute /dɪˈstrɪbjuːt/ v. 分发，分配　【前缀:dis-；词根:tribut】
+1006 district /ˈdɪstrɪkt/ n. 区；地区；区域　【基础词】
+1007 disturb /dɪˈstɜːb/ vt. 扰乱；打扰　【前缀:dis-；词根:turb】
+1008 disturbing /dɪˈstɜːbɪŋ/ adj. 令人不安的，引起恐慌的　【前缀:dis-；词根:turb；后缀:-ing】
+1009 dive /daɪv/ vi. 跳水　【基础词】
+1010 diverse /daɪˈvɜːs/ v. 不同的，多种多样，形形色色的　【词根:vers/vert】
+1011 divide /dɪˈvaɪd/ vt. 分，划分　【基础词】
+1012 division /dɪˈvɪʒ(ə)n/ n. （算术用语）除　【基础词】
+1013 divorce /dɪˈvɔːs/ v. 离婚　【基础词】
+1014 dizzy /ˈdɪzɪ/ adj. 头眩目晕的；do (did, done) donˈt=do not　【后缀:-y】
+1015 doctor /ˈdɔktə(r)/ n. 医生，大夫；博士　【词根:doc/doct；后缀:-er/-or】
+1016 document /ˈdɔkjʊmənt/ n. 文件；文献　【词根:doc/doct；后缀:-ment】
+1017 dog /dɔɡ; (US) dɔːɡ/ n. 狗　【基础词】
+1018 doll /dɔl; (US) dɔːl/ n. 玩偶，玩具娃娃　【基础词】
+1019 dollar /dɔl; (US) dɔːl/ n. 元（美国、加拿大、澳大利亚等国货币单位　【后缀:-ar】
+1020 door /dɔː(r)/ n. 门　【基础词】
+1021 dormitory /ˈdɔːmɪtərɪ; (US) ˈdɔːrmɪtɔːrɪ/ n. 学生宿舍（缩写式dorm　【后缀:-y】
+1022 dot /dɔt/ n. 点，小点，圆点　【基础词】
+1023 double /ˈdʌb(ə)l/ adj. n. 两倍.双的 n. 两个.双　【基础词】
+1024 doubt /daʊt/ n. v. 怀疑，疑惑　【基础词】
+1025 down /daʊn/ prep. adv. 沿着，沿…而下 ad. 向下　【基础词】
+1026 download /ˈdaunləud/ n. v. 下载　【基础词】
+1027 downstairs /ˈdaʊnsteəz/ adv. 在楼下；到楼下　【基础词】
+1028 downtown /ˈdaʊntaʊn/ adv. n. adj. 往或在城市的商业区（或中心区、闹市区） n. 城市的商业区，中心区，闹市区 a.城市的商业区的，中心区的，闹市区的　【基础词】
+1029 downward /ˈdaʊnwəd/ adv. 向下　【基础词】
+1030 dozen /ˈdaʊnwəd/ n. 十二个；几十，许多；Dr(缩) = Doctor　【基础词】
+1031 draft /drɑːft; (US) dræft/ n. v. / v. 草稿，草案，起草，草拟　【基础词】
+1032 drag /dræɡ/ v. 拖；拽；draw (drew, drawn　【基础词】
+1033 drawback /ˈdrɔːbæk/ n. 缺点，不利条件　【基础词】
+1034 drawer /ˈdrɔːə(r)/ n. 抽屉　【基础词】
+1035 drawing /ˈdrɔːɪŋ/ n. 图画，素描,绘画；dream (dreamt, dreamt 或--ed, --ed　【基础词】
+1036 dress /dres/ n. v. 女服，连衣裙；(统指)服装；童装 v. 穿衣；穿着　【后缀:-ess】
+1037 drill /drɪl/ n. vt. 钻头；（反复的）训练 vt. 钻(孔)， 在…上钻孔；重复训练　【基础词】
+1038 drink /drɪŋk/ n. 饮料；喝酒 ；drink(drank,drunk　【基础词】
+1039 driver /ˈdraɪvə(r)/ n. 司机，驾驶员　【基础词】
+1040 drop /drɔp/ n. v. 滴 v.掉下.落下.投递.放弃　【基础词】
+1041 drown /draʊn/ vi. 溺死；淹没　【基础词】
+1042 drug /drʌɡ/ n. 药，药物；毒品　【基础词】
+1043 drum /drʌm/ n. 鼓　【基础词】
+1044 drunk /drʌŋk/ adj. 醉的　【基础词】
+1045 dry /draɪ/ v. adj. 使…干；弄干；擦干 a. 干的；干燥的　【后缀:-y】
+1046 duck /dʌk/ n. 鸭子　【词根:duc/duct】
+1047 due /djuː; (US) duː/ adj. 预期的；约定的　【基础词】
+1048 dull /dʌl/ adj. 阴暗的；单调无味　【基础词】
+1049 dumpling /ˈdʌmplɪŋ/ n. 饺子　【基础词】
+1050 during /ˈdjʊərɪŋ; (US) ˈdʊərɪŋ/ prep. 在…期间；在…过程中　【词根:dur；后缀:-ing】
+1051 dusk /dʌsk/ n. 黄昏　【基础词】
+1052 dust /dʌst/ n. 灰尘，尘土　【基础词】
+1053 dustbin /ˈdʌstbɪn/ n. 垃圾箱　【基础词】
+1054 dusty /ˈdʌstɪ/ adj. 尘土般的，尘土多的　【后缀:-y】
+1055 duty /ˈdjuːtɪ; (US) ˈduːtɪ/ n. 责任，义务　【后缀:-ity/-ty】
+1056 dvd /ˌdiːviːˈdiː/ n. 数码影碟(digital versatile disk　【基础词】
+1057 dynamic /daɪˈnæmɪk/ adj. 充满活力,精力充沛的　【词根:dyn；后缀:-ic/-ical】
+1058 dynasty /ˈdɪnəstɪ; (US) ˈdaɪnəstɪ/ n. 王朝，朝代　【词根:dyn；后缀:-ity/-ty】
+1059 each /iːtʃ/ adj. pron. 每人.每个.每件　【基础词】
+1060 eager /ˈiːɡə(r)/ adj. 渴望的，热切的　【基础词】
+1061 eagle /ˈiːɡ(ə)l/ n. 鹰　【基础词】
+1062 ear /ɪə(r)/ n. 耳朵.耳状物；听力，听觉　【基础词】
+1063 early /ɜːlɪ/ adj. adv. 早的 ad. 早地　【后缀:-ly】
+1064 earn /ɜːn/ vt. 挣得，赚得　【基础词】
+1065 earth /ɜːθ/ n. 地球；土，泥；大地　【后缀:-th】
+1066 earthquake /ˈɜːθkweɪk/ n. 地震　【前缀:ex-/e-/ef-；词根:art】
+1067 ease /iːz/ v. 减轻；缓解（难度或严重程度　【基础词】
+1068 easily /ˈiːzɪlɪ/ adv. 容易地　【后缀:-y】
+1069 east /iːst/ adj. adv. n. 东方；东部的；朝东的；从东方来 ad. 在东方；向东方；从东方 n. 东，东方；东部　【前缀:ex-/e-/ef-；词根:aster/astr/astro】
+1070 easter /ˈiːstə(r)/ n. 复活节　【前缀:ex-/e-/ef-；词根:aster/astr/astro；后缀:-er/-or】
+1071 eastern /ˈiːst(ə)n/ adj. 东方的；东部的　【前缀:ex-/e-/ef-；词根:aster/astr/astro；后缀:-ern】
+1072 eastwards /ˈiːstwədz/ adv. 向东　【基础词】
+1073 easy /ˈiːzɪ/ adj. 容易的，不费力的　【后缀:-y】
+1074 ecology /ɪˈkɔlədʒɪ/ n. 生态，生态学　【后缀:-y】
+1075 edge /edʒ/ n. 边缘　【基础词】
+1076 edition /ɪˈdɪʃ(ə)n/ n. （发行物的）版，版（本　【基础词】
+1077 editor /ˈedɪtə(r)/ n. 编辑　【基础词】
+1078 educate /ˈedjʊkeɪt/ vt. 教育，培养　【前缀:ex-/e-/ef-；词根:duc/duct】
+1079 educator /ˈedjuːkeitə(r)/ n. 教育家　【前缀:ex-/e-/ef-；词根:duc/duct；后缀:-er/-or】
+1080 education /edjʊˈkeɪʃ(ə)n/ n. 教育，培养　【前缀:ex-/e-/ef-；词根:duc/duct；后缀:-ation/-tion/-ion/-sion】
+1081 effect /ɪˈfekt/ n. 效果；作用　【前缀:ex-/e-/ef-；词根:fac/fact/fect/fic】
+1082 effort /ˈefət/ n. 努力，艰难的尝试　【前缀:ex-/e-/ef-；词根:fort/forc】
+1083 egg /eɡ/ n. 蛋；卵　【基础词】
+1084 eggplant /ˈeɡplɑːnt/ n. 茄子　【前缀:ex-/e-/ef-；词根:plant】
+1085 Egyptian /ɪˈdʒɪpʃ(ə)n/ adj. n. 埃及的；埃及人的；埃及语的 n. 埃及人　【基础词】
+1086 eight /eɪt/ num. 八　【基础词】
+1087 eighteen /ˈeɪˈtiːn/ num. 十八　【基础词】
+1088 eighth /eɪtθ/ num. 第八　【基础词】
+1089 eighty /ˈeɪtɪ/ num. 八十　【后缀:-y】
+1090 either /ˈaɪðə(r)/ adj. conj. adv. 两方任一方的；二者之一 conj. 二者之一；要么……；ad.　【基础词】
+1091 elder /ˈeldə(r)/ n. 长者；前辈　【基础词】
+1092 elect /ɪˈlekt/ vt. （投票）选举　【前缀:ex-/e-/ef-；词根:lect/leg/lig】
+1093 electric /ɪˈlektrɪk/ adj. 电的　【前缀:ex-/e-/ef-；词根:lect/leg/lig；后缀:-ic/-ical】
+1094 electrical /ɪˈlektrɪk(ə)l/ adj. 电的；电器的　【前缀:ex-/e-/ef-；词根:lect/leg/lig；后缀:-ic/-ical】
+1095 electricity /ɪlekˈtrɪsɪtɪ/ n. 电；电流　【前缀:ex-/e-/ef-；词根:lect/leg/lig；后缀:-ity/-ty】
+1096 electronic /ɪlekˈtrɔnɪk/ adj. 电子的　【前缀:ex-/e-/ef-；词根:lect/leg/lig；后缀:-ic/-ical】
+1097 elegant /ˈelɪɡənt/ adj. 文雅的,漂亮的,精美的　【前缀:ex-/e-/ef-；词根:lect/leg/lig】
+1098 elephant /ˈelɪfənt/ n. 象　【基础词】
+1099 eleven /ɪˈlev(ə)n/ num. 十一　【基础词】
+1100 else /els/ adv. 别的，其他的　【基础词】
+1101 embarrass /ɪmˈbærəs/ v. 使窘迫，尴尬　【前缀:en-/em-；词根:bar】
+1102 embassy /ˈembəsɪ/ n. 大使馆　【前缀:en-/em-；词根:bas；后缀:-y】
+1103 emergency /ɪˈmɜːdʒənsɪ/ n. 紧急情况或状态　【后缀:-y】
+1104 emperor /ˈempərə(r)/ n. 皇帝　【基础词】
+1105 empire /ˈempaɪə(r)/ n. 帝国　【基础词】
+1106 employ /ɪmˈplɔɪ/ vt. 雇佣　【后缀:-y】
+1107 empty /ˈemptɪ/ adj. 空的　【后缀:-y】
+1108 encourage /ɪnˈkʌrɪdʒ/ vt. 鼓励　【前缀:en-/em-；词根:cur/curs/cour；后缀:-age】
+1109 encouragement /ɪnˈkʌrɪdʒmənt/ n. 鼓励　【前缀:en-/em-；词根:cur/curs/cour；后缀:-ment】
+1110 end /end/ n. v. 末尾；终点；结束 v. 结束，终止　【基础词】
+1111 ending /ˈendɪŋ/ n. 结局；结尾，最后　【后缀:-ing】
+1112 endless /ˈendlɪs/ adj. 无止境的； 没完的　【后缀:-less】
+1113 enemy /ˈenɪmɪ/ n. 敌人；敌军　【后缀:-y】
+1114 energetic /enəˈdʒetɪk/ adj. 精力旺盛的　【基础词】
+1115 engine /ˈendʒɪn/ n. 发动机，引擎　【基础词】
+1116 engineer /endʒɪˈnɪə(r)/ n. 工程师；技师　【后缀:-er/-or】
+1117 English /ˈɪŋɡlɪʃ/ adj. n. 英国的，英国人的，英语的 n. 英语　【基础词】
+1118 enjoy /ɪnˈdʒɔɪ/ vt. 欣赏；享受乐趣；喜欢　【前缀:en-/em-；后缀:-y】
+1119 enjoyable /ɪnˈdʒɔɪəb(ə)l/ adj. 愉快的；有趣的　【前缀:en-/em-；后缀:-able/-ible】
+1120 enlarge /ɪnˈlɑːdʒ/ vt. 扩大　【前缀:en-/em-】
+1121 enough /ɪˈnʌf/ n. adj. adv. 足够；充足 a. 足够；充分的 ad. 足够地；充分地　【基础词】
+1122 enquiry /ɪnˈkwaɪərɪ/ n. 询问　【前缀:en-/em-；词根:quest/quir/quis；后缀:-y】
+1123 enter /ˈentə(r)/ vt. 进入　【前缀:en-/em-；词根:term】
+1124 enterprise /ˈentəpraɪz/ n. 公司，企，事业单位　【前缀:en-/em-；词根:pris】
+1125 entertainment /entəˈteɪnmənt/ n. 娱乐　【前缀:en-/em-；词根:tain/ten/tent/tin；后缀:-ment】
+1126 enthusiastic /ɪnθjuːzɪˈæstɪk/ adj. 热情的，热心的　【基础词】
+1127 entire /ɪnˈtaɪə(r)/ adj. 整个的，全部的　【前缀:en-/em-】
+1128 entrance /ˈentrəns/ n. 入口；入场；进入的权利;入学许可　【前缀:en-/em-；后缀:-ance/-ence】
+1129 entry /ˈentrɪ/ n. 进入　【前缀:en-/em-；后缀:-y】
+1130 envelope /ˈenvələʊp/ n. 信封　【基础词】
+1131 environment /ɪnˈvaɪərənmənt/ n. 环境　【前缀:en-/em-；词根:ment】
+1132 envy /ˈenvɪ/ vt. n. 忌妒； 羡慕　【后缀:-y】
+1133 equal /ˈiːkw(ə)l/ adj. vt. 平等的 vt.等于，使等于　【词根:equ；后缀:-al】
+1134 equality /iːˈkwɔlətɪ/ n. 平等　【词根:equ；后缀:-ity/-ty】
+1135 equip /ɪˈkwɪp/ vt. 提供设备；装备；配备　【前缀:ex-/e-/ef-；词根:quiet/qui】
+1136 equipment /ɪˈkwɪpmənt/ n. 装备，设备　【前缀:ex-/e-/ef-；词根:quiet/qui；后缀:-ment】
+1137 eraser /ɪˈreɪzə(r)/ n. 橡皮擦；黑板擦　【基础词】
+1138 error /ˈerə(r)/ n. 错误；差错　【词根:err；后缀:-er/-or】
+1139 erupt /ɪˈrʌpt/ v. （火山）爆发，喷发　【前缀:ex-/e-/ef-；词根:ru/rupt】
+1140 escape /ɪˈskeɪp/ n. vi. 逃跑；逃脱　【基础词】
+1141 especially /ɪˈspeʃəlɪ/ adv. 特别，尤其　【前缀:ex-/e-/ef-；词根:spec/spect/spic；后缀:-ly】
+1142 essay /ˈeseɪ/ n. 散文；文章；随笔　【后缀:-y】
+1143 European /jʊərəˈpiːən/ adj. n. 欧洲的，欧洲人的 n. 欧洲人　【基础词】
+1144 evaluate /ɪˈvæljʊeɪt/ v. 估值，评价，评估　【前缀:ex-/e-/ef-；词根:val】
+1145 even /ˈiːv(ə)n/ adv. 甚至，连（…都）；更　【前缀:ex-/e-/ef-；词根:ven/vent】
+1146 evening /ˈiːvnɪŋ/ n. 傍晚，晚上　【前缀:ex-/e-/ef-；词根:ven/vent；后缀:-ing】
+1147 event /ɪˈvent/ n. 事件，大事　【前缀:ex-/e-/ef-；词根:ven/vent】
+1148 eventually /ɪˈventjʊəlɪ/ adv. 最终地　【前缀:ex-/e-/ef-；词根:ven/vent；后缀:-ly】
+1149 ever /ˈevə(r)/ adv. 曾经；无论何时　【前缀:ex-/e-/ef-；词根:vers/vert】
+1150 every /ˈevrɪ/ adj. 每一，每个的　【前缀:ex-/e-/ef-；词根:vers/vert；后缀:-y】
+1151 everybody /evribɒdi/ pron. 每人，人人　【后缀:-y】
+1152 everyday /ˈevrɪbɔdɪ/ adj. 每日的；日常的　【后缀:-y】
+1153 everyone /ˈevrɪwʌn/ pron. 每人，人人　【基础词】
+1154 everything /ˈevrɪθɪŋ/ pron. 每件事，事事　【基础词】
+1155 everywhere /ˈevrɪweə(r)/ adv. 到处　【基础词】
+1156 evidence /ˈevɪdəns/ n. 证据，证明　【前缀:ex-/e-/ef-；词根:vid/vis】
+1157 evident /ˈevɪdənt/ adj. 清楚的，显而易见的　【前缀:ex-/e-/ef-；词根:vid/vis】
+1158 evolution /iːvəˈluːʃ(ə)n; (US) ev-/ n. 进化，演变　【前缀:ex-/e-/ef-；词根:vol；后缀:-ation/-tion/-ion/-sion】
+1159 exact /ɪɡˈzækt/ adj. 精确的；确切的　【前缀:ex-/e-/ef-；词根:ag/act】
+1160 exactly /ɪɡˈzæktli/ adv. 精确地；确切地　【前缀:ex-/e-/ef-；词根:ag/act；后缀:-ly】
+1161 examine /ɪɡˈzæmɪn/ vt. 检查；诊察　【基础词】
+1162 example /ɪɡˈzɑːmp(ə)l; (US) ɪɡˈzæmpl/ n. 例子；榜样　【前缀:ex-/e-/ef-】
+1163 excellent /ˈeksələnt/ adj. 极好的，优秀的　【基础词】
+1164 except /ɪkˈsept/ prep. 除……之外　【前缀:ex-/e-/ef-；词根:cap/cept/ceive/cip】
+1165 exchange /ɪksˈtʃeɪndʒ/ n. 交换，掉换；交流　【前缀:ex-/e-/ef-】
+1166 excite /ɪkˈsaɪt/ vt. 使兴奋，使激动　【前缀:ex-/e-/ef-；词根:cit】
+1167 excuse /ɪkˈskjuːz/ n. vt. 借口.辩解 vt.原谅.宽恕　【前缀:ex-/e-/ef-；词根:caus/cus】
+1168 exercise /ˈeksəsaɪz/ n. vi. 锻炼，做操；练习，习题 vi. 锻炼　【基础词】
+1169 exhibition /eksɪˈbɪʃ(ə)n/ n. 展览；展览会　【基础词】
+1170 exist /ɪgˈzɪst/ vi. 存在　【基础词】
+1171 existence /ɪɡˈzɪst(ə)ns/ n. 存在；生存；存在物　【后缀:-ance/-ence】
+1172 exit /ˈeksɪt/ n. 出口，太平门　【基础词】
+1173 expand /ɪkˈspænd/ v. 扩大，增加，扩展　【基础词】
+1174 expect /ɪkˈspekt/ vt. 预料；盼望；认为　【基础词】
+1175 expectation /ekspekˈteɪʃ(ə)n/ n. 预料；期望　【后缀:-ation/-tion/-ion/-sion】
+1176 expense /ɪkˈspens/ n. 消费； 支出　【前缀:ex-/e-/ef-；词根:pen/pun】
+1177 expensive /ɪkˈspensɪv/ adj. 昂贵的　【前缀:ex-/e-/ef-；词根:pen/pun；后缀:-ive】
+1178 experience /ɪkˈspɪərɪəns/ n. 经验；经历　【基础词】
+1179 experiment /ɪkˈsperɪmənt/ n. 实验　【前缀:ex-/e-/ef-；词根:ment】
+1180 expert /ˈekspɜːt/ n. 专家，能手　【基础词】
+1181 explain /ɪksˈpleɪn/ vt. 解释，说明　【前缀:ex-/e-/ef-】
+1182 explanation /ekspləˈneɪʃ(ə)n/ n. 解释，说明　【基础词】
+1183 explicit /ɪkˈsplɪsɪt/ adj. 清楚明白,易于理解的　【前缀:ex-/e-/ef-；词根:ple/plet/pli】
+1184 explode /ɪkˈspləʊd/ v. （使）爆炸　【基础词】
+1185 exploit /eksplɒit/ vt. 开采.开发.利用.剥削　【基础词】
+1186 explore /ɪkˈsplɔː(r)/ v. 探险　【前缀:ex-/e-/ef-；词根:plor】
+1187 explorer /ɪkˈsplɔːrə(r)/ n. 探险者　【前缀:ex-/e-/ef-；词根:plor；后缀:-er/-or】
+1188 export /ɪkˈspɔːt/ n. v. / v.出口，输出　【前缀:ex-/e-/ef-；词根:port】
+1189 expose /ɪkˈspəʊz; (US) ekspəˈzeɪ/ vt. 揭露　【前缀:ex-/e-/ef-；词根:pon/pos/posit】
+1190 express /ɪkˈspres/ vt. n. 表达；表示；表情 n. 快车，特快专递　【前缀:ex-/e-/ef-；词根:press】
+1191 expression /ɪkˈspreʃ(ə)n/ n. 表达；词句；表示，说法；表情　【前缀:ex-/e-/ef-；词根:press；后缀:-ation/-tion/-ion/-sion】
+1192 extension /ɪkˈstenʃ(ə)n/ n. 扩大，延伸　【前缀:ex-/e-/ef-；词根:tain/ten/tent/tin；后缀:-ation/-tion/-ion/-sion】
+1193 extra /ˈekstrə/ adj. 额外的，外加的　【前缀:ex-/e-/ef-；词根:tract】
+1194 extraordinary /ɪkˈstrɔːdɪnərɪ; (US) -dənerɪ/ adj. 离奇的；使人惊奇的　【前缀:extra-；词根:ord/ordin；后缀:-ary】
+1195 extreme /ɪkˈstriːm/ adj. 极其的，非常的　【基础词】
+1196 extremely /ɪkˈstriːmlɪ/ adv. 极其，非常　【后缀:-ly】
+1197 eye /aɪ/ n. 眼睛　【基础词】
+1198 eyesight /ˈaɪsaɪt/ n. 视力；视觉　【基础词】
+1199 eyewitness /ˈaɪwɪtnɪs/ n. 目击证人；f (缩) =female (或 =foot,feet　【基础词】
+1200 face /feɪs/ n. vt. 脸 vt. 面向；面对　【词根:fac/fact/fect/fic】
+1201 facial /ˈfeɪʃ(ə)l/ adj. 面部用的　【词根:fac/fact/fect/fic；后缀:-al】
+1202 fact /fækt/ n. 事实，现实　【词根:fac/fact/fect/fic】
+1203 factory /ˈfæktəri/ n. 工厂　【词根:fac/fact/fect/fic；后缀:-y】
+1204 fade /feɪd/ vi. 褪色，（颜色）消退　【基础词】
+1205 fail /feɪl/ v. 失败；不及格；衰退　【基础词】
+1206 failure /ˈfeɪljə(r)/ n. 失败　【后缀:-ure】
+1207 fair /feə(r)/ adj. n. 公平的，合理的 a. (肤色)白皙的； （人）白肤金发的 n. 集市；庙会；展览会　【基础词】
+1208 fairly /ˈfeəlɪ/ adv. 公正地，正当地；相当（程度）地　【后缀:-ly】
+1209 fairness /ˈfɛənis/ n. 公平；公正　【后缀:-ness】
+1210 faith /feɪθ/ n. 信仰；信念　【基础词】
+1211 fall /fɔːl/ n. （美）秋季　【基础词】
+1212 false /fɔːls/ adj. 不正确的；假的　【基础词】
+1213 familiar /fəˈmɪlɪə(r)/ adj. 熟悉的　【基础词】
+1214 family /ˈfæmɪlɪ/ n. 家庭；家族；子女　【后缀:-y】
+1215 family name /ˈfæməli neɪm/ n. 姓氏　【基础词】
+1216 famous /ˈfeɪməs/ adj. 著名的　【基础词】
+1217 fan /fæn/ n. （电影、运动等的）迷；热心的爱好者（支持者） n. 风扇　【基础词】
+1218 fancy /ˈfænsɪ/ adj. 花式；装饰的；奇特的　【后缀:-cy】
+1219 fantastic /fæn'tæstik/ adj. (口语)极好的，美妙的，很棒的　【基础词】
+1220 fantasy /ˈfæntəsɪ/ n. 幻想，梦想　【后缀:-y】
+1221 far /fɑː(r)/ adj. adv. (farther, farthest 或further , furthest) a.& ad. 远的；远地　【基础词】
+1222 fare /feə(r)/ n. （车或船的）费用，票（价　【基础词】
+1223 farm /fɑːm/ n. 农场；农庄　【基础词】
+1224 farmer /ˈfɑːmə(r)/ n. 农民　【后缀:-er/-or】
+1225 fast /fɑːst; (US) fæst/ adj. adv. 快的，迅速的；紧密的 ad. 快地，迅速地；紧密地　【基础词】
+1226 fasten /ˈfɑːs(ə)n; (US) fæsn/ vt. 扎牢；扣住　【后缀:-en】
+1227 fat /fæt/ n. adj. 脂肪 a. 胖的；肥的　【基础词】
+1228 father /ˈfɑːðə(r)/ n. 父亲　【基础词】
+1229 fault /fɔːlt/ n. 缺点，毛病　【基础词】
+1230 favour /ˈfeivə/ n. (美favor) n. 恩惠；好意；帮助　【基础词】
+1231 favourite /ˈfeivərit/ adj. n. (美 favorite) a. 喜爱的 n. 特别喜爱的人（或物　【基础词】
+1232 fax /fæks/ n. 传真　【基础词】
+1233 fear /fɪə(r)/ n. 害怕；恐惧； 担忧　【后缀:-ar】
+1234 feast /fiːst/ n. 盛宴，宴会，（宗教的）节日　【基础词】
+1235 feather /ˈfeðə(r)/ n. 羽毛　【基础词】
+1236 February /ˈfebruəri/ n. 2月　【后缀:-y】
+1237 fee /fiː/ n. 费，费用；feed (fed, fed　【基础词】
+1238 feeling /ˈfiːlɪŋ/ n. 感情；感觉　【基础词】
+1239 fellow /ˈfeləʊ/ n. 同伴；伙伴　【基础词】
+1240 female /ˈfiːmeɪl/ adj. 女的；女性的；雌性的　【基础词】
+1241 fence /fens/ n. 栅栏；围栏；篱笆　【基础词】
+1242 ferry /ˈferɪ/ n. 渡船　【词根:fer；后缀:-y】
+1243 festival /ˈfestɪvəl/ adj. 节日的，喜庆的　【基础词】
+1244 fetch /fetʃ/ vt. （去）取（物）来，（去）带（人）来　【基础词】
+1245 fever /ˈfiːvə(r)/ n. 发烧；发热　【基础词】
+1246 few /fjuː/ pron. 不多；少数 不多的；少数的　【基础词】
+1247 fibre /ˈfaibə/ n. (美fiber) n. 纤维质　【基础词】
+1248 fiction /ˈfɪkʃ(ə)n/ n. 小说，虚构的事　【词根:fac/fact/fect/fic；后缀:-ation/-tion/-ion/-sion】
+1249 field /fiːld/ n. 田地；牧场；场地　【基础词】
+1250 fierce /ˈfɪəs/ adj. 猛烈的　【基础词】
+1251 fifteen /fɪfˈtiːn/ num. 十五　【基础词】
+1252 fifth /fɪfθ/ num. 第五　【基础词】
+1253 fifty /ˈfɪftɪ/ num. 五十　【后缀:-y】
+1254 fight /faɪt/ n. 打仗（架），争论　【词根:fig】
+1255 fighter /ˈfaɪtə(r)/ v. 战士；斗士　【词根:fig；后缀:-er/-or】
+1256 figure /ˈfɪɡə(r); (US) ˈfɪgjər/ n. vt. 数字；数目；图；图形；（人的）身型；人物；（绘画、雕刻）人物像 vt.（美口语）认为，判断.（在心里）想像，描绘　【词根:fig；后缀:-ure】
+1257 file /faɪl/ n. 公文柜；档案(计算机)文档　【基础词】
+1258 fill /fɪl/ vt. 填空，装满　【基础词】
+1259 film /fɪlm/ n. vt. 电影；影片；胶卷vt. 拍摄，把……拍成电影　【基础词】
+1260 final /ˈfaɪn(ə)l/ adj. 最后的；终极的　【词根:fin；后缀:-al】
+1261 finance /ˈfaɪnæns/ n. 资金，财政，财务　【词根:fin；后缀:-ance/-ence】
+1262 find /faɪnd/ vt. (found, found) vt. 找到，发现，感到　【词根:fin】
+1263 fine /faɪn/ adj. n. v. 细的；晴朗的；美好的；（身体）健康的 n.& v. 罚款　【词根:fin】
+1264 finger /ˈfɪŋɡə(r)/ n. 手指　【词根:fin；后缀:-er/-or】
+1265 fingernail /ˈfɪŋɡəneɪl/ n. 指甲　【词根:fin】
+1266 finish /ˈfɪnɪʃ/ v. 结束；做完　【词根:fin；后缀:-ish】
+1267 fire /ˈfaɪə(r)/ n. vi. 火；火炉；火灾 vi. 开火，开（枪，炮等），射击　【基础词】
+1268 firefighter /ˈfaɪəfaɪtə(r)/ n. 消防人员　【基础词】
+1269 fireplace /ˈfaɪəpleɪs/ n. 壁炉　【词根:plac/pleas】
+1270 firewood /ˈfairwud/ n. 木柴　【基础词】
+1271 firework /ˈfaɪəwɜːk/ n. 焰火　【基础词】
+1272 firm /fɜːm/ n. adj. 公司;企业 a.坚固的,坚定的　【词根:firm】
+1273 firmly /ˈfɜːmlɪ/ adv. 牢牢地　【词根:firm；后缀:-ly】
+1274 first /fɜːst/ num. adj. adv. n. 第一 a.& ad. 第一；首次；最初 n. 开始；开端　【基础词】
+1275 fish /fɪʃ/ n. vi. 鱼；鱼肉 vi. 钓鱼；捕鱼　【基础词】
+1276 fisherman /ˈfɪʃəmən/ n. 渔民；钓鱼健身者　【基础词】
+1277 fist /fɪst/ n. 拳(头　【基础词】
+1278 fit /fɪt/ adj. v. 健康的, 适合的 v. （使）适合，安装　【基础词】
+1279 fitting room /ˈfɪtɪŋ-rʊm/ n. 试衣间　【基础词】
+1280 five /faɪv/ num. 五　【基础词】
+1281 fix /fɪks/ vt. 修理；安装；确定，决定　【词根:fix】
+1282 flag /flæɡ/ n. 旗；标志；旗舰　【基础词】
+1283 flame /fleɪm/ n. 火焰，光辉　【基础词】
+1284 flaming /ˈfleɪmɪŋ/ adj. 火红的；火焰般的　【后缀:-ing】
+1285 flash /flæʃ/ n. 闪；闪光； 转瞬间　【基础词】
+1286 flashlight /flæʃ/ n. 手电　【基础词】
+1287 flat /flæt/ adj. n. 平的 n. 楼中一套房间； 公寓(常用复数　【基础词】
+1288 flee /fliː/ v. (fled, fled) v. 逃走；逃跑　【后缀:-ee】
+1289 flexible /ˈfleksəbl/ adj. 灵活的，可变动的　【词根:flect/flex；后缀:-able/-ible】
+1290 flesh /fleʃ/ n. 肉　【基础词】
+1291 flight /flaɪt/ n. 航班 n. 楼梯的一段　【基础词】
+1292 float /fləʊt/ vi. 漂浮，浮动　【基础词】
+1293 flood /flʌd/ n. vt. 洪水 vt. 淹没，使泛滥　【基础词】
+1294 floor /flɔː(r)/ n. 地面，地板.（楼房的）层　【词根:flor/flour；后缀:-er/-or】
+1295 flour /ˈflaʊə(r)/ n. 面粉，粉　【词根:flor/flour】
+1296 flow /fləʊ/ vi. 流动　【基础词】
+1297 flower /ˈflaʊə(r)/ n. 花　【后缀:-er/-or】
+1298 flu /fluː/ n. 流行性感冒　【词根:flu/fluct】
+1299 fluency /ˈfluənsi/ n. （外语）流利，流畅　【词根:flu/fluct；后缀:-ancy/-ency】
+1300 fluent /ˈfluːənt/ adj. （外语）流利的，流畅　【词根:flu/fluct；后缀:-ant/-ent】
+1301 fly /ˈfluːənt/ n. 飞行；苍蝇；fly (flew, flown　【后缀:-y】
+1302 focus /ˈfəʊkəs/ v. n. / n.集中（注意力，精力）于，焦点，中心点　【基础词】
+1303 fog /fɔɡ/ n. 雾　【基础词】
+1304 foggy /ˈfɔɡɪ/ adj. 多雾的　【后缀:-y】
+1305 fold /fəʊld/ vt. 折叠；合拢　【基础词】
+1306 folk /fəʊk/ adj. 民间的　【基础词】
+1307 follow /ˈfɔləʊ/ vt. 跟随；仿效；跟得上　【基础词】
+1308 following /ˈfɔləʊwɪŋ/ adj. 接着的；以下的　【后缀:-ing】
+1309 fond /fɔnd/ adj. 喜爱的，爱好的　【基础词】
+1310 food /fuːd/ n. 食物，食品　【基础词】
+1311 fool /fuːl/ n. 傻子，蠢人　【基础词】
+1312 foolish /ˈfuːlɪʃ/ adj. 愚蠢的，傻的；foot (复 feet　【后缀:-ish】
+1313 football /ˈfʊtbɔːl/ n. （英式）足球；（美式）橄榄球　【基础词】
+1314 for /fə(r)/ prep. conj. 为了…；向…，往…；与…交换；防备…；适合…；因为…；在…期 间；对于…；对…来说 conj. 因为，由于　【词根:form】
+1315 forbid /fəˈbɪd/ vt. (forbade, forbidden) vt. 禁止，不许　【基础词】
+1316 force /fɔːs/ vt. 强迫，迫使　【词根:fort/forc】
+1317 forecast /ˈfɔːkɑːst; (US) ˈfɔrkæst/ n. vt. 预告　【前缀:fore-；词根:cad/cas/cid】
+1318 forehead /ˈfɔrɪd; (US) ˈfɔːrɪd/ n. 前额　【前缀:fore-】
+1319 foreign /ˈfɔrən; (US) ˈfɔːrɪn/ adj. 外国的　【基础词】
+1320 foreigner /ˈfɔrənə(r)/ n. 外国人　【后缀:-er/-or】
+1321 foresee /fɔːˈsiː/ vt. (foresaw, foreseen) vt.预见.预知　【基础词】
+1322 forest /ˈfɔrɪst; (US) ˈfɔːrɪst/ n. 森林　【基础词】
+1323 forever /fəˈrevə(r)/ adv. 永远；永恒的　【前缀:fore-；词根:vers/vert】
+1324 forget /fəˈrevə(r)/ v. (forgot, forgotten) v. 忘记；忘掉　【基础词】
+1325 forgetful /fəˈɡetfʊl/ adj. 健忘的，不留心的　【后缀:-ful】
+1326 forgive /fəˈɡɪv/ vt. (forgave, forgiven) vt. 原谅，宽恕　【基础词】
+1327 fork /fɔːk/ n. 叉，餐叉　【基础词】
+1328 form /fɔːm/ n. 表格；形式；结构　【词根:form】
+1329 format /ˈfɔːmæt/ n. 安排，计划，设计　【词根:form】
+1330 former /ˈfɔːmə(r)/ adj. 以前的，从前的；（两者之中的）前者　【词根:form；后缀:-er/-or】
+1331 fortnight /ˈfɔːtnaɪt/ n. 十四日，两星期　【词根:fort/forc】
+1332 fortunate /ˈfɔːtʃənət/ adj. 幸运的； 侥幸的　【词根:fort/forc；后缀:-ate】
+1333 fortune /ˈfɔːtjuːn/ n. 财产；运气　【词根:fort/forc】
+1334 forty /ˈfɔːtɪ/ num. 四十　【词根:form；后缀:-ity/-ty】
+1335 forward /ˈfɔːwəd/ adv. 将来.今后.向前，前进　【基础词】
+1336 found /faʊnd/ vt. 成立，建立　【词根:found/fund】
+1337 founding /ˈfaundiŋ/ n. 成立，建立　【词根:found/fund；后缀:-ing】
+1338 fountain /ˈfaʊntɪn; (US) ˈfaʊntn/ n. 喷泉　【词根:tain/ten/tent/tin】
+1339 four /fɔː(r)/ num. 四　【基础词】
+1340 fourteen /ˈfɔːˈtiːn/ num. 十四　【基础词】
+1341 fourth /fɔːθ/ num. 第四　【后缀:-th】
+1342 fox /fɔks/ n. 狐狸　【基础词】
+1343 franc /fræŋk/ n. 法郎　【基础词】
+1344 fragile /ˈfrædʒaɪl; (US) ˈfrædʒl/ adj. 易碎的，易损的　【词根:fract/frag】
+1345 fragrant /ˈfreɪɡrənt/ adj. 香的，芳香的　【词根:fract/frag；后缀:-ant/-ent】
+1346 framework /ˈfreɪmwɜːk/ n. （建筑物）框架，结构　【基础词】
+1347 free /friː/ adj. 自由，空闲的；免费的　【后缀:-ee】
+1348 freedom /ˈfriːdəm/ n. 自由　【后缀:-dom】
+1349 freeway /ˈfriːweɪ/ n. 高速公路　【后缀:-y】
+1350 freeze /friːz/ vi. (froze, frozen) vi. 结冰　【基础词】
+1351 freezing /ˈfriːziŋ/ adj. 冻结的；极冷的　【后缀:-ing】
+1352 French /frentʃ/ n. 法语 a法国的；法国人的；法语的　【基础词】
+1353 Frenchman /ˈfrentʃmən/ n. (复 Frenchmen) n. 法国人（男　【基础词】
+1354 frequent /ˈfriːkwənt/ adj. 经常的；频繁的　【基础词】
+1355 fresh /freʃ/ adj. 新鲜的　【基础词】
+1356 Friday /ˈfraɪdɪ/ n. 星期五　【后缀:-y】
+1357 friction /ˈfrɪkʃ(ə)n/ n. 摩擦　【基础词】
+1358 fried /fraid/ adj. 油煎的　【基础词】
+1359 friend /frend/ n. 朋友　【基础词】
+1360 friendly /ˈfrendlɪ/ adj. 友好的　【后缀:-ly】
+1361 friendship /ˈfrendʃɪp/ n. 友谊，友情　【后缀:-ship】
+1362 fright /fraɪt/ n. 惊恐；恐吓　【基础词】
+1363 frighten /ˈfraɪt(ə)n/ vt. 使惊恐，吓唬　【后缀:-en】
+1364 frog /frɔɡ; (US) frɔːɡ/ n. 青蛙　【基础词】
+1365 from /frəm/ prep. 从；从…起.距.来自　【基础词】
+1366 front /frʌnt/ adj. n. 前面的；前部的 n. 前面；前部；前线　【基础词】
+1367 frontier /ˈfrʌntɪə(r); (US) frʌnˈtɪər/ n. 前沿 ，边界；前线　【基础词】
+1368 frost /frɔst; (US) frɔːst/ n. 霜　【基础词】
+1369 fruit /fruːt/ n. 水果；果实　【基础词】
+1370 fruit juice /fruːt dʒuːs/ n. 果汁　【基础词】
+1371 fry /fraɪ/ vt. 用油煎；用油炸　【后缀:-y】
+1372 fuel /fjuːəl/ n. 燃料　【基础词】
+1373 full /fʊl/ adj. 满的，充满的；完全的　【基础词】
+1374 fun /fʌn/ n. 有趣的事，娱乐，玩笑　【词根:found/fund】
+1375 function /ˈfʌŋkʃən/ n. v. / v. 作用,功能,运转　【基础词】
+1376 fundamental /fʌndəˈment(ə)l/ adj. 十分重大的，根本的　【词根:found/fund；后缀:-al】
+1377 funeral /ˈfjuːˈnər(ə)l/ n. 葬礼　【基础词】
+1378 funny /ˈfʌnɪ/ adj. 有趣的，滑稽可笑的　【后缀:-y】
+1379 fur /fɜː(r)/ n. 毛皮；皮子　【基础词】
+1380 furnished /ˈfɜːnɪʃt/ adj. 配备了家具的　【基础词】
+1381 furniture /ˈfɜːnɪtʃə(r)/ n. （总称）家具　【基础词】
+1382 future /ˈfjuːtʃə(r)/ n. 将来　【基础词】
+1383 gain /ɡeɪn/ vt. 赢得；挣得　【基础词】
+1384 gale /ɡeɪl/ n. 强风（约每小时60英里　【基础词】
+1385 gallery /ˈɡælərɪ/ n. 画廊；美术品陈列室　【后缀:-y】
+1386 gallon /ˈɡælən/ n. 加仑　【基础词】
+1387 game /ɡeɪm/ n. 游戏；运动；比赛　【基础词】
+1388 garage /ˈɡærɑːʒ/ n. 汽车间（库　【基础词】
+1389 garbage /ˈɡɑːbɪdʒ/ n. 垃圾　【基础词】
+1390 garden /ˈɡɑːd(ə)n/ n. 花园，果园，菜园　【基础词】
+1391 gardening /ˈɡɑːdnɪŋ/ n. 园艺学　【后缀:-ing】
+1392 garlic /ˈɡɑːlɪk/ n. 大蒜　【基础词】
+1393 garment /ˈɡɑːmənt/ n. （一件）衣服　【词根:ment】
+1394 gas /ɡæs/ n. 煤气　【基础词】
+1395 gate /ɡeɪt/ n. 大门　【基础词】
+1396 gather /ˈɡæðə(r)/ v. 聚集；采集　【基础词】
+1397 gay /ɡeɪ/ adj. （男）同性恋的；快活的，愉快的　【后缀:-y】
+1398 general /ˈdʒenər(ə)l/ adj. 大体，笼统的，总的　【词根:gen/gener；后缀:-al】
+1399 generation /dʒenəˈreɪʃ(ə)n/ n. 代，一代　【词根:gen/gener；后缀:-ation/-tion/-ion/-sion】
+1400 generous /ˈdʒenərəs/ adj. 慷慨大方的　【词根:gen/gener；后缀:-ous】
+1401 gentle /ˈdʒent(ə)l/ adj. 温柔的，轻轻的　【词根:gen/gener】
+1402 gentleman /ˈdʒent(ə)lmən/ n. 绅士，先生；有身份、有教养的人　【词根:gen/gener】
+1403 geography /dʒɪˈɔɡrəfɪ/ n. 地理学　【词根:geo；后缀:-y】
+1404 geometry /dʒɪˈɑmɪtrɪ/ n. 几何学　【词根:geo；后缀:-y】
+1405 German /ˈdʒɜːmən/ adj. n. 德国的，德国人的，德语的 n. 德国人，德语　【词根:ger/gest】
+1406 Germany /ˈdʒɜːmənɪ/ n. * n. 德国　【词根:ger/gest；后缀:-y】
+1407 gesture /ˈdʒestʃə(r)/ n. 姿势，手势；get (got , got　【词根:ger/gest；后缀:-ure】
+1408 gift /ɡɪft/ n. 赠品；礼物　【基础词】
+1409 gifted /ˈɡɪftɪd/ adj. 有天赋的；有才华的　【后缀:-ed】
+1410 giraffe /dʒɪˈrɑːf; (US) dʒəˈræf/ n. 长颈鹿　【基础词】
+1411 girl /ɡɜːl/ n. 女孩；give (gave, given　【基础词】
+1412 glad /ɡlæd/ adj. 高兴的；乐意的　【基础词】
+1413 glance /glæns /glɑːns/ vi. 匆匆一看；一瞥　【基础词】
+1414 glare /ɡleə(r)/ v. 瞪眼,怒目而视,闪耀　【基础词】
+1415 glass /ɡlɑːs; (US) ɡlæs/ n. 玻璃杯,玻璃；(复)眼镜　【基础词】
+1416 glasshouse /ˈɡlɑːshaʊs/ n. 温室，暖房　【基础词】
+1417 globe /ɡləʊb/ n. 地球仪,地球　【基础词】
+1418 glory /ˈɡlɔːrɪ/ n. 巨大的光荣; 荣誉;赞美　【后缀:-y】
+1419 glove /ɡlʌv/ n. 手套　【基础词】
+1420 glue /ɡluː/ n. 胶水；go (went, gone　【基础词】
+1421 goal /ɡəʊl/ n. （足球）球门，目标　【基础词】
+1422 goat /ɡəʊt/ n. 山羊　【基础词】
+1423 god /ɡɔd/ n. 神，（大写）上帝　【基础词】
+1424 gold /ɡəʊld/ n. 黄金 a 金的，黄金的　【基础词】
+1425 golden /ˈɡəʊld(ə)n/ adj. 金(黄)色的　【后缀:-en】
+1426 goldfish /ˈɡəʊldfɪʃ/ n. 金鱼　【基础词】
+1427 golf /ɡɔlf/ n. 高尔夫球；good (better ,best　【基础词】
+1428 goodness /ˈɡʊdnɪs/ n. 善良，美德　【基础词】
+1429 goods /ɡʊd/ n. 商品，货物；goose (复 geese　【基础词】
+1430 govern /ˈɡʌv(ə)n/ v. 统治；管理　【基础词】
+1431 government /ˈɡʌvənmənt/ n. 政府　【后缀:-ment】
+1432 gown /ɡaʊn/ n. 礼服，长外衣，睡衣　【基础词】
+1433 grade /ɡreɪd/ n. 等级；（中小学的）学年；成绩，分数　【词根:grad/gress】
+1434 gradually /ˈɡrædjʊəlɪ/ adv. 逐渐地　【词根:grad/gress；后缀:-ly】
+1435 graduate /ˈɡrædjʊət/ v. 毕业　【词根:grad/gress；后缀:-ate】
+1436 graduation /ɡrædjʊˈeɪʃ(ə)n/ n. 毕业，毕业典礼　【词根:grad/gress；后缀:-ation/-tion/-ion/-sion】
+1437 grain /ɡreɪn/ n. 谷物，谷类　【基础词】
+1438 gram /ɡræm/ n. 克(重量单位　【词根:gram/graph】
+1439 grammar /ˈɡræmə(r)/ n. 语法　【词根:gram/graph；后缀:-ar】
+1440 grand /ɡrænd/ adj. 宏伟的　【基础词】
+1441 grandchild /ˈgræntʃaɪld/ n. (外)孙或孙女.孙辈　【基础词】
+1442 granddaughter /ˈɡrændɔːtə(r)/ n. （外）孙女　【基础词】
+1443 grandparents /ˈɡrændpeərənt/ n. 祖父母.外祖父母　【基础词】
+1444 grandson /ˈɡrændsʌn/ n. （外）孙子　【基础词】
+1445 granny /ˈɡrænɪ/ n. 老奶奶；祖母；外婆　【后缀:-y】
+1446 grape /ɡreɪp/ n. 葡萄　【基础词】
+1447 graph /ɡrɑːf; (US) ɡræf/ n. 图表，曲线图　【词根:gram/graph】
+1448 grasp /ɡrɑːsp; (US) ɡræsp/ v. 抓住；紧握　【基础词】
+1449 grass /ɡrɑːs; (US) ɡræs/ n. 草；草场；牧草　【基础词】
+1450 grateful /ˈɡreɪtfʊl/ adj. 感激的，感谢的　【词根:grat；后缀:-ful】
+1451 gravity /ˈɡrævɪtɪ/ n. 重力，地球引力　【基础词】
+1452 great /ɡreɪt/ adj. adv. 伟大的,重要的,好极了 ad. （口语）好极了，很好　【基础词】
+1453 Greece /ɡriːs/ n. * n. 希腊　【基础词】
+1454 greedy /ˈɡriːdɪ/ adj. 贪婪的　【后缀:-y】
+1455 Greek /ɡriːk/ adj. n. / n. 希腊的，希腊人的，希腊语的 ; 希腊人，希腊语　【基础词】
+1456 green /ɡriːn/ adj. n. 绿色的；青的 n. 绿色　【词根:grad/gress；后缀:-en】
+1457 greengrocer /ˈɡriːnɡrəʊsə(r)/ n. （英）蔬菜水果商　【基础词】
+1458 greet /ɡriːt/ vt. 问候；向……致敬　【词根:grad/gress；后缀:-et】
+1459 greeting /ˈɡriːtɪŋ/ n. 祝贺　【后缀:-ing】
+1460 grill /ɡrɪl/ n. （烧食物的）烤架　【基础词】
+1461 grocer /ˈɡrəʊsə(r)/ n. 零售商人；食品店　【基础词】
+1462 ground /ɡraʊnd/ n. 地面　【基础词】
+1463 group /ɡruːp/ n. 组，群；grow (grew, grown　【基础词】
+1464 growth /ɡrəʊθ/ n. 生长，增长　【基础词】
+1465 gruel /ɡrʊəl/ n. 粥　【基础词】
+1466 guarantee /ɡærənˈtiː/ v. 保证，担保　【基础词】
+1467 guard /ɡɑːd/ n. 防护装置，警戒　【基础词】
+1468 guess /ɡes/ vi. 猜　【基础词】
+1469 guest /ɡest/ n. 客人，宾客　【基础词】
+1470 guidance /ˈɡaɪdəns/ n. 引导，指导　【后缀:-ance/-ence】
+1471 guide /ɡaɪd/ n. 向导，导游者　【基础词】
+1472 guilty /ˈɡɪltɪ/ adj. 有罪,犯法的,做错事的　【后缀:-y】
+1473 guitar /ɡɪˈtɑː(r)/ n. 吉他，六弦琴　【基础词】
+1474 gun /ɡʌn/ n. 枪，炮　【基础词】
+1475 gymnastics /dʒɪmˈnæstɪks/ n. 体操　【基础词】
+1476 ha /hɑː/ int. 哈(笑声　【基础词】
+1477 habit /ˈhæbɪt/ n. 习惯，习性　【词根:habit】
+1478 hair /heə(r)/ n. 头发　【基础词】
+1479 haircut /ˈheəkʌt/ n. （男子）理发　【基础词】
+1480 half /hɑːf; (US) hæf/ adj. n. 半，一半，半个　【基础词】
+1481 hall /hɔːl/ n. 大厅,会堂,礼堂;过道　【基础词】
+1482 ham /hæm/ n. 火腿　【基础词】
+1483 hamburger /ˈhæmbɜːɡə(r)/ n. 汉堡包　【基础词】
+1484 hammer /ˈhæmə(r)/ n. 锤子，锣锤　【基础词】
+1485 hand /hænd/ n. v. 手；指针 v. 递；给；交付 交上；交进　【基础词】
+1486 handbag /ˈhændbæɡ/ n. 女用皮包，手提包　【基础词】
+1487 handful /ˈhændfʊl/ n. (一)把；少数，少量　【后缀:-ful】
+1488 handkerchief /ˈhæŋkətʃɪf/ n. 手帕　【基础词】
+1489 handle /ˈhænd(ə)l/ n. v. 柄，把柄 v. 处理　【基础词】
+1490 handsome /ˈhænsəm/ adj. 英俊的　【后缀:-some】
+1491 handtruck /ˈhændtrʌk/ n. 手推运货车　【基础词】
+1492 handwriting /ˈhændraɪtɪŋ/ n. 书法　【基础词】
+1493 handy /ˈhændɪ/ adj. v. 便利的，顺手的 hang(hanged,hanged) v. 处（人）绞刑；上吊；hang (hung, hung　【后缀:-y】
+1494 happen /ˈhæpən/ vi. （偶然）发生　【词根:hap；后缀:-en】
+1495 happily /ˈhæpɪlɪ/ adv. 幸福地，快乐地　【词根:hap；后缀:-ly】
+1496 happiness /ˈhæpɪnɪs/ n. 幸福，愉快　【词根:hap；后缀:-ness】
+1497 happy /ˈhæpɪ/ adj. 幸福；快乐的，高兴的；harbour (美harbor　【词根:hap；后缀:-y】
+1498 hard /hɑːd/ adv. adj. 努力地；使劲；猛烈地 a.硬的；困难的；艰难的　【基础词】
+1499 hardly /ˈhɑːdlɪ/ adv. 几乎不　【后缀:-ly】
+1500 hardship /ˈhɑːdʃɪp/ n. 困难　【后缀:-ship】
+1501 hardworking /ˌhɑːdˈwɜːkɪŋ/ adj. 努力工作的　【基础词】
+1502 harm /hɑːm/ n. v. 伤害；损伤　【基础词】
+1503 harmful /ˈhɑːmfʊl/ adj. 有害的；致伤的　【后缀:-ful】
+1504 harmless /ˈhɑːmlɪs/ adj. 无害的;不致伤的　【后缀:-less】
+1505 harmony /ˈhɑːmənɪ/ n. 融洽，和睦　【后缀:-y】
+1506 harvest /ˈhɑːvɪst/ n. vt. 收割，收获（物　【基础词】
+1507 hat /hæt/ n. 帽子(一般指有边的)；礼帽　【基础词】
+1508 hatch /hætʃ/ v. （鸟、鸡）孵蛋　【基础词】
+1509 hate /heɪt/ vt. n. 恨，讨厌；have (has, had, had　【后缀:-ate】
+1510 hawk /hɔːk/ n. 鹰　【基础词】
+1511 hay /heɪ/ n. 作饲料用的干草　【后缀:-y】
+1512 he /heɪ/ pron. 他　【基础词】
+1513 head /hed/ n. adj. v. 头；头脑(像)；才智；首脑；源头；标题 a. 头部的；主要的；首席的 v. 率领；加标题；用头顶；出发；(船等)驶向　【基础词】
+1514 headache /ˈhedeɪk/ n. 头疼　【基础词】
+1515 headline /ˈhedlaɪn/ n. （报刊的）大字标题　【基础词】
+1516 headmaster /hedˈmɑːstə(r)/ n. （英）中小学校长　【词根:aster/astr/astro】
+1517 headmistress /ˈhedˈmistrɪs/ n. 女校长　【基础词】
+1518 headteacher /ˌhedˈtiːtʃə(r)/ n. 中小学班主任　【基础词】
+1519 health /helθ/ n. 健康，卫生　【基础词】
+1520 healthy /ˈhelθɪ/ adj. 健康的，健壮的　【后缀:-y】
+1521 heap /hiːp/ n. v. 堆 v. 堆起来；hear (heard, heard　【基础词】
+1522 hearing /ˈhɪərɪŋ/ n. 听力　【基础词】
+1523 heart /hɑːt/ n. 心.心脏, 纸牌中的红桃　【基础词】
+1524 heat /hiːt/ n. vt. 热 vt. 把……加热　【基础词】
+1525 heaven /ˈhev(ə)n/ n. 天，天空　【后缀:-en】
+1526 heavy /ˈhevɪ/ adj. 重的　【后缀:-y】
+1527 heavily /ˈhevɪlɪ/ adv. 重地，大量地　【后缀:-y】
+1528 heel /hiːl/ n. 脚后跟　【基础词】
+1529 height /haɪt/ n. 高，高度　【基础词】
+1530 helicopter /ˈhelɪkɔptə(r)/ n. 直升飞机　【基础词】
+1531 hello /həˈləʊ/ int. 喂；你好（表示打招呼，问候或唤起注意　【基础词】
+1532 helmet /ˈhelmɪt/ n. 头盔　【基础词】
+1533 help /help/ n. vt. 帮助，帮忙　【基础词】
+1534 helpful /ˈhelpfʊl/ adj. 有帮助的，有益的　【后缀:-ful】
+1535 hen /hen/ n. 母鸡　【后缀:-en】
+1536 her /hɜː(r)/ pron. 她(宾格),她的　【后缀:-er/-or】
+1537 herb /hɜːb; (US) ɜːrb/ n. 草药　【词根:her/hes】
+1538 here /hɪə(r)/ adv. 这里，在这里；向这里　【词根:her/hes】
+1539 hero /ˈhɪərəʊ/ n. 英雄，勇士，男主角　【词根:her/hes】
+1540 heroine /ˈherəʊɪn/ n. 女英雄，女主角　【词根:her/hes】
+1541 hers /hɜːz/ pron. 她的　【词根:her/hes】
+1542 herself /hɜːˈself/ pron. 她自己　【词根:her/hes】
+1543 hey /heɪ/ int. 嘿！　【后缀:-y】
+1544 hi /haɪ/ int. 你好（表示打招呼、问候或唤起注 意　【基础词】
+1545 hibernate /ˈhaɪbəneɪt/ vi. 冬眠　【基础词】
+1546 hibernation /haɪbə(r)ˈneɪʃn/ n. 冬眠；hide (hid, hidden　【后缀:-ation/-tion/-ion/-sion】
+1547 high /haɪ/ adj. adv. 高的;高度的 ad. 高地　【基础词】
+1548 highway /ˈhaɪweɪ/ n. 公路,主要交通道路　【后缀:-y】
+1549 hill /hɪl/ n. 小山;丘陵;土堆;斜坡　【基础词】
+1550 hillside /ˈhɪlsaɪd/ n. （小山）山腰，山坡　【基础词】
+1551 hilly /ˈhɪlɪ/ adj. 丘陵的； 多小山的　【后缀:-y】
+1552 him /hɪm/ pron. 他（宾格　【基础词】
+1553 himself /hɪmˈself/ pron. 他自己　【基础词】
+1554 hire /ˈhaɪə(r)/ vt. 租用　【基础词】
+1555 his /hɪz/ pron. 他的　【基础词】
+1556 history /ˈhɪstərɪ/ n. 历史，历史学；hit (hit, hit　【后缀:-y】
+1557 hive /haɪv/ n. 蜂房；蜂箱　【后缀:-ive】
+1558 hobby /ˈhɔbɪ/ n. 业余爱好，嗜好；hold (held, held　【后缀:-y】
+1559 hole /həʊl/ n. 洞，坑　【基础词】
+1560 holiday /ˈhɔlɪdɪ/ n. 假日；假期　【后缀:-y】
+1561 holy /ˈhəʊlɪ/ adj. 神圣的　【后缀:-y】
+1562 home /həʊm/ n. adv. 家 ad. 到家；回家　【基础词】
+1563 homeland /ˈhəʊmlænd/ n. 祖国　【基础词】
+1564 hometown /ˈhəʊmtaʊn/ n. 故乡　【基础词】
+1565 homework /ˈhəʊmwɜːk/ n. 家庭作业　【基础词】
+1566 honest /ˈɔnɪst/ adj. 诚实的，正直的　【基础词】
+1567 honey /ˈhʌni/ n. 蜂蜜　【后缀:-y】
+1568 hook /hʊk/ n. v. 钩子；衔接，连接　【基础词】
+1569 hooray /hʊˈreɪ/ int. 好哇！（欢呼声　【后缀:-y】
+1570 hope /həʊp/ n. v. 希望　【基础词】
+1571 hopeful /ˈhəʊpfʊl/ adj. 有希望的；有前途的　【后缀:-ful】
+1572 hopeless /ˈhəʊplɪs/ adj. 没有希望,不可救药的　【后缀:-less】
+1573 horrible /ˈhɔrɪb(ə)l/ adj. 令人恐惧；恐怖的　【词根:horr；后缀:-able/-ible】
+1574 horse /hɔːs/ n. 马　【基础词】
+1575 hospital /ˈhɔspɪt(ə)l/ n. 医院　【词根:hospit/host；后缀:-al】
+1576 host /həʊst/ n. v. 主人；节目主持人 v. 做主人招待　【词根:hospit/host】
+1577 hostess /ˈhəʊstɪs/ n. 女主人　【词根:hospit/host；后缀:-ess】
+1578 hot /hɔt/ adj. 热的　【基础词】
+1579 hot dog /hɔt- dɔɡ/ n. 热狗(红肠面包　【基础词】
+1580 hotel /həʊˈtel/ n. 旅馆，饭店，宾馆　【基础词】
+1581 hour /ˈaʊə(r)/ n. 小时　【基础词】
+1582 house /haʊs/ n. 房子；住宅　【基础词】
+1583 housewife /ˈhaʊswaɪf/ n. 家庭主妇　【基础词】
+1584 housework /ˈhaʊswɜːk/ n. 家务劳动　【基础词】
+1585 how /haʊ/ adv. 怎样,如何；多少；多么　【基础词】
+1586 however /haʊˈevə(r)/ adv. conj. 可是 conj. 然而，可是，尽管如此　【基础词】
+1587 howl /haʊl/ vi. 嚎叫，嚎哭　【基础词】
+1588 hug /hʌɡ/ v. 拥抱　【基础词】
+1589 huge /hjuːdʒ/ adj. 巨大的，庞大的　【基础词】
+1590 human /ˈhjuːmən/ adj. 人的，人类的　【基础词】
+1591 human being /ˈhjuːmən ˈbiːɪŋ/ n. 人　【基础词】
+1592 humorous /ˈhjuːmərəs/ adj. 富于幽默的；humour (美humor　【基础词】
+1593 hundred /ˈhʌndrəd/ num. 百　【基础词】
+1594 hunger /ˈhʌŋɡə(r)/ n. 饥饿　【基础词】
+1595 hungry /ˈhʌŋɡrɪ/ adj. （饥）饿的　【后缀:-y】
+1596 hunt /hʌnt/ vt. 寻找；狩猎，猎取　【基础词】
+1597 hunter /ˈhʌntə(r)/ n. 猎人　【后缀:-er/-or】
+1598 hurricane /ˈhʌrɪkən/ n. 飓风，十二级风　【基础词】
+1599 hurry /ˈhʌrɪ/ vi. 赶快；急忙；hurt (hurt, hurt　【后缀:-y】
+1600 husband /ˈhʌzbənd/ n. 丈夫　【词根:band】
+1601 hydrogen /ˈhaɪdrədʒ(ə)n/ n. 氢　【基础词】
+1602 i /aɪ/ pron. 我　【基础词】
+1603 ice /aɪs/ n. 冰　【基础词】
+1604 iceland /ˈaɪslənd/ n. * n. 冰岛　【基础词】
+1605 idea /aɪˈdɪə/ n. 主意,意见,打算,想法　【基础词】
+1606 identity /aɪˈdentɪtɪ/ n. 身份，特征　【基础词】
+1607 identification /aɪdentɪfɪˈkeɪʃ(ə)n/ n. 鉴定，辨别　【基础词】
+1608 idiom /ˈɪdɪəm/ n. 习语，成语　【基础词】
+1609 if /ɪf/ conj. 如果,假使,是否,是不是　【基础词】
+1610 ignore /ɪɡˈnɔː(r)/ v. 忽视，对…不理会　【基础词】
+1611 ill /ɪl/ adj. 有病的；不健康的　【基础词】
+1612 illegal /ɪˈliːɡ(ə)l/ adj. 非法的　【前缀:il-/im-/in-/ir-；词根:lect/leg/lig】
+1613 illness /ˈɪlnɪs/ n. 疾病　【后缀:-ness】
+1614 imagine /ɪˈmædʒɪn/ vt. 想像，设想　【基础词】
+1615 immediate /ɪˈmiːdɪət/ adj. 立即的，马上　【前缀:il-/im-/in-/ir-；词根:med；后缀:-ate】
+1616 immediately /ɪˈmiːdɪətlɪ/ adv. 立即　【前缀:il-/im-/in-/ir-；词根:med；后缀:-ly】
+1617 immigration /ɪmɪˈgreɪʃn/ n. 移民　【前缀:il-/im-/in-/ir-；词根:grat；后缀:-ation/-tion/-ion/-sion】
+1618 import /ɪmˈpɔːt/ v. n. 进口，输入　【前缀:il-/im-/in-/ir-；词根:port】
+1619 importance /ɪmˈpɔːt(ə)ns/ n. 重要性　【前缀:il-/im-/in-/ir-；词根:port；后缀:-ance/-ence】
+1620 important /ɪmˈpɔːtənt/ adj. 重要的　【前缀:il-/im-/in-/ir-；词根:port；后缀:-ant/-ent】
+1621 impossible /ɪmˈpɔsɪb(ə)l/ adj. 不可能的　【前缀:il-/im-/in-/ir-；词根:pon/pos/posit；后缀:-able/-ible】
+1622 impress /ɪmˈpres/ vt. 留下极深的印象　【前缀:il-/im-/in-/ir-；词根:press】
+1623 impression /ɪmˈpreʃ(ə)n/ n. 印象，感觉　【前缀:il-/im-/in-/ir-；词根:press；后缀:-ation/-tion/-ion/-sion】
+1624 improve /ɪmˈpruːv/ vt. 改进，更新　【前缀:il-/im-/in-/ir-；词根:prob/prov】
+1625 in /ɪn/ prep. adv. 在…里(内)；在…；以… ad. 在家，在内，向内　【基础词】
+1626 inch /ɪntʃ/ n. 英寸　【基础词】
+1627 incident /ˈɪnsɪd(ə)nt/ n. 事件　【前缀:il-/im-/in-/ir-；词根:cad/cas/cid】
+1628 include /ɪnˈkluːd/ vt. 包含，包括　【前缀:il-/im-/in-/ir-；词根:clud/clus/clos】
+1629 income /ˈɪnkʌm/ n. 收入，所得　【基础词】
+1630 incorrect /ɪnkəˈrekt/ adj. 不正确的，错误的　【前缀:il-/im-/in-/ir-；词根:rect】
+1631 increase /ɪnˈkriːs/ v. n. 增加，繁殖　【前缀:il-/im-/in-/ir-；词根:cre/creas/cresc】
+1632 indeed /ɪnˈdiːd/ adj. 确实；实在　【前缀:il-/im-/in-/ir-】
+1633 independence /ɪndɪˈpendəns/ n. 独立　【前缀:il-/im-/in-/ir-；词根:pend/pens；后缀:-ance/-ence】
+1634 independent /ɪndɪˈpendənt/ adj. 独立的,有主见的　【前缀:il-/im-/in-/ir-；词根:pend/pens；后缀:-ant/-ent】
+1635 India /ˈɪndɪə/ n. * n. 印度　【基础词】
+1636 Indian /ˈɪndɪən/ adj. n. （美洲）印地安人的； 印度人的 n. 印地安人；印度人　【基础词】
+1637 indicate /ˈɪndɪkeɪt/ v. 表明，象征，暗示　【前缀:il-/im-/in-/ir-；词根:dic/dict】
+1638 industry /ˈɪndəstrɪ/ n. 工业，产业　【后缀:-y】
+1639 influence /ˈɪnflʊəns/ n. v. 影响　【前缀:il-/im-/in-/ir-；词根:flu/fluct】
+1640 inform /ɪnˈfɔːm/ vt. 告诉； 通知　【前缀:il-/im-/in-/ir-；词根:form】
+1641 information /ɪnfəˈmeɪʃ(ə)n/ n. 信息　【前缀:il-/im-/in-/ir-；词根:form；后缀:-ation/-tion/-ion/-sion】
+1642 information desk /ɪnfəˈmeɪʃ(ə)n desk/ n. 问讯处　【前缀:il-/im-/in-/ir-；词根:form】
+1643 initial /ɪˈnɪʃ(ə)l/ adj. 开始的，最初的　【基础词】
+1644 injure /ˈɪndʒə(r)/ vt. 损害，伤害　【前缀:il-/im-/in-/ir-；词根:jud/jur/jus】
+1645 injury /ˈɪndʒərɪ/ n. 受伤处　【前缀:il-/im-/in-/ir-；词根:jud/jur/jus；后缀:-y】
+1646 ink /ɪŋk/ n. 墨水，油墨　【基础词】
+1647 inland /ˈɪnlənd/ adj. 内陆的；内地的　【前缀:il-/im-/in-/ir-】
+1648 inn /ɪn/ n. 小旅店；小饭店　【基础词】
+1649 innocent /ˈɪnəsənt/ adj. 无辜的，清白的　【前缀:il-/im-/in-/ir-；词根:cent】
+1650 insect /ˈɪnsekt/ n. 昆虫　【前缀:il-/im-/in-/ir-；词根:sect】
+1651 insert /ɪnˈsɜːt/ vt. 插入　【基础词】
+1652 inside /ɪnˈsaɪd/ prep. adv. 在…里面 ad.在里面　【前缀:il-/im-/in-/ir-；词根:sed/sess/sid】
+1653 insist /ɪnˈsɪst/ vi. 坚持；坚决认为　【前缀:il-/im-/in-/ir-；词根:sist】
+1654 inspect /ɪnˈspekt/ vt. 检查；检验；审视　【前缀:il-/im-/in-/ir-；词根:spec/spect/spic】
+1655 inspire /ɪnˈspaɪə(r)/ vt. 鼓舞； 激励　【前缀:il-/im-/in-/ir-；词根:spir】
+1656 instant /ˈɪnst(ə)nt/ adj. 瞬间；刹那　【前缀:il-/im-/in-/ir-；词根:st/sta/stat】
+1657 instead /ɪnˈsted/ adv. 代替，顶替　【基础词】
+1658 institute /ˈɪnstɪtjuːt; (US) ˈɪnstətuːt/ n. (研究)所, 院，学院　【基础词】
+1659 institution /ɪnstɪˈtjuːʃ(ə)n; (US) ɪnstəˈtuːʃn/ n. (慈善、宗教等性质的)公共机构； 学校　【后缀:-ation/-tion/-ion/-sion】
+1660 instruct /ɪnˈstrʌkt/ vt. 通知；指示；教　【前缀:il-/im-/in-/ir-；词根:struct】
+1661 instruction /ɪnˈstrʌkʃ(ə)n/ n. 说明,须知;教导　【前缀:il-/im-/in-/ir-；词根:struct；后缀:-ation/-tion/-ion/-sion】
+1662 instrument /ˈɪnstrʊmənt/ n. 乐器;工具,器械　【前缀:il-/im-/in-/ir-；词根:ment】
+1663 insurance /ɪnˈʃʊərəns/ n. 保险　【前缀:il-/im-/in-/ir-；后缀:-ance/-ence】
+1664 insure /ɪnˈʃʊə(r)/ vt. 给……保险　【前缀:il-/im-/in-/ir-】
+1665 intelligence /ɪnˈtelɪdʒəns/ n. 智力,才智,智慧　【基础词】
+1666 intend /ɪnˈtend/ vt. 想要，打算　【前缀:il-/im-/in-/ir-；词根:tain/ten/tent/tin】
+1667 intention /ɪnˈtenʃ(ə)n/ n. 打算,计划,意图　【前缀:il-/im-/in-/ir-；词根:tain/ten/tent/tin；后缀:-ation/-tion/-ion/-sion】
+1668 interest /ˈɪntrəst/ n. 兴趣，趣味;利息　【基础词】
+1669 interesting /ˈɪntrətɪŋ/ adj. 有趣的　【后缀:-ing】
+1670 international /ɪntəˈnæʃən(ə)l/ adj. 国际的　【前缀:inter-；词根:nat】
+1671 internet /ˈɪntənet/ n. 互联网，英特网　【前缀:inter-】
+1672 interpreter /ɪnˈtɜːprɪtə(r)/ n. 翻译　【基础词】
+1673 interrupt /ɪntəˈrʌpt/ v. 打扰，打断　【前缀:inter-；词根:ru/rupt】
+1674 interval /ˈɪntəv(ə)l/ n. 间歇；间隔　【前缀:inter-；词根:val】
+1675 interview /ˈɪntəvjuː/ n. vt. 采访,会见,面试　【前缀:inter-】
+1676 into /ˈɪntʊ/ prep. 到…里;向内；变成　【基础词】
+1677 introduce /ɪntrəˈdjuːs; (US) -duːs/ vt. 介绍　【前缀:intro-；词根:duc/duct】
+1678 introduction /ɪntrəˈdʌkʃ(ə)n/ n. 引进，介绍　【前缀:intro-；词根:duc/duct；后缀:-ation/-tion/-ion/-sion】
+1679 invent /ɪnˈvent/ vt. 发明，创造　【前缀:il-/im-/in-/ir-；词根:ven/vent】
+1680 invention /ɪnˈvenʃ(ə)n/ n. 发明，创造　【前缀:il-/im-/in-/ir-；词根:ven/vent；后缀:-ation/-tion/-ion/-sion】
+1681 inventor /ɪnˈventə(r)/ n. 发明者，创造者　【前缀:il-/im-/in-/ir-；词根:ven/vent；后缀:-er/-or】
+1682 invitation /ɪnvɪˈteɪʃ(ə)n/ n. 邀请，请帖　【前缀:il-/im-/in-/ir-；词根:vit/viv；后缀:-ation/-tion/-ion/-sion】
+1683 invite /ɪnˈvaɪt/ vt. 邀请，招待　【前缀:il-/im-/in-/ir-；词根:vit/viv】
+1684 Ireland /ˈaɪələnd/ n. * n. 爱尔兰　【基础词】
+1685 Irish /ˈaɪərɪʃ/ adj. 爱尔兰的，爱尔兰人的　【基础词】
+1686 iron /ˈaɪən; (US) ˈaɪərn/ n. vt. 铁，熨斗 vt. 熨烫　【基础词】
+1687 irrigate /ˈɪrɪɡeɪt/ vt. 灌溉　【基础词】
+1688 irrigation /ɪrɪˈɡeɪʃ(ə)n/ n. 灌溉　【后缀:-ation/-tion/-ion/-sion】
+1689 island /ˈaɪlənd/ n. 岛　【基础词】
+1690 it /ɪt/ pron. 它　【基础词】
+1691 Italian /ɪˈtæljən/ adj. n. 意大利(人)的；意大利语的 n. 意大利人；意大利语　【后缀:-ian】
+1692 Italy /ˈɪtəlɪ/ n. * n. 意大利　【后缀:-y】
+1693 its /ɪts/ pron. 它的　【基础词】
+1694 itself /ɪtˈself/ pron. 它自己　【基础词】
+1695 jacket /ˈdʒækɪt/ n. 短上衣，夹克衫　【基础词】
+1696 jam /dʒæm/ n. 果酱；阻塞　【基础词】
+1697 January /ˈdʒænjʊərɪ; (US) ˈdʒænjʊerɪ/ n. 1月　【后缀:-y】
+1698 Japan /dʒæˈpæn/ n. * n. 日本　【基础词】
+1699 Japanese /dʒæpəˈniːz/ adj. n. 日本的，日本人的，日语的 n. 日本人，日语　【后缀:-ese】
+1700 jar /dʒɑː(r)/ n. 罐子；坛子　【基础词】
+1701 jaw /dʒɔː/ n. 下巴　【基础词】
+1702 jazz /dʒæz/ n. 爵士音乐，爵士舞曲　【基础词】
+1703 jeans /dʒiːns/ n. 牛仔裤　【基础词】
+1704 jeep /dʒiːp/ n. 吉普车　【基础词】
+1705 jet /dʒet/ n. 喷气式飞机；喷射（器　【基础词】
+1706 jewel /ˈdʒuːəl/ n. 宝石　【基础词】
+1707 jewelry /ˈdʒuːəlrɪ/ n. （总称）珠宝　【后缀:-y】
+1708 job /dʒɔb/ n. （一份）工作　【基础词】
+1709 jog /dʒɔɡ/ v. 慢跑　【基础词】
+1710 join /dʒɔɪn/ v. 参加,加入;连接;会合　【词根:join/junct】
+1711 joke /dʒəʊk/ n. 笑话　【基础词】
+1712 journalist /ˈdʒɜːnəlɪzt/ n. 记者，新闻工作者　【词根:journ；后缀:-ist】
+1713 journey /ˈdʒɜːnɪ/ n. 旅行，路程　【词根:journ；后缀:-y】
+1714 joy /dʒɔɪ/ n. 欢乐，高兴，乐趣　【后缀:-y】
+1715 judge /dʒʌdʒ/ n. vt. 裁判；审判员；法官vt. 判断，断定　【词根:jud/jur/jus】
+1716 judgement /ˈdʒʌdʒmənt/ n. 裁判　【词根:jud/jur/jus；后缀:-ment】
+1717 juice /dʒuːs/ n. 汁、液　【基础词】
+1718 juicy /dʒuːsɪ/ adj. 多汁的；水分多的　【后缀:-y】
+1719 July /dʒʊˈlaɪ/ n. 7月　【后缀:-y】
+1720 jump /dʒʌmp/ n. v. 跳跃；跳变 v. 跳跃；惊起；猛扑　【基础词】
+1721 June /dʒuːn/ n. 6月　【基础词】
+1722 jungle /ˈdʒʌŋɡ(ə)l/ n. 丛林，密林　【基础词】
+1723 junior /ˈdʒuːnɪə(r)/ adj. 初级的；年少的　【基础词】
+1724 junk /dʒʌŋk/ n. （口语）废品，破烂货　【基础词】
+1725 junk mail /dʒʌŋk meɪl/ n. 塞到邮箱的广告宣传品　【基础词】
+1726 junk food /dʒʌŋk fuːd/ n. 没有营养的垃圾食品　【基础词】
+1727 just /dʒʌst/ adv. adj. 刚才；恰好；不过；仅 a. 公正的　【词根:jud/jur/jus】
+1728 justice /ˈdʒʌstɪs/ n. 正义；公正；司法　【词根:jud/jur/jus】
+1729 kangaroo /kæŋɡəˈruː/ n. 大袋鼠；keep (kept, kept　【基础词】
+1730 keeper /ˈkiːpə(r)/ n. （动物园中的）饲养员，看守人　【基础词】
+1731 kettle /ˈket(ə)l/ n. (烧水用的)水壶　【基础词】
+1732 key /kiː/ n. 钥匙;答案;键;关键　【后缀:-y】
+1733 keyboard /kiːbɔːd/ n. 键盘　【基础词】
+1734 kick /kɪk/ v. n. 踢　【基础词】
+1735 kid /kɪd/ n. 小孩　【基础词】
+1736 kill /kɪl/ v. 杀死，弄死　【基础词】
+1737 kilo /ˈkiːləʊ/ n. 千克；千米　【基础词】
+1738 kilogram /ˈkɪləɡræm/ n. 千克　【词根:gram/graph】
+1739 kind /kaɪnd/ n. adj. 种;类 a. 善良,友好的　【基础词】
+1740 kindergarten /kɪndəˈɡɑːt(ə)n/ n. 幼儿园　【基础词】
+1741 kindness /ˈkaɪndnɪs/ n. 仁慈；善良　【后缀:-ness】
+1742 king /kɪŋ/ n. 国王　【基础词】
+1743 kingdom /ˈkɪŋdəm/ n. 王国　【后缀:-dom】
+1744 kiss /kɪs/ n. vt. 吻，亲吻　【基础词】
+1745 kitchen /ˈkɪtʃɪn/ n. 厨房　【基础词】
+1746 kite /kaɪt/ n. 风筝　【基础词】
+1747 knee /niː/ n. 膝盖　【基础词】
+1748 knife /naɪf/ n. (复 knives) n.小刀;匕首;刀片　【基础词】
+1749 knock /nɔk/ n. v. 敲；打；击 ；know(knew,known　【基础词】
+1750 knowledge /ˈnɔlɪdʒ/ n. 知识，学问　【基础词】
+1751 lab /læb/ n. = laboratory n. 实验室；labour (美labor　【词根:labor】
+1752 lack /læk/ n. vt. 缺乏，缺少　【基础词】
+1753 ladder /ˈlædə(r)/ n. 梯子　【基础词】
+1754 lady /ˈleɪdɪ/ n. 女士，夫人　【后缀:-y】
+1755 lake /leɪk/ n. 湖　【基础词】
+1756 lamb /læm/ n. 羔羊　【基础词】
+1757 lame /leɪm/ adj. 跛的，瘸的，残废的　【基础词】
+1758 lamp /læmp/ n. 灯，油灯；光源　【基础词】
+1759 land /lænd/ n. v. 陆地,土地v.登岸(陆)降落　【基础词】
+1760 language /ˈlæŋɡwɪdʒ/ n. 语言　【基础词】
+1761 lantern /ˈlæntən/ n. 灯笼；提灯　【基础词】
+1762 lap /læp/ n. (人坐时)膝部.(跑道的)一圈　【词根:laps】
+1763 large /lɑːdʒ/ adj. 大的；巨大的　【基础词】
+1764 laser /ˈleɪzə(r)/ n. 激光　【基础词】
+1765 last /lɑːst; (US) læst/ adj. adv. n. v. 最近刚过去;最后的ad.最近刚过去;最后地 n.最后v.持续　【基础词】
+1766 late /leɪt/ adj. adv. 晚的,迟的ad.晚地,迟地　【词根:lat】
+1767 lately /ˈleɪtlɪ/ adv. 最近，不久前　【词根:lat；后缀:-ly】
+1768 later /ˈleɪtə(r)/ adj. 晚些的，迟些的　【词根:lat；后缀:-er/-or】
+1769 latest /ˈleɪtɪst/ adj. 最近，最新的；最晚的　【词根:lat】
+1770 latter /ˈlætə(r)/ n. （两者之中的）后者　【词根:lat；后缀:-er/-or】
+1771 laugh /lɑːf/ n. v. 笑，大笑；嘲笑　【基础词】
+1772 laughter /ˈlɑːftə(r); (US) ˈlæftər/ n. 笑； 笑声　【基础词】
+1773 laundry /ˈlɔːndrɪ/ n. 洗衣店;要洗的衣服　【后缀:-y】
+1774 lavatory /ˈlævətrɪ; (US) ˈlævətɔːrɪ/ n. 便所，厕所　【词根:lav；后缀:-y】
+1775 law /lɔː/ n. 法律，法令；定律　【基础词】
+1776 lawyer /ˈlɔːjə(r)/ n. 律师；lay (laid, laid　【基础词】
+1777 lazy /ˈleɪzɪ/ adj. 懒惰的；lead (led, led　【后缀:-y】
+1778 leader /ˈliːdə(r)/ n. 领袖，领导人　【基础词】
+1779 leading /ˈliːdɪŋ/ adj. 最主要的，第一位的；leaf (复 leaves　【基础词】
+1780 league /liːɡ/ n. 联盟，社团　【基础词】
+1781 leak /liːk/ vi. 漏； 渗；learn (learnt, learnt；--ed --ed　【基础词】
+1782 learned /ˈlɜːnɪd/ adj. 有才华的；博学的　【基础词】
+1783 least /liːst/ n. 最少，最少量　【词根:lax/leas】
+1784 leather /ˈleðə(r)/ n. 皮革；leave (left, left　【基础词】
+1785 lecture /ˈlektʃə(r)/ n. 讲课，演讲　【词根:lect/leg/lig；后缀:-ure】
+1786 left /left/ adj. adv. n. 左边的 ad.向左 n.左,左边　【基础词】
+1787 leftover /ˈleftˌəuvə/ adj. n. 剩余,剩下的n.剩饭菜　【基础词】
+1788 leg /leɡ/ n. 腿；腿脚；支柱　【词根:lect/leg/lig】
+1789 legal /ˈliːɡ(ə)l/ adj. 与法律有关的，法律的　【词根:lect/leg/lig；后缀:-al】
+1790 lemon /ˈlemən/ n. adj. 柠檬 a. 柠檬色(味)的　【基础词】
+1791 lemonade /leməˈneɪd/ n. 柠檬水；lend (lent, lent　【基础词】
+1792 length /leŋθ/ n. 长，长度，段，节；less（little的比较级　【词根:long/leng；后缀:-th】
+1793 lesson /ˈles(ə)n/ n. 课；功课；教训；let (let, let　【基础词】
+1794 letter /ˈletə(r)/ n. 信；字母　【基础词】
+1795 level /ˈlev(ə)l/ n. 水平线，水平　【基础词】
+1796 liberty /ˈlɪbətɪ/ n. 自由　【词根:liber；后缀:-ity/-ty】
+1797 liberate /ˈlɪbəreɪt/ vt. 解放，使获自由　【词根:liber；后缀:-ate】
+1798 liberation /lɪbəˈreɪʃ(ə)n/ n. 解放　【词根:liber；后缀:-ation/-tion/-ion/-sion】
+1799 librarian /laɪˈbreərɪən/ n. 图书管理员；（西方的）图书馆馆长　【后缀:-ian】
+1800 library /ˈlaɪbrərɪ; (US) ˈlaɪbrerɪ/ n. 图书馆，图书室　【后缀:-y】
+1801 license /ˈlaɪsəns/ n. 执照，许可证　【词根:lic】
+1802 lid /lɪd/ n. 盖子；lie (lay, lain　【基础词】
+1803 lifetime /ˈlaɪftaɪm/ n. 一生，终生　【基础词】
+1804 lift /lɪft/ v. n. 举起，抬起；（云、烟等）消散 n. （英）电梯　【基础词】
+1805 light /laɪt/ n. vt. adj. 光，光亮；灯，灯光 vt. 点（火），点燃 a. 明亮的；轻的；浅色的　【词根:lect/leg/lig】
+1806 lightning /ˈlaɪtnɪŋ/ n. 闪电　【词根:lect/leg/lig；后缀:-ing】
+1807 like /laɪk/ prep. vt. 像，跟…一样 vt. 喜欢，喜爱　【基础词】
+1808 likely /ˈlaɪklɪ/ adj. 很可能的　【后缀:-ly】
+1809 limit /ˈlɪmɪt/ vt. 限制；减少　【基础词】
+1810 line /laɪn/ n. v. 绳索，线，排，行，线路 v. 画线于，（使）成行　【基础词】
+1811 link /lɪŋk/ v. 连接； 联系　【基础词】
+1812 lion /ˈlaɪən/ n. 狮子　【基础词】
+1813 lip /lɪp/ n. 嘴唇　【基础词】
+1814 liquid /ˈlɪkwɪd/ n. adj. 液体；液体的　【基础词】
+1815 list /lɪst/ n. 一览表，清单　【基础词】
+1816 listen /ˈlɪs(ə)n/ vi. 听,仔细听　【后缀:-en】
+1817 literature /ˈlɪtərətʃə(r); (US) ˈlɪtrətʃʊər/ n. 文学　【词根:liter；后缀:-ure】
+1818 literary /ˈlɪtərərɪ; (US) ˈlɪtərerɪ/ adj. 文学的；litre (美liter　【词根:liter；后缀:-ary】
+1819 litter /ˈlɪtə(r)/ v. 乱丢杂物；little (less, least　【基础词】
+1820 live /lɪv/ vi. adj. 生活;居住;活着 a. 活的,活着的;实况,现场（直播）的　【基础词】
+1821 lively /ˈlaɪvlɪ/ adj. 活泼的;充满生气的　【后缀:-ly】
+1822 living /ˈlɪvɪŋ/ adj. n. 活着的 n. 生计　【后缀:-ing】
+1823 load /ləʊd/ n. 担子，货物　【基础词】
+1824 loaf /ləʊf/ n. 一个面包　【基础词】
+1825 local /ˈləʊk(ə)l/ adj. 当地的；地方的　【词根:loc；后缀:-al】
+1826 lock /lɔk/ n. vt. 锁 vt. 锁，锁上　【词根:loc】
+1827 locust /ˈləʊkəst/ n. 蝗虫　【词根:loc】
+1828 London /ˈlʌnd(ə)n/ n. 伦敦　【基础词】
+1829 lonely /ˈləʊnlɪ/ adj. 孤独的，寂寞的　【后缀:-y】
+1830 long /lɔŋ; (US) lɔːŋ/ adj. adv. 长的，远 ad. 长久　【词根:long/leng】
+1831 look /lʊk/ n. v. 看，瞧 v. 看，观看 v. link 看起来　【基础词】
+1832 loose /luːs/ adj. 松散的； 宽松的　【基础词】
+1833 lorry /ˈlɔrɪ; (US) ˈlɔːrɪ/ n. （英）运货汽车，卡车　【后缀:-y】
+1834 loss /lɔs; (US) lɔːs/ n. 丧失；损耗；lose (lost, lost　【基础词】
+1835 lot /lɔt/ n. 许多，好些　【基础词】
+1836 loud /laʊd/ adj. 大声的　【基础词】
+1837 loudly /laʊdlɪ/ adv. 大声地　【后缀:-ly】
+1838 loudspeaker /laʊdˈspiːkə(r)/ n. 扬声器，喇叭　【基础词】
+1839 lounge /laʊndʒ/ n. 休息厅；休息室　【基础词】
+1840 love /lʌv/ n. vt. 爱；热爱;很喜欢　【基础词】
+1841 lovely /ˈlʌvlɪ/ adj. 美好的，可爱的　【后缀:-ly】
+1842 low /ləʊ/ adj. adv. 低；矮　【基础词】
+1843 luck /lʌk/ n. 运气，好运　【词根:luc/lustr】
+1844 lucky /ˈlʌkɪ/ adj. 运气好，侥幸　【词根:luc/lustr；后缀:-y】
+1845 luggage /ˈlʌɡɪdʒ/ n. (总称)行李　【基础词】
+1846 lunch /lʌntʃ/ n. 午餐，午饭　【基础词】
+1847 lung /lʌŋ/ n. 肺；肺脏　【基础词】
+1848 machine /məˈʃiːn/ n. 机器　【基础词】
+1849 mad /mæd/ adj. 发疯的；生气的　【基础词】
+1850 magazine /mæɡəˈziːn/ n. 杂志　【基础词】
+1851 magic /ˈmædʒɪk/ adj. 有魔力的　【词根:magn；后缀:-ic/-ical】
+1852 maid /meɪd/ n. 女仆；侍女　【基础词】
+1853 mail /meɪl/ n. v. 邮政,邮递 v. (美)邮寄　【基础词】
+1854 mailbox /ˈmeɪlbɒks/ n. 邮筒；邮箱　【基础词】
+1855 main /meɪn/ adj. 主要的　【基础词】
+1856 mainland /ˈmeɪnlənd/ n. 大陆　【基础词】
+1857 major /ˈmeɪdʒə(r)/ adj. 较大的；主要的　【词根:maj/max；后缀:-er/-or】
+1858 majority /məˈdʒɔrɪtɪ/ n. 大多数 ；make (made,made　【词根:maj/max；后缀:-ity/-ty】
+1859 male /meɪl/ adj. 男（性）的；雄的；man (复men　【基础词】
+1860 manage /ˈmænɪdʒ/ v. 管理；设法对付　【词根:man/manu；后缀:-age】
+1861 manager /ˈmænɪdʒə(r)/ n. 经理　【词根:man/manu；后缀:-er/-or】
+1862 mankind /mænˈkaɪnd/ n. 人类;（总称）人　【词根:man/manu】
+1863 manner /ˈmænə(r)/ n. 方式，态度，举止　【词根:man/manu；后缀:-er/-or】
+1864 table manners /ˈteɪb(ə)l ˈmænə(r) z/ n. 餐桌礼节，用餐的规矩；many (more, most　【基础词】
+1865 map /mæp/ n. 地图　【基础词】
+1866 maple /ˈmeɪp(ə)l/ n. 枫树　【基础词】
+1867 marathon /ˈmærəθ(ə)n/ n. 马拉松　【词根:mar】
+1868 marble /ˈmɑːb(ə)l/ n. 大理石；玻璃弹子　【词根:mar】
+1869 march /mɑːtʃ/ n. 游行，行进　【词根:arch】
+1870 mark /mɑːk/ n. vt. 标记 vt.标明,作记号于　【词根:mar】
+1871 market /ˈmɑːkɪt/ n. 市场，集市　【词根:mar；后缀:-et】
+1872 marriage /ˈmærɪdʒ/ n. 结婚，婚姻　【词根:mar；后缀:-age】
+1873 married /ˈmærɪd/ adj. 已婚的　【词根:mar；后缀:-ed】
+1874 marry /ˈmærɪ/ v. （使）成婚，结婚　【词根:mar；后缀:-y】
+1875 mask /mɑːsk; (US) mæsk/ n. v. 口罩；面罩(具)；遮盖物 v. 戴面具；掩饰；伪装　【基础词】
+1876 mass /mæs/ n. 众多;大量;（复）群众　【基础词】
+1877 master /ˈmɑːstə(r); (US) ˈmæstər/ vt. 精通，掌握　【词根:aster/astr/astro】
+1878 mat /mæt/ n. 垫子　【词根:mat/mater】
+1879 match /mætʃ/ vt. n. 使相配，使成对 n. 比赛，竞赛 n. 火柴　【词根:mat/mater】
+1880 material /məˈtɪərɪəl/ n. 材料，原料　【词根:mat/mater；后缀:-al】
+1881 matter /ˈmætə(r)/ n. vi. 要紧事，要紧, 事情；问题 vi. 要紧，有重大关系　【词根:mat/mater；后缀:-er/-or】
+1882 mature /məˈtjʊə(r); (US) məˈtʊər/ adj. 成熟的　【词根:mat/mater；后缀:-ure】
+1883 maximum /ˈmæksɪməm/ adj. n. 最大量(的)； 最大限度(的　【词根:maj/max】
+1884 May /meɪ/ n. 5月　【后缀:-y】
+1885 maybe /ˈmeɪbiː/ adv. 可能，大概，也许　【基础词】
+1886 me /miː/ pron. 我（宾格　【基础词】
+1887 meal /miːl/ n. 一餐（饭） ；mean(meant,meant　【后缀:-al】
+1888 meaning /ˈmiːnɪŋ/ n. 意思，含意　【基础词】
+1889 means /miːnz/ n. 方法，手段；财产　【基础词】
+1890 meanwhile /ˈmiːnwaɪl; (US) ˈmɪnhwaɪl/ adv. 同时　【基础词】
+1891 measure /ˈmeʒə(r)/ v. 量　【基础词】
+1892 meat /miːt/ n. （猪、牛、羊等的）肉　【基础词】
+1893 medal /ˈmed(ə)l/ n. 奖牌　【词根:med；后缀:-al】
+1894 gold medal /ɡəʊld ˈmed(ə)l/ n. 金牌　【基础词】
+1895 media /ˈmiːdɪə/ n. 大众传播媒介　【词根:med】
+1896 medical /ˈmedɪk(ə)l/ adj. 医学的，医疗的　【词根:med；后缀:-ic/-ical】
+1897 medicine /ˈmeds(ə)n; (US) ˈmedɪsn/ n. 药　【词根:med】
+1898 medium /ˈmiːdɪəm/ n. 媒体,中间的,中等的；meet (met, met　【词根:med】
+1899 meeting /ˈmiːtɪŋ/ n. 会,集会,会见,汇合点　【基础词】
+1900 melon /ˈmelən/ n. （甜）瓜；瓜状物　【基础词】
+1901 member /ˈmembə(r)/ n. 成员，会员　【基础词】
+1902 memorial /mɪˈmɔːrɪəl/ n. 纪念馆　【词根:memor；后缀:-al】
+1903 memory /ˈmemərɪ/ n. 回忆，记忆　【词根:memor；后缀:-y】
+1904 memorize /ˈmeməraɪz/ v. 记忆　【词根:memor；后缀:-ize/-ise】
+1905 mend /mend/ v. 修理，修补　【基础词】
+1906 mental /ˈment(ə)l/ adj. 精神的；脑力的　【词根:ment；后缀:-al】
+1907 mentally /ˈmentəlɪ/ adv. 精神上；智力上　【词根:ment；后缀:-ly】
+1908 mention /ˈmenʃ(ə)n/ n. vt. 提及；记载 vt. 提到，说起；提名表扬　【词根:ment；后缀:-ation/-tion/-ion/-sion】
+1909 menu /ˈmenʃ(ə)n/ n. 菜单　【基础词】
+1910 merchant /ˈmɜːtʃənt/ adj. n. 商业的；商人的 n. 商人；生意人　【词根:merc；后缀:-ant/-ent】
+1911 merciful /ˈmɜːsɪfʊl/ adj. 仁慈的；宽大的　【词根:merc；后缀:-ful】
+1912 mercy /ˈmɜːsɪ/ n. 怜悯　【词根:merc；后缀:-cy】
+1913 merely /ˈmɪəlɪ/ adv. 仅仅，只不过　【后缀:-y】
+1914 merry /ˈmerɪ/ adj. 高兴的，愉快的　【后缀:-y】
+1915 mess /mes/ n. 凌乱　【后缀:-ess】
+1916 message /ˈmesɪdʒ/ n. 消息，音信　【后缀:-age】
+1917 messy /ˈmesɪ/ adj. 乱七八糟的　【后缀:-y】
+1918 metal /ˈmet(ə)l/ n. adj. 金属 a. 金属制成的　【词根:meter/metr；后缀:-al】
+1919 method /ˈmeθəd/ n. 方法，办法；metre (美meter　【基础词】
+1920 mexican /ˈmeksɪkən/ adj. 墨西哥的　【基础词】
+1921 mexico /ˈmeksɪkəʊ/ n. * n. 墨西哥　【基础词】
+1922 microcomputer /ˈmaɪkrəʊkəmpjuːtə(r)/ n. 微机　【前缀:micro-】
+1923 microscope /ˈmaɪkrəskəʊp/ n. 显微镜　【前缀:micro-；词根:scop】
+1924 microwave /ˈmaɪkrəʊweɪv/ n. 微波　【前缀:micro-】
+1925 midday /ˈmɪddeɪ/ n. 中午, 正午　【前缀:mid-；后缀:-y】
+1926 middle /ˈmɪd(ə)l/ n. 中间;当中;中级的　【基础词】
+1927 midnight /ˈmɪdnaɪt/ n. 午夜　【前缀:mid-】
+1928 might /maɪt/ v. aux. (may的过去式，助动词) 可能，也许，或许　【基础词】
+1929 mild /maɪld/ adj. 温和,暖和的,凉爽的　【基础词】
+1930 mile /maɪl/ n. 英里　【基础词】
+1931 milk /mɪlk/ n. vt. 牛奶 vt. 挤奶　【基础词】
+1932 million /ˈmɪlɪən/ num. n. 百万 n. 百万个（人或物　【基础词】
+1933 millionaire /mɪljəˈneə(r)/ n. 百万富翁　【基础词】
+1934 mind /maɪnd/ n. v. 思想,想法 v.介意,关心　【词根:min】
+1935 mine /maɪn/ n. vt. pron. 矿藏,矿山vt.开采(矿物) pron. 我的　【词根:min】
+1936 mineral /ˈmɪnər(ə)l/ n. 矿物质，矿物　【词根:min；后缀:-al】
+1937 minibus /ˈmɪnɪbʌs/ n. 小型公共汽车　【前缀:mini-】
+1938 minimum /ˈmɪnɪməm/ adj. 最小的　【词根:min】
+1939 miniskirt /ˈmɪnɪskɜːt/ n. 超短裙　【前缀:mini-】
+1940 minister /ˈmɪnɪstə(r)/ n. 部长；牧师　【词根:min；后缀:-er/-or】
+1941 ministry /ˈmɪnɪstrɪ/ n. （政府的）部　【前缀:mini-；词根:struct；后缀:-y】
+1942 minority /maɪˈnɔrɪtɪ; (US) -ˈnɔːr-/ n. 少数；少数民族　【词根:min；后缀:-ity/-ty】
+1943 minus /ˈmaɪnəs/ prep. adj. 负的，减去的　【词根:min】
+1944 minute /ˈmɪnɪt/ n. 分钟;一会儿，瞬间　【词根:min】
+1945 mirror /ˈmɪrə(r)/ n. 镜子　【词根:mir；后缀:-er/-or】
+1946 miss /mɪs/ vt. 失去，错过，缺；Miss.　【词根:miss/mit】
+1947 missile /ˈmɪsaɪl/ n. 导弹　【词根:miss/mit】
+1948 mist /mɪst/ n. 雾；mistake (mistook, mistaken　【后缀:-ist】
+1949 mistaken /mɪsˈteɪkən/ adj. 错误的；misunderstand (-stood, -stood　【基础词】
+1950 mix /mɪks/ v. 混合，搅拌　【基础词】
+1951 mixture /ˈmɪkstʃə(r)/ n. 混合物；mm (缩) = millimetre　【基础词】
+1952 mobile /ˈməʊbaɪl; (US) məʊbl/ adj. 活动的，可移动的　【词根:mob/mot/mov】
+1953 mobile phone /ˈməʊbaɪl fəʊn/ n. 手提电话，手机　【词根:mob/mot/mov】
+1954 model /ˈmɔd(ə)l/ n. 模型,原形,范例,模范　【基础词】
+1955 modem /ˈməʊdem/ n. 调制解调器　【基础词】
+1956 modern /ˈmɔd(ə)n/ adj. 现代的　【基础词】
+1957 modest /ˈmɔdɪst/ adj. 谦虚的；谦逊的　【基础词】
+1958 moment /ˈməʊmənt/ n. 片刻，瞬间　【词根:ment】
+1959 Monday /ˈmʌndeɪ/ n. 星期一　【词根:mon/monit；后缀:-y】
+1960 money /ˈmʌnɪ/ n. 钱；货币　【词根:mon/monit；后缀:-y】
+1961 monitor /ˈmɔnɪtə(r)/ n. （班级内的）班长；纠察生；监视器　【词根:mon/monit；后缀:-er/-or】
+1962 monkey /ˈmʌŋkɪ/ n. 猴子　【词根:mon/monit；后缀:-y】
+1963 month /mʌnθ/ n. 月，月份　【词根:mon/monit；后缀:-th】
+1964 monument /ˈmɔnjʊmənt/ n. 纪念碑，纪念物　【词根:mon/monit；后缀:-ment】
+1965 moon /muːn/ n. 月球；月光；月状物　【基础词】
+1966 mop /mɔp/ n. v. / v. 拖把 拖地　【基础词】
+1967 moral /ˈmɔr(ə)l; (US) ˈmɔːrəl/ adj. n. 道德的 n.寓意,道德启示；more（much或many 的比较级　【词根:mort；后缀:-al】
+1968 morning /ˈmɔːnɪŋ/ n. 早晨，上午　【基础词】
+1969 Moscow /ˈmɔskəʊ/ n. 莫斯科　【基础词】
+1970 moslem /ˈmɔzləm/ n. 伊斯兰教徒,回教徒　【基础词】
+1971 mosquito /məˈskiːtəʊ/ n. 蚊子；most (much或many 的最高级　【基础词】
+1972 mother /ˈmʌðə(r)/ n. 母亲　【词根:mob/mot/mov；后缀:-er/-or】
+1973 motherland /ˈmʌðəlænd/ n. 祖国　【词根:mob/mot/mov】
+1974 motivation /məʊtɪˈveɪʃn/ n. （做事的）动机　【词根:mob/mot/mov；后缀:-ation/-tion/-ion/-sion】
+1975 motor /ˈməʊtə(r)/ n. 发动机，马达　【词根:mob/mot/mov；后缀:-er/-or】
+1976 motorbike /ˈməʊtəbaɪk/ n. 摩托车　【词根:mob/mot/mov】
+1977 motorcycle /ˈməʊtəsaikl/ n. 摩托车　【词根:circ/cycl】
+1978 motto /ˈmɔtəʊ/ n. 箴言，格言；mountain(s　【词根:mob/mot/mov】
+1979 mountainous /ˈmaʊntɪnəs/ adj. 多山的　【词根:mons/mount；后缀:-ous】
+1980 mourn /mɔːn/ vt. 哀痛； 哀悼；mouse (复mice　【基础词】
+1981 moustache /məsˈtɑːʃ/ n. 小胡子　【基础词】
+1982 mouth /maʊθ/ n. 嘴，口　【词根:mons/mount；后缀:-th】
+1983 mouthful /ˈmaʊθfʊl/ n. 满口，一口　【后缀:-ful】
+1984 from mouth to mouth /frɒm maʊθ tə maʊθ/ adv. 口口相传；人传人地　【基础词】
+1985 move /muːv/ v. 移动，搬动，搬家　【词根:mob/mot/mov】
+1986 movement /ˈmuːvmənt/ n. 运动，活动　【词根:mob/mot/mov；后缀:-ment】
+1987 movie /ˈmuːvɪ/ n. （口语）电影；Mr. (mister　【词根:mob/mot/mov】
+1988 mud /mʌd/ n. 泥, 泥浆　【基础词】
+1989 muddy /ˈmʌdɪ/ adj. 泥泞的　【后缀:-y】
+1990 multiply /ˈmʌltɪplaɪ/ vt. 乘；使相乘　【前缀:multi-；词根:plex/plic/ply；后缀:-y】
+1991 murder /ˈmɜːdə(r)/ vt. 谋杀　【基础词】
+1992 museum /mjuːˈzɪəm/ n. 博物馆，博物院　【基础词】
+1993 mushroom /ˈmʌʃrʊm/ n. 蘑菇　【基础词】
+1994 music /ˈmjuːzɪk/ n. 音乐，乐曲　【基础词】
+1995 musical /ˈmjuːzɪk(ə)l/ adj. n. 音乐的，爱好音乐的 n. 音乐片　【后缀:-al】
+1996 musician /mjuːˈzɪʃ(ə)n/ n. 音乐家，乐师　【后缀:-ian】
+1997 mustard /ˈmʌstəd/ n. 芥末，芥子粉　【基础词】
+1998 mutton /ˈmʌt(ə)n/ n. 羊肉　【基础词】
+1999 my /maɪ/ pron. 我的　【基础词】
+2000 myself /maɪˈself/ pron. 我自己　【基础词】
+2001 nail /neɪl/ n. 钉，钉子　【基础词】
+2002 name /neɪm/ n. vt. 名字,姓名,名称 vt. 命名,名叫　【基础词】
+2003 narrow /ˈnærəʊ/ adj. 狭窄的　【基础词】
+2004 nation /ˈneɪʃ(ə)n/ n. 民族，国家　【词根:nat；后缀:-ation/-tion/-ion/-sion】
+2005 national /ˈnæʃən(ə)l/ adj. 国家的,全国性的，民族的　【词根:nat；后缀:-al】
+2006 nationality /næʃəˈnælətɪ/ n. 国籍　【词根:nat；后缀:-ity/-ty】
+2007 nationwide /ˈneɪʃ(ə)nwaɪd/ adv. 全国范围内的,全国性的　【词根:nat】
+2008 native /ˈneɪtɪv/ adj. 本土的，本国的　【词根:nat；后缀:-ive】
+2009 natural /ˈnætʃər(ə)l/ adj. 自然的　【词根:nat；后缀:-al】
+2010 nature /ˈneɪtʃə(r)/ n. 自然, 性质，种类　【词根:nat；后缀:-ure】
+2011 navy /ˈneɪvɪ/ n. 海军　【词根:nav；后缀:-y】
+2012 near /nɪə(r)/ adj. adv. prep. 近的 ad. 附近，邻近 prep. 在……附近，靠近　【基础词】
+2013 nearby /ˈnɪəbaɪ/ adj. 附近的　【后缀:-y】
+2014 nearly /ˈnɪəlɪ/ adv. 将近，几乎　【后缀:-ly】
+2015 neat /niːt/ adj. 整洁的；灵巧的　【基础词】
+2016 necessary /ˈnesəsərɪ; (US) ˈnesəserɪ/ adj. 必需的，必要的　【词根:ced/ceed/cess；后缀:-ary】
+2017 neck /nek/ n. 颈，脖子　【基础词】
+2018 necklace /ˈneklɪs/ n. 项链　【基础词】
+2019 necktie /ˈnektaɪ/ n. 领带，领花　【基础词】
+2020 need /niːd/ n. aux. v. 需要,需求aux.& v.需要,必须　【基础词】
+2021 needle /niːd(ə)l/ n. 针　【基础词】
+2022 negotiate /nɪˈɡəʊʃɪeɪt/ v. 谈判，协商；neighbour (美neighbor　【基础词】
+2023 neither /ˈnaɪðə(r)/ adj. （两者）都不;也不　【基础词】
+2024 nephew /ˈnefjuː/ n. 侄子，外甥　【基础词】
+2025 nervous /ˈnɜːvəs/ adj. 紧张不安的　【基础词】
+2026 nest /nest/ n. 巢；窝　【基础词】
+2027 net /net/ n. 网　【基础词】
+2028 network /ˈnetwɜːk/ n. 网络，网状系统　【基础词】
+2029 never /ˈnevə(r)/ adv. 决不，从来没有　【基础词】
+2030 new /njuː; (US) nuː/ adj. 新的；新鲜的　【基础词】
+2031 news /njuːz; (US) nuːz/ n. 新闻，消息　【基础词】
+2032 newspaper /njuːz; (US) nuːz/ n. 报纸　【基础词】
+2033 next /nekst/ adj. adv. n. 最近的，紧挨着的，隔壁的；下一次 ad. 随后，然后，下一步 n. 下一个人（东西　【基础词】
+2034 nice /naɪs/ adj. 令人愉快;好的漂亮的　【基础词】
+2035 niece /niːs/ n. 侄女，甥女　【基础词】
+2036 night /naɪt/ n. 夜；夜间　【基础词】
+2037 nine /naɪn/ num. 九　【基础词】
+2038 nineteen /naɪnˈtiːn/ num. 十九　【基础词】
+2039 ninety /ˈnaɪntɪ/ num. 九十　【后缀:-ity/-ty】
+2040 ninth /naɪnθ/ num. 第九　【后缀:-th】
+2041 no /nəʊ/ adv. adj. 不,不是 a.没有,无,不；No.(缩) = number　【基础词】
+2042 noble /ˈnəʊb(ə)l/ adj. 高贵的，贵族的　【基础词】
+2043 nobody /ˈnəʊbədɪ/ n. pron. 渺小人物 pron. 没有人，谁也不　【后缀:-y】
+2044 nod /nɔd/ vi. 点头　【基础词】
+2045 noise /nɔɪz/ n. 声音，噪声，喧闹声　【后缀:-ize/-ise】
+2046 noisily /ˈnɔɪzɪlɪ/ adv. 喧闹地　【后缀:-y】
+2047 noisy /ˈnɔɪzɪ/ adj. 喧闹的，嘈杂的　【后缀:-y】
+2048 none /nʌn/ pron. 无任何东西, 无一人　【基础词】
+2049 noodle /ˈnuːd(ə)l/ n. 面条　【基础词】
+2050 noon /nuːn/ n. 中午，正午　【基础词】
+2051 nor /nɔː(r)/ conj. 也不　【词根:norm】
+2052 normal /ˈnɔːm(ə)l/ n. adj. 正常的（状态　【词根:norm；后缀:-al】
+2053 north /nɔːθ/ adj. adv. n. 北的;朝北的;从北来的 ad.向（在,从）北方 n.北;北方;北部　【词根:norm；后缀:-th】
+2054 northeast /ˌnɔːθˈiːst/ n. 东北（部　【基础词】
+2055 northern /ˈnɔːð(ə)n/ adj. 北方的，北部的　【后缀:-ern】
+2056 northwards /ˈnɔːθwədz/ adv. 向北　【基础词】
+2057 northwest /ˌnɔːθˈwest/ n. 西北　【基础词】
+2058 nose /nəʊz/ n. 鼻　【基础词】
+2059 not /nɔt/ adv. 不，没　【词根:not】
+2060 note /nəʊt/ n. vt. 便条，笔记，注释；钞票，纸币；音符，音调 vt. 记下，记录；注意，留意　【词根:not】
+2061 notebook /ˈnəʊtbʊk/ n. 笔记簿　【词根:not】
+2062 nothing /ˈnʌθɪŋ/ n. adv. 没有东西,没有什么 adv.一点也不；并不　【词根:not；后缀:-ing】
+2063 notice /ˈnəʊtɪs/ n. vt. 布告，通告；注意 vt. 注意，注意到　【词根:not】
+2064 novel /ˈnɔv(ə)l/ n. （长篇）小说　【词根:nov】
+2065 novelist /ˈnɔvəlɪst/ n. 小说家　【词根:nov；后缀:-ist】
+2066 November /nəʊˈvembə(r)/ n. 11月　【词根:nov；后缀:-er/-or】
+2067 now /naʊ/ adv. 现在　【基础词】
+2068 nowadays /ˈnaʊədeɪz/ adv. 当今，现在　【基础词】
+2069 nowhere /ˈnəʊweə(r); (US) ˈnəʊhweər/ adv. 任何地方都不,无处　【基础词】
+2070 nuclear /ˈnjuːklɪə(r)/ adj. 原子核的，原子能的，核动力的　【基础词】
+2071 numb /nʌm/ adj. 麻木的，失去知觉的，迟钝的　【基础词】
+2072 number /ˈnʌmbə(r)/ n. 数,数字,号码,数量　【后缀:-er/-or】
+2073 nurse /nɜːs/ n. 护士；保育员　【基础词】
+2074 nursery /ˈnɜːsərɪ/ n. 托儿所　【后缀:-y】
+2075 nursing /nɜːsɪŋ/ n. (职业性的）保育,护理　【后缀:-ing】
+2076 nut /nʌt/ n. 坚果,果仁(胡桃,栗子等　【词根:nutri】
+2077 nutrition /njuːˈtrɪʃ(ə)n/ n. 营养，滋养　【词根:nutri；后缀:-ation/-tion/-ion/-sion】
+2078 nylon /ˈnaɪlɔn/ n. 尼龙　【基础词】
+2079 obey /əʊˈbeɪ/ v. 服从，顺从，听从　【后缀:-y】
+2080 object /ˈɔbdʒɪkt/ n. 物，物体；宾语　【前缀:ob-/oc-/op-；词根:ject】
+2081 observe /əbˈzɜːv/ v. 观察，监视，观测　【前缀:ob-/oc-/op-；词根:serv】
+2082 obtain /əbˈteɪn/ vt. 获得；得到　【前缀:ob-/oc-/op-；词根:tain/ten/tent/tin】
+2083 obvious /ˈɔbvɪəs/ adj. 显然　【基础词】
+2084 occupation /ɔkjʊˈpeɪʃ(ə)n/ n. 职业，工作　【基础词】
+2085 occur /əˈkɜː(r)/ vi. 发生　【前缀:ob-/oc-/op-；词根:cur/curs/cour】
+2086 ocean /ˈəʊʃ(ə)n/ n. 海洋　【基础词】
+2087 October /ɔkˈtəʊbə(r)/ n. 10月　【基础词】
+2088 of /ɔv/ prep. (表所属,数量,) ….的　【基础词】
+2089 off /ˈɔf; (US) ɔːf/ prep. 离开,脱离,（走）开　【基础词】
+2090 offence /əˈfens/ n. 违法行为，犯罪　【后缀:-ance/-ence】
+2091 offer /ˈɔfə(r); (US) ɔːfər/ n. vt. 提供；建议　【后缀:-er/-or】
+2092 office /ˈɔfɪs; (US) ˈɔːfɪs/ n. 办公室　【基础词】
+2093 officer /ˈɔfɪsə(r); (US) ˈɔːfɪsər/ n. 军官;公务员,官员；警察，警官　【后缀:-er/-or】
+2094 official /əˈfɪʃ(ə)l; (US) ˈɔːf-/ n. adj. （公司、团体或政府）官员 ,高级职员 a.官方,政府的　【基础词】
+2095 offshore /ˈɔfʃɔː(r); (US) ˈɔːf-/ adj. 近海的　【基础词】
+2096 often /ˈɔf(ə)n; (US) ˈɔːfn/ adv. 经常，常常　【基础词】
+2097 oh /əʊ/ int. 哦！啊！　【基础词】
+2098 oil /ɔɪl/ n. 油　【基础词】
+2099 oilfield /ˈɔɪlfiːld/ n. 油田　【基础词】
+2100 ok /əʊˈkeɪ/ adv. （口语）好,对,不错　【基础词】
+2101 old /əʊld/ adj. 老的，旧的；Olympic(s　【基础词】
+2102 omelette /ˈɔmlɪt/ n. 煎蛋卷；煎蛋饼　【基础词】
+2103 on /ɔn/ prep. adv. 在…上（时），关于 ad. （穿，放…）上；接通；进行下 去；（电灯）开　【基础词】
+2104 once /wʌns/ n. adv. conj. 一次,一度,从前 conj. 一旦　【基础词】
+2105 one /wʌn/ pron. num. 一（个，只…）(pl. ones) num. 一　【基础词】
+2106 oneself /wʌnˈself/ pron. 自己；自身　【基础词】
+2107 onion /ˈʌnjən/ n. 洋葱；洋葱头　【后缀:-ation/-tion/-ion/-sion】
+2108 only /ˈəʊnlɪ/ adj. adv. 惟一的，仅有的 ad. 仅仅，只，才　【后缀:-ly】
+2109 onto /ˈɔntʊ/ prep. 到…的上面　【基础词】
+2110 open /ˈəʊpən/ adj. vt. 开着的,开的 vt.开,打开　【基础词】
+2111 opener /ˈəʊpənə(r)/ n. 开具，启子　【后缀:-er/-or】
+2112 opening /ˈəʊpənɪŋ/ n. 开放，口子　【后缀:-ing】
+2113 opera /ˈɔpərə/ n. 歌剧　【词根:oper】
+2114 opera house /ˈɔpərə haʊs/ n. 歌剧院,艺术剧院　【词根:oper】
+2115 operate /ˈɔpəreɪt/ v. 做手术，运转；实施，负责, 经营，管理　【词根:oper；后缀:-ate】
+2116 operation /ɔpəˈreɪʃ(ə)n/ n. 手术，操作　【词根:oper；后缀:-ation/-tion/-ion/-sion】
+2117 operator /ˈɔpəreɪtə(r)/ n. 接线员　【词根:oper；后缀:-er/-or】
+2118 opinion /əˈpɪnjən/ n. 看法，见解　【基础词】
+2119 oppose /əˈpəʊz/ vt. 反对；反抗　【前缀:ob-/oc-/op-；词根:pon/pos/posit】
+2120 opposite /ˈɔpəzɪt/ n. adj. 相反，对面 a. 相反的，对面的　【前缀:ob-/oc-/op-；词根:pon/pos/posit】
+2121 optimistic /ɔptɪˈmɪstɪk/ adj. 乐观的　【词根:opt；后缀:-ic/-ical】
+2122 optional /ˈɔpʃən(ə)l/ adj. 可选择的，选修的　【词根:opt；后缀:-al】
+2123 or /ə(r)/ conj. 或；就是；否则　【基础词】
+2124 oral /ˈɔːrəl/ adj. 口述的，口头上的　【后缀:-al】
+2125 orange /ˈɔrɪndʒ; (US) ˈɔːr-/ n. adj. 橘子，橙子，橘汁 a. 橘色的，橙色的　【词根:or/ora】
+2126 orbit /ˈɔːbɪt/ n. （天体等的）运行轨道　【基础词】
+2127 order /ˈɔːdə(r)/ n. 顺序　【词根:ord/ordin；后缀:-er/-or】
+2128 ordinary /ˈɔːdɪnərɪ; (US) ˈɔːrdənerɪ/ adj. 普通的，平常的　【词根:ord/ordin；后缀:-ary】
+2129 organ /ˈɔːɡən/ n. （人，动物）器官；organise(美organize　【基础词】
+2130 organization /ɔːɡənaɪˈzeɪʃ(ə)n/ n. 组织，机构　【基础词】
+2131 origin /ˈɔrɪdʒɪn/ n. 起源，由来　【词根:ori】
+2132 other /ˈʌðə(r)/ pron. adj. 别人，别的东西 a. 别的,另外的　【基础词】
+2133 otherwise /ˈʌðəwaɪz/ adv. 要不然,否则,另样　【后缀:-wise】
+2134 Ottawa /ˈɔtəwə/ n. 渥太华　【基础词】
+2135 ouch /aʊtʃ/ int. （突然受痛时叫声）哎哟　【基础词】
+2136 ought /ɔːt/ v. aux. 应该，应当　【基础词】
+2137 our /ˈaʊə(r)/ pron. 我们的　【基础词】
+2138 ours /ˈaʊəz/ pron. 我们的　【基础词】
+2139 ourselves /aʊəˈselvz/ pron. 我们自己　【基础词】
+2140 out /aʊt/ adv. 出外;在外,向外;熄　【基础词】
+2141 outcome /ˈaʊtkʌm/ n. 结果，效果　【基础词】
+2142 outdoors /aʊtˈdɔːz/ adv. 在户外, 在野外　【基础词】
+2143 outer /ˈaʊtə(r)/ adj. 外部的，外面的　【后缀:-er/-or】
+2144 outgoing /ˈaʊtɡəʊɪŋ/ adj. 爱交际的,外向的　【基础词】
+2145 outing /ˈaʊtɪŋ/ n. 郊游，远足　【后缀:-ing】
+2146 outline /ˈaʊtlaɪn/ n. 概述，略述　【前缀:out-】
+2147 output /ˈaʊtpʊt/ n. 产量，输出量　【基础词】
+2148 outside /aʊtˈsaɪd/ n. adv. prep. 外面 ad. 在外面；向外面 prep. 在…外面　【前缀:out-；词根:sed/sess/sid】
+2149 outspoken /aʊtˈspəʊkən/ adj. 直率，坦诚　【前缀:out-】
+2150 outstanding /aʊtˈstændɪŋ/ adj. 优秀的，杰出的；outward(s　【前缀:out-；词根:st/sta/stat】
+2151 oval /ˈəʊv(ə)l/ n. adj. 椭圆；椭圆形的　【基础词】
+2152 over /ˈəʊvə(r)/ prep. adv. 在…上方,越过,遍及 ad. 翻倒,遍布,越过,结束　【基础词】
+2153 overcoat /ˈəʊvəkəʊt/ n. 大衣　【前缀:over-】
+2154 overcome /əʊvəˈkʌm/ v. 克服，解决　【基础词】
+2155 overhead /əʊvəˈhed/ adj. 在头顶上;架空的　【前缀:over-】
+2156 overlook /əʊvəˈlʊk/ v. 忽略,不予理会　【前缀:over-】
+2157 overweight /əʊvəˈweɪt/ adj. 太胖的,超重的　【前缀:over-】
+2158 owe /əʊ/ vt. 欠（债等　【基础词】
+2159 own /əʊn/ adj. v. 自己的 v. 拥有,所有　【基础词】
+2160 owner /ˈəʊnə(r)/ n. 物主，所有人　【后缀:-er/-or】
+2161 ownership /ˈəʊnəʃɪp/ n. 所有制；ox (复oxen　【后缀:-ship】
+2162 oxygen /ˈɔksɪdʒ(ə)n/ n. 氧；氧气　【基础词】
+2163 pace /peɪs/ n. 步子；节奏　【基础词】
+2164 pacific /pəˈsɪfɪk/ adj. 太平洋的　【词根:paci；后缀:-ic/-ical】
+2165 pack /pæk/ n. v. 包,捆;（猎犬、野兽的）一群 v.(为运输或储存而)打包　【基础词】
+2166 package /ˈpækɪdʒ/ n. （尤指包装好或密封的容器）一包，一袋，一盒　【后缀:-age】
+2167 packet /ˈpækɪt/ n. 小包裹，袋　【后缀:-et】
+2168 paddle /ˈpæd(ə)l/ n. 桨状物，蹼　【基础词】
+2169 page /peɪdʒ/ n. 页，页码　【基础词】
+2170 pain /peɪn/ n. 疼痛，疼　【基础词】
+2171 painful /ˈpeɪnfʊl/ adj. 使痛的，使痛苦的　【后缀:-ful】
+2172 paint /peɪnt/ n. vt. 油漆 vt.油漆,粉刷,绘画　【基础词】
+2173 painter /ˈpeɪntə(r)/ n. 绘画者,（油）画家　【后缀:-er/-or】
+2174 painting /ˈpeɪntɪŋ/ n. 油画，水彩画　【后缀:-ing】
+2175 pair /peə(r)/ n. 一双，一对　【基础词】
+2176 palace /ˈpælɪs/ n. 宫，宫殿　【基础词】
+2177 pale /peɪl/ adj. 苍白的，灰白的　【基础词】
+2178 pan /pæn/ n. 平底锅　【基础词】
+2179 pancake /ˈpænkeɪk/ n. 薄煎饼　【基础词】
+2180 panda /ˈpændə/ n. 熊猫　【基础词】
+2181 panic /ˈpænɪk/ adj. v. / v.惊慌,恐慌,惶恐不安　【后缀:-ic/-ical】
+2182 paper /ˈpeɪpə(r)/ n. 纸；报纸　【基础词】
+2183 paperwork /ˈpeɪpəwɜːk/ n. 日常文书工作　【基础词】
+2184 paragraph /ˈpærəɡrɑːf; (US) ˈpærəgræf/ n. （文章的）段落　【词根:gram/graph】
+2185 parallel /ˈpærəlel/ n. 极其相似的人,纬线　【基础词】
+2186 parcel /ˈpɑːs(ə)l/ n. 包裹　【基础词】
+2187 pardon /ˈpɑːd(ə)n/ n. 原谅,宽恕,对不起　【基础词】
+2188 parent /ˈpeərənt/ n. 父(母)，双亲　【词根:part；后缀:-ant/-ent】
+2189 Paris /ˈpærɪs/ n. 巴黎　【基础词】
+2190 park /ˈpærɪs/ n. 公园　【基础词】
+2191 parking /ˈpɑːkɪŋ/ n. 停车　【后缀:-ing】
+2192 parrot /ˈpærət/ n. 鹦鹉　【基础词】
+2193 part /pɑːt/ n. adj. v. 部分；成分；角色；部件；零件 a. 局部的；部分的 v. 分离；分开；分割　【词根:part】
+2194 participate /pɑːˈtɪsɪpeɪt/ v. 参加，参与　【词根:part；后缀:-ate】
+2195 particular /pəˈtɪkjʊlə(r)/ adj. 特殊的，个别的　【词根:part；后缀:-ar】
+2196 partly /ˈpɑːtlɪ/ adv. 部分地,在一定程度上　【词根:part；后缀:-ly】
+2197 partner /ˈpɑːtnə(r)/ n. 搭档，合作者　【词根:part；后缀:-er/-or】
+2198 party /ˈpɑːtɪ/ n. 聚会，晚会；党派　【词根:part；后缀:-ity/-ty】
+2199 pass /pɑːs; (US) pæs/ vt. 传，递；经过；通过　【词根:pass】
+2200 passage /ˈpæsɪdʒ/ n. （文章等的）一节，一段；通道；走廊　【词根:pass；后缀:-age】
+2201 passenger /ˈpæsɪndʒə(r)/ n. 乘客，旅客　【词根:pass；后缀:-er/-or】
+2202 passive /ˈpæsɪv/ adj. 被动的　【词根:pass；后缀:-ive】
+2203 passport /ˈpɑːspɔːt; (US) ˈpæ-/ n. 护照　【词根:pass】
+2204 past /pɑːst; (US) pæst/ adv. n. prep. 过 n.过去，昔日，往事 prep. 过…，走过某处　【基础词】
+2205 patent /ˈpeɪt(ə)nt; (US) ˈpætnt/ n. 专利权，专利证书　【词根:path/pat；后缀:-ant/-ent】
+2206 path /pɑːθ; (US) pæθ/ n. 小道，小径　【后缀:-th】
+2207 patience /ˈpeɪʃns/ n. 容忍；耐心　【词根:path/pat；后缀:-ance/-ence】
+2208 patient /ˈpeɪʃ(ə)nt/ n. 病人　【词根:path/pat；后缀:-ant/-ent】
+2209 pattern /ˈpæt(ə)n/ n. 式样　【词根:path/pat；后缀:-ern】
+2210 pause /pɔːz/ n. vi. 中止，暂停；停止　【基础词】
+2211 pay /peɪ/ v. n. (paid, paid) v. 付钱，给…报酬 n. 工资；P.E.(缩) =physical education　【后缀:-y】
+2212 pea /piː/ n. 豌豆　【基础词】
+2213 peace /piːs/ n. 和平　【基础词】
+2214 peaceful /ˈpiːsfʊl/ adj. 和平的，安宁的　【后缀:-ful】
+2215 peach /piːtʃ/ n. 桃子　【基础词】
+2216 pear /peə(r)/ n. 梨子，梨树　【基础词】
+2217 peasant /ˈpezənt/ n. 农民；佃农　【基础词】
+2218 pedestrian /pɪˈdestrɪən/ n. 步行者，行人　【基础词】
+2219 pen /pen/ n. 钢笔，笔　【词根:pen/pun】
+2220 pencil /ˈpens(ə)l/ n. 铅笔　【词根:pen/pun】
+2221 penny /ˈpenɪ/ n. (英复pence) n. （英）便士；美分　【词根:pen/pun；后缀:-y】
+2222 pension /ˈpenʃ(ə)n/ n. 养老金　【词根:pen/pun；后缀:-ation/-tion/-ion/-sion】
+2223 people /ˈpiːp(ə)l/ n. 人，人们；人民　【基础词】
+2224 pepper /ˈpepə(r)/ n. 胡椒粉　【基础词】
+2225 per /pə(r)/ prep. 每，每一　【基础词】
+2226 percent /pəˈsent/ n. 百分之……　【前缀:per-；词根:cent】
+2227 percentage /pəˈsentədʒ/ n. 百分率　【前缀:per-；词根:cent；后缀:-age】
+2228 perfect /kwestʃəˈneə(r)/ adj. 完美的，极好的　【前缀:per-；词根:fac/fact/fect/fic】
+2229 perform /pəˈfɔːm/ v. 表演，履行；行动　【前缀:per-；词根:form】
+2230 performance /pəˈfɔːm/ n. 演出，表演　【前缀:per-；词根:form；后缀:-ance/-ence】
+2231 performer /pəˈfɔːmə(r)/ n. 表演者，执行者　【前缀:per-；词根:form；后缀:-er/-or】
+2232 perfume /ˈpɜːfjuːm/ n. 香水　【基础词】
+2233 perhaps /pəˈhæps/ adv. 可能，或　【前缀:per-；词根:hap】
+2234 period /ˈpɪərɪəd/ n. 时期，时代　【基础词】
+2235 permanent /ˈpɜːmənənt/ adj. 永久的，永恒的　【前缀:per-；词根:man/manu】
+2236 permission /pəˈmɪʃ(ə)n/ n. 允许,许可,同意　【前缀:per-；词根:miss/mit；后缀:-ation/-tion/-ion/-sion】
+2237 permit /pəˈmɪt/ vt. n. 许可,允许;执照 n.许可证　【前缀:per-；词根:miss/mit】
+2238 person /ˈpɜːs(ə)n/ n. 人　【前缀:per-；词根:son】
+2239 personal /ˈpɜːsən(ə)l/ adj. 个人的，私人的　【前缀:per-；词根:son；后缀:-al】
+2240 personnel /pɜːsəˈnel/ n. 全体人员，职员　【前缀:per-；词根:son】
+2241 personally /ˈpɜːsənəlɪ/ adv. 就自己而言　【前缀:per-；词根:son；后缀:-ly】
+2242 persuade /ˈpɜːsənəlɪ/ vt. 说服，劝说　【前缀:per-；词根:suad/suas】
+2243 pest /pest/ n. 害虫　【基础词】
+2244 pet /pet/ n. 宠物，爱畜　【词根:pet】
+2245 petrol /ˈpetr(ə)l/ n. 石油；phenomenon (pl. phenomena　【词根:pet】
+2246 photograph /ˈfəʊtəɡrɑːf; (US) -ɡræf/ n. 照片　【词根:gram/graph】
+2247 photographer /fəˈtɔɡrəfə(r)/ n. 摄影师　【词根:gram/graph；后缀:-er/-or】
+2248 phrase /freɪz/ n. 短语；习惯用语　【基础词】
+2249 physical /ˈfɪzɪk(ə)l/ adj. 身体的；物理的　【基础词】
+2250 physician /fɪˈzɪʃ(ə)n/ n. (有行医执照的)医生　【基础词】
+2251 physicist /ˈfɪzɪsɪst/ n. 物理学家　【基础词】
+2252 physics /ˈfɪzɪks/ n. 物理（学　【基础词】
+2253 pianist /ˈfɪzɪks/ n. 钢琴家　【基础词】
+2254 piano /pɪˈænəʊ/ n. 钢琴　【基础词】
+2255 pick /pɪk/ v. 拾起，采集；挑选　【基础词】
+2256 picnic /ˈpɪknɪk/ n. v. 野餐　【基础词】
+2257 picture /ˈpɪktʃə(r)/ n. 图片，画片，照片　【词根:pict；后缀:-ure】
+2258 pie /paɪ/ n. 甜馅饼　【基础词】
+2259 piece /paɪ/ n. 一块（片，张，件…　【基础词】
+2260 pig /paɪ/ n. 猪　【基础词】
+2261 pile /paɪ/ n. 堆　【基础词】
+2262 pill /pɪl/ n. 药丸，药片　【基础词】
+2263 pillow /pɪl/ n. 枕头　【基础词】
+2264 pilot /ˈpaɪlət/ n. 飞行员　【基础词】
+2265 pin /pɪn/ n. v. 别针 v. 别住, 钉住　【基础词】
+2266 pine /paɪn/ n. 松树　【基础词】
+2267 pineapple /ˈpaɪnæp(ə)l/ n. 菠萝　【基础词】
+2268 pink /piŋk/ adj. 粉红色的　【基础词】
+2269 pint /paɪnt/ n. （液量单位）品脱　【基础词】
+2270 pioneer /paɪəˈnɪə(r)/ n. 先锋，开拓者　【基础词】
+2271 pipe /paɪp/ n. 管子，输送管　【基础词】
+2272 pity /ˈpɪtɪ/ n. 怜悯，同情　【后缀:-ity/-ty】
+2273 place /pleɪs/ n. v. 地方，处所 v. 放置，安置，安排　【词根:plac/pleas】
+2274 plain /pleɪn/ adj. 家常的； 普通的　【基础词】
+2275 plan /plæn/ n. v. 计划，打算　【词根:plant】
+2276 plane /pleɪn/ n. 飞机　【基础词】
+2277 planet /ˈplænɪt/ n. 行星　【词根:plant；后缀:-et】
+2278 plant /plɑːnt; (US) ˈplænt/ vt. n. 种植，播种 n. 植物　【词根:plant】
+2279 plastic /ˈplæstɪk/ adj. 塑料的　【基础词】
+2280 plate /pleɪt/ n. 板；片；牌；盘子；盆子　【基础词】
+2281 platform /ˈplætfɔːm/ n. 讲台,(车站的)月台　【词根:form】
+2282 play /pleɪ/ v. n. 玩；打（球）；游戏；播放 n. 玩耍，戏剧　【词根:plac/pleas；后缀:-y】
+2283 playroom /ˈpleɪruːm/ n. 游戏室　【基础词】
+2284 player /ˈpleɪə(r)/ n. 比赛者，选手　【后缀:-er/-or】
+2285 playground /ˈpleɪgraʊnd/ n. 操场，运动场　【基础词】
+2286 playmate /ˈpleɪmeɪt/ n. 玩伴　【基础词】
+2287 pleasant /ˈplezənt/ adj. 令人愉快的，舒适的　【词根:lax/leas；后缀:-ant/-ent】
+2288 please /pliːz/ v. 请,使人高兴,使人满意　【词根:lax/leas】
+2289 pleased /pliːzd/ adj. 高兴的　【词根:lax/leas；后缀:-ed】
+2290 pleasure /pliːzd/ n. 高兴，愉快　【词根:lax/leas；后缀:-ure】
+2291 plenty /pliːzd/ n. 充足，大量　【词根:ple/plet/pli；后缀:-ity/-ty】
+2292 plot /plɔt/ v. n. / n. 故事情节，密谋　【基础词】
+2293 plug /plʌɡ/ n. vt. 塞子 vt.（用塞子）把…塞住　【基础词】
+2294 plus /plʌs/ prep. 加，加上；p.m./pm, P.M. /PM　【基础词】
+2295 pocket /ˈpɔkɪt/ n. （衣服的）口袋　【基础词】
+2296 poem /ˈpəʊɪm/ n. 诗　【基础词】
+2297 poet /ˈpəʊɪt/ n. 诗人　【基础词】
+2298 point /pɔɪnt/ v. n. 指，指向 n. 点；分数　【词根:point/punct】
+2299 poison /ˈpɔɪz(ə)n/ n. 毒药　【基础词】
+2300 poisonous /ˈpɔɪzənəs/ adj. 有毒的，致命的　【后缀:-ous】
+2301 pole /pəʊl/ n. 杆，电线杆；；the North (South) Pole　【词根:pol/polis】
+2302 police /pəˈliːs/ n. 警察，警务人员；policeman (复-men　【词根:pol/polis】
+2303 policy /ˈpɔlɪsɪ/ n. 政策，方针，原则　【词根:pol/polis；后缀:-cy】
+2304 polish /ˈpɔlɪsɪ/ v. n. 擦亮 n.擦光剂,亮光剂　【词根:pol/polis；后缀:-ish】
+2305 polite /pəˈlaɪt/ adj. 有礼貌的,有教养的　【词根:pol/polis】
+2306 political /pəˈlɪtɪk(ə)l/ adj. 政治的　【词根:pol/polis；后缀:-ic/-ical】
+2307 politician /pɔlɪˈtɪʃ(ə)n/ n. 政治家　【词根:pol/polis；后缀:-ian】
+2308 politics /ˈpɔlɪtɪks/ n. 政治　【词根:pol/polis】
+2309 pollute /pəˈluːt/ vt. 污染　【词根:pol/polis】
+2310 pollution /pəˈluːʃ(ə)n/ n. 污染　【词根:pol/polis；后缀:-ation/-tion/-ion/-sion】
+2311 pond /pɔnd/ n. 池塘　【词根:pon/pos/posit】
+2312 pool /puːl/ n. 水塘，水池　【基础词】
+2313 poor /pʊə(r)/ adj. 贫穷；可怜；不好的,差的　【基础词】
+2314 popcorn /ˈpɔpkɔːn/ n. 爆米花　【基础词】
+2315 popular /ˈpɔpjʊlə(r)/ adj. 流行,大众,受欢迎的　【词根:popul；后缀:-ar】
+2316 population /pɔpjʊˈleɪʃ(ə)n/ n. 人口，人数　【词根:popul；后缀:-ation/-tion/-ion/-sion】
+2317 pork /pɔːk/ n. 猪肉　【基础词】
+2318 porridge /ˈpɔrɪdʒ; (US) ˈpɔːrɪdʒ/ n. 稀饭，粥　【基础词】
+2319 port /pɔːt/ n. 港口，码头　【词根:port】
+2320 portable /ˈpɔːtəb(ə)l/ adj. 手提的，便携式的　【词根:port；后缀:-able/-ible】
+2321 porter /ˈpɔːtə(r)/ n. （火车站或旅馆处的）搬运工　【词根:port；后缀:-er/-or】
+2322 position /pəˈzɪʃ(ə)n/ n. 位置　【词根:pon/pos/posit；后缀:-ation/-tion/-ion/-sion】
+2323 possess /pəˈzɪʃ(ə)n/ vt. 占有；拥有　【词根:pon/pos/posit；后缀:-ess】
+2324 possession /pəˈzeʃ(ə)n/ n. 所有，拥有；财产，所有物　【词根:pon/pos/posit；后缀:-ation/-tion/-ion/-sion】
+2325 possibility /pɔsɪˈbɪlɪtɪ/ n. 可能，可能性　【词根:pon/pos/posit；后缀:-ity/-ty】
+2326 possible /ˈpɔsɪb(ə)l/ adj. 可能的　【词根:pon/pos/posit；后缀:-able/-ible】
+2327 possibly /ˈpɒsəbli/ adv. 可能地，也许　【词根:pon/pos/posit；后缀:-ly】
+2328 post /pəʊst/ n. v. 邮政，邮寄，邮件 v. 投寄； 邮寄　【词根:pon/pos/posit】
+2329 postage /ˈpəʊstɪdʒ/ n. 邮费　【词根:pon/pos/posit；后缀:-age】
+2330 postbox /ˈpəʊstbɔks/ n. 邮箱　【前缀:post-】
+2331 postcard /ˈpəʊstkɑːd/ n. 明信片　【前缀:post-；词根:card/cord】
+2332 postcode /ˈpəʊstkəʊd/ n. （英）邮政编码　【词根:pon/pos/posit】
+2333 poster /ˈpəʊstə(r)/ n. (贴在公共场所的大型)招贴；广告(画　【词根:pon/pos/posit；后缀:-er/-or】
+2334 postman /ˈpəʊstmən/ n. 邮递员　【前缀:post-；词根:man/manu】
+2335 postpone /pəʊstˈpəʊn/ vt. 推迟，延期　【前缀:post-；词根:pon/pos/posit】
+2336 pot /pɔt/ n. 锅，壶，瓶，罐　【词根:poss/pot】
+2337 potato /pəˈteɪtəʊ/ n. 土豆，马铃薯　【词根:poss/pot】
+2338 potential /pəˈtenʃ(ə)l/ adj. 潜在的，可能的　【词根:poss/pot；后缀:-al】
+2339 pound /pəˈtenʃ(ə)l/ n. 磅；英镑　【基础词】
+2340 pour /pɔː(r)/ vi. 倾泻，不断流出　【基础词】
+2341 powder /ˈpaʊdə(r)/ n. 粉，粉末　【基础词】
+2342 power /ˈpaʊdə(r)/ n. 力，动力，电力　【基础词】
+2343 powerful /ˈpaʊəfʊl/ adj. 效力大的，强有力的，强大的　【后缀:-ful】
+2344 practical /ˈpræktɪk(ə)l/ adj. 实际的，适用的；practice(s)e　【基础词】
+2345 prairie /ˈpreərɪ/ n. 大草原　【基础词】
+2346 praise /preɪz/ n. vt. n.& vt.赞扬，表扬　【后缀:-ize/-ise】
+2347 pray /preɪ/ v. 祈祷；祈求　【后缀:-y】
+2348 prayer /preə(r)/ n. 祈祷　【后缀:-er/-or】
+2349 precious /ˈpreʃəs/ adj. 宝贵的, 珍贵的　【词根:preci；后缀:-ous】
+2350 precise /prɪˈsaɪs/ adj. 准确,精确的,确切的　【词根:preci；后缀:-ize/-ise】
+2351 predict /prɪˈdɪkt/ v. 预言，预告，预报　【前缀:pre-；词根:dic/dict】
+2352 prefer /prɪˈfɜː(r)/ vt. 宁愿（选择）,更喜欢　【前缀:pre-；词根:fer】
+2353 preference /ˈprefərəns/ n. 选择，趋向　【前缀:pre-；词根:fer；后缀:-ance/-ence】
+2354 pregnant /ˈpreɡnənt/ adj. 怀孕的　【基础词】
+2355 prejudice /ˈpredʒʊdɪs/ n. 偏见，成见　【前缀:pre-；词根:jud/jur/jus】
+2356 premier /ˈpremɪə(r); (US) priːˈmɪər/ n. 首相，总理　【基础词】
+2357 preparation /prepəˈreɪʃ(ə)n/ n. 准备　【后缀:-ation/-tion/-ion/-sion】
+2358 prepare /prɪˈpeə(r)/ vt. 准备,预备,调制,配制　【基础词】
+2359 prescription /prɪˈskrɪpʃ(ə)n/ n. 处方，药方　【基础词】
+2360 present /ˈprez(ə)nt/ adj. n. vt. 出现的，出席的 n. 礼物，赠品 vt. 呈奉，奉送　【词根:press；后缀:-ant/-ent】
+2361 presentation /prezənˈteɪʃ(ə)n; (US) priːzenˈteʃn/ n. 演示，演出　【前缀:pre-；词根:sen；后缀:-ation/-tion/-ion/-sion】
+2362 preserve /prezənˈteɪʃ(ə)n; (US) priːzenˈteʃn/ v. 保护，保留，保存　【前缀:pre-；词根:serv】
+2363 president /ˈprezɪdənt/ n. 总统；主席　【前缀:pre-；词根:sed/sess/sid】
+2364 press /ˈprezɪdənt/ vt. n. 压,按 n.新闻界,出版社　【词根:press】
+2365 pressure /ˈpreʃə(r)/ n. 压迫,压力,压强　【词根:press；后缀:-ure】
+2366 pretend /ˈpreʃə(r)/ vi. 假装，装作　【前缀:pre-；词根:tain/ten/tent/tin】
+2367 pretty /ˈprɪtɪ/ adj. 漂亮的，俊俏的　【后缀:-y】
+2368 prevent /prɪˈvent/ vt. 防止, 预防　【前缀:pre-；词根:ven/vent】
+2369 preview /ˈpriːvjuː/ vt. 预习;试演;预展　【前缀:pre-】
+2370 price /praɪs/ n. 价格，价钱　【基础词】
+2371 pride /praɪd/ n. 自豪，骄傲　【基础词】
+2372 primary /ˈpraɪmərɪ/ adj. 初等的；初级的　【词根:prim；后缀:-ary】
+2373 primary school /ˈpraɪmərɪ skuːl/ n. 小学　【词根:prim】
+2374 primitive /ˈprɪmɪtɪv/ adj. 原始的，远古的　【词根:prim；后缀:-ive】
+2375 principle /ˈprɪnsɪp(ə)l/ n. 道德原则，法则　【基础词】
+2376 print /prɪnt/ vt. 印刷　【基础词】
+2377 printer /ˈprɪntə(r)/ n. 打印机　【后缀:-er/-or】
+2378 printing /ˈprɪntɪŋ/ n. 印刷，印刷术　【后缀:-ing】
+2379 prison /ˈprɪz(ə)n/ n. 监狱　【词根:pris】
+2380 prisoner /ˈprɪznə(r)/ n. 囚犯　【词根:pris；后缀:-er/-or】
+2381 private /ˈpraɪvɪt/ adj. 私人的　【词根:priv；后缀:-ate】
+2382 privilege /ˈprɪvɪlɪdʒ/ n. 特权，特殊待遇　【词根:priv】
+2383 prize /praɪz/ n. 奖赏，奖品　【基础词】
+2384 probable /ˈprɔbəb(ə)l/ adj. 很可能,很有希望的　【词根:prob/prov；后缀:-able/-ible】
+2385 probably /ˈprɔbəb(ə)lɪ/ adv. 很可能，大概　【词根:prob/prov；后缀:-ly】
+2386 problem /ˈprɔbləm/ n. 问题，难题　【词根:prob/prov】
+2387 procedure /prəˈsiːdʒə(r)/ n. 程序,手续,待遇　【前缀:pro-；词根:ced/ceed/cess】
+2388 process /ˈprəʊses; (US) ˈprɔses/ n. v. / v. 过程,加工,处理　【前缀:pro-；词根:ced/ceed/cess】
+2389 produce /prəˈdjuːs; (US) -ˈduːs/ vt. 生产；制造　【前缀:pro-；词根:duc/duct】
+2390 product /ˈprɔdʌkt/ n. 产品，制品　【前缀:pro-；词根:duc/duct】
+2391 production /prəˈdʌkʃ(ə)n/ n. 生产；制造　【前缀:pro-；词根:duc/duct；后缀:-ation/-tion/-ion/-sion】
+2392 profession /prəˈfeʃ(ə)n/ n. （需要有高等教育学位的）职业（如医生或律师　【基础词】
+2393 professor /prəˈfesə(r)/ n. 教授　【基础词】
+2394 profit /ˈprɔfɪt/ n. 利润，收益；programme (美program　【前缀:pro-】
+2395 progress /ˈprəʊɡres; (US) ˈprɔɡres/ n. vi. 进步,上进vi.进展,进行　【前缀:pro-；词根:grad/gress】
+2396 prohibit /prəˈhɪbɪt/ v. 禁止　【基础词】
+2397 project /ˈprɔdʒekt/ n. 工程　【前缀:pro-；词根:ject】
+2398 promise /ˈprɔmɪs/ n. vi. 答应，允诺　【基础词】
+2399 promote /prəˈməʊt/ v. 促进,推动,促销,晋升　【前缀:pro-；词根:mob/mot/mov】
+2400 pronounce /prəˈnaʊns/ vt. 发音　【前缀:pro-；词根:nounce/nunci】
+2401 pronunciation /prənʌnsɪˈeɪʃ(ə)n/ n. 发音　【前缀:pro-；词根:nounce/nunci；后缀:-ation/-tion/-ion/-sion】
+2402 proper /ˈprɔpə(r)/ adj. 恰当的，合适的　【词根:proper/propri；后缀:-er/-or】
+2403 properly /ˈprɔpəlɪ/ adv. 适当地　【前缀:pro-；后缀:-ly】
+2404 protect /prəˈtekt/ vt. 保护　【前缀:pro-；词根:tect】
+2405 protection /prəˈtekʃ(ə)n/ n. 保护　【前缀:pro-；词根:tect；后缀:-ation/-tion/-ion/-sion】
+2406 proud /praʊd/ adj. 自豪的；骄傲的　【基础词】
+2407 prove /pruːv/ vt. 证明　【词根:prob/prov】
+2408 provide /prəˈvaɪd/ vt. 提供　【前缀:pro-；词根:vid/vis】
+2409 province /ˈprɔvɪns/ n. 省　【前缀:pro-；词根:vict/vinc】
+2410 psychology /saɪˈkɔlədʒɪ/ n. 心理学　【词根:psych；后缀:-y】
+2411 pub /pʌb/ n. 酒店，酒吧　【基础词】
+2412 public /ˈpʌblɪk/ adj. n. 公共,公众的 n. 公众　【基础词】
+2413 publicly /ˈpʌblɪklɪ/ adv. 当众；公开地　【后缀:-ly】
+2414 publish /ˈpʌblɪʃ/ vt. 出版，发行　【基础词】
+2415 pull /pʊl/ n. 拉，拖 n. 拉力，引力　【基础词】
+2416 pulse /pʌls/ n. 脉搏，（光、能量、波等的）脉动，搏动　【词根:pel/puls】
+2417 pump /ˈpʌmp/ vt. 用泵抽水　【基础词】
+2418 punctual /ˈpʌŋktjʊəl/ adj. 准时的　【词根:pen/pun；后缀:-al】
+2419 punctuate /ˈpʌŋktjʊeɪt/ v. 加标点　【词根:pen/pun；后缀:-ate】
+2420 punctuation /ˌpʌŋktʃuˈeɪʃn/ n. 标点符号　【词根:pen/pun；后缀:-ation/-tion/-ion/-sion】
+2421 punish /ˈpʌnɪʃ/ v. 惩罚，处罚　【词根:pen/pun；后缀:-ish】
+2422 punishment /ˈpʌnɪʃmənt/ n. 惩罚　【词根:pen/pun；后缀:-ment】
+2423 pupil /ˈpjuːpɪl/ n. （小）学生　【基础词】
+2424 purchase /ˈpɜːtʃəs/ v. 购买，采购　【词根:pur】
+2425 pure /pjʊə(r)/ adj. 纯的, 不掺杂的　【词根:pur】
+2426 purple /ˈpɜːp(ə)l/ n. adj. / a. 紫色　【词根:pur】
+2427 purpose /ˈpɜːpəs/ n. 目的，意图　【词根:pur】
+2428 purse /pɜːs/ n. 钱包　【词根:pur】
+2429 push /pʊʃ/ n. v. 推；put (put, put　【基础词】
+2430 puzzle /ˈpʌz(ə)l/ n. 难题,（字、画）谜　【基础词】
+2431 puzzled /ˈpʌz(ə)l/ adj. 迷惑的，困惑的　【后缀:-ed】
+2432 pyramid /ˈpɪrəmɪd/ n. 角锥形，金字塔　【基础词】
+2433 quake /kweɪk/ n. v. 震动，颤抖　【基础词】
+2434 qualification /kwɔlɪfɪˈkeɪʃ(ə)n/ n. 资格，学历　【基础词】
+2435 quality /ˈkwɔlɪtɪ/ n. 质量，性质　【基础词】
+2436 quantity /ˈkwɔntətɪ/ n. 量，数　【基础词】
+2437 quarrel /ˈkwɔrəl; (US) ˈkwɔːrəl/ vi. 争吵，吵架　【基础词】
+2438 quarter /ˈkwɔːtə(r)/ n. 四分之一，一刻钟　【基础词】
+2439 queen /kwiːn/ n. 皇后，女王　【词根:quest/quir/quis；后缀:-en】
+2440 question /ˈkwestʃ(ə)n/ vt. n. 询问 n. 问题　【词根:quest/quir/quis；后缀:-ation/-tion/-ion/-sion】
+2441 questionnaire /kwestʃəˈneə(r)/ n. 调查表，问卷　【词根:quest/quir/quis】
+2442 queue /kjuː/ n. 行列，长队　【基础词】
+2443 quick /kwɪk/ adj. adv. 快；敏捷的；急剧的 ad. 快地；敏捷地；急剧地　【词根:quiet/qui】
+2444 quiet /ˈkwaɪət/ adj. 安静的；寂静的　【词根:quest/quir/quis；后缀:-et】
+2445 quilt /kwɪlt/ n. 被子；被状物　【词根:quiet/qui】
+2446 quit /kwɪt/ v. 离任，离校，戒掉　【词根:quiet/qui】
+2447 quite /kwaɪt/ adv. 完全，十分　【词根:quiet/qui】
+2448 quiz /kwɪz/ n. 测验，小型考试　【词根:quiet/qui】
+2449 rabbit /ˈræbɪt/ n. 兔，家兔　【基础词】
+2450 race /reɪs/ n. v. 种族，民族 v. （速度）竞赛，比赛 n. 赛跑，竞赛　【基础词】
+2451 racial /ˈreɪʃ(ə)l/ adj. 种族的　【基础词】
+2452 radiation /reɪdɪˈeɪʃ(ə)n/ n. 放射，放射物　【词根:radi；后缀:-ation/-tion/-ion/-sion】
+2453 radio /reɪdɪəʊ/ n. 无线电，收音机　【词根:radi】
+2454 radioactive /reɪdɪəʊˈæktɪv/ adj. 放射性的　【词根:radi；后缀:-ive】
+2455 radium /ˈreɪdɪəm/ n. 镭　【词根:radi】
+2456 rag /ræɡ/ n. 破布，抹布　【基础词】
+2457 rail /reɪl/ n. 铁路　【基础词】
+2458 railway /ˈreɪlweɪ/ n. 铁路；铁道　【后缀:-y】
+2459 rain /reɪn/ n. vi. 雨，雨水 vi. 下雨　【基础词】
+2460 rainbow /ˈreɪnbəʊ/ n. 虹，彩虹　【基础词】
+2461 raincoat /ˈreɪnkəʊt/ n. 雨衣　【基础词】
+2462 rainfall /ˈreɪnfɔːl/ n. 一场雨； 降雨量　【基础词】
+2463 rainy /ˈreɪnɪ/ adj. 下雨的；多雨的　【后缀:-y】
+2464 raise /reɪz/ vt. 使升高； 饲养　【后缀:-ize/-ise】
+2465 random /ˈrændəm/ adj. 随意,未经事先考虑的　【基础词】
+2466 range /reɪndʒ/ n. v. / v. 变化，变动，排序　【基础词】
+2467 rank /ræŋk/ n. 职衔，军衔　【基础词】
+2468 rapid /ˈræpɪd/ adj. 快的，迅速的　【基础词】
+2469 rare /reə(r)/ adj. 罕见的，稀有的　【基础词】
+2470 rat /ræt/ n. 老鼠　【词根:rat】
+2471 rate /reɪt/ n. v. / v. 率，评估，评价　【词根:rat】
+2472 rather /ˈrɑːðə; (US) ˈræðər/ adv. 相当，宁可　【词根:rat；后缀:-er/-or】
+2473 raw /rɔː/ adj. 生的,未煮过的,未加工的　【基础词】
+2474 raw material /rɔː məˈtɪərɪəl/ n. 原料　【词根:mat/mater；后缀:-al】
+2475 ray /reɪ/ n. 光辉，光线　【后缀:-y】
+2476 razor /ˈreɪzə(r)/ n. 剃须刀　【基础词】
+2477 reach /riːtʃ/ v. 到达，伸手(脚)够到　【基础词】
+2478 react /riːˈækt/ v. 回应，过敏，起物理，化学反应；read (read, read　【前缀:re-；词根:ag/act】
+2479 reading /ʃɜːt/ n. 阅读；朗读　【后缀:-ing】
+2480 ready /ˈredɪ/ adj. 准备好的　【后缀:-y】
+2481 real /riːl/ adj. 真实的，确实的　【基础词】
+2482 reality /rɪˈælɪtɪ/ n. 现实；realise (美realize　【后缀:-ity/-ty】
+2483 really /ˈrɪəlɪ/ adv. 真正地；到底；确实　【后缀:-ly】
+2484 reason /ˈriːz(ə)n/ vi. n. 评理,劝说n.理由,原因　【基础词】
+2485 reasonable /ˈriːzənəb(ə)l/ adj. 合乎情理的　【后缀:-able/-ible】
+2486 rebuild /riːˈbɪld/ vt. 重建　【基础词】
+2487 receipt /rɪˈsiːt/ n. 收据　【基础词】
+2488 receive /rɪˈsiːv/ v. 收到，得到　【前缀:re-；词根:cap/cept/ceive/cip】
+2489 receiver /rɪˈsiːvə(r)/ n. 电话听筒　【前缀:re-；词根:cap/cept/ceive/cip；后缀:-er/-or】
+2490 recent /ˈriːsənt/ adj. 近来的，最近的　【词根:rect；后缀:-ant/-ent】
+2491 reception /rɪˈsepʃ(ə)n/ n. 接待　【前缀:re-；词根:cap/cept/ceive/cip；后缀:-ation/-tion/-ion/-sion】
+2492 receptionist /rɪˈsepʃənɪst/ n. 接待员　【前缀:re-；词根:cap/cept/ceive/cip；后缀:-ist】
+2493 recipe /ˈresɪpɪ/ n. 烹饪法，食谱　【前缀:re-；词根:cap/cept/ceive/cip】
+2494 recite /rɪˈsaɪt/ v. 背诵；recognise (美recognize　【前缀:re-；词根:cit】
+2495 recommend /rekəˈmend/ v. 推荐　【基础词】
+2496 record /ˈrekɔːd; (US) ˈrekərd/ n. 记录；唱片　【前缀:re-；词根:card/cord】
+2497 record holder /ˈrekɔːd ˈhəʊldə(r)/ n. 记录保持者　【前缀:re-；词根:card/cord；后缀:-er/-or】
+2498 recorder /rɪˈkɔːdə(r)/ n. 录音机　【前缀:re-；词根:card/cord；后缀:-er/-or】
+2499 recover /rɪˈkʌvə(r)/ vi. 痊愈；恢复　【前缀:re-】
+2500 recreation /rekrɪˈeɪʃ(ə)n/ n. 娱乐，消遣　【前缀:re-；词根:cre/creas/cresc】
+2501 recycle /riːˈsaɪk(ə)l/ vt. 回收；再循环　【前缀:re-；词根:circ/cycl】
+2502 rectangle /ˈrektæŋɡ(ə)l/ n. adj. 长方形,长方形的　【前缀:re-；词根:tact/tang/tag】
+2503 red /red/ n. adj. 红色 a.红色的　【基础词】
+2504 redirect /riːdaɪˈrekt/ vt. 使改变，使转移　【前缀:re-；词根:rect】
+2505 reduce /rɪˈdjuːs; (US) -ˈduːs/ vt. 减少，缩减　【前缀:re-；词根:duc/duct】
+2506 refer /rɪˈfɜː(r)/ vi. 谈到,提到,涉及,有关　【前缀:re-；词根:fer】
+2507 referee /refəˈriː/ n. 裁判，仲裁，调解员　【前缀:re-；词根:fer；后缀:-ee】
+2508 reference /ˈref(ə)rəns/ n. 提到,涉及,谈及,查询　【前缀:re-；词根:fer；后缀:-ance/-ence】
+2509 reflect /rɪˈflekt/ v. 反映，反射　【前缀:re-；词根:flect/flex】
+2510 reform /rɪˈfɔːm/ v. n. / n. 改革，改进，改良　【前缀:re-；词根:form】
+2511 refresh /rɪˈfreʃ/ v. 使恢复精力，提醒　【前缀:re-】
+2512 refreshments /rɪˈfreʃmənt/ n. 点心，便餐；(会议后的)简单茶点招待　【前缀:re-；词根:ment】
+2513 refrigerator /rɪˈfrɪdʒəreɪtə(r)/ n. 冰箱　【基础词】
+2514 refusal /rɪˈfjuːz(ə)l/ n. 拒绝　【前缀:re-；词根:fus；后缀:-al】
+2515 refuse /rɪˈfjuːz/ vi. 拒绝，不愿　【前缀:re-；词根:fus】
+2516 regard /rɪˈɡɑːd/ v. 把……看作　【基础词】
+2517 regards /rɪˈɡɑːd/ n. 问候，致意　【基础词】
+2518 regardless /rɪˈɡɑːdlɪs/ adj. 不顾，不加理会　【后缀:-less】
+2519 register /ˈredʒɪstə(r)/ n. v. 登记簿，花名册，注册员 v. 登记，注册　【基础词】
+2520 regret /rɪˈɡret/ n. vt. / vt.可惜,遗憾;痛惜;哀悼　【基础词】
+2521 regular /ˈreɡjʊlə(r)/ adj. 规则的，经常　【基础词】
+2522 regulation /reɡjʊˈleɪʃ(ə)n/ n. 规则，规章　【基础词】
+2523 reject /rɪˈdʒekt/ v. 拒绝　【前缀:re-；词根:ject】
+2524 relate /rɪˈleɪt/ vi. 有关； 涉及　【后缀:-ate】
+2525 relation /rɪˈleɪʃ(ə)n/ n. 关系； 亲属　【后缀:-ation/-tion/-ion/-sion】
+2526 relationship /rɪˈleɪʃənʃɪp/ n. 关系　【前缀:re-；词根:lat；后缀:-ship】
+2527 relative /ˈrelətɪv/ n. 亲属，亲戚　【前缀:re-；词根:lat；后缀:-ive】
+2528 relax /rɪˈlæks/ v. （使）放松，轻松　【前缀:re-；词根:lax/leas】
+2529 relay /ˈriːleɪ/ n. v. 接力，接替人，中转 v. 接替，补充；转运　【后缀:-y】
+2530 relevant /ˈreləvənt/ adj. 紧密相关,有意义的　【基础词】
+2531 reliable /rɪˈlaɪəb(ə)l/ adj. 可信赖的，可依靠的　【基础词】
+2532 relief /rɪˈliːf/ n. 轻松,解脱,缓和,救济　【基础词】
+2533 religion /rɪˈlɪdʒən/ n. 宗教　【前缀:re-；词根:lect/leg/lig】
+2534 religious /rɪˈlɪdʒəs/ adj. 宗教的　【前缀:re-；词根:lect/leg/lig】
+2535 rely /rɪˈlaɪ/ v. 依赖，依靠　【后缀:-y】
+2536 remain /rɪˈmeɪn/ vt. vi. 余下,留下vi.保持,仍是　【前缀:re-】
+2537 remark /rɪˈmɑːk/ n. 陈述；话；议论　【前缀:re-；词根:mar】
+2538 remember /rɪˈmembə(r)/ v. 记得，想起　【前缀:re-】
+2539 remind /rɪˈmaɪnd/ vt. 提醒，使记起　【前缀:re-；词根:min】
+2540 remote /rɪˈməʊt/ adj. 偏远的，偏僻的　【前缀:re-；词根:mob/mot/mov】
+2541 remove /rɪˈmuːv/ vt. 移动，拿走，脱掉（衣服等　【前缀:re-；词根:mob/mot/mov】
+2542 rent /rent/ n. v. 租金　【基础词】
+2543 repair /rɪˈpeə(r)/ n. vt. 修理；修补　【前缀:re-】
+2544 repairs /rɪˈpeə(r)/ n. 修理工作　【基础词】
+2545 repeat /rɪˈpiːt/ vt. 重说，重做　【基础词】
+2546 replace /rɪˈpleɪs/ vt. 取代　【前缀:re-；词根:plac/pleas】
+2547 reply /rɪˈplaɪ/ n. 回答，答复　【前缀:re-；词根:plex/plic/ply；后缀:-y】
+2548 report /rɪˈpɔːt/ n. v. 报道，报告　【前缀:re-；词根:port】
+2549 reporter /rɪˈpɔːtə(r)/ n. 记者，新闻通讯员　【前缀:re-；词根:port；后缀:-er/-or】
+2550 represent /reprɪˈzent/ vt. 代表　【前缀:re-；词根:sens/sent】
+2551 representative /reprɪˈzentətɪv/ n. 代表,典型人物　【前缀:re-；词根:sens/sent；后缀:-ive】
+2552 republic /rɪˈpʌblɪk/ n. 共和国　【前缀:re-】
+2553 reputation /repjʊˈteɪʃ(ə)n/ n. 名声，名誉　【基础词】
+2554 request /rɪˈkwest/ n. 请求，要求的事物　【前缀:re-；词根:quest/quir/quis】
+2555 require /rɪˈkwaɪə(r)/ vt. 需求；要求　【前缀:re-；词根:quest/quir/quis】
+2556 requirement /rɪˈkwaɪəmənt/ n. 需要； 要求； 必要的条件　【前缀:re-；词根:quest/quir/quis；后缀:-ment】
+2557 rescue /ˈreskjuː/ vt. 营救，援救　【基础词】
+2558 research /rɪˈsɜːtʃ/ n. 研究，调查　【前缀:re-；词根:arch】
+2559 resemble /rɪˈzemb(ə)l/ v. （不用进行时）像，看起来像　【前缀:re-；词根:simil/sembl】
+2560 reservation /rezəˈveɪʃ(ə)n/ n. 预定　【前缀:re-；词根:serv；后缀:-ation/-tion/-ion/-sion】
+2561 reserve /rɪˈzɜːv/ n. v. 储备；预定　【前缀:re-；词根:serv】
+2562 resign /rɪˈzaɪn/ v. 辞职　【前缀:re-；词根:sign】
+2563 resist /rɪˈzɪst/ v. 抵抗；挡开　【前缀:re-；词根:sist】
+2564 respect /rɪˈspekt/ vt. n. 尊敬，尊重　【前缀:re-；词根:spec/spect/spic】
+2565 respond /rɪˈspekt/ v. 回答,回应,作出反应　【前缀:re-；词根:spond/spons】
+2566 responsibility /rɪspɔnsɪˈbɪlɪtɪ/ n. 责任，负责　【前缀:re-；词根:spond/spons；后缀:-ity/-ty】
+2567 rest /rest/ n. vi. 休息；剩余的部分，其余的人（物） vi. 休息，歇息　【基础词】
+2568 restaurant /ˈrestərɔnt; (US) ˈrestərənt/ n. 饭馆, 饭店　【前缀:re-；词根:st/sta/stat】
+2569 restrict /rɪˈstrɪkt/ v. 限制　【前缀:re-】
+2570 restriction /rɪˈstrɪkʃ(ə)n/ n. 限制，约束　【前缀:re-；后缀:-ation/-tion/-ion/-sion】
+2571 result /rɪˈzʌlt/ n. 结果，效果　【基础词】
+2572 retell /riːˈtel/ vt. 重讲，重复，复述　【基础词】
+2573 retire /rɪˈtaɪə(r)/ v. 退休　【前缀:re-】
+2574 return /rɪˈtɜːn/ v. 归还　【前缀:re-；词根:tort/tour/turn】
+2575 reuse /riːˈjuːz/ vt. 重新使用；循环使用　【前缀:re-】
+2576 review /rɪˈvjuː/ vt. n. 重新调查； 回顾； 复习 n. 复查；复习；评论　【前缀:re-】
+2577 reviewer /rɪˈvjuːə(r)/ n. 评论者；书评家　【前缀:re-；后缀:-er/-or】
+2578 revision /rɪˈvɪʒ(ə)n/ n. 复习，温习　【前缀:re-；词根:vid/vis】
+2579 revolution /revəˈluːʃ(ə)n/ n. 革命，变革　【前缀:re-；词根:vol；后缀:-ation/-tion/-ion/-sion】
+2580 reward /rɪˈwɔːd/ n. 奖赏　【前缀:re-】
+2581 rewind /riːˈwaɪnd/ v. 回转（磁带等　【前缀:re-】
+2582 rewrite /riːˈraɪt/ vt. 重写　【前缀:re-】
+2583 rhyme /raɪm/ n. v. / v. 押韵　【基础词】
+2584 rice /raɪs/ n. 稻米；米饭　【基础词】
+2585 rich /rɪtʃ/ adj. 富裕的，有钱的；rid (rid, rid / ridded, ridded　【基础词】
+2586 riddle /ˈrɪd(ə)l/ n. 谜(语　【词根:rid/ris】
+2587 ridiculous /rɪˈdɪkjʊləs/ adj. 荒谬的，愚蠢的；ride (rode, ridden　【词根:rid/ris；后缀:-ous】
+2588 right /raɪt/ n. adj. adv. 权利 a.对,正确的 ad. 正确地,恰恰,完全地 a. 右,右边的　【基础词】
+2589 rigid /ˈrɪdʒɪd/ adj. 死板的,僵硬的,固执的　【基础词】
+2590 ripe /raɪp/ adj. 成熟的，熟的　【基础词】
+2591 ripen /ˈraɪpən/ v. 成熟；rise (rose, risen　【后缀:-en】
+2592 risk /rɪsk/ n. v. / v. 危险，风险，冒险　【词根:rid/ris】
+2593 river /ˈrɪvə(r)/ n. 江；河；水道；巨流　【词根:riv；后缀:-er/-or】
+2594 road /rəʊd/ n. 路，道路　【基础词】
+2595 roast /rəʊst/ v. 烤（肉　【基础词】
+2596 rob /rɔb/ v. 抢夺，抢劫　【基础词】
+2597 robot /ˈrəʊbɔt/ n. 机器人　【基础词】
+2598 rock /rɔk/ n. vt. 岩石,大石头vt. 摇,摇晃　【基础词】
+2599 rocket /rɒkit/ n. 火箭　【后缀:-et】
+2600 role /rəʊl/ n. 角色　【基础词】
+2601 roll /rəʊl/ v. n. 滚动, 打滚 n. 面包圈，小圆面包；卷状物　【基础词】
+2602 roller /ˈrəʊlə(r)/ n. 滚筒； 辊　【后缀:-er/-or】
+2603 roof /ruːf/ n. 屋顶，顶部　【基础词】
+2604 room /rʊm/ n. 房间,室;空间;地方　【基础词】
+2605 rooster /ˈruːstə(r)/ n. (美)公鸡　【基础词】
+2606 root /ruːt/ n. 根，根源，起源　【基础词】
+2607 rope /rəʊp/ n. 绳，索　【基础词】
+2608 rose /rəʊz/ n. 玫瑰花　【基础词】
+2609 rot /rɔt/ vi. 烂； 腐败　【基础词】
+2610 rough /rʌf/ adj. 粗糙的，粗略的　【基础词】
+2611 round /raʊnd/ adv. prep. adj. 转过来 prep. 环绕一周，围着 a.圆的；球形的　【基础词】
+2612 roundabout /ˈraʊndəbaʊt/ adj. n. 绕道的，不直接的；转盘路　【基础词】
+2613 routine /ruːˈtiːn/ n. 常规,正常顺序,无聊　【基础词】
+2614 row /rəʊ/ n. v. （一）排,（一）行 v.划船　【基础词】
+2615 royal /ˈrɔɪəl/ adj. 皇家的，王室的，国王的，女王的　【基础词】
+2616 rubber /ˈrʌbə(r)/ n. 橡胶； 合成橡胶　【基础词】
+2617 rubbish /ˈrʌbɪʃ/ n. 垃圾； 废物　【基础词】
+2618 rude /ruːd/ adj. 无理的, 粗鲁的　【词根:rud】
+2619 rugby /ˈrʌɡbɪ/ n. （英）橄榄球　【后缀:-y】
+2620 ruin /ˈruːɪn/ vt. n. （使）毁坏；（使） 毁灭 n. (复) 废墟；遗迹　【基础词】
+2621 rule /ruːl/ n. vt. 规则,规定 vt.统治,支配　【基础词】
+2622 ruler /ˈruːlə(r)/ n. 统治者；直尺；run (ran, run　【后缀:-er/-or】
+2623 runner /ˈrʌnə(r)/ n. 赛跑者；操作者；滑行装置　【基础词】
+2624 running /ˈrʌnɪŋ/ n. 跑步　【基础词】
+2625 rush /rʌʃ/ vi. 冲，奔跑　【基础词】
+2626 Russia /ˈrʌʃə/ n. * n. 俄罗斯，俄国　【基础词】
+2627 Russian /ˈrʌʃ(ə)n/ adj. n. 俄国人的，俄语的 n. 俄国人，俄语　【基础词】
+2628 sacred /ˈseɪkrɪd/ adj. 害怕，恐惧，担心　【词根:sacr/sanct；后缀:-ed】
+2629 sacrifice /ˈsækrɪfaɪs/ vt. 牺牲　【词根:sacr/sanct】
+2630 sad /sæd/ adj. （使人）悲伤的　【基础词】
+2631 sadness /ˈsædnɪs/ n. 悲哀，忧伤　【后缀:-ness】
+2632 safe /seɪf/ adj. n. 安全的 n. 保险柜　【基础词】
+2633 safety /ˈseɪftɪ/ n. 安全，保险　【后缀:-ity/-ty】
+2634 sail /seɪl/ n. v. 航行 v. 航行，开航　【基础词】
+2635 sailing /ˈseɪlɪŋ/ n. 航海　【后缀:-ing】
+2636 sailor /ˈseɪlə(r)/ n. 水手，海员　【后缀:-er/-or】
+2637 salad /ˈsæləd/ n. 色拉（西餐中的一种菜　【词根:sal】
+2638 salary /ˈsælərɪ/ n. 薪金，薪水　【词根:sal；后缀:-ary】
+2639 sale /seɪl/ n. 卖，出售　【词根:sal】
+2640 salesgirl /ˈseɪlzɡɜːl/ n. 女售货员　【词根:sal】
+2641 salesman /ˈseɪlzmən/ n. 男售货员　【词根:sal】
+2642 saleswoman /seɪlz‚wʊmən/ n. 女售货员　【词根:sal】
+2643 salt /sɔːlt/ n. 盐　【词根:sal】
+2644 salty /ˈsɔːltɪ/ adj. 盐的，咸的，含盐的　【词根:sal；后缀:-ity/-ty】
+2645 salute /səˈluːt/ v. n. 敬礼　【词根:sal】
+2646 same /seɪm/ n. 同样的事a同样的,同一　【基础词】
+2647 sand /sænd/ n. 沙，沙子　【基础词】
+2648 sandwich /ˈsænwɪdʒ/ n. 三明治（夹心面包片　【基础词】
+2649 satellite /ˈsætəlaɪt/ n. 卫星　【词根:sat/satis】
+2650 satisfaction /sætɪsˈfækʃ(ə)n/ n. 满意　【词根:sat/satis；后缀:-ation/-tion/-ion/-sion】
+2651 satisfy /ˈsætɪsfaɪ/ vt. 满足，使满意　【词根:sat/satis；后缀:-fy/-ify】
+2652 Saturday /ˈsætədeɪ/ n. 星期六　【词根:sat/satis；后缀:-y】
+2653 sauce /sɔːs/ n. 酱汁； 调味汁　【基础词】
+2654 saucer /ˈsɔːsə(r)/ n. 茶碟，茶托，小圆盘　【后缀:-er/-or】
+2655 sausage /ˈsɔsɪdʒ; (US) ˈsɔːsɪdʒ/ n. 香肠，腊肠　【基础词】
+2656 savage /ˈsævɪdʒ/ n. 野蛮人，未开化的人　【后缀:-age】
+2657 save /seɪv/ vt. 救，挽救，节省；say (said, said　【基础词】
+2658 saying /ˈseɪɪŋ/ n. 说，俗话，谚语　【基础词】
+2659 scan /skæn/ v. 略读，浏览，扫描　【基础词】
+2660 scar /skɑː(r)/ n. 伤疤，伤痕　【基础词】
+2661 scare /skeə(r)/ v. 使害怕，使恐惧　【基础词】
+2662 scarf /skɑːf/ n. 领巾，围巾　【基础词】
+2663 scene /sɪːn/ n. （戏剧、电影等的）一场，场景，布景　【基础词】
+2664 scenery /ˈsiːnərɪ/ n. 风景，景色，风光；sceptical (AmE skeptical　【后缀:-y】
+2665 schedule /ˈʃedjuːl; (US) ˈskedʒʊl/ n. v. 工作计划，日程安排v. 安排时间，预定　【基础词】
+2666 school /skuːl/ n. 学校　【基础词】
+2667 scholar /ˈskɔlə(r)/ n. 学者　【基础词】
+2668 scholarship /ˈskɔləʃɪp/ n. 奖学金　【后缀:-ship】
+2669 schoolbag /ˈskuːlbæɡ/ n. 书包　【基础词】
+2670 schoolmate /ˈskuːlmeɪt/ n. 同校同学　【基础词】
+2671 science /ˈsaɪəns/ n. 科学，自然科学　【词根:sci；后缀:-ance/-ence】
+2672 scientific /saɪənˈtɪfɪk/ adj. 科学的　【词根:sci；后缀:-ic/-ical】
+2673 scientist /ˈsaɪəntɪst/ n. 科学家　【词根:sci；后缀:-ist】
+2674 scissors /ˈsɪzəz/ n. 剪刀，剪子　【词根:sci】
+2675 scold /skəʊld/ vt. 责骂　【基础词】
+2676 score /skɔː(r)/ n. v. 得分，分数　【基础词】
+2677 scores /skɔː(r) z/ n. 许多，很多　【基础词】
+2678 Scotland /ˈskɔtlənd/ n. * n. 苏格兰　【基础词】
+2679 Scottish /ˈskɔtɪʃ/ adj. n. 苏格兰（人）的 n. 苏格兰人　【基础词】
+2680 scratch /krætʃ/ v. n. / n. 划破，划痕，划伤　【基础词】
+2681 scream /skriːm/ n. 尖叫　【基础词】
+2682 screen /skriːn/ n. 幕，荧光屏　【基础词】
+2683 sculpture /ˈskʌlptʃə(r)/ n. 雕塑（术），雕刻（术），雕刻作品，雕像　【基础词】
+2684 sea /siː/ n. 海，海洋　【基础词】
+2685 seagull /ˈsiːɡʌl/ n. 海鸥　【基础词】
+2686 seal /siːl/ n. 海豹　【基础词】
+2687 seaman /ˈsiːmən/ n. 水手； 海员　【基础词】
+2688 search /sɜːtʃ/ n. v. 搜寻，搜查　【前缀:se-；词根:arch】
+2689 seashell /ˈsiːʃel/ n. 海贝　【基础词】
+2690 seaside /ˈsiːsaɪd/ n. 海滨　【前缀:se-】
+2691 season /ˈsiːz(ə)n/ n. 季；季节　【基础词】
+2692 seat /siːt/ n. 座位，座　【基础词】
+2693 seaweed /ˈsiːwiːd/ n. 海草,海藻,海带　【基础词】
+2694 second /ˈsekənd/ n. num. adj. 秒 num.第二a.第二的　【基础词】
+2695 secondhand /ˈsekəndˈhænd/ n. 二手货; 旧货　【基础词】
+2696 secret /ˈsiːkrɪt/ n. 秘密，内情　【前缀:se-；词根:cre/creas/cresc】
+2697 secretary /ˈsekrətərɪ/ n. 秘书；书记　【前缀:se-；词根:cre/creas/cresc；后缀:-ary】
+2698 section /ˈsekʃ(ə)n/ n. 段，部分，部门　【词根:sect；后缀:-ation/-tion/-ion/-sion】
+2699 secure /sɪˈkjʊə(r)/ adj. 安心的,有把握的,牢靠的　【词根:sect；后缀:-ure】
+2700 security /sɪˈkjʊərɪtɪ/ n. 安全，平安；see (saw, seen　【前缀:se-；词根:cur/curs/cour；后缀:-ity/-ty】
+2701 seed /siːd/ n. 种子　【基础词】
+2702 seem /siːm/ v. 似乎，好像　【基础词】
+2703 seize /siːz/ vt. 抓住(时机等　【基础词】
+2704 seldom /ˈseldəm/ adv. 很少，不常　【基础词】
+2705 select /sɪˈlekt/ vt. 选择，挑选，选拔　【前缀:se-；词根:lect/leg/lig】
+2706 self /self/ n. 自己，自我，自身　【基础词】
+2707 selfish /ˈselfɪʃ/ adj. 自私的　【后缀:-ish】
+2708 semicircle /ˈsemɪsɜːk(ə)l/ n. 半圆；send (sent, sent　【前缀:semi-；词根:circ/cycl】
+2709 senior /ˈsiːnɪə(r)/ adj. n. 年长的,资深的,高年级的 n. 上级，长辈，高年级生　【词根:sen；后缀:-er/-or】
+2710 sense /sens/ n. 感觉，意识　【词根:sen】
+2711 sensitive /ˈsensɪtɪv/ adj. 体贴的,善解人意的　【词根:sen；后缀:-ive】
+2712 sentence /ˈsent(ə)ns/ n. 句子　【词根:sen；后缀:-ance/-ence】
+2713 separate /ˈsepərət/ v. adj. 使分开，使分离a. 单独的，分开的　【基础词】
+2714 separately /ˈsepərətlɪ/ adv. 单独地，各自地　【后缀:-ly】
+2715 separation /sepəˈreɪʃ(ə)n/ n. 分离，隔离　【后缀:-ation/-tion/-ion/-sion】
+2716 September /səpˈtembə(r)/ n. 9月　【基础词】
+2717 serious /ˈsɪərɪəs/ adj. 严肃的,严重的,认真的　【基础词】
+2718 servant /ˈsɜːvənt/ n. 仆人，佣人　【词根:serv；后缀:-ant/-ent】
+2719 serve /sɜːv/ vt. 招待（顾客等）,服务　【词根:serv】
+2720 service /ˈsɜːvɪs/ n. 服务　【词根:serv】
+2721 session /ˈseʃ(ə)n/ n. 一场,一节,一段时间；set (set, set　【词根:sed/sess/sid；后缀:-ation/-tion/-ion/-sion】
+2722 settle /ˈset(ə)l/ vi. 安家，定居　【基础词】
+2723 settlement /ˈsetəlmənt/ n. 新拓居地；（美）部落，村落　【后缀:-ment】
+2724 settler /ˈsetlə(r)/ n. 移居者，开拓者　【后缀:-er/-or】
+2725 seven /ˈsev(ə)n/ num. 七　【前缀:se-；词根:ven/vent】
+2726 seventeen /sevənˈtiːn/ num. 十七　【前缀:se-；词根:ven/vent；后缀:-en】
+2727 seventh /ˈsevənθ/ num. 第七　【前缀:se-；词根:ven/vent；后缀:-th】
+2728 seventy /ˈsevəntɪ/ num. 七十　【前缀:se-；词根:ven/vent；后缀:-ity/-ty】
+2729 several /ˈsevr(ə)l/ pron. adj. 几个,数个 a.若干　【后缀:-al】
+2730 severe /sɪˈvɪə(r)/ adj. 极为恶劣,十分严重的；sew (sewed, sewn 或sewed　【基础词】
+2731 sex /seks/ n. 性，性别　【基础词】
+2732 shabby /ˈʃæbɪ/ adj. 破旧,破烂,衣衫褴褛的　【后缀:-y】
+2733 shade /ʃeɪd/ n. 阴凉处，树荫处　【基础词】
+2734 shadow /ˈʃædəʊ/ n. 影子, 阴影；shake (shook, shak en　【基础词】
+2735 shallow /ˈʃæləʊ/ adj. 浅的,不深的,肤浅的　【基础词】
+2736 shame /ʃeɪm/ n. 遗憾的事；羞愧　【基础词】
+2737 Shanghai /ʃæŋˈhaɪ/ n. 上海　【基础词】
+2738 shape /ʃeɪp/ n. v. 形状，外形 v. 使成型，制造，塑造　【基础词】
+2739 share /ʃeə(r)/ vt. 分享，共同使用　【基础词】
+2740 shark /ʃɑːk/ n. 鲨鱼　【基础词】
+2741 sharp /ʃɑːp/ adj. 锋利的，尖的　【基础词】
+2742 sharpen /ˈʃɑːpən/ v. （使）变锐利，削尖　【后缀:-en】
+2743 sharpener /ˈʃɑːpənə(r)/ n. 削尖用的器具　【后缀:-er/-or】
+2744 shaver /ˈʃeɪvə(r)/ n. 电动剃须刀　【基础词】
+2745 she /ʃiː/ pron. 她；sheep (复sheep　【基础词】
+2746 sheet /ʃiːt/ n. 成幅的薄片，薄板；shelf (复 shelves　【后缀:-et】
+2747 shelter /ˈʃeltə(r)/ n. 掩蔽；隐蔽处　【基础词】
+2748 shine /ʃaɪn/ n. 光泽；光彩；阳光；晴天；光(亮)；shine (shone, shone 或-d, -d　【基础词】
+2749 ship /ʃɪp/ n. vi. 船，轮船 vi. 用船装运　【基础词】
+2750 shirt /ʃɜːt/ n. 男衬衫　【基础词】
+2751 shock /ʃɔk/ vt. 使震惊　【基础词】
+2752 shoe /ʃuː/ n. 鞋　【基础词】
+2753 shoot /ʃuːt/ vt. n. (shot, shot) vt. 射击，射中，发射 n. 嫩枝；苗；芽　【基础词】
+2754 shooting /ˈʃuːtɪŋ/ n. 射击　【后缀:-ing】
+2755 shop /ʃɔp/ vi. n. 买东西 n. 商店,车间　【基础词】
+2756 shop assistant /ʃɔp əˈsɪst(ə)nt/ n. (英) 售货员　【词根:sist；后缀:-ant/-ent】
+2757 shopkeeper /ˈʃɔpkiːpə(r)/ n. 店主，零售商人　【基础词】
+2758 shopping /ˈʃɔpɪŋ/ n. 买东西　【基础词】
+2759 shore /ʃɔː(r)/ n. 滨，岸　【基础词】
+2760 short /ʃɔːt/ adj. 短的；矮的　【基础词】
+2761 shortcoming /ˈʃɔːtkʌmɪŋ/ n. 缺点，短处　【基础词】
+2762 shortly /ˈʃɔːtlɪ/ adv. 不久　【后缀:-ly】
+2763 shorts /ʃɔːts/ n. 短裤；运动短裤　【基础词】
+2764 short wave /ʃɔːt/ n. [医] 短波　【基础词】
+2765 shot /ʃɔt/ n. 射击，开枪，开炮，射击声；子弹　【基础词】
+2766 should /ʃʊd/ v. aux. mod. 应当，应该，会 v. aux.会,应该（shall的过去时态　【基础词】
+2767 shoulder /ˈʃəʊldə(r)/ n. 肩膀,(道路的)路肩　【后缀:-er/-or】
+2768 shout /ˈʃəʊldə(r)/ n. v. 喊，高声呼喊　【基础词】
+2769 show /ʃəʊ/ n. 展示,展览（会）;演出　【基础词】
+2770 shower /ˈʃaʊə(r)/ n. 阵雨；淋浴；shrink (shrank, shrunk / shrunk, shrunken　【后缀:-er/-or】
+2771 shuttle /ˈʃʌt(ə)l/ n. 合拢 （往返与两个定点之间的）（火车汽车飞机）班车/机　【基础词】
+2772 sick /sɪk/ adj. 有病,患病的,（想）呕吐　【基础词】
+2773 sickness /ˈsɪknɪs/ n. 疾病　【后缀:-ness】
+2774 side /ˈsɪknɪs/ n. 边，旁边，面，侧面；sideroad (AmE sidewalk) n.人行道　【词根:sed/sess/sid】
+2775 sideway /ˈsaɪdweɪz/ n. 岔路，旁路　【词根:sed/sess/sid；后缀:-y】
+2776 sideways /ˈsaɪdweɪz/ adv. 斜向一边的　【词根:sed/sess/sid】
+2777 sigh /saɪ/ vi. 叹息；叹气　【基础词】
+2778 sight /saɪ/ n. 情景，风景；视力　【基础词】
+2779 sightseeing /ˈsaɪtsiːɪŋ/ n. 游览，观光　【基础词】
+2780 sign /saɪn/ n. 符号，标记　【词根:sign】
+2781 signal /ˈsɪɡn(ə)l/ n. 信号，暗号　【词根:sign；后缀:-al】
+2782 signature /ˈsɪɡnətʃə(r)/ n. 签名　【词根:sign；后缀:-ure】
+2783 significance /ˈsɪɡnətʃə(r)/ n. 重要性，意义　【词根:sign；后缀:-ance/-ence】
+2784 silence /ˈsaɪləns/ n. 安静，沉默　【基础词】
+2785 silent /ˈsaɪlənt/ adj. 无声的，无对话的　【基础词】
+2786 silk /sɪlk/ n. （蚕）丝，丝织品　【基础词】
+2787 silly /ˈsɪlɪ/ adj. 傻的，愚蠢的　【后缀:-y】
+2788 silver /ˈsɪlvə(r)/ n. 银　【基础词】
+2789 similar /ˈsɪmɪlə(r)/ adj. 相似的，像　【词根:simil/sembl；后缀:-ar】
+2790 simple /ˈsɪmp(ə)l/ adj. 简单的，简易的　【基础词】
+2791 simplify /ˈsɪmplɪfaɪ/ v. 使简化，使简易　【后缀:-fy/-ify】
+2792 simply /ˈsɪmplɪ/ adv. 简单地,(加强语气)的确　【后缀:-y】
+2793 since /sɪns/ adv. conj. prep. 从那时以来 conj. 从…以来，…以后，由于 prep. 从…以来　【基础词】
+2794 sincerely /sɪnˈsɪrlɪ /-ˈsɪəl-/ adv. 真诚地；sing (sang, sung　【后缀:-y】
+2795 singer /sɪŋ/ n. 歌唱家，歌手　【基础词】
+2796 single /ˈsɪŋɡ(ə)l/ adj. 单一的，单个的　【基础词】
+2797 sink /sɪŋk/ n. 洗涤槽；污水槽；sink (sank, sunk　【基础词】
+2798 sir /sɜː(r)/ n. 先生；阁下　【基础词】
+2799 sister /ˈsɪstə(r)/ n. 姐；妹　【词根:sist；后缀:-er/-or】
+2800 situation /sɪtjʊˈeɪʃ(ə)n/ n. 形势，情况　【基础词】
+2801 six /sɪks/ num. 六　【基础词】
+2802 sixth /sɪksθ/ num. 第六　【后缀:-th】
+2803 sixty /ˈsɪkstɪ/ num. 六十　【后缀:-ity/-ty】
+2804 sixteen /ˈsɪkstɪ/ num. 十六　【基础词】
+2805 sixteenth /sɪksˈtiːnθ/ num. 第十六　【后缀:-th】
+2806 size /sɪksˈtiːnθ/ n. 尺寸，大小　【基础词】
+2807 skate /sɪksˈtiːnθ/ vi. 溜冰，滑冰　【后缀:-ate】
+2808 skateboard /ˈskeɪtbɔːd/ n. 冰鞋，滑板　【基础词】
+2809 ski /skiː/ n. vi. 滑雪板；滑雪　【基础词】
+2810 skill /skiː/ n. 技能，技巧　【基础词】
+2811 skilled /skiː/ adj. 熟练的；有技能的　【后缀:-ed】
+2812 skillful /ˈskɪlf(ə)l/ adj. 熟练,精湛的,灵巧的　【后缀:-ful】
+2813 skillfully /ˈskilfuli/ adv. 精湛地,巧妙地　【后缀:-ly】
+2814 skin /skɪn/ n. 皮，皮肤；兽皮　【基础词】
+2815 skip /skɪp/ v. 蹦蹦跳跳；跳绳　【基础词】
+2816 skipping /skɪpɪŋ/  rope （跳绳用）绳　【基础词】
+2817 skirt /skɜːt/ n. 女裙　【基础词】
+2818 sky /skaɪ/ n. 天；天空　【后缀:-y】
+2819 skyscraper /ˈskaɪskreɪpə(r)/ n. 摩天楼　【基础词】
+2820 slave /sleɪv/ n. 奴隶　【基础词】
+2821 slavery /ˈsleɪvərɪ/ n. 奴隶制度　【后缀:-y】
+2822 sleep /sliːp/ n. 睡觉；sleep (slept, slept　【基础词】
+2823 sleepy /sliːp/ adj. 想睡的,困倦的,瞌睡的　【后缀:-y】
+2824 sleeve /sliːv/ n. 袖子，袖套　【基础词】
+2825 slice /sliːv/ n. 片，切面（薄）片　【基础词】
+2826 slide /slaɪd/ n. v. 幻灯片,滑道 v.滑行,滑动　【基础词】
+2827 slight /slaɪt/ adj. 轻微的，细小的　【基础词】
+2828 slim /slɪm/ adj. 苗条的，纤细的　【基础词】
+2829 slip /slɪp/ n. 片，条，纸片，纸条　【基础词】
+2830 slow /slɪp/ adv. 慢慢地，缓慢地　【基础词】
+2831 small /smɔːl/ adj. 小的，少的　【基础词】
+2832 smart /smɑːt/ adj. 灵巧的，伶俐的；（人、服装等）时髦的，帅的；smell (smelt, smelt 或-ed,-ed　【基础词】
+2833 smelly /ˈsmelɪ/ adj. 有臭味的,发出臭味的　【后缀:-y】
+2834 smile /smaɪl/ n. v. 微笑　【基础词】
+2835 smog /smaɪl/ n. 烟雾(= smoke + fog　【基础词】
+2836 smoke /smaɪl/ n. v. 烟 v. 冒烟；吸烟　【基础词】
+2837 smoker /ˈsməʊkə(r)/ n. 吸烟者　【后缀:-er/-or】
+2838 smoking /ˈsməʊkɪŋ/ n. 吸烟,抽烟;冒烟　【后缀:-ing】
+2839 smooth /ˈsməʊkɪŋ/ adj. 光滑的;平坦的　【基础词】
+2840 snack /snæk/ n. 小吃　【基础词】
+2841 snack bar /snæk bɑː/ n. 快餐店　【基础词】
+2842 snake /sneɪk/ n. v. 蛇v.蛇般爬行;蜿蜒行进　【基础词】
+2843 snatch /sneɪk/ v. 夺，夺得，夺走　【基础词】
+2844 sneaker /sneɪk/ n. （复）轻便运动鞋（美　【基础词】
+2845 sneeze /sneɪk/ v. 打喷嚏　【基础词】
+2846 sniff /snɪf/ v. 抽鼻子（哭,患感冒时　【基础词】
+2847 snow /snəʊ/ n. vi. 雪 vi.下雪　【基础词】
+2848 snowball /ˈsnəʊbɔːl/ n. 雪球　【基础词】
+2849 snowman /ˈsnəʊmæn/ n. 雪人　【基础词】
+2850 snowy /ˈsnəʊɪ/ adj. 雪(白)的；下雪的；多(积)雪的　【后缀:-y】
+2851 so /səʊ/ adv. conj. 如此，这么；非常；同样 conj. 因此，所以　【基础词】
+2852 soap /səʊp/ n. 肥皂　【基础词】
+2853 sob /səʊp/ n. v. 抽泣，啜泣　【基础词】
+2854 soccer /ˈsɔkə(r)/ n. 英式足球　【基础词】
+2855 social /ˈsəʊʃ(ə)l/ adj. 社会的；社交的　【词根:soci；后缀:-al】
+2856 socialism /ˈsəʊʃəlɪz(ə)m/ n. 社会主义　【词根:soci；后缀:-ism】
+2857 socialist /ˈsəʊʃəlɪst/ adj. 社会主义的　【词根:soci；后缀:-ist】
+2858 society /səˈsaɪətɪ/ n. 社会　【词根:soci；后缀:-ity/-ty】
+2859 sock /sɔk/ n. 短袜　【基础词】
+2860 socket /ˈsɔkɪt/ n. （电源）插座　【后缀:-et】
+2861 sofa /ˈsəʊfə/ n. adj. （长）沙发；soft sɔft; (US) sɔːft]；a. 软的，柔和的　【基础词】
+2862 software /sɔft; (US) sɔːft/ n. 软件　【基础词】
+2863 soft drink /sɔft drɪŋk/ n. (不含酒精)清凉饮料　【基础词】
+2864 softball /ˈsɔftbɔːl/ n. 垒球　【基础词】
+2865 soil /sɔɪl/ n. 土壤，土地　【基础词】
+2866 solar /ˈsəʊlə(r)/ adj. 太阳的　【词根:sol；后缀:-ar】
+2867 soldier /ˈsəʊldʒə(r)/ n. 士兵，战士　【词根:sol；后缀:-er/-or】
+2868 solid /ˈsɔlɪd/ adj. n. 结实的,固体的 n.固体　【词根:sol】
+2869 some /sʌm/ adj. pron. 一些，若干；有些；某一 pron. 若干，一些　【基础词】
+2870 somebody /ˈsʌmbʌdɪ; ˈsʌmbədɪ/ pron. 某人；有人；有名气的人　【后缀:-y】
+2871 someone /ˈsʌmwʌn/ pron. 某一个人　【基础词】
+2872 something /ˈsʌmθɪŋ/ pron. 某事；某物　【基础词】
+2873 sometimes /ˈsʌmtaɪmz/ adv. 有时　【基础词】
+2874 somewhere /ˈsʌmtaɪmz/ adv. 在某处　【基础词】
+2875 son /sʌn/ n. 儿子　【词根:son】
+2876 song /sʌn/ n. 歌唱；歌曲　【词根:son】
+2877 soon /sʌn/ adv. 不久,很快,一会儿　【基础词】
+2878 sorrow /ˈsɔrəʊ/ n. 悲伤，悲痛　【基础词】
+2879 sorry /ˈsɔrɪ/ adj. 对不起,抱歉;难过的　【后缀:-y】
+2880 sort /sɔːt/ n. ]；t. 把…分类，拣选 n. 种类，类别　【基础词】
+2881 soul /səʊl/ n. 灵魂；心灵；气魄　【基础词】
+2882 sound /saʊnd/ vi. n. 听起来,发出声音n.声音　【基础词】
+2883 soup /suːp/ n. 汤　【基础词】
+2884 sour /ˈsaʊə(r)/ adj. 酸的，馊的　【基础词】
+2885 south /ˈsaʊə(r)/ adj. adv. n. 南(方)的；向南的；从南来的 ad. 在南方；向南方；自南方 n. 南；南方；南风；南部　【基础词】
+2886 southeast /‚saʊθˈɪːs/ n. 东南　【基础词】
+2887 southern /ˈsʌð(ə)n/ adj. 南部的，南方的　【后缀:-ern】
+2888 southwest /sauθˈwest/ n. 西南　【基础词】
+2889 souvenirs /suːvəˈnɪə(r); (US) ˈsuːvənɪər/ n. 旅游纪念品,纪念物；sow (sowed, sown 或-ed　【基础词】
+2890 space /speɪs/ n. 空间　【基础词】
+2891 spaceship /ˈspeɪsʃɪp/ n. 宇宙飞船　【后缀:-ship】
+2892 spade /speɪd/ n. 铲子;纸牌中的黑桃　【基础词】
+2893 Spanish /ˈspænɪʃ/ adj. n. 西班牙人的，西班牙的，西班牙语的 n. 西班牙语　【基础词】
+2894 spare /speə(r)/ adj. 空闲,多余的，剩余的　【基础词】
+2895 sparrow /ˈspærəʊ/ n. 麻雀，雀型鸟类；speak (spoke, spoken　【基础词】
+2896 speaker /ˈspiːkə(r)/ n. 演讲人，演说家　【基础词】
+2897 spear /spɪə(r)/ n. 矛，枪，梭镖　【词根:spec/spect/spic；后缀:-ar】
+2898 special /ˈspeʃ(ə)l/ adj. 特别的，专门的　【词根:spec/spect/spic；后缀:-al】
+2899 specialist /ˈspeʃəlɪst/ n. （医学）专家，专科医生；专家；专业人员　【词根:spec/spect/spic；后缀:-ist】
+2900 specific /spɪˈsɪfɪk/ adj. 明确的,具体的,独特的　【词根:spec/spect/spic；后缀:-ic/-ical】
+2901 speech /spiːtʃ/ n. 演讲　【基础词】
+2902 speed /spiːd/ n. v. 速度 v. （使）加速　【词根:spec/spect/spic；后缀:-ed】
+2903 spell /spiːd/ vt. 拼写　【基础词】
+2904 spelling /ˈspelɪŋ/ n. 拼写，拼读；spend (spent, spent　【后缀:-ing】
+2905 spin /spɪn/ v. n. 纺，（使）快速旋转；旋转，旋转运动　【基础词】
+2906 spirit /ˈspɪrɪt/ n. 精神　【词根:spir】
+2907 spiritual /ˈspɪrɪtʃʊəl/ adj. 精神的； 心灵的　【词根:spir；后缀:-al】
+2908 spit /spɪt/ v. 吐唾沫；吐痰　【基础词】
+2909 splendid /ˈsplendɪd/ adj. 灿烂的，辉煌的；（口语）极好的　【基础词】
+2910 split /splɪt/ v. 撕开;切开　【基础词】
+2911 spoken /ˈspəʊkən/ adj. 口语的；spoken man/ woman (pl. spokemen/ women　【基础词】
+2912 sponsor /ˈspɔnsə(r)/ n. 赞助者，赞助商　【词根:spond/spons；后缀:-er/-or】
+2913 spoon /spuːn/ n. 匙, 调羹　【基础词】
+2914 spoonful /ˈspuːnfʊl/ n. 一匙（的量　【后缀:-ful】
+2915 sport /spɔːt/ n. 体育运动，锻炼；(复，英)运动会　【词根:port】
+2916 spot /spɔt/ n. v. 斑点，污点；场所，地点 v. 沾上污渍，弄脏　【基础词】
+2917 spray /spreɪ/ n. v. / v. 水雾,喷雾(器)喷洒　【后缀:-y】
+2918 spread /spred/ v. 延伸； 展开　【基础词】
+2919 spring /sprɪŋ/ n. 春天,春季 n. 泉水,泉　【基础词】
+2920 spy /spaɪ/ n. v. 密探,间谍 v.侦探,刺探　【后缀:-y】
+2921 square /skweə(r)/ n. adj. 广场 a. 平方的；方形的，宽而结实的（体格，肩膀　【基础词】
+2922 squeeze /skwiːz/ n. 挤压，捏，塞　【基础词】
+2923 squid /skwɪd/ n. 鱿鱼　【基础词】
+2924 squirrel /ˈskwɪr(ə)l; (US) ˈskwɜːrəl/ n. 松鼠　【词根:quest/quir/quis】
+2925 stable /ˈsteɪb(ə)l/ adj. 稳固的，牢固的　【词根:st/sta/stat】
+2926 stadium /ˈsteɪdɪəm/ n. （露天）体育场　【词根:st/sta/stat】
+2927 staff /stɑːf/ n. 全体职工（雇员　【词根:st/sta/stat】
+2928 stage /steɪdʒ/ n. 舞台；阶段　【词根:st/sta/stat】
+2929 stain /steɪn/ n. 污点，污渍，染色剂　【词根:st/sta/stat】
+2930 stainless /ˈsteɪnlɪs/ adj. 无污点的　【词根:st/sta/stat；后缀:-less】
+2931 stainless steel /ˈsteɪnlɪs stiːl/ n. 不锈钢　【词根:st/sta/stat】
+2932 stair /steə(r)/ n. 楼梯　【词根:st/sta/stat】
+2933 stamp /stæmp/ n. 邮票　【词根:st/sta/stat】
+2934 stand /stænd/ n. 站；立；停止；立场；地位；台；坛；摊；stand (stood, stood　【词根:st/sta/stat】
+2935 standard /ˈstændəd/ n. adj. 标准（的　【词根:st/sta/stat】
+2936 star /stɑː(r)/ n. 星，恒星　【词根:st/sta/stat】
+2937 stare /steə(r)/ vi. 盯，凝视　【词根:st/sta/stat】
+2938 start /stɑːt/ v. 开始，着手；出发　【词根:st/sta/stat】
+2939 starvation /stɑːˈveɪʃ(ə)n/ n. 饥饿； 饿死　【词根:st/sta/stat；后缀:-ation/-tion/-ion/-sion】
+2940 starve /stɑːv/ v. 饿死　【词根:st/sta/stat】
+2941 state /steɪt/ n. 状态； 情形；国家，（美国的）州　【词根:st/sta/stat】
+2942 station /ˈsteɪʃ(ə)n/ n. 站，所，车站；电台　【词根:st/sta/stat；后缀:-ation/-tion/-ion/-sion】
+2943 statement /ˈsteɪtmənt/ n. 声明，陈诉，说法；statesman/ woman (pl. statesmen/ women　【词根:st/sta/stat；后缀:-ment】
+2944 statistics /stəˈtɪstɪks/ n. 统计数字，统计资料，统计学　【词根:st/sta/stat】
+2945 statue /ˈstætjuː/ n. 法令，法规，章程　【词根:st/sta/stat】
+2946 status /ˈsteɪtəs/ n. 法律地位（身份　【词根:st/sta/stat】
+2947 stay /steɪ/ n. vi. 停留，逗留，呆　【词根:st/sta/stat；后缀:-y】
+2948 steady /ˈstedɪ/ adj. 稳固的；平稳的　【后缀:-y】
+2949 steak /steɪk/ n. 牛排，肉排，鱼排；steal (stole, stolen　【基础词】
+2950 steam /stiːm/ n. 汽，水蒸气　【基础词】
+2951 steel /stiːl/ n. 钢，钢铁　【基础词】
+2952 steep /stiːp/ adj. 险峻的； 陡峭的　【基础词】
+2953 step /step/ n. vi. 脚步,台阶,梯级 vi.走,跨步　【基础词】
+2954 steward /ˈstjuːəd; (US) ˈstuːərd/ n. (火车、飞机、轮船等)男服务员；男乘务员　【基础词】
+2955 stewardess /stjuːəˈdes/ n. 女乘务员,空中小姐；stick (stuck, stuck　【后缀:-ess】
+2956 still /stɪl/ adj. adv. 不动的,平静的ad.仍然,还　【基础词】
+2957 stocking /ˈstɔkɪŋ/ n. 长统袜　【基础词】
+2958 stomach /ˈstʌmək/ n. 胃，胃部　【基础词】
+2959 stomachache /ˈstʌməkeɪk/ n. 胃疼　【基础词】
+2960 stone /stəʊn/ n. 石头，石料　【基础词】
+2961 stop /stɔp/ n. v. 停；（停车）站 v. 停，停止，阻止　【基础词】
+2962 stopwatch /ˈstɔpwɔtʃ/ n. 记秒表；跑表　【基础词】
+2963 storage /ˈstɔːrɪdʒ/ n. 贮藏； 储存　【后缀:-age】
+2964 store /stɔː(r)/ n. vt. 商店 vt. 储藏，存储　【基础词】
+2965 storm /stɔːm/ n. 风暴，暴（风）雨　【基础词】
+2966 story /ˈstɔːrɪ/ n. 故事，小说　【后缀:-y】
+2967 stout /staʊt/ adj. 肥壮的，厚实牢固的　【基础词】
+2968 stove /stəʊv/ n. （供烹饪用的 ）火炉，煤炉，电炉　【基础词】
+2969 straight /streɪt/ adj. adv. 一直的，直的 ad. 一直地，直地　【基础词】
+2970 straightforward /streɪtˈfɔːwəd/ adj. adv. / ad. 简单的，坦率的　【基础词】
+2971 strait /streɪt/ n. 海峡　【基础词】
+2972 strange /streɪndʒ/ adj. 奇怪,奇特的,陌生的　【基础词】
+2973 stranger /ˈstreɪndʒə(r)/ n. 陌生人，外人　【后缀:-er/-or】
+2974 straw /strɔː/ n. 稻草　【基础词】
+2975 strawberry /ˈstrɔːbərɪ; (US) -berɪ/ n. 草莓　【后缀:-y】
+2976 stream /striːm/ n. 小河；溪流　【基础词】
+2977 street /striːt/ n. 街，街道　【基础词】
+2978 strength /streŋθ/ n. 力量，力气　【基础词】
+2979 strengthen /ˈstreŋθ(ə)n/ vt. 加强，增强　【后缀:-en】
+2980 stress /stres/ n. v. 精神压力，心理负担 v. 强调，重读　【词根:struct；后缀:-ess】
+2981 strict /strɪkt/ adj. 严格的，严密的　【基础词】
+2982 strike /straɪk/ v. （钟）鸣;敲（响）,罢工；strike (struck, struck 或stricken　【基础词】
+2983 string /strɪŋ/ n. 细绳，线，带　【词根:struct；后缀:-ing】
+2984 strong /strɔŋ; (US) strɔːɡ/ adj. 强(壮)的；坚固的；强烈的；坚强的　【基础词】
+2985 struggle /ˈstrʌɡ(ə)l/ vi. 斗争　【基础词】
+2986 stubborn /ˈstʌbən/ adj. 固执的，倔强的　【基础词】
+2987 student /ˈstjuːdənt/ n. 学生　【后缀:-ant/-ent】
+2988 studio /ˈstjuːdɪəʊ/ n. 工作室，演播室　【基础词】
+2989 study /ˈstʌdɪ/ v. n. 学习；研究 n. 书房　【后缀:-y】
+2990 stupid /ˈstjuːpɪd/ adj. 愚蠢的，笨的　【基础词】
+2991 style /staɪl/ n. 方式，作风，款式　【基础词】
+2992 subject /ˈsʌbdʒɪkt/ adj. vt. n. 隶属的；受支配的；易受…的；在…条件下 vt. 使隶属；使服从；使受到 n. 题目；主题；学科；主语；主体　【前缀:sub-/suc-/suf-/sup-/sus-；词根:ject】
+2993 subjective /səbˈdʒektɪv/ adj. 主观的　【前缀:sub-/suc-/suf-/sup-/sus-；词根:ject；后缀:-ive】
+2994 submit /səbˈmɪt/ v. 提交，呈递（文件，建议等　【前缀:sub-/suc-/suf-/sup-/sus-；词根:miss/mit】
+2995 subscribe /səbˈskraɪb/ v. 订阅,订购（报刊等　【基础词】
+2996 substitute /ˈsʌbstɪtjuːt/ v. 代替，取代　【基础词】
+2997 subtraction /səbˈtrɔkʃ(ə)n/ n. （算数中的）减　【前缀:sub-/suc-/suf-/sup-/sus-；词根:tract；后缀:-ation/-tion/-ion/-sion】
+2998 succeed /səkˈsiːd/ vi. 成功　【前缀:sub-/suc-/suf-/sup-/sus-；词根:ced/ceed/cess】
+2999 success /səkˈses/ n. 成功　【前缀:sub-/suc-/suf-/sup-/sus-；词根:ced/ceed/cess】
+3000 successful /səkˈsesfʊl/ adj. 成功的,有成就的　【前缀:sub-/suc-/suf-/sup-/sus-；词根:ced/ceed/cess；后缀:-ful】
+3001 such /sʌtʃ/ adv. pron. adj. 那么 pron. （泛指）人，事物 a.这样的，那样的　【基础词】
+3002 suck /sʌk/ vt. 吸吮　【基础词】
+3003 sudden /ˈsʌd(ə)n/ adj. 突然的　【基础词】
+3004 suffer /ˈsʌfə(r)/ vi. 受苦，遭受　【前缀:sub-/suc-/suf-/sup-/sus-；词根:fer】
+3005 suffering /ˈsʌfərɪŋ/ n. 痛苦，苦难　【前缀:sub-/suc-/suf-/sup-/sus-；词根:fer；后缀:-ing】
+3006 sugar /ˈʃʊɡə(r)/ n. 糖　【基础词】
+3007 suggest /səˈdʒest; (US) səɡˈdʒest/ vt. 建议，提议　【词根:ger/gest】
+3008 suggestion /səˈdʒestʃ(ə)n/ n. 建议　【词根:ger/gest；后缀:-ation/-tion/-ion/-sion】
+3009 suit /suːt/ vt. n. 适合 n.一套（衣服　【基础词】
+3010 suite /swiːt/ n. 套间；组曲　【基础词】
+3011 suitable /ˈsjuːtəb(ə)l/ adj. 合适的，适宜的　【后缀:-able/-ible】
+3012 suitcase /ˈsjuːtkeɪs/ n. (旅行用)小提箱,衣箱　【基础词】
+3013 summary /ˈsʌmərɪ/ n. 摘要，概要　【词根:sum；后缀:-ary】
+3014 summer /ˈsʌmə(r)/ n. 夏天，夏季　【词根:sum；后缀:-er/-or】
+3015 sun /sʌn/ n. 太阳，阳光　【基础词】
+3016 sunburnt /ˈsʌnbɜːnt/ adj. 晒黑的　【基础词】
+3017 Sunday /ˈsʌndeɪ/ n. 星期日　【后缀:-y】
+3018 sunglasses /ˈsʌnɡlɑːsɪs/ n. 太阳眼镜，墨镜　【基础词】
+3019 sunlight /ˈsʌnlaɪt/ n. 日光，阳光　【基础词】
+3020 sunny /ˈsʌnɪ/ adj. 晴朗的;阳光充足的　【后缀:-y】
+3021 sunrise /ˈsʌnraɪs/ n. 黎明，拂晓　【基础词】
+3022 sunset /ˈsʌnset/ n. 日落(时分　【基础词】
+3023 sunshine /ˈsʌnʃaɪn/ n. 阳光　【基础词】
+3024 super /ˈsuːpə(r)/ adj. 顶好的，超级的　【基础词】
+3025 superb /suːˈpɜːb/ adj. 卓越的,质量极高的　【基础词】
+3026 superior /suːˈpɪərɪə(r)/ adj. n. 更胜一筹的 n. 上级，上司　【基础词】
+3027 superman /ˈsuːpəman/ n. 超人　【前缀:super-/sur-；词根:man/manu】
+3028 supermarket /ˈsuːpəmɑːkɪt/ n. 超级市场　【前缀:super-/sur-；词根:mar】
+3029 supper /ˈsʌpə(r)/ n. 晚餐，晚饭　【前缀:sub-/suc-/suf-/sup-/sus-】
+3030 supply /səˈplaɪ/ vt. n. 供给，供应　【前缀:sub-/suc-/suf-/sup-/sus-；词根:plex/plic/ply；后缀:-y】
+3031 support /səˈpɔːt/ vt. n. 支持，赞助　【前缀:sub-/suc-/suf-/sup-/sus-；词根:port】
+3032 suppose /səˈpəʊz/ vt. 猜想,假定,料想　【前缀:sub-/suc-/suf-/sup-/sus-；词根:pon/pos/posit】
+3033 supreme /suːˈpriːm/ adj. 至高无上的,最高的　【基础词】
+3034 sure /ʃʊə(r)/ adj. adv. 确信，肯定 ad. (口语)的确，一定，当然　【基础词】
+3035 surface /ˈsɜːfɪs/ n. 表面　【前缀:super-/sur-；词根:fac/fact/fect/fic】
+3036 surgeon /ˈsɜːdʒ(ə)n/ n. 外科医生　【前缀:super-/sur-；词根:geo】
+3037 surplus /ˈsɜːpləs/ n. 过剩，剩余　【前缀:super-/sur-】
+3038 surprise /səˈpraɪz/ vt. n. 使惊奇,使诧异 n. 惊奇,诧异　【前缀:super-/sur-；词根:pris】
+3039 surround /səˈraʊnd/ vt. 围绕；包围　【前缀:super-/sur-】
+3040 surrounding /səˈraʊndɪŋ/ adj. 周围的　【前缀:super-/sur-；后缀:-ing】
+3041 survival /səˈvaɪv(ə)l/ n. 存活，幸存　【前缀:super-/sur-；词根:vit/viv；后缀:-al】
+3042 survive /səˈvaɪv/ v. 生存，存活，幸免于难　【前缀:super-/sur-；词根:vit/viv】
+3043 suspect /səˈspekt/ n. 犯罪嫌疑人　【词根:spec/spect/spic】
+3044 suspension /səˈspenʃ(ə)n/ n. 暂令停职,推迟,延期　【前缀:sub-/suc-/suf-/sup-/sus-；词根:pen/pun；后缀:-ation/-tion/-ion/-sion】
+3045 swallow /ˈswɔləʊ/ vt. 吞下；咽下　【基础词】
+3046 swap /swɔp/ v. 交换（东西）；swear (swore, sworn　【基础词】
+3047 sweat /swet/ n. 汗，汗水　【基础词】
+3048 sweater /ˈswetə(r)/ n. 厚运动衫，毛衣 ；sweep(swept,swept　【后缀:-er/-or】
+3049 sweet /swiːt/ n. adj. 甜食;蜜饯;甜点;糖果;芳香a.甜的;新鲜的;可爱的;亲切的；swell (swelled, swollen　【基础词】
+3050 swift /swɪft/ adj. 快的，迅速的　【基础词】
+3051 swim /swɪm/ n. 游泳，游；swim (swam, swum　【基础词】
+3052 swimming /ˈswɪmɪŋ/ n. 游泳　【基础词】
+3053 swimming pool /ˈswɪmɪŋ puːl/ n. 游泳池　【基础词】
+3054 swing /swɪŋ/ vt. n. 挥舞，摆动 n. 秋千　【基础词】
+3055 Swiss /swɪŋ/ adj. n. 瑞士人的 n. 瑞士人　【基础词】
+3056 Switzerland /ˈswɪtsələnd/ n. * n. 瑞士　【基础词】
+3057 switch /swɪtʃ/ v. n. / n. 开关,转换,改变　【基础词】
+3058 sword /sɔːd/ n. 剑，刀　【基础词】
+3059 symbol /ˈsɪmb(ə)l/ n. 象征　【基础词】
+3060 sympathy /ˈsɪmpəθɪ/ n. 同情　【前缀:sym-/syn-；词根:path/pat；后缀:-y】
+3061 symphony /ˈsɪmfənɪ/ n. 交响乐　【前缀:sym-/syn-；词根:phon；后缀:-y】
+3062 symptom /ˈsɪmfənɪ/ n. 症状　【基础词】
+3063 system /ˈsɪstəm/ n. 体系；系统　【基础词】
+3064 systematic /sɪstəˈmætɪk/ adj. 系统的,有条理的　【基础词】
+3065 table /ˈteɪb(ə)l/ n. 桌子，表格　【基础词】
+3066 table tennis /ˈteɪb(ə)l ˈtenɪs/ n. 乒乓球　【基础词】
+3067 tablet /tæblit/ n. 药片　【后缀:-et】
+3068 tail /teɪl/ n. (动物的)尾巴　【基础词】
+3069 tailor /ˈteɪlə(r)/ n. 裁缝；take (took, taken　【后缀:-er/-or】
+3070 tale /teɪl/ n. 故事, 传说　【基础词】
+3071 talent /ˈtælənt/ n. 天才，天赋　【后缀:-ant/-ent】
+3072 talk /tɔːk/ n. v. 谈话,讲话,演讲,交谈　【基础词】
+3073 tall /tɔːl/ adj. 高的　【基础词】
+3074 tank /tæŋk/ n. 储水容量；坦克　【基础词】
+3075 tanker /ˈtæŋkə(r)/ n. 油船　【后缀:-er/-or】
+3076 tap /tæp/ n. (自来水煤气等的)龙头　【基础词】
+3077 tape /teɪp/ n. 磁带；录音带　【基础词】
+3078 tape recorder /teɪp rɪˈkɔːdə(r)/ n. 磁带录音机　【词根:card/cord；后缀:-er/-or】
+3079 target /ˈtɑːɡɪt/ n. v. / v. 目标，把…作为攻击目标　【基础词】
+3080 task /tɑːsk; (US) tæsk/ n. 任务, 工作　【基础词】
+3081 taste /teɪst/ n. vt. 品尝, 尝味；味道 vt. 品尝, 尝味　【基础词】
+3082 tasteless /ˈteɪstlɪs/ adj. 无滋味的　【后缀:-less】
+3083 tasty /ˈteɪstɪ/ adj. 味道好的　【后缀:-y】
+3084 tax /tæks/ n. 税，税款　【基础词】
+3085 taxi /ˈtæksɪ/ n. 出租汽车　【基础词】
+3086 tea /tiː/ n. 茶；茶叶 ；teach(taught,taught　【基础词】
+3087 teacher /ˈtiːtʃə(r)/ n. 教师，教员　【基础词】
+3088 team /tiːm/ n. 队，组　【基础词】
+3089 teamwork /ˈtiːmwɜːk/ n. 合作，协同工作　【基础词】
+3090 teapot /ˈtiːpɔt/ n. 茶壶　【基础词】
+3091 tear /teə(r)/ n. v. 眼泪 v. 扯破, 撕开　【基础词】
+3092 tease /tiːz/ v. 取笑，戏弄，寻开心　【基础词】
+3093 technical /ˈteknɪk(ə)l/ adj. 技术的，工艺的　【基础词】
+3094 technique /ˈteknɪk(ə)l/ n. 技术;技巧,方法　【基础词】
+3095 technology /tekˈnɔlədʒɪ/ n. 技术　【后缀:-y】
+3096 teenager /ˈtiːneɪdʒə(r)/ n. （13～19岁的）青少年，十几岁的少年　【基础词】
+3097 telegram /ˈtelɪɡræm/ n. 电报　【前缀:tele-；词根:gram/graph】
+3098 telegraph /ˈtelɪɡrɑːf; (US) -ɡræf/ v. (拍) 电报　【前缀:tele-；词根:gram/graph】
+3099 telephone /ˈtelɪɡrɑːf; (US) -ɡræf/ v. n. 打电话 n. 电话　【前缀:tele-；词根:phon】
+3100 telescope /ˈtelɪɡrɑːf; (US) -ɡræf/ n. 望远镜　【前缀:tele-；词根:scop】
+3101 television /ˈtelɪɡrɑːf; (US) -ɡræf/ n. 电视；tell (told, told　【前缀:tele-；词根:vid/vis】
+3102 temperature /ˈtemprɪtʃə(r)/ n. 温度　【基础词】
+3103 temple /ˈtemp(ə)l/ n. 庙宇，寺院　【基础词】
+3104 temporary /ˈtempərərɪ/ adj. 短暂的，暂时的　【词根:tempor；后缀:-ary】
+3105 temptation /tempˈteɪʃ(ə)n/ n. 引诱；诱惑　【基础词】
+3106 tend /tend/ v. 往往会，常常就，倾向，趋于　【词根:tain/ten/tent/tin】
+3107 tendency /ˈtendənsɪ/ n. 倾向，偏好，性情　【词根:tain/ten/tent/tin；后缀:-ancy/-ency】
+3108 tennis /ˈtenɪs/ n. 网球　【词根:tain/ten/tent/tin】
+3109 ten /ten/ num. 十　【词根:tain/ten/tent/tin】
+3110 tense /tens/ adj. 心烦意乱的，紧张的　【词根:tain/ten/tent/tin】
+3111 tension /ˈtenʃ(ə)n/ n. 紧张局势，矛盾　【词根:tain/ten/tent/tin；后缀:-ation/-tion/-ion/-sion】
+3112 tent /tent/ n. 帐篷　【词根:tain/ten/tent/tin】
+3113 tentative /tent/ adj. 不确定的，踌躇的　【词根:tain/ten/tent/tin；后缀:-ive】
+3114 term /tɜːm/ n. 学期;术语;条款;项　【词根:term】
+3115 terminal /tɜːm/ adj. (火车汽车飞机)终点站　【词根:term；后缀:-al】
+3116 terrible /ˈterɪb(ə)l/ adj. 可怕的；糟糕的　【词根:terr；后缀:-able/-ible】
+3117 terrify /ˈterɪfaɪ/ vt. 使人感到恐怖　【词根:terr；后缀:-fy/-ify】
+3118 terror /ˈterə(r)/ n. 恐惧，惊恐　【词根:terr；后缀:-er/-or】
+3119 test /test/ vt. n. 测试, 考查，试验　【词根:test】
+3120 text /tekst/ n. 文本，课文　【词根:text】
+3121 textbook /tekstbuk/ n. 课本，教科书　【词根:text】
+3122 than /ðen/ conj. 比　【基础词】
+3123 thank /θæŋk/ vt. n. 感谢，致谢，道谢 n. （复）感谢，谢意　【基础词】
+3124 thankful /ˈθæŋkfʊl/ adj. 感谢的，感激的　【后缀:-ful】
+3125 that /ðæt/ adj. pron. conj. adv. 那，那个 conj. 那，那个（引导宾语从句等）ad. 那么，那样　【基础词】
+3126 the /ðə/ art. 这（那）个,这（那）些（用于特定人或物，序数词，最高级，专有名词，世上独一 无二事物前）；theatre (美theater　【词根:therm】
+3127 theft /θeft/ n. 盗窃案　【基础词】
+3128 their /ðeə(r)/ pron. 他(她,它)们的　【基础词】
+3129 theirs /ðeəz/ pron. 他（她,它）们的　【基础词】
+3130 them /ð(ə)m/ pron. 他/她/它们（宾格　【基础词】
+3131 theme /θiːm/ n. 主题　【基础词】
+3132 themselves /ðəmˈselvz/ pron. 他/她/它们自己　【基础词】
+3133 then /ðen/ adv. 当时,那时,然后,那么　【词根:therm；后缀:-en】
+3134 theoretical /θɪəˈretɪk(ə)l/ adj. 理论的　【基础词】
+3135 theory /θɪəˈretɪk(ə)l/ n. 理论　【后缀:-y】
+3136 there /ðeə(r)/ int. n. adv. 那！你瞧（表示引起注意） n. 那里，那儿 ad. 在那里，往那里；（作引导词）表”存在"　【基础词】
+3137 therefore /ˈðeəfɔː(r)/ adv. 因此，所以　【基础词】
+3138 thermos /ˈθɜːmɔs/ n. 热水瓶　【词根:therm】
+3139 these /ðiːz/ adj. pron. 这些　【词根:therm；后缀:-ese】
+3140 they /ðeɪ/ pron. 他（她）们；它们　【词根:therm；后缀:-y】
+3141 thick /θɪk/ adj. 厚的；thief (复thieves　【基础词】
+3142 thin /θɪn/ adj. 薄的；瘦的；稀的　【基础词】
+3143 thing /θɪŋ/ n. 东西；(复)物品，用品；事情，事件；think(thought, thought　【词根:therm；后缀:-ing】
+3144 thinking /ˈθɪŋkɪŋ/ n. 思索;见解;想法　【基础词】
+3145 third /θɜːd/ num. 第三　【基础词】
+3146 thirst /θɜːd/ n. 渴； 口渴　【基础词】
+3147 thirsty /ˈθɜːstɪ/ adj. 渴　【后缀:-y】
+3148 thirteen /θɜːˈtiːn/ num. 十三　【基础词】
+3149 thirty /ˈθɜːtɪ/ num. 三十　【后缀:-y】
+3150 this /ðɪs/ adj. pron. 这，这个　【基础词】
+3151 thorough /ˈθʌrə; (US) ˈθʌrəʊ/ adj. 彻底的　【基础词】
+3152 those /ðəʊz/ adj. pron. 那些　【基础词】
+3153 though /ðəʊ/ conj. 虽然，可是　【基础词】
+3154 thought /θɔːt/ n. 思考,思想;念头　【基础词】
+3155 thousand /ˈθaʊzənd/ num. 千　【基础词】
+3156 thread /θred/ n. 线　【基础词】
+3157 three /θriː/ num. 三　【基础词】
+3158 thrill /θrɪl/ n. v. / v. 兴奋，激动　【基础词】
+3159 thriller /ˈθrɪlə(r)/ n. 惊险小说　【后缀:-er/-or】
+3160 throat /θrəʊt/ n. 喉咙　【基础词】
+3161 through /θruː/ prep. adv. 穿（通）过;从始至终 ad.穿(通)过;自始至终,全部　【基础词】
+3162 throughout /θruːˈaʊt/ prep. 遍及，贯穿；throw(threw,thrown　【基础词】
+3163 thunder /ˈθʌndə(r)/ n. v. 雷声，打雷　【基础词】
+3164 thunderstorm /ˈθʌndəstɔːm/ n. 雷电交加暴风雨　【基础词】
+3165 Thursday /ˈθɜːzdeɪ/ n. 星期四　【后缀:-y】
+3166 thus /ðʌs/ adv. 这样；因而　【基础词】
+3167 Tibet /tiˈbet/ n. 西藏　【基础词】
+3168 tick /tɪk/ vt. 作记号　【基础词】
+3169 ticket /ˈtɪkɪt/ n. 票；卷　【后缀:-et】
+3170 tidy /ˈtɪkɪt/ adj. vt. 整洁的，干净的 vt. 弄整洁，弄干净　【后缀:-y】
+3171 tie /taɪ/ vt. n. （用绳，线）系，拴，扎 n. 领带，绳子，结；关系　【基础词】
+3172 tiger /ˈtaɪɡə(r)/ n. 老虎　【基础词】
+3173 tight /taɪt/ adj. 紧的　【基础词】
+3174 till /tɪl/ conj. prep. 直到,直到…为止　【基础词】
+3175 time /taɪm/ n. vt. 时间;时期;钟点,次,回 vt.测定…的时间,记录…的时间　【基础词】
+3176 timetable /ˈtaɪmteɪb(ə)l/ n. （火车、公共汽车等）时间表；（学校）课表　【基础词】
+3177 tin /tɪn/ n. （英）罐头，听头　【词根:tain/ten/tent/tin】
+3178 tiny /ˈtaɪnɪ/ adj. tinier, tiniest a. 极小的，微小的　【词根:tain/ten/tent/tin；后缀:-y】
+3179 tip /tɪp/ n. v. 顶端，尖端；告诫； 提示 (给)小费　【基础词】
+3180 tire /ˈtaɪə(r)/ vi. 使疲劳　【基础词】
+3181 tired /ˈtaɪəd/ adj. 疲劳的，累的　【后缀:-ed】
+3182 tissue /ˈtɪʃuː/ n. （人，动植物的）组织，纸巾　【基础词】
+3183 title /ˈtɪʃuː/ n. 标题，题目　【基础词】
+3184 to /tʊ/ prep. （动词不定式符号，无词义）；（表示接受动作的人或物）给；对，向，到；在…之前　【基础词】
+3185 toast /təʊst/ v. n. / n. 烤　【基础词】
+3186 tobacco /təʊst/ n. 烟草，烟叶　【基础词】
+3187 today /təʊst/ adv. n. 今天;现在,当前　【后缀:-y】
+3188 together /təʊst/ adv. 一起，共同　【基础词】
+3189 toilet /ˈtɔɪlɪt/ n. 厕所　【基础词】
+3190 Tokyo /ˈtəʊkjəʊ/ n. 东京　【基础词】
+3191 tolerate /ˈtɔləreɪt/ v. 容许，允许，忍受　【基础词】
+3192 tomato /təˈmɑːtəʊ; (US) təˈmeɪtəʊ/ n. 西红柿，番茄　【词根:tom】
+3193 tomb /tuːm/ n. 坟墓　【词根:tom】
+3194 tomorrow /təˈmɔrəʊ/ adv. n. 明天　【词根:tom】
+3195 ton /tʌn/ n. （重量单位）吨　【基础词】
+3196 tongue /tʌŋ/ n. 舌，舌头　【基础词】
+3197 tonight /təˈnaɪt/ adv. n. 今晚，今夜　【基础词】
+3198 too /təˈnaɪt/ adv. 也,还,又,太,过分,很,非常　【基础词】
+3199 tool /tuːl/ n. 工具，器具；tooth (复 teeth　【基础词】
+3200 toothache /ˈtuːθeɪk/ n. 牙痛　【基础词】
+3201 toothbrush /ˈtuːθbrʌʃ/ n. 牙刷　【基础词】
+3202 toothpaste /ˈtuːθpeɪst/ n. 牙膏　【基础词】
+3203 top /tɔp/ n. 顶部,（物体的）上面　【基础词】
+3204 topic /ˈtɔpɪk/ n. 题目，话题　【后缀:-ic/-ical】
+3205 tortoise /ˈtɔːtəs/ n. 乌龟　【词根:tort/tour/turn；后缀:-ize/-ise】
+3206 total /ˈtəʊt(ə)l/ adj. n. v. 总数的;总括的;完全的,全然的 n.合计,总计 v.合计为　【基础词】
+3207 totally /ˈtɔt(ə)lɪ/ adv. 总合地，完全地　【后缀:-ly】
+3208 touch /tʌtʃ/ vt. 触摸，接触　【基础词】
+3209 tough /tʌf/ adj. 坚硬的；结实的；棘手的，难解的　【基础词】
+3210 tour /tʊə(r)/ n. 参观, 观光, 旅行　【词根:tort/tour/turn】
+3211 tourism /ˈtʊərɪz(ə)m/ n. 旅游业；观光　【词根:tort/tour/turn；后缀:-ism】
+3212 tourist /ˈtʊərɪst/ n. 旅行者，观光者　【词根:tort/tour/turn；后缀:-ist】
+3213 tournament /ˈtʊənəmənt; (US) ˈtɜːrn-/ n. 锦标赛，联赛；toward(s　【词根:tort/tour/turn；后缀:-ment】
+3214 towel /ˈtaʊəl/ n. 毛巾　【基础词】
+3215 tower /ˈtaʊə(r)/ n. 塔　【基础词】
+3216 town /taʊn/ n. 城镇，城　【基础词】
+3217 toy /tɔɪ/ n. 玩具, 玩物　【后缀:-y】
+3218 track /træk/ n. 轨道；田径　【基础词】
+3219 tractor /ˈtræktə(r)/ n. 拖拉机　【词根:tract；后缀:-er/-or】
+3220 trade /treɪd/ n. vt. 贸易 vt.用…进行交换　【基础词】
+3221 tradition /trəˈdɪʃ(ə)n/ n. 传统，风俗　【词根:radi；后缀:-ation/-tion/-ion/-sion】
+3222 traditional /trəˈdɪʃ(ə)n/ adj. 传统的，风俗的　【词根:radi；后缀:-al】
+3223 traffic /ˈtræfɪk/ n. 交通，来往车辆　【基础词】
+3224 traffic lights /ˈtræfɪk laɪts/ n. 交通指挥灯红绿灯　【基础词】
+3225 train /treɪn/ n. v. 火车 v. 培训,训练　【基础词】
+3226 trainer /treɪˈnə(r)/ n. 训练人；教练　【后缀:-er/-or】
+3227 training /ˈtreɪnɪŋ/ n. 培训　【后缀:-ing】
+3228 tram /træm/ n. 有轨电车　【基础词】
+3229 transform /trænsˈfɔːm/ v. 使改变形态,使改观　【前缀:trans-；词根:form】
+3230 translate /trænsˈleɪt/ vt. 翻译　【前缀:trans-；词根:lat】
+3231 translation /trænsˈleɪʃ(ə)n/ n. 翻译；译文　【前缀:trans-；词根:lat；后缀:-ation/-tion/-ion/-sion】
+3232 transparent /trænsˈpærənt/ adj. 透明的，清澈的　【前缀:trans-】
+3233 translator /trænsˈleitə/ n. 翻译家，译者　【前缀:trans-；词根:lat；后缀:-er/-or】
+3234 transport /trænsˈpɔːt/ n. vt. 运输　【前缀:trans-；词根:port】
+3235 trap /træp/ n. vt. 陷阱 vt. 使陷入困境　【基础词】
+3236 travel /ˈtræv(ə)l/ n. vi. 旅行　【基础词】
+3237 traveler /ˈtrævələ(r)/ n. 旅行者　【后缀:-er/-or】
+3238 treasure /ˈtreʒə(r)/ n. 金银财宝, 财富　【基础词】
+3239 treat /triːt/ vt. 对待，看待　【基础词】
+3240 treatment /ˈtriːtmənt/ n. 治疗,疗法　【后缀:-ment】
+3241 tree /triː/ n. 树　【后缀:-ee】
+3242 tremble /ˈtremb(ə)l/ v. 颤抖　【基础词】
+3243 trend /trend/ n. 趋势，倾向，动态　【基础词】
+3244 trial /ˈtraɪəl/ n. 审判；试验；试用　【词根:tribut；后缀:-al】
+3245 triangle /ˈtraɪæŋɡ(ə)l/ n. adj. 三角形;三角形的　【前缀:tri-】
+3246 trick /trɪk/ n. 诡计，把戏　【基础词】
+3247 trip /trɪp/ n. 旅行，旅程　【基础词】
+3248 trooping /ˈtruːpɪŋ/ vi. 成群结队地走　【后缀:-ing】
+3249 troop /truːp/ n. 部队　【基础词】
+3250 trouble /ˈtrʌb(ə)l/ vt. n. 使苦恼,使忧虑,使麻烦 n.问题,疾病,烦恼,麻烦　【基础词】
+3251 troublesome /ˈtrʌb(ə)lsəm/ adj. 令人烦恼, 讨厌　【后缀:-some】
+3252 trousers /ˈtraʊzəz/ n. 裤子，长裤　【基础词】
+3253 truck /trʌk/ n. v. 卡车, 运货车；车皮 v. 装车；用货车运　【基础词】
+3254 true /truː/ adj. 真的，真实的；忠诚的　【基础词】
+3255 truly /ˈtruːlɪ/ adv. 真正地，真实地　【词根:trud/trus；后缀:-ly】
+3256 trunk /trʌŋk/ n. 树干；大箱子　【基础词】
+3257 trust /trʌst/ vt. 相信，信任，信赖　【词根:trud/trus】
+3258 truth /truːθ/ n. 真理,事实,真相,实际　【词根:trud/trus；后缀:-th】
+3259 try /truːθ/ v. 试，试图，努力　【后缀:-y】
+3260 tube /tjuːb; (US) tuːb/ n. 管，管状物　【基础词】
+3261 tune /tjuːn; (US) tuːn/ n. 曲调，曲子　【基础词】
+3262 Tuesday /ˈtjuːzdeɪ/ n. 星期二　【后缀:-y】
+3263 turkey /ˈtɜːkɪ/ n. 火鸡　【后缀:-y】
+3264 turn /tɜːn/ v. n. 旋转，翻转，转变，转弯 n. 轮流，（轮流的）顺序　【词根:tort/tour/turn】
+3265 tutor /ˈtjuːtə(r)/ n. 家庭教师，私人教师，导师；TV(缩) = television　【词根:tut/tuit；后缀:-er/-or】
+3266 twelfth /twelfθ/ num. 第十二　【基础词】
+3267 twelve /twelv/ num. 十二　【基础词】
+3268 twentieth /ˈtwentiəθ/ num. 第二十　【基础词】
+3269 twenty /ˈtwentɪ/ num. 二十　【后缀:-y】
+3270 twice /twaɪs/ adv. 两次；两倍　【基础词】
+3271 twin /twɪst/ n. 双胞胎之一　【基础词】
+3272 twist /twɪst/ v. n. / n. 使弯曲，转动　【基础词】
+3273 two /tuː/ num. 二　【基础词】
+3274 type /ˈtaɪp/ vt. 打字　【词根:typ】
+3275 typewriter /ˈtaɪpraɪtə(r)/ n. 打字机　【词根:typ；后缀:-er/-or】
+3276 typical /ˈtɪpɪk(ə)l/ adj. 典型的，有代表性的，特有的　【词根:typ；后缀:-ic/-ical】
+3277 typhoon /taɪˈfuːn/ n. 台风　【词根:typ】
+3278 typist /ˈtaɪpɪst/ n. 打字员；tyre (美tire　【词根:typ；后缀:-ist】
+3279 ugly /ˈʌɡlɪ/ adj. 丑陋的；难看的；U.K./ UK(缩) = United Kingdom　【后缀:-y】
+3280 umbrella /ʌmˈbrelə/ n. 雨伞；U.N./ UN(缩) = the United Nations　【词根:umbr】
+3281 unable /juː ˈən/ adj. 不能的，不能胜任的　【前缀:un-】
+3282 unbearable /ʌnˈbeərəb(ə)l/ adj. 难耐得,无法接受的　【基础词】
+3283 unbelievable /ʌnbɪˈliːvəb(ə)l/ adj. 难以置信的　【基础词】
+3284 uncertain /ˈsɜːt(ə)n/ adj. 不确定的　【前缀:un-；词根:cern/cert】
+3285 uncle /ˈʌŋk(ə)l/ n. 叔,伯,舅,姑夫,姨父　【基础词】
+3286 uncomfortable /ʌnˈkʌmftəb(ə)l/ adj. 令人不舒服的　【前缀:un-；词根:fort/forc；后缀:-able/-ible】
+3287 unconditional /ʌnkənˈdɪʃən(ə)l/ adj. 无条件，绝对的　【基础词】
+3288 unconscious /ʌnˈkɔnʃəs/ adj. 昏迷,不省人事的　【基础词】
+3289 under /ˈʌndə(r)/ adv. prep. 在…下面，向…下面　【基础词】
+3290 underground /ʌndəˈɡraʊnd/ adj. n. 地下的 n. 地铁　【前缀:under-】
+3291 underline /ʌndəˈlaɪn/ v. 在…下划线；understand (understood, understood　【前缀:under-】
+3292 understanding /ʌndəˈstændɪŋ/ n. 领会;理解；undertake (undertook, undertaken　【前缀:under-；词根:st/sta/stat】
+3293 underwear /ˈʌndəweə(r)/ n. 内衣　【基础词】
+3294 undivided /ʌndɪˈvaɪdɪd/ adj. 没分开的；专一的； 专心的　【基础词】
+3295 undo /ʌnˈduː/ v. 解开，松开　【基础词】
+3296 unemployment /ʌnɪmˈplɔɪmənt/ n. 失业,失业状态　【前缀:un-；词根:ment】
+3297 unfair /ʌnˈfeə(r)/ adj. 不公平的，不公正的　【前缀:un-】
+3298 unfit /ʌnˈfɪt/ adj. 不合宜的，不相宜的　【前缀:un-】
+3299 unfold /ʌnˈfəʊld/ vt. 展开，打开　【前缀:un-】
+3300 unfortunate /ʌnˈfəʊld/ adj. 不幸的　【前缀:un-；词根:fort/forc；后缀:-ate】
+3301 unfortunately /ʌnˈfɔːtjʊnətlɪ/ adv. 不幸地　【前缀:un-；词根:fort/forc；后缀:-ly】
+3302 unhappy /ʌnˈfɔːtjʊnətlɪ/ adj. 不高兴的,伤心的　【前缀:un-；词根:hap；后缀:-y】
+3303 unhealthy /ʌnˈhelθɪ/ adj. 不健康的,不卫生的　【前缀:un-；后缀:-y】
+3304 uniform /ˈjuːnɪfɔːm/ n. 制服　【前缀:un-；词根:form】
+3305 unimportant /ʌnɪmˈpɔːt(e)nt/ adj. 不重要的,无意义　【前缀:un-；词根:port；后缀:-ant/-ent】
+3306 union /ˈjuːnjən/ n. 联合,联盟；工会　【词根:un/uni】
+3307 unique /jʊˈniːk/ adj. 惟一的,独一无二的　【词根:un/uni】
+3308 unit /ˈjuːnɪt/ n. 单元，单位　【词根:un/uni】
+3309 unite /jʊˈnaɪt/ v. 联合，团结　【词根:un/uni】
+3310 universal /juːnɪˈvɜːs(ə)l/ adj. 普遍的，全体的　【前缀:un-；词根:vers/vert；后缀:-al】
+3311 universe /ˈjuːnɪvɜːs/ n. 宇宙　【前缀:un-；词根:vers/vert】
+3312 university /juːnɪˈvɜːsɪtɪ/ n. 大学　【前缀:un-；词根:vers/vert；后缀:-ity/-ty】
+3313 unknown /juːnɪˈvɜːsɪtɪ/ adj. 不知道的　【基础词】
+3314 unless /ʌnˈles/ conj. 如果不，除非　【基础词】
+3315 unlike /ʌnˈlaɪk/ prep. 不像，和…不同　【前缀:un-】
+3316 unmarried /ʌnˈmærɪd/ adj. 未婚的，独身的　【前缀:un-；词根:mar】
+3317 unpleasant /ʌnˈplez(ə)nt/ adj. 使人不愉快的　【前缀:un-；词根:lax/leas；后缀:-ant/-ent】
+3318 unrest /ʌnˈrest/ n. 不安；骚动　【前缀:un-】
+3319 unsafe /ʌnˈseɪf/ adj. 不安全的；危险的　【前缀:un-】
+3320 unsuccessful /ʌnsəkˈsesfʊl/ adj. 不成功,失败的　【前缀:un-；词根:ced/ceed/cess；后缀:-ful】
+3321 until /ʌnˈtɪl/ prep. conj. 直到…为止　【基础词】
+3322 untrue /ʌnˈtruː/ adj. 不真实的，假的　【前缀:un-】
+3323 unusual /ʌnˈjuːʒʊəl/ adj. 不平常的，异常的　【前缀:un-】
+3324 unwilling /ʌnˈwɪlɪŋ/ adj. 不愿意的，勉强的　【前缀:un-】
+3325 up /ʌp/ adv. adj. n. v. prep. 向上；在上方；起来；在…以上 a. 上面的，向上的，上行的 n. 上升；上坡；上行；繁荣 v. 举起；拿起；提高 prep. 向(高处)；向(在)……上(面)游　【基础词】
+3326 upon /əˈpɔn/ prep. 在……上面　【基础词】
+3327 upper /ˈʌpə(r)/ adj. 较高的，较上的　【前缀:up-】
+3328 upset /ʌpˈset/ adj. 心烦的，苦恼的　【基础词】
+3329 upstairs /ʌpˈsteəz/ adv. 在楼上，到楼上　【前缀:up-；词根:st/sta/stat】
+3330 upward /ˈʌpwəd/ adv. 向上；往上　【前缀:up-】
+3331 urban /ˈɜːbən/ adj. 城市的，都市的　【词根:urb】
+3332 urge /ɜːdʒ/ v. 敦促，催促，力劝　【基础词】
+3333 urgent /ˈɜːdʒənt/ adj. 紧急的，紧迫的；U.S.A./USA(缩) = the United States of America　【后缀:-ant/-ent】
+3334 use /juːz/ n. vt. 利用,使用,应用　【基础词】
+3335 used /juːzd/ adj. 用过的;旧的;二手的　【后缀:-ed】
+3336 useful /ˈjuːsfʊl/ adj. 有用的，有益的　【后缀:-ful】
+3337 useless /ˈjuːslɪs/ adj. 无用的　【后缀:-less】
+3338 user /ˈjuːzə/ n. 使用者；用户　【后缀:-er/-or】
+3339 usual /ˈjuːʒʊəl/ adj. 通常的，平常的　【基础词】
+3340 usually /ˈjuːʒʊəlɪ/ adv. 通常，经常　【后缀:-ly】
+3341 vacation /vəˈkeɪʃ(ə)n/ n. 假期，休假　【基础词】
+3342 vacant /ˈveɪkənt/ adj. 空缺的，未被占用的　【基础词】
+3343 vague /veɪɡ/ adj. 含糊的，紧迫的　【基础词】
+3344 vain /veɪn/ n. 自负的，自视过高的，徒劳的，无效的　【基础词】
+3345 valid /ˈvælɪd/ adj. 有效的,合理的,有根据的　【词根:val】
+3346 valley /ˈvælɪ/ n. 山谷, 溪谷　【词根:val；后缀:-y】
+3347 valuable /ˈvæljʊəb(ə)l/ adj. 值钱的，贵重的　【词根:val；后缀:-able/-ible】
+3348 value /ˈvæljuː/ n. 价值，益处　【词根:val】
+3349 vanilla /vəˈnɪlə/ n. 香草　【基础词】
+3350 variety /vəˈraɪətɪ/ n. 种种，种类　【词根:vari；后缀:-ity/-ty】
+3351 various /ˈveərɪəs/ adj. 各种各样的，不同的　【词根:vari；后缀:-ous】
+3352 vase /vɑːz; (US) veɪs/ n. （花）瓶；瓶饰　【基础词】
+3353 vast /vɑːst; (US) væst/ adj. 巨大的，广阔的　【基础词】
+3354 veal /viːl/ n. （食用）小牛肉　【基础词】
+3355 vegetable /ˈvedʒɪtəb(ə)l/ n. 蔬菜　【基础词】
+3356 vehicle /ˈviːɪk(ə)l; (US) ˈviːhɪkl/ n. 交通工具，车辆　【基础词】
+3357 version /ˈvɜːʃ(ə)n; (US) ˈvərʒn/ n. 变体，变种，改写本　【词根:vers/vert；后缀:-ation/-tion/-ion/-sion】
+3358 vertical /ˈvɜːtɪk(ə)l/ adj. 垂直的，纵向的　【词根:vers/vert；后缀:-ic/-ical】
+3359 very /ˈverɪ/ adv. 很，非常　【词根:vers/vert；后缀:-y】
+3360 vest /vest/ n. 背心，内衣　【基础词】
+3361 via /ˈvaɪə/ prep. 经过（某地），通过　【词根:vi/via】
+3362 vice /vaɪs/ n. 罪行，不道德行为　【基础词】
+3363 victim /ˈvɪktɪm/ n. 受害者，牺牲品　【词根:vict/vinc】
+3364 victory /ˈvɪktərɪ/ n. 胜利　【词根:vict/vinc；后缀:-y】
+3365 video /ˈvɪdɪəʊ/ n. 录像，视频　【词根:vid/vis】
+3366 videophone /ˈvidiəʊfəʊn/ n. 可视电话　【词根:phon】
+3367 view /vjuː/ n. 看法,见解;风景,景色　【基础词】
+3368 viewer /ˈvjuːə(r)/ n. 观看者　【后缀:-er/-or】
+3369 village /ˈvɪlɪdʒ/ n. 村庄，乡村　【词根:vil；后缀:-age】
+3370 villager /ˈvilidʒə/ n. 村民　【词根:vil；后缀:-er/-or】
+3371 vinegar /ˈvilidʒə/ n. 醋　【基础词】
+3372 violate /ˈvaɪəleɪt/ v. 违反（法律、协议等），侵犯　【基础词】
+3373 violence /ˈvaɪələns/ n. 暴力行为　【基础词】
+3374 violent /ˈvaɪələnt/ adj. 暴力的　【基础词】
+3375 violin /vaɪəˈlɪn/ n. 小提琴　【基础词】
+3376 violinist /vaɪəˈlɪnɪst/ n. 提琴家，提琴手　【后缀:-ist】
+3377 virtue /ˈvɜːtjuː/ n. 美德,正直的品行,德行　【基础词】
+3378 virus /ˈvaɪərəs/ n. 病毒　【基础词】
+3379 visa /ˈviːzə/ n. 签证，背签　【词根:vid/vis】
+3380 visit /ˈviːzə/ n. vt. 参观，访问，拜访　【词根:vid/vis】
+3381 visitor /ˈvɪzɪtə(r)/ n. 访问者，参观者　【词根:vid/vis；后缀:-er/-or】
+3382 visual /ˈvɪʒjʊəl/ adj. 视力的，视觉的　【词根:vid/vis；后缀:-al】
+3383 vital /ˈvaɪt(ə)l/ adj. 必不可少的，对…极重要的　【词根:vit/viv；后缀:-al】
+3384 vivid /ˈvɪvɪd/ adj. 生动，逼真的，鲜明的　【词根:vit/viv】
+3385 vocabulary /vəˈkæbjʊlərɪ/ n. 词汇, 词汇表　【词根:voc/vok；后缀:-ary】
+3386 voice /vɔɪs/ n. 说话声; 语态　【基础词】
+3387 volcano /vɔlˈkeɪnəʊ/ n. 火山　【词根:vol】
+3388 volleyball /vɔlˈkeɪnəʊ/ n. 排球　【词根:vol】
+3389 voluntary /ˈvɔləntərɪ/ adj. 自愿的，主动的　【词根:vol；后缀:-ary】
+3390 volunteer /vɔlənˈtɪə(r)/ n. v. / v. 义工，自愿者，无偿做　【词根:vol；后缀:-er/-or】
+3391 vote /vəʊt/ vi. 选举，投票　【词根:vot】
+3392 voyage /ˈvɔɪɪdʒ/ n. 航行，旅行　【基础词】
+3393 wag /wæɡ/ v. 摇动；摆动　【基础词】
+3394 wage /weɪdʒ/ n. 工资，工钱，报酬　【后缀:-age】
+3395 waist /weɪst/ n. 腰，腰部，腰围　【后缀:-ist】
+3396 wait /weɪt/ vi. 等，等候　【基础词】
+3397 waiter /ˈweɪtə(r)/ n. （餐厅）男服务员　【后缀:-er/-or】
+3398 waitress /tres/ n. 女服务员；wake (woke, woken　【基础词】
+3399 walk /wɔːk/ n. v. 步行；散步　【基础词】
+3400 walkman /ˈwɔːkmən/ n. 随身听　【基础词】
+3401 wall /wɔːl/ n. 墙　【基础词】
+3402 wallet /ˈwɔlɪt/ n. (放钱,证件等的)皮夹　【后缀:-et】
+3403 walnut /ˈwɔːlnʌt/ n. 核桃，胡桃　【基础词】
+3404 wander /ˈwɔndə(r)/ vi. 漫游,游荡,漫步,流浪　【基础词】
+3405 want /wɔnt; (US) wɔːnt/ vt. 想,想要,需要,必要　【后缀:-ant/-ent】
+3406 war /wɔː(r)/ n. 战争　【后缀:-ar】
+3407 ward /wɔːd/ n. 保卫,看护,病房,收容所　【基础词】
+3408 warehouse /ˈweəhaʊs/ n. 仓库，货栈　【基础词】
+3409 warm /wɔːm/ adj. 暖和的,温暖的;热情的　【基础词】
+3410 warmth /wɔːmθ/ n. 暖和，温暖　【后缀:-th】
+3411 warning /ˈwɔːnɪŋ/ n. 警报　【基础词】
+3412 wash /wɒʃ/ n. v. 洗(涤)冲洗,洗剂,泼溅,洗的衣服 v.洗(涤),冲洗,流过,弄湿　【基础词】
+3413 washroom /ˈwɔʃrʊm/ n. 盥洗室　【基础词】
+3414 waste /weɪst/ n. vt. 浪费　【基础词】
+3415 watch /wɔtʃ/ vt. n. 观看，注视；当心，注意 n. 手表，表　【基础词】
+3416 water /ˈwɔːtə(r)/ n. v. 水v. 浇水　【基础词】
+3417 watermelon /ˈwɔːtəmelən/ n. 西瓜　【词根:term】
+3418 wave /weɪv/ n. v. （热、光、声等的）波，波浪 v. 挥手，挥动，波动　【基础词】
+3419 wax /wæks/ n. 蜡　【基础词】
+3420 way /weɪ/ n. 路，路线；方式，手段　【后缀:-y】
+3421 wayside /weɪ/ adj. 路边的　【基础词】
+3422 we /wiː/ pron. 我们　【基础词】
+3423 web /web/ n. 网，网状物　【基础词】
+3424 website /websaɪt/ n. 网络　【基础词】
+3425 weak /wiːk/ adj. 差的，弱的，淡的　【基础词】
+3426 weakness /ˈwiːknɪs/ n. 软弱　【后缀:-ness】
+3427 wealth /welθ/ n. 财产，财富　【基础词】
+3428 wealthy /ˈwelθɪ/ adj. 富的；wear (wore, worn　【后缀:-y】
+3429 weather /weə(r)/ n. 天气　【基础词】
+3430 weatherman /ˈweðəmæn/ n. 气象员,预报天气的人　【词根:therm】
+3431 wedding /ˈwedɪŋ/ n. 婚礼,结婚　【基础词】
+3432 Wednesday /ˈwenzdeɪ/ n. 星期三　【后缀:-y】
+3433 weed /wiːd/ n. 杂草，野草　【后缀:-ed】
+3434 week /wiːk/ n. 星期，周　【基础词】
+3435 weekday /ˈwiːkdeɪ/ n. 平日　【后缀:-y】
+3436 weekend /wiːkˈend/ n. 周末　【基础词】
+3437 weekly /ˈwiːklɪ/ adj. 每周的　【后缀:-ly】
+3438 weep /wiːp/ v. 哭泣，流泪　【基础词】
+3439 weigh /weɪ/ vt. 称…的重量，重（若干　【基础词】
+3440 weight /weɪt/ n. 重，重量　【基础词】
+3441 welcome /ˈwelkəm/ n. v. adj. 欢迎 a. 受欢迎的　【基础词】
+3442 welfare /ˈwelfeə(r)/ n. 幸福，福利　【基础词】
+3443 well /wel/ adv. adj. int. n. (better, best) ad. 好,令人满意地,完全地 a.好的,,健康的int. 表示惊讶同意或犹豫等,亦用于接话语;好吧,那么,哎呀 n. 井　【基础词】
+3444 west /west/ adj. adv. n. (在)西；向西,从西来的 ad. 在西方,向西方 n.西部；西方　【基础词】
+3445 western /ˈwest(ə)n/ adj. 西方的，西部的　【后缀:-ern】
+3446 westerner /ˈwestənə/ n. 西方人　【后缀:-er/-or】
+3447 westwards /ˈwestwədz/ adv. 向西　【基础词】
+3448 wet /wet/ adj. 湿的,潮的,多雨的　【后缀:-et】
+3449 whale /weɪl; (US) hweɪl/ n. 鲸　【基础词】
+3450 what /wɔt; (US) hwɑt/ pron. adj. 什么,怎么样 a. 多么，何等；什么　【基础词】
+3451 whatever /wɔtˈevə(r)/ conj. pron. 无论什么，不管什么　【基础词】
+3452 wheat /wiːt; (US) hwiːt/ n. 小麦　【基础词】
+3453 wheel /wiːl; (US) hwiːl/ n. 轮，机轮　【基础词】
+3454 when /wen/ conj. adv. 当…的时候 ad. 什么时候，何时　【后缀:-en】
+3455 whenever /wenˈevə(r)/ conj. 每当，无论何时　【基础词】
+3456 where /weə(r); (US) hweər/ adv. 在哪里；往哪里　【基础词】
+3457 wherever /weərˈevə(r)/ conj. 无论在哪里　【基础词】
+3458 whether /ˈweðə(r); (US) ˈhweðər/ conj. 是否　【基础词】
+3459 which /wɪtʃ; (US) hwɪtʃ/ pron. adj. 那(哪)一个；那(哪)一些 a.这(哪)个；这(哪)些；无论哪个(些　【基础词】
+3460 whichever /wɪtʃˈevə(r)/ pron. 无论哪个;无论哪些　【基础词】
+3461 while /waɪl; (US) hwaɪl/ conj. n. 在…的时候,和…同时 n. 一会儿，一段时间　【基础词】
+3462 whisper /ˈwɪspə(r)/ v. 低语，私下说　【基础词】
+3463 whistle /waɪt; (US) hwaɪt/ n. 口哨，口哨声　【基础词】
+3464 white /waɪt; (US) hwaɪt/ adj. n. 白色的 n. 白色　【基础词】
+3465 who /huː/ pron. 谁　【基础词】
+3466 whole /həʊl/ adj. 整个的　【基础词】
+3467 whom /huːm/ pron. (who的宾格　【基础词】
+3468 whose /huːz/ pron. 谁的　【基础词】
+3469 why /waɪ; (US) hwaɪ/ adv. int. / int. 为什么, 你难道不知道（表示反驳、不耐烦等　【后缀:-y】
+3470 wide /weə(r); (US) hweər/ adj. 宽阔的　【基础词】
+3471 widespread /ˈwaɪdspred/ adj. 分布广的,普遍的　【基础词】
+3472 wife /waɪf/ n. 妻子　【基础词】
+3473 wild /waɪld/ adj. 未开发的，荒凉的；野生的，野的　【基础词】
+3474 wildlife /ˈwaɪldlaɪf/ n. 野生动物　【基础词】
+3475 will /wɪl/ n. 意志, 遗嘱；will (would　【基础词】
+3476 willing /ˈwɪlɪŋ/ adj. 乐意的； 愿意的　【后缀:-ing】
+3477 willingly /ˈwiliŋli/ adv. 乐意地　【后缀:-ly】
+3478 willingness /ˈwiliŋnis/ n. 意愿； 愿望；win (won, won　【后缀:-ness】
+3479 wind /wɪnd/ n. 风 ；wind(wound,wound　【基础词】
+3480 windbreaker /ˈwind/ n. 风衣,防风(皮)夹克　【基础词】
+3481 window /ˈwɪndəʊ/ n. 窗户；计算机的窗　【基础词】
+3482 windy /ˈwɪndɪ/ adj. 有风的，多风的　【后缀:-y】
+3483 wine /waɪn/ n. 酒　【基础词】
+3484 wing /wɪŋ/ n. 机翼，翅膀　【后缀:-ing】
+3485 winner /ˈwɪnə(r)/ n. 获胜者　【基础词】
+3486 winter /ˈwɪntə(r)/ n. 冬天，冬季　【基础词】
+3487 wipe /waɪp/ v. 擦；擦净；擦干　【基础词】
+3488 wire /ˈwaɪə(r)/ n. 电线　【基础词】
+3489 wisdom /ˈwɪzdəm/ n. 智慧　【后缀:-dom】
+3490 wise /waɪz/ adj. 聪明,英明的,有见识的　【后缀:-ize/-ise】
+3491 wish /wɪʃ/ n. vt. 愿望，祝愿 vt. 希望，想要，祝愿　【后缀:-ish】
+3492 with /wɪʃ/ prep. 关于,带有,以,和,用,有　【基础词】
+3493 withdraw /wɪðˈdrɔː/ v. 撤回，撤离　【基础词】
+3494 within /wɪˈðɪn/ prep. 在……里面　【基础词】
+3495 without /wɪˈðaʊt/ prep. 没有　【基础词】
+3496 witness /ˈwɪtnɪs/ v. n. / n. 目击者，见证人；wolf（复wolves　【基础词】
+3497 wonder /ˈwʌndə(r)/ v. n. 对…疑惑，感到惊奇,想知道 n. 惊讶,惊叹;奇迹　【基础词】
+3498 wonderful /ˈwʌndəfʊl/ adj. 美妙的，精彩的；了不起的；太好了　【后缀:-ful】
+3499 wood /wʊd/ n. 木头,木材,(复)树木,森林　【基础词】
+3500 wooden /ˈwʊd(ə)n/ adj. 木制的　【后缀:-en】
+3501 wool /wʊl/ n. 羊毛，羊绒　【基础词】
+3502 woollen /ˈwulin/ adj. 羊毛的，羊毛制的　【基础词】
+3503 word /wɜːd/ n. 词，单词；话　【基础词】
+3504 work /wɜːk/ n. vi. 工作,劳动,事情 vi. 工作;(机器、器官等)运转,活动　【基础词】
+3505 workday /ˈwəːkdei/ n. 工作日　【后缀:-y】
+3506 worker /ˈwɜːkə(r)/ n. 工人；工作者　【后缀:-er/-or】
+3507 workforce /ˈwəːkfɔːs/ n. 劳动力　【词根:fort/forc】
+3508 workmate /ˈwəːkfɔːs/ n. 同事；工友　【基础词】
+3509 workplace /wɜːkpleɪs/ n. 工作场所，车间　【词根:plac/pleas】
+3510 works /wɜːks/ n. 著作，作品　【基础词】
+3511 world /wɜːld/ n. 世界　【基础词】
+3512 worldwide /ˈwɜːldwaɪd/ adj. 遍及全球的，世界范围的　【基础词】
+3513 worm /wɜːm/ n. 软体虫,蠕虫(尤指蚯蚓　【基础词】
+3514 worn /wɜrn /wɜːm/ adj. 用坏,用旧的,疲惫的　【基础词】
+3515 worried /ˈwɜrɪd /ˈwʌ-/ adj. 担心的，烦恼的　【基础词】
+3516 worry /ˈwʌrɪ/ n. v. 烦恼,担忧,发怒,困扰　【后缀:-y】
+3517 worse /wɜːs/ adj. (bad的比较级)更坏的　【基础词】
+3518 worst /wɜːst/ adj. (bad的最高级)最坏的　【基础词】
+3519 worth /wɜːθ/ adj. 有…的价值,值得…的　【基础词】
+3520 worthless /ˈwɜːθlɪs/ adj. 没有价值,没有用的　【后缀:-less】
+3521 worthwhile /wɜːθˈwaɪl/ adj. 值得做的　【基础词】
+3522 worthy /wɜːθˈwaɪl/ adj. 值得的　【后缀:-y】
+3523 would /wəd/ v. （will的过去时）将会，打算，想要，过去常常　【基础词】
+3524 wound /wuːnd/ vt. n. 伤,伤害 n.创伤,伤口　【基础词】
+3525 wounded /wuːndɪd/ adj. 受伤的　【后缀:-ed】
+3526 wrestle /ˈres(ə)l/ v. 摔跤　【基础词】
+3527 wrinkle /ˈrɪŋk(ə)l/ n. 皱纹　【基础词】
+3528 wrist /rɪst/ n. 手腕，腕关节　【基础词】
+3529 write /raɪt/ v. (wrote, written) v. 写，书写；写作，著述　【基础词】
+3530 writing /raɪt/ n. 书写，写　【后缀:-ing】
+3531 wrong /rɔŋ; (US) rɔːŋ/ adj. 错误,不正常,有毛病的　【基础词】
+3532 yard /jɑːd/ n. 码；院子；场地　【基础词】
+3533 yawn /jɔːn/ v. 打哈欠　【基础词】
+3534 year /jɪə(r)/ n. 年　【基础词】
+3535 yell /jel/ v. 叫喊，吼叫　【基础词】
+3536 yellow /ˈjeləʊ/ adj. 黄色的　【基础词】
+3537 yes /jes/ adv. 是，好，同意　【基础词】
+3538 yesterday /ˈjestədeɪ/ n. adv. 昨天　【后缀:-y】
+3539 yet /jet/ adv. 尚，还，仍然　【基础词】
+3540 yoghurt /ˈjɔgət/ n. 酸奶　【基础词】
+3541 you /juː/ pron. 你；你们　【基础词】
+3542 young /jʌŋ/ adj. 年轻的　【基础词】
+3543 your /jʌŋ/ pron. 你的；你们的　【基础词】
+3544 yours /jɔːz/ pron. 你的；你们的　【基础词】
+3545 yourself /jɔːˈself; (US) jʊərˈself/ pron. 你自己　【基础词】
+3546 yourselves /jɔːˈselvz/ pron. 你们自己　【基础词】
+3547 youth /juːθ/ n. 青春；青年　【后缀:-th】
+3548 yummy /ˈjʌmɪ/ adj. 很好吃的　【后缀:-y】
+3549 zebra /ˈzebrə/ n. 斑马　【基础词】
+3550 zero /ˈzɪərəʊ/ n. num. 零,零度,零点　【基础词】
+3551 zip /zɪp/ v. n. 拉开(或扣上)……的拉链；拉链；zip code(美) =postcode　【基础词】
+3552 zipper /ˈzɪpə(r)/ n. 拉链　【基础词】
+3553 zone /zuː/ n. 区域；范围　【基础词】
+3554 zoo /zuː/ n. 动物园　【基础词】
+3555 zoom /zuːm/ v. 快速移动，迅速前往，猛涨　【基础词】

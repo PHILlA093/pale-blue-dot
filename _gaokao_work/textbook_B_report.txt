@@ -1,0 +1,15 @@
+https://raw.githubusercontent.com/Gumingyu/rjb-word-review/main/index.html | 册数=1(必修1) 单元数=6 词条数=143
+https://raw.githubusercontent.com/Gumingyu/pep-selective1-wordlab/main/vocabulary.js | 册数=1(选择性必修1) 单元数=5 词条数=369
+https://raw.githubusercontent.com/Gumingyu/pep-selective2-wordlab/main/vocabulary.js | 册数=1(选择性必修2) 单元数=5 词条数=363
+https://raw.githubusercontent.com/Gumingyu/pep-selective3-wordlab/main/vocabulary.js | 册数=1(选择性必修3) 单元数=5 词条数=350
+https://raw.githubusercontent.com/cyforkk/pep-english-words/main/public/data/textbooks/pep2019-{compulsory-1..3,optional-1..4}.json | 册数=7(必修1..选择性必修4) 单元数=36 词条数=2731
+https://raw.githubusercontent.com/kajweb/dict/master/book/{ts}_PEPGaoZhong_{1..11}.zip(共11个zip) | 册数=11(旧版必修1..旧版选修11) 单元数=11 词条数=3877
+SKIPPED https://api.github.com/search/repositories?q=人教版+必修+单词 | 0 条可用结果(仅返回本任务已用的 Gumingyu 4 个仓库)
+SKIPPED https://api.github.com/search/repositories?q=高中英语+必修+单词表 | total_count=0
+SKIPPED https://api.github.com/search/repositories?q=人教版+必修+词汇 | total_count=0
+SKIPPED https://api.github.com/search/repositories?q=高中英语+词汇表 | total_count=0
+SKIPPED https://api.github.com/search/repositories?q=高考+英语+单词 | HTTP 403 速率限制(未认证搜索配额耗尽)
+SKIPPED https://github.com/keyonsin/astrobox-resource-com-renjiao-gaozhong-english-word-xiaomi | 仅含 .rpk 打包件与图片,无文本词表
+SKIPPED https://github.com/liuyuming0823/zhiyue-learning | wordbank.js 未含人教版课后单词表结构,未采用
+SKIPPED https://hf-mirror.com | 未找到可用的人教版高中课后单词表数据集(parquet 无解析工具)
+总词条数=6653 册数=18 单元数=47 去重后不同单词数=4796(忽略大小写=4787)

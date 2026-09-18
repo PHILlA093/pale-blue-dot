@@ -1,0 +1,16 @@
+# --- runtime data: holds the local DeepSeek API key in plain text, never commit it ---
+*.exe.WebView2/
+# --- build / debug artifacts ---
+_app_tmp.exe
+_web_icon.ico
+_prof*/
+pkg/
+webview2.zip
+webview2.nupkg
+_st_*.png
+_console*.log
+*.bak_*
+__pycache__/
+*.pyc
+# --- promo render cache / local scratch ---
+frames*/
