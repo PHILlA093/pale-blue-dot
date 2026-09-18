@@ -24,52 +24,62 @@ window.ENG_DB = {
     {
       "id": "eng-bx1",
       "name": "必修第一册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#42a5f5"
     },
     {
       "id": "eng-bx2",
       "name": "必修第二册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#26c6da"
     },
     {
       "id": "eng-bx3",
       "name": "必修第三册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#66bb6a"
     },
     {
       "id": "eng-xx1",
       "name": "选择性必修第一册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#9ccc65"
     },
     {
       "id": "eng-xx2",
       "name": "选择性必修第二册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ffa726"
     },
     {
       "id": "eng-xx3",
       "name": "选择性必修第三册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ef5350"
     },
     {
       "id": "eng-xx4",
       "name": "选择性必修第四册",
-      "kind": "major"
+      "kind": "major",
+      "color": "#ab47bc"
     },
     {
       "id": "eng-roots",
       "name": "词根词缀",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#26a69a"
     },
     {
       "id": "eng-sentence",
       "name": "核心句型",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#ffb74d"
     },
     {
       "id": "eng-grammar",
       "name": "语法知识",
-      "kind": "minor"
+      "kind": "minor",
+      "color": "#90a4ae"
     }
   ],
   "points": [
