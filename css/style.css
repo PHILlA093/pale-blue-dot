@@ -1,4 +1,4 @@
-/* ============ 穷观 · 弹性网络知识库 样式 ============ */
+/* ============ 穷观 · 样式 ============ */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
@@ -638,9 +638,11 @@ body {
 }
 #dContent b { color: #8cd4ff; font-weight: 700; }
 
-/* MathJax 公式排版适配 */
-#dContent mjx-container { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
-#dContent mjx-container[display="true"] { margin: 6px 0 10px; }
+/* MathJax 公式排版适配
+ * 行内公式不能设 overflow:hidden —— 分式/根式/上下标会被纵向裁掉,看起来就像"文字压线"。
+ * 行内容器交给浏览器撑高行盒;只有块级(display)公式才需要横向滚动。 */
+#dContent mjx-container { max-width: 100%; line-height: 1.35; vertical-align: middle; }
+#dContent mjx-container[display="true"] { overflow-x: auto; margin: 8px 0 12px; }
 #dContent .mjx-math { font-size: 100%; }
 
 #dKeywords { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
