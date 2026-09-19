@@ -94,7 +94,7 @@
     if (!btn || btn.__qgBound) return;
     btn.__qgBound = true;
     btn.addEventListener('click', function () {
-      try { if (!window.open('train.html', 'qg_train')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开破卷窗口:' + e); }
+      try { if (!window.open('train.html', 'qg_train')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开破卷窗口:' + e); }
     });
   }
 
@@ -365,7 +365,7 @@
     }
     if (m.gopen === '1') {
       setTimeout(function () {
-        try { if (!window.open('guanlan.html', 'qg_guanlan')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开观澜窗口:' + e); }
+        try { if (!window.open('guanlan.html', 'qg_guanlan')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开观澜窗口:' + e); }
       }, 1800);
     }
     if (m.open) {
@@ -373,7 +373,7 @@
         var u = 'train.html?auto=1';
         if (m.wipe === '1') u = 'train.html?wipe=1';
         else if (m.ask) u += '&ask=' + encodeURIComponent(m.ask);
-        try { if (!window.open(u, 'qg_train')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开破卷窗口:' + e); }
+        try { if (!window.open(u, 'qg_train')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开破卷窗口:' + e); }
       }, 1800);
     }
   })();
@@ -385,3 +385,16 @@
     executeLocate: executeLocate
   };
 })();
+
+/* 非阻塞提示条:替代 qgNotice(alert 会冻结页面,对无头测试与真实用户都不友好) */
+function qgNotice(msg) {
+    try {
+        var d = document.createElement("div");
+        d.textContent = msg;
+        d.style.cssText = "position:fixed;left:50%;bottom:72px;transform:translateX(-50%);" +
+            "background:rgba(229,57,53,.95);color:#fff;padding:10px 16px;border-radius:8px;" +
+            "font-size:13px;line-height:1.5;z-index:100000;box-shadow:0 6px 20px rgba(0,0,0,.45);max-width:80vw";
+        document.body.appendChild(d);
+        setTimeout(function () { try { d.remove(); } catch (e) { } }, 5000);
+    } catch (e) { }
+}
