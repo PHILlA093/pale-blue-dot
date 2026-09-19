@@ -334,7 +334,7 @@
       // 不再把对话塞进 URL:宿主会把新窗口的完整 URI 原样写进运行日志(NWREQ:),
       // URL 也会进浏览历史 —— 与"对话仅保留在内存、关闭即清空"的承诺直接冲突。
       store('qg_guanlan_conv', JSON.stringify(payload));
-      window.open('guanlan.html', 'qg_guanlan');
+      if (!window.open('guanlan.html', 'qg_guanlan')) { try { openPanel(); } catch (e) { } }
       // 兜底清除(独立窗正常读取后会立即自删)
       setTimeout(function () {
         try { localStorage.removeItem('qg_guanlan_conv'); } catch (e) { /* 忽略 */ }
@@ -663,7 +663,7 @@
   function on(id, fn) { var el = $(id); if (el) el.addEventListener('click', fn); }
   // 侧栏「观澜」入口:直接打开无边框独立窗口(桌面版由宿主拦截;网页版开新标签页)
   on('guanlanOpen', function () {
-    try { window.open('guanlan.html', 'qg_guanlan'); } catch (e) { openPanel(); }
+    try { if (!window.open('guanlan.html', 'qg_guanlan')) openPanel(); } catch (e) { openPanel(); }
   });
   on('glClose', closePanel);
   on('glClearText', clearConv);

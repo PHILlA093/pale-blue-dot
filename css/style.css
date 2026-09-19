@@ -865,7 +865,7 @@ html.intro-live, html.intro-live body { background: #000; }
   position: fixed;
   right: 18px;
   bottom: 18px;
-  z-index: 39;                 /* 低于侧栏/详情卡:面板打开时自然被覆盖 */
+  z-index: 45;                 /* 高于详情面板(40):面板打开时也要能点,否则用户点了没反应 */
   padding: 8px 16px;
   border-radius: 12px;         /* 长方形圆角框(非胶囊) */
   border: 1px solid rgba(120, 160, 220, 0.22);

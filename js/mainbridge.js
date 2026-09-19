@@ -94,7 +94,7 @@
     if (!btn || btn.__qgBound) return;
     btn.__qgBound = true;
     btn.addEventListener('click', function () {
-      try { window.open('train.html', 'qg_train'); } catch (e) { /* 忽略 */ }
+      try { if (!window.open('train.html', 'qg_train')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开破卷窗口:' + e); }
     });
   }
 
@@ -365,7 +365,7 @@
     }
     if (m.gopen === '1') {
       setTimeout(function () {
-        try { window.open('guanlan.html', 'qg_guanlan'); } catch (e) { /* 忽略 */ }
+        try { if (!window.open('guanlan.html', 'qg_guanlan')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开观澜窗口:' + e); }
       }, 1800);
     }
     if (m.open) {
@@ -373,7 +373,7 @@
         var u = 'train.html?auto=1';
         if (m.wipe === '1') u = 'train.html?wipe=1';
         else if (m.ask) u += '&ask=' + encodeURIComponent(m.ask);
-        try { window.open(u, 'qg_train'); } catch (e) { /* 忽略 */ }
+        try { if (!window.open(u, 'qg_train')) alert('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { alert('无法打开破卷窗口:' + e); }
       }, 1800);
     }
   })();
