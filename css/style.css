@@ -855,7 +855,8 @@ html.intro-live, html.intro-live body { background: #000; }
 /* ---------- 窄窗口适配 ---------- */
 @media (max-width: 1200px) {
   .brand-text .sub { display: none; }
-  #statBar { display: none; }
+  /* 窄窗不再整条隐藏:搜索命中数与节点数是有用信息,压缩显示即可(原为 display:none) */
+  #statBar { font-size: 11.5px; max-width: 200px; overflow: hidden; text-overflow: ellipsis; }
 }
 /* 原 @media (max-width: 860px) 已删除:主窗 MinimumSize 为 980×640、观澜独立窗为 900×620
    (桌面版/build/Program.cs:65、193),而 style.css 只被这两页引用,该断点永不命中,属死规则。 */
@@ -1364,3 +1365,19 @@ html.intro-live, html.intro-live body { background: #000; }
   box-sizing: border-box;
 }
 html.maxed .winedge { border-radius: 0; }
+
+/* ---------- 板块「全选 / 全不选」 ---------- */
+.board-bulk { display: flex; gap: 6px; margin: 4px 0 6px; }
+.board-bulk button {
+  flex: 1; font-size: 11.5px; padding: 3px 0; cursor: pointer;
+  color: var(--text-dim); background: rgba(120, 160, 220, 0.08);
+  border: 1px solid var(--panel-border); border-radius: 6px;
+}
+.board-bulk button:hover { color: var(--accent); border-color: rgba(79, 195, 247, 0.45); }
+
+/* ---------- 未开放科目的「建设中」标记 ---------- */
+#subjectMenu [data-sub].soon { opacity: 0.62; }
+#subjectMenu [data-sub].soon .soon-tag {
+  margin-left: 6px; font-size: 10px; padding: 1px 5px; border-radius: 8px;
+  color: var(--text-dim); border: 1px solid var(--panel-border);
+}

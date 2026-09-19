@@ -936,7 +936,7 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
     return true;
   }
 
-  function doSearch() {
+  function doSearch(keepPanel) {
     var q = searchInput.value.trim();
     if (!q) { clearSearch(); return; }
     var tokens = tokenize(q);
@@ -947,7 +947,7 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
     renderResults(matches, tokens.length);
     // 进入搜索态先收起旧的选择(聚焦重排 / 详情卡),避免云层搜索高亮与
     // 详情卡内容不一致;此处 applyVisualState 会以搜索态为准重画。
-    if (selectedId) deselectNode();
+    if (selectedId && !keepPanel) deselectNode();   // 从关键词标签发起搜索时保留详情面板
     applyVisualState();
     document.getElementById('statBar').textContent =
       '节点 ' + DB.points.length + ' · 关联 ' + edges.length + ' · 命中 ' + matches.length;
@@ -1030,6 +1030,23 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
   var boardChecks = {};
   (function buildBoardList() {
     var list = document.getElementById('boardList');
+    // 全选 / 全不选:板块多了以后逐个点很烦,而且「全不选」是排错常用动作
+    (function boardBulk() {
+      var bar = document.createElement('div');
+      bar.className = 'board-bulk';
+      [['全选', true], ['全不选', false]].forEach(function (pair) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = pair[0];
+        b.addEventListener('click', function () {
+          DB.boards.forEach(function (bb) { if (boardChecks[bb.id]) boardChecks[bb.id].checked = pair[1]; });
+          applyBoardFilter();
+          applyVisualState();
+        });
+        bar.appendChild(b);
+      });
+      list.parentNode.insertBefore(bar, list);
+    })();
     DB.boards.forEach(function (b) {
       var item = document.createElement('label');
       item.className = 'board-item';
@@ -1065,6 +1082,20 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
   // 启动即应用一次板块筛选(词点层默认隐藏等重负载默认值立即生效)
   applyBoardFilter();
 
+  /* 板块筛选后的统计:不再是固定总数,而是「可见/总数」,并显示被隐藏的点数,
+   * 避免「全部取消勾选后 statBar 仍写着 132」这种自相矛盾。 */
+  function updateFilterStat() {
+    var el = document.getElementById('statBar');
+    if (!el) return;
+    var total = DB.points.length, vn = 0;
+    DB.points.forEach(function (p) { var r = nodeById[p.id]; if (r && r.boardOn) vn++; });
+    var et = edges.length, ve = 0;
+    allEdges.forEach(function (e) { if (e.line.visible) ve++; });
+    el.textContent = (vn === total)
+      ? '节点 ' + total + ' · 关联 ' + et
+      : '节点 ' + vn + '/' + total + ' · 关联 ' + ve + '/' + et + ' · 已隐藏 ' + (total - vn) + ' 点';
+  }
+
   function applyBoardFilter() {
     DB.points.forEach(function (p) {
       var vis = boardChecks[p.board] ? boardChecks[p.board].checked : true;
@@ -1088,6 +1119,7 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
       var vb = boardChecks[e.edge.b.board] ? boardChecks[e.edge.b.board].checked : true;
       e.line.visible = va && vb;
     });
+    updateFilterStat();     // 必须在点与边都更新完之后再统计,否则关联数滞后一格
     // 正在查看/聚焦的知识点所属板块被取消勾选 → 立即收起其详情与聚焦,
     // 避免界面上残留"该知识点已不存在(被隐藏)"的名称
     if (selectedId) {
@@ -1327,7 +1359,7 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
       s.textContent = k;
       s.addEventListener('click', function () {
         searchInput.value = k;
-        doSearch();
+        doSearch(true);            // true = 保留详情面板(点关键词只是想看看相关命中)
       });
       kw.appendChild(s);
     });
@@ -1356,6 +1388,17 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
   document.getElementById('dFocus').addEventListener('click', function () {
     if (selectedId) focusNode(selectedId);
   });
+
+  /* 重置视角:转晕了 / 拖到极端角度后的一键复位(与初始机位一致) */
+  (function resetView() {
+    var btn = document.getElementById('resetViewBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      camera.position.set(70, 50, 76);
+      controls.target.set(0, 0, 0);
+      controls.update();
+    });
+  })();
 
   /* ---------------- 界面控件 ----------------
    * 左上按钮 ↔ 抽屉侧栏;分栏头/箭头 ↔ 分栏折叠;✕ ↔ 关闭详情
@@ -1401,6 +1444,16 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
       physics: '物理', chemistry: '化学', biology: '生物'
     };
     var OPEN = { math: 1, chemistry: 1, physics: 1, english: 1, biology: 1 };   // 已开放
+    // 未开放科目(目前只有语文)在菜单里直接标出,免得点进去才发现是"建设中"
+    setTimeout(function () {
+      Array.prototype.forEach.call(document.querySelectorAll('#subjectMenu [data-sub]'), function (el) {
+        var sub = el.getAttribute('data-sub');
+        if (!OPEN[sub] && !/建设中/.test(el.textContent)) {
+          el.classList.add('soon');
+          el.innerHTML = el.innerHTML + '<span class=\"soon-tag\">建设中</span>';
+        }
+      });
+    }, 0);
     // boot 科目值(math/chem/physics/eng/bio) ↔ 菜单值(math/chemistry/physics/english/biology)
     var MENU_OF = { math: 'math', chem: 'chemistry', physics: 'physics', eng: 'english', bio: 'biology' };
     var KEY_OF = { math: 'math', chemistry: 'chem', physics: 'physics', english: 'eng', biology: 'bio' };
