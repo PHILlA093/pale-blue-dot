@@ -8,10 +8,15 @@
  *   { camera:{cx,cy,scale}?, anim:{mode,dur}?, defs:[...], objects:[...] }
  * defs 按 id 合并求值(op: fixed/line/onLine/reflect/lineIntersect/mid/between),
  * 支持引用前面 def 的名字或 {x,y} 字面量;坐标/参数可为含 u 的四则表达式。
- * objects(op: dot/segment/line/ray/circle/polyline/polygon/arrow/curve/text),
+ * objects(op: dot/segment/line/ray/circle/polyline/polygon/arrow/curve/polar/text),
  * 图元配色取主题色板,支持虚线、自由点拖动(drag:'free')、MathJax 标注(tex)。
+ * 极坐标曲线为一等图元:type:'polar', {r:"cos(3*theta)", thetaMin, thetaMax},
+ * 逐点按 x=r·cosθ、y=r·sinθ 换算成参数曲线,**画在同一个直角坐标系里**
+ * (r<0 时按定义自然落在反方向,不做取绝对值之类的改写);θ 可写 theta 或 θ。
  * 安全:表达式由自写词法/递归下降求值器处理(白名单 Math 函数),不引入
  * 任何动态执行手段;动画内时 u∈[0,1] 按真实时间推进。
+ * 另外本文件提供"用户表达式层"(见 3.18,api.ueXxx):用户在界面上自己写
+ * y=f(x) / r=f(θ) / 隐函数,并与 AI 场景共存(独立存储,engine.clear() 不清它)。
  * ============================================================ */
 (function (global) {
   'use strict';
@@ -34,10 +39,18 @@
     red: '#ff8a80',
     white: '#eaf2ff'
   };
+  /* 用户表达式自动配色:主题色板在前(复用既有观感),后面补充高对比色,
+     10 条以内两两可辨(颜色由引擎分配,UI 只负责显示色点) */
+  var PAL_LIST = ['#4fc3f7', '#ffd54f', '#ff8a80', '#7ee787', '#c792ea',
+    '#ffab40', '#4dd0e1', '#f06292', '#aed581', '#9575cd'];
   /* 坐标轴与刻度:灰调细线,不做网格(引擎默认无网格,可开 showGrid 加 5% 淡刻度线) */
   var AXIS_COLOR = 'rgba(143,163,192,0.42)';
   var AXIS_TEXT = 'rgba(143,163,192,0.8)';
   var GRID_COLOR = 'rgba(234,242,255,0.05)';
+  /* 极坐标网格(可选叠加层,默认关):同心圆淡、角度射线稍亮、0/90/180/270 最亮 */
+  var POLAR_GRID = 'rgba(143,163,192,0.20)';
+  var POLAR_RAY = 'rgba(143,163,192,0.32)';
+  var POLAR_MAIN = 'rgba(143,163,192,0.5)';
   var FONT_STACK = '"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif';
   /* 刻度/网格循环的硬迭代上限:即使可视矩形或步长因异常状态失去上界,
      循环也必须在有限步内退出(宁可少画几条刻度,也不能让页面假死,D1) */
@@ -45,10 +58,13 @@
 
   /* ============================================================
    * 2. 安全表达式求值器(自写 tokenizer + 递归下降,无动态执行)
-   * 支持:数字、变量 u/x、常量 PI/E、+ - * /、括号、一元负号、
+   * 支持:数字、变量 u/x/y/theta、常量 PI/E、+ - * / ^、括号、一元负号、
+   *       隐式乘法(2x、2(x+1)、(x-1)(x+1))、
    *       白名单函数(全部来自 Math,无 eval/Function):
    *       sin cos tan asin acos atan atan2、sqrt cbrt abs、pow hypot、
    *       min max、exp ln log(底10) log2、floor ceil round sign。
+   * 写法归一化(见 normExpr):θ→theta、π→PI、² ³→^2 ^3、全角运算符→半角,
+   *       于是 AI 与用户都能直接写 cos(3θ)。
    * ============================================================ */
   // 白名单函数表(函数名 -> 最少参数个数)。
   // 必须用无原型字典:若用普通对象字面量,MATH_ARITY['constructor'] 会沿原型链
@@ -72,7 +88,10 @@
         j = i;
         while (j < n && (src.charAt(j) >= '0' && src.charAt(j) <= '9' || src.charAt(j) === '.')) j++;
         s = src.slice(i, j);
-        if (s === '.' || s.charAt(s.length - 1) === '.') throw new Error('bad number');
+        // 多个小数点一律算写法错误:'1.2.3' 交给 parseFloat 会静默变成 1.2,
+        // 学生看到的是"图不对"而不是"写错了",这类静默错误必须拦在词法层
+        if (s === '.' || s.charAt(s.length - 1) === '.' ||
+          s.indexOf('.') !== s.lastIndexOf('.')) throw new Error('bad number');
         out.push({ k: 'num', v: parseFloat(s) });
         i = j;
       } else if (ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {
@@ -81,7 +100,7 @@
           src.charAt(j) >= 'a' && src.charAt(j) <= 'z' || src.charAt(j) >= '0' && src.charAt(j) <= '9')) j++;
         out.push({ k: 'id', s: src.slice(i, j) });
         i = j;
-      } else if (ch === '+' || ch === '-' || ch === '*' || ch === '/' ||
+      } else if (ch === '+' || ch === '-' || ch === '*' || ch === '/' || ch === '^' ||
         ch === '(' || ch === ')' || ch === ',') {
         out.push({ k: 'op', s: ch });
         i++;
@@ -98,8 +117,20 @@
     return function (env) {
       if (name === 'u') return env.u == null ? 0 : Number(env.u);
       if (name === 'x') return env.x == null ? 0 : Number(env.x);
+      // y:隐函数采样点的纵坐标(用户表达式层的隐函数描迹用;AI 场景从不设置
+      // env.y,取 0 与旧行为一致 —— 旧实现里 'y' 一律算非法)
+      if (name === 'y') return env.y == null ? 0 : Number(env.y);
+      // theta:极坐标的极角。没显式给 theta 时退回采样自变量 x,
+      // 于是 r='cos(3*theta)' 与 r='cos(3*x)' 两种写法都能画(θ 已由
+      // normExpr 归一成 theta,故 AI 写 'cos(3*θ)' 也能用)
+      if (name === 'theta') return env.theta == null
+        ? (env.x == null ? 0 : Number(env.x)) : Number(env.theta);
       if (name === 'PI') return Math.PI;
       if (name === 'E') return Math.E;
+      // 用户表达式层注入的具名参数(如 a=2 里的 a):用无原型字典查表。
+      // AI 场景从不写 env.vars,既有取值路径完全不变(D6 同类防护)
+      var vs = env.vars;
+      if (vs && has(vs, name)) { var dv = vs[name]; return isNum(dv) ? dv : NaN; }
       return NaN; // 其余名称一律非法
     };
   }
@@ -113,6 +144,16 @@
       if (op === '*') return x * y;
       if (op === '/') return x / y;
       return NaN;
+    };
+  }
+  // 幂:x^y(右结合)。底数为负且指数非整数时 Math.pow 给 NaN —— 与数学一致,
+  // 曲线在此断笔即可,不做"复数域"之类的额外处理
+  function nPow(a, b) {
+    return function (env) {
+      var x = a(env), y = b(env);
+      if (!isNum(x) || !isNum(y)) return NaN;
+      var r = Math.pow(x, y);
+      return isNum(r) ? r : NaN;
     };
   }
   function nCall(name, args) {
@@ -141,6 +182,10 @@
   }
 
   // 递归下降: expr := term (('+'|'-') term)* ...
+  // 文法要点(与中学/Desmos 书写习惯对齐):
+  //   · ^ 右结合且优先级高于一元负号:-x^2 = -(x^2)、2^-1 合法、x^2^3 = x^(2^3)
+  //   · 隐式乘法:2x、3sin(x)、2(x+1)、(x-1)(x+1)、x(x+1) 都按乘法处理
+  //   · 只有白名单里的名字跟 '(' 才算函数调用,其余单字母名当变量(故 x(x+1) 是乘法)
   function parseExprTks(tks) {
     var p = 0;
     function peek() { return p < tks.length ? tks[p] : null; }
@@ -148,6 +193,12 @@
     function expectOp(s) {
       var t = next();
       if (!t || t.k !== 'op' || t.s !== s) throw new Error('expect ' + s);
+    }
+    // 该记号能否作为一个 primary 的开头(隐式乘法的判定依据)
+    function startsPrim(t) {
+      if (!t) return false;
+      if (t.k === 'num' || t.k === 'id') return true;
+      return t.k === 'op' && t.s === '(';
     }
     function parseAdd() {
       var node = parseMul(), t;
@@ -160,17 +211,31 @@
     }
     function parseMul() {
       var node = parseUn(), t;
-      while ((t = peek()) && t.k === 'op' && (t.s === '*' || t.s === '/')) {
-        next();
-        var rhs = parseUn();
-        node = nBin(t.s, node, rhs);
+      while ((t = peek())) {
+        if (t.k === 'op' && (t.s === '*' || t.s === '/')) {
+          next();
+          node = nBin(t.s, node, parseUn());
+        } else if (startsPrim(t)) {
+          // 隐式乘法:2x / 2(x+1) / (x-1)(x+1) / sin(x)cos(x)
+          node = nBin('*', node, parseUn());
+        } else {
+          break;
+        }
       }
       return node;
     }
     function parseUn() {
       var t = peek();
       if (t && t.k === 'op' && t.s === '-') { next(); return nNeg(parseUn()); }
-      return parsePrim();
+      return parsePow();
+    }
+    function parsePow() {
+      var node = parsePrim(), t = peek();
+      if (t && t.k === 'op' && t.s === '^') {
+        next();
+        node = nPow(node, parseUn()); // 右结合,且允许 2^-1
+      }
+      return node;
     }
     function parsePrim() {
       var t = next();
@@ -182,7 +247,8 @@
         return e;
       }
       if (t.k === 'id') {
-        if (peek() && peek().k === 'op' && peek().s === '(') {
+        // 只有白名单函数名后面的 '(' 才是调用;'x(x+1)' / 'a(x+1)' 交给隐式乘法
+        if (has(MATH_ARITY, t.s) && peek() && peek().k === 'op' && peek().s === '(') {
           next(); // 吃掉 '('
           var args = [];
           if (!(peek() && peek().k === 'op' && peek().s === ')')) {
@@ -215,7 +281,7 @@
     if (has(exprCache, src)) return exprCache[src];
     var c;
     try {
-      c = parseExprTks(tokenize(src));
+      c = parseExprTks(tokenize(normExpr(src)));
     } catch (e) {
       c = null;
     }
@@ -228,6 +294,22 @@
     exprCache[src] = c;
     exprCacheN++;
     return c;
+  }
+  // 原始词法只认 ASCII:把中文习惯写法换成等价 ASCII(纯文本替换,无动态执行)。
+  // 放在 compileExpr 里,AI 场景 / 模板 / 用户表达式三条路径共用一套写法 ——
+  // 提示词里允许模型写 cos(3*θ),这里兜住,不必让每个调用方各自预处理。
+  function normExpr(src) {
+    var s = String(src == null ? '' : src);
+    if (!/[^\x00-\x7f]/.test(s)) return s;   // 纯 ASCII 快路径(绝大多数表达式走这里)
+    s = s.replace(/[θΘ]/g, 'theta').replace(/[πΠ]/g, 'PI');
+    s = s.replace(/²/g, '^2').replace(/³/g, '^3').replace(/¹/g, '^1');
+    s = s.replace(/（/g, '(').replace(/）/g, ')').replace(/，/g, ',');
+    s = s.replace(/＝/g, '=').replace(/＋/g, '+').replace(/[－—−]/g, '-');
+    s = s.replace(/[×＊]/g, '*').replace(/[÷／]/g, '/');
+    s = s.replace(/\bpi\b/g, 'PI');
+    // 'PIx' 这类紧贴写法补回乘号(只在上面的替换路径里做,不动原本就是 ASCII 的写法)
+    s = s.replace(/PI(?=[A-Za-z0-9(])/g, 'PI*');
+    return s;
   }
   // 数值/表达式求值:数字直接返回;字符串走安全求值器;非法返回 NaN
   function calcVal(v, env) {
@@ -332,6 +414,9 @@
     // 的求值结果取决于引用顺序(D8)。
     var env = { u: 0, x: 0 };
     var cam = { scale: 42, ox: 0, oy: 0 };
+    /* 默认视野:42px/单位、世界原点落在画布中心(与引擎初始相机一致)。
+       双击空白复位、空场景取景、以及"没有任何图元可取景"时都用它。 */
+    var DEFAULT_SCALE = 42;
     // id -> 条目 的字典一律用无原型对象:id 来自外部场景描述(demo.js 的 ID_RE
     // 允许 '__proto__' / 'constructor'),普通对象会让这些 id 命中原型链而静默
     // 丢条目、甚至换掉原型(D6)。读取一律配合 has() 判定。
@@ -589,6 +674,26 @@
       return found;
     }
 
+    // 极坐标曲线的同类判据:按绘制时的采样密度扫一遍 θ,
+    // 只要有一个有限且量级可绘的 (r·cosθ, r·sinθ) 即视为可画(D3 同源)
+    function polarHasFiniteSample(fn, ta, tb) {
+      if (!fn || !isNum(ta) || !isNum(tb) || !(tb > ta)) return false;
+      var keepX = env.x, keepTh = env.theta, i, th, r, found = false;
+      for (i = 0; i < 240 && !found; i++) {
+        th = ta + (tb - ta) * i / 239;
+        if (!isNum(th)) break;
+        env.x = th; env.theta = th;
+        r = NaN;
+        try { var rr = fn(env); if (isNum(rr)) r = rr; } catch (e) { r = NaN; }
+        if (isFinite(r) && Math.abs(r) <= 1e8) {
+          var xx = r * Math.cos(th), yy = r * Math.sin(th);
+          if (isFinite(xx) && isFinite(yy)) found = true;
+        }
+      }
+      env.x = keepX; env.theta = keepTh;
+      return found;
+    }
+
     /* object 计算:把类型参数解析为可绘制数据(帧内 memo + 递归防护) */
     function objCompute(o, stack) {
       if (o._fe === frameEpoch) return o._ok;
@@ -683,6 +788,20 @@
             if (xa > xb) { var sw = xa; xa = xb; xb = sw; }
             o._fn = fnf; o._xa = xa; o._xb = xb;
             if (curveHasFiniteSample(fnf, xa, xb)) { o._ok = true; o._kind = 'none'; }
+          }
+        } else if (t === 'polar') {
+          // 极坐标曲线 r=f(θ):与 curve 同样"先预采样再判定可绘",
+          // 否则 r 写错(如引用了不存在的参数)会静默变成空白图元
+          var pfn = compileExpr(isStr(o.r) ? o.r : '');
+          if (pfn) {
+            var ta = calcVal(o.thetaMin, env), tb = calcVal(o.thetaMax, env);
+            if (!isNum(ta)) ta = 0;
+            if (!isNum(tb)) tb = Math.PI * 2;
+            if (tb < ta) { var swt = ta; ta = tb; tb = swt; }
+            // θ 区间上限:AI 可能给出 1e9,无上限会让单帧采样循环失去节制
+            if (tb - ta > Math.PI * 200) tb = ta + Math.PI * 200;
+            o._fn = pfn; o._ta = ta; o._tb = tb;
+            if (polarHasFiniteSample(pfn, ta, tb)) { o._ok = true; o._kind = 'none'; }
           }
         } else if (t === 'text') {
           var ta = ptRef(o.at, stack);
@@ -867,6 +986,64 @@
         ctx.textAlign = 'left';
         ctx.textBaseline = 'top';
         ctx.fillText('0', ox + 4, oy + 4);
+      }
+    }
+
+    /* ---------- 3.8b 绘制:极坐标网格(**可选叠加层**,默认关) ----------
+     * 只在用户显式打开时叠加:等间距同心圆 + 每 30° 一条射线 + 角度标注。
+     * 注意它**不替换**直角坐标轴与刻度 —— 画布始终是普通笛卡尔坐标系,
+     * 这一层只是帮读图用的辅助网格(用户明确要过"正常情况还是笛卡尔坐标系")。
+     */
+    function drawPolarGrid() {
+      var rect = viewRect(0);
+      var step = niceStep(cam.scale, 46);
+      var ox = w2sx(0), oy = w2sy(0);
+      var hx = Math.max(Math.abs(rect.xmin), Math.abs(rect.xmax));
+      var hy = Math.max(Math.abs(rect.ymin), Math.abs(rect.ymax));
+      var rMax = Math.sqrt(hx * hx + hy * hy);
+      if (!isNum(rMax) || rMax <= 0) rMax = 1;
+      var kMax = Math.ceil(rMax / step);
+      if (!isNum(kMax) || kMax < 0) kMax = 0;
+      if (kMax > MAX_TICK_ITERS) kMax = MAX_TICK_ITERS;   // 硬上限:循环必须有界
+      var i, r, rr, iter = 0;
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = POLAR_GRID;
+      ctx.beginPath();
+      for (i = 1; i <= kMax; i++) {
+        if (++iter > MAX_TICK_ITERS) break;
+        r = i * step;
+        rr = r * cam.scale;
+        if (!isNum(rr) || rr <= 0 || rr > 4e4) break;     // 半径跑到离谱就停
+        ctx.moveTo(ox + rr, oy);
+        ctx.arc(ox, oy, rr, 0, Math.PI * 2);
+      }
+      ctx.stroke();
+      // 射线:每 30° 一条(0/90/180/270 稍亮,当作极轴与坐标轴)
+      var rectEx = viewRect(0.05);
+      var ang, seg;
+      for (i = 0; i < 12; i++) {
+        ang = i * Math.PI / 6;
+        seg = clipParamLine(0, 0, 0, 0, Math.cos(ang), Math.sin(ang), 0, 1e7, rectEx);
+        if (!seg) continue;
+        ctx.strokeStyle = (i % 3 === 0) ? POLAR_MAIN : POLAR_RAY;
+        ctx.beginPath();
+        ctx.moveTo(w2sx(seg.x0), w2sy(seg.y0));
+        ctx.lineTo(w2sx(seg.x1), w2sy(seg.y1));
+        ctx.stroke();
+      }
+      // 角度标注:放在画布内切半径处,超出画布的那条不标(避免压边)
+      var labR = Math.min(cssW, cssH) * 0.44;
+      ctx.fillStyle = AXIS_TEXT;
+      ctx.font = fontOf(10);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      for (i = 0; i < 12; i++) {
+        ang = i * Math.PI / 6;
+        var lx = ox + Math.cos(ang) * labR;
+        var ly = oy - Math.sin(ang) * labR;
+        if (!isNum(lx) || !isNum(ly)) continue;
+        if (lx < 16 || lx > cssW - 16 || ly < 10 || ly > cssH - 10) continue;
+        ctx.fillText((i * 30) + '°', lx, ly);
       }
     }
 
@@ -1073,6 +1250,43 @@
         ctx.stroke();
         break;
       }
+      case 'polar': {
+        // 极坐标曲线:逐点 (r·cosθ, r·sinθ) —— 与直角坐标系共用同一套世界坐标,
+        // 所以它直接画在普通笛卡尔画布上,不需要任何"坐标系切换"。
+        // r<0 时点自然落在 θ+π 方向(极坐标的定义),不做取绝对值之类的改写。
+        if (!o._ok || !o._fn) break;
+        col = colorOf(o, PAL.gold);
+        var pa = isNum(o._ta) ? o._ta : 0;
+        var pb = isNum(o._tb) ? o._tb : Math.PI * 2;
+        // 采样点数随 θ 跨度自适应:每 2π 至少 720 点(3 瓣玫瑰线每瓣 240 点),
+        // 跨度越大、越密的曲线越不容易出缺口;上限 6000 保证单帧有界
+        var nS = Math.round(720 * (pb - pa) / (Math.PI * 2));
+        if (!isNum(nS) || nS < 240) nS = 240;
+        if (nS > 6000) nS = 6000;
+        var keepX = env.x, keepTh = env.theta;
+        ctx.lineWidth = pxNum(o.width, 1.8);
+        ctx.strokeStyle = col;
+        setDash(o);
+        ctx.beginPath();
+        var penP = false, ip, thp, rp, xp, yp, sxp, syp;
+        for (ip = 0; ip <= nS; ip++) {
+          thp = pa + (pb - pa) * ip / nS;
+          env.x = thp; env.theta = thp;
+          rp = NaN;
+          try { var rv2 = o._fn(env); if (isNum(rv2)) rp = rv2; } catch (e) { rp = NaN; }
+          if (!isFinite(rp) || Math.abs(rp) > 1e7) { penP = false; continue; }
+          xp = rp * Math.cos(thp); yp = rp * Math.sin(thp);
+          if (!isFinite(xp) || !isFinite(yp)) { penP = false; continue; }
+          sxp = w2sx(xp); syp = w2sy(yp);
+          if (!isNum(sxp) || !isNum(syp)) { penP = false; continue; }
+          // 逐点画:θ 走满一圈时最后一点与起点重合,闭合曲线不留缺口
+          if (!penP) { ctx.moveTo(sxp, syp); penP = true; }
+          else { ctx.lineTo(sxp, syp); }
+        }
+        env.x = keepX; env.theta = keepTh;
+        ctx.stroke();
+        break;
+      }
       case 'text':
         if (!o._ok || !isStr(o.text)) break;
         var tOff = offset2(o.offset, 0, -14);
@@ -1189,6 +1403,11 @@
       ctx.clearRect(0, 0, cssW, cssH);
       env.u = u;
       drawAxes();
+      // 可选叠加层:极坐标网格(默认关,画布始终是笛卡尔坐标系)
+      if (polarGridOn) { try { drawPolarGrid(); } catch (e) { /* 网格异常不影响主体 */ } }
+      // 用户表达式层:**先于 AI 图元绘制**,AI 的动点/标注始终压在最上面;
+      // 它独立于 objList,故 engine.clear()(清 AI 场景)不会清掉用户函数
+      try { ueDrawAll(); } catch (e) { /* 表达式层异常不影响 AI 图元 */ }
       // 逐个求值并绘制(单个对象出错不影响其它图元)
       var rectEx = viewRect(0.35);
       var i;
@@ -1285,8 +1504,31 @@
           anim.mode = 'pingpong'; anim.dur = 4;
         }
         // 图元与几何定义:按 id 合并(替换同 id / 追加新 id)
-        mergeById(defList, defMap, isArr(desc.defs) ? desc.defs : []);
-        mergeById(objList, objMap, isArr(desc.objects) ? desc.objects : []);
+        // 容错:模型有时把极坐标曲线写进 defs(如 {op:'polar', r:'cos(3*θ)'})。
+        // defs 只参与"点/线"求值、不会被绘制 —— 若原样放过,就会出现
+        // "标注写着玫瑰线、画布上什么都没有"这类静默错误,故这里搬到 objects 绘制。
+        var pfDefs = [], pi, pd;
+        if (isArr(desc.defs)) {
+          for (pi = 0; pi < desc.defs.length; pi++) {
+            pd = desc.defs[pi];
+            if (isObj(pd) && pd.op === 'polar') continue;
+            pfDefs.push(pd);
+          }
+        }
+        var pObjItems = isArr(desc.objects) ? desc.objects.slice() : [];
+        if (isArr(desc.defs)) {
+          for (pi = 0; pi < desc.defs.length; pi++) {
+            pd = desc.defs[pi];
+            if (!isObj(pd) || pd.op !== 'polar') continue;
+            var mv = {}, mk;
+            for (mk in pd) { if (has(pd, mk)) mv[mk] = pd[mk]; }
+            delete mv.op;
+            mv.type = 'polar';
+            pObjItems.push(mv);
+          }
+        }
+        mergeById(defList, defMap, pfDefs);
+        mergeById(objList, objMap, pObjItems);
         pruneOverlays();
         // tex 标注容器建档
         var i;
@@ -1398,12 +1640,37 @@
                 add(o._xb, ys[ys.length - 1 - cut]);
               }
             }
+          } else if (o.type === 'polar') {
+            // 极坐标曲线参与取景:按 θ 采样出 (x,y) 包围盒
+            // (否则 AI 生成的玫瑰线可能落在视野外,表现为"画布空白")
+            var pfn2 = o._fn || compileExpr(isStr(o.r) ? o.r : '');
+            var pa2 = isNum(o._ta) ? o._ta : 0;
+            var pb2 = isNum(o._tb) ? o._tb : Math.PI * 2;
+            if (pfn2 && isNum(pa2) && isNum(pb2) && pb2 > pa2) {
+              var sp;
+              for (sp = 0; sp <= 240; sp++) {
+                var th3 = pa2 + (pb2 - pa2) * sp / 240;
+                env.x = th3; env.theta = th3;
+                var rp2 = NaN;
+                try {
+                  var r3 = pfn2(env);
+                  if (isNum(r3) && Math.abs(r3) < 1e6) rp2 = r3;
+                } catch (e3) { rp2 = NaN; }
+                if (isFinite(rp2)) add(rp2 * Math.cos(th3), rp2 * Math.sin(th3));
+              }
+            }
           }
         }
       } catch (e) { /* 取景尽力而为 */ }
       var cx, cy, bw, bh;
       if (minX > maxX || !isFinite(minX)) { cx = 0; cy = 0; bw = 10; bh = 7; }
-      else {
+      else if (maxX - minX < 1e-9 && maxY - minY < 1e-9) {
+        // 退化到"只有一个点"(空场景 / 只有无限直线时 add(0,0) 是唯一入账的点):
+        // 旧实现会拿 0.6×0.6 的兜底框取景,结果是几百 px/单位、刻度密到看不清。
+        // 这里直接回默认视野(42px/单位、原点居中),与双击复位后的观感一致。
+        setView({ scale: DEFAULT_SCALE, cx: 0, cy: 0 });
+        return;
+      } else {
         cx = (minX + maxX) / 2;
         cy = (minY + maxY) / 2;
         bw = Math.max(maxX - minX, 1e-6);
@@ -1421,6 +1688,10 @@
       cam.ox = cssW / 2 - cx * cam.scale;
       cam.oy = cssH / 2 + cy * cam.scale;
       camReady = true; // 相机已按有效尺寸定过位,后续 resize 不再自动取景
+      // 取景本身要落到画面上:update()/markResized() 之后本来就会重绘,但
+      // 外部直接调 fit()(例如双击复位的 resetView)时若不自绘,画面会停在旧视野 ——
+      // 表现为"双击没反应",相机其实已经变了。
+      redraw();
     }
     // 备用交互镜头函数(本版本未接滚轮/拖移,留待后续;勿删)
     function zoomAt(factor, sx, sy) {
@@ -1433,6 +1704,34 @@
     function panByPx(dx, dy) {
       cam.ox += dx; cam.oy += dy;
       redraw();
+    }
+    /* 默认视野:42px/单位、世界原点落在画布中心(与引擎初始相机一致)。
+       双击空白复位、以及"没有任何图元可取景"时都用它。 */
+    function setView(v) {
+      if (!isObj(v)) return getView();
+      if (isNum(v.scale)) cam.scale = clamp(v.scale, 1e-6, 1e7);
+      if (isNum(v.cx)) cam.ox = cssW / 2 - v.cx * cam.scale;
+      if (isNum(v.cy)) cam.oy = cssH / 2 + v.cy * cam.scale;
+      // 记住机位:面板尺寸由 0 恢复时按新尺寸重摆,而不是重新取景(D7 同源)
+      camReq = { scale: cam.scale, cx: s2wx(cssW / 2), cy: s2wy(cssH / 2) };
+      camReady = true;
+      redraw();
+      return getView();
+    }
+    function getView() {
+      return { scale: cam.scale, cx: s2wx(cssW / 2), cy: s2wy(cssH / 2) };
+    }
+    // 回到默认视野:有图元就按图元取景,否则回 42px/单位、原点居中
+    function resetView() {
+      if (objList.length > 0) fit();
+      else setView({ scale: DEFAULT_SCALE, cx: 0, cy: 0 });
+    }
+    // 用户手动改了视野(滚轮/拖拽/双击)时通知外部:
+    // 观澜用它在"用户接管视野"后关闭 AI 场景的自动取景,两者互不打架
+    function notifyViewChange(kind) {
+      if (typeof api.onViewChange === 'function') {
+        try { api.onViewChange(kind); } catch (e) { /* 忽略 */ }
+      }
     }
 
     /* ---------- 3.14 动画时钟 ---------- */
@@ -1667,6 +1966,7 @@
         cam.oy = panState.oy + ny2;
         try { canvasEl.style.cursor = 'grabbing'; } catch (e) { /* 忽略 */ }
         try { ev.preventDefault(); } catch (e) { /* 忽略 */ }
+        notifyViewChange('pan');
         redraw();
         return;
       }
@@ -1723,6 +2023,8 @@
       // 指针捕获丢失同样要复位(例如系统手势/拖出窗口)
       canvasEl.addEventListener('lostpointercapture', abortInteraction);
       canvasEl.addEventListener('wheel', onWheel, { passive: false });
+      // 双击回到默认视野(Desmos 习惯);空画布时也把视野复位
+      canvasEl.addEventListener('dblclick', onDblClick);
       // 窗口失焦时不会再有 pointerup,必须兜底复位
       try {
         if (typeof global.addEventListener === 'function') {
@@ -1736,8 +2038,538 @@
         var p = canvasPos(ev);
         var f = Math.exp(-(ev.deltaY || 0) * 0.0012);
         zoomAt(f, p.x, p.y);
+        notifyViewChange('wheel');
         try { ev.preventDefault(); } catch (e2) { /* 忽略 */ }
       } catch (e) { /* 忽略 */ }
+    }
+    // 双击空白:回到默认视野(有图元按图元取景,否则 42px/单位、原点居中)。
+    // 外部若注册了 onDblClick 且返回 true,则视为已处理(观澜用它把用户表达式一并取景)。
+    function onDblClick(ev) {
+      var handled = false;
+      if (typeof api.onDblClick === 'function') {
+        try { handled = !!api.onDblClick(ev); } catch (e) { handled = false; }
+      }
+      notifyViewChange('reset');
+      if (!handled) resetView();
+    }
+
+    /* ---------- 3.18 用户表达式层(Desmos 式:可编辑函数 + 参数滑块) ----------
+     * 目标:让用户自己写 y=f(x)、r=f(θ)、a=2、隐函数,并与 AI 生成的场景共存。
+     * 三个关键约定:
+     *   1) 独立存储:用户表达式放在 ueList,不进 objList/defList。于是
+     *      engine.clear()(清 AI 场景/模板)不会清掉用户函数,
+     *      getState().objects 与 window.__gl.objects 也仍然只反映 AI 图元 ——
+     *      既有的"有效图元比例"校验与模板探针口径完全不变。
+     *   2) 复用同一套解析器:tokenize/parseExprTks/compileExpr(见第 2 节),
+     *      参数通过 env.vars 注入求值器,不另写解析器、不引入动态执行。
+     *   3) 拖滑块只改"数值 + 失效几何 + 重绘",不重新解析表达式、不重建场景
+     *      (UI 侧再用 requestAnimationFrame 节流,见 demo.js)。
+     */
+    var UE_RESERVED = { x: 1, y: 1, r: 1, t: 1, theta: 1, u: 1, PI: 1, E: 1 };
+    var ueList = [];                                  // 解析后的表达式条目
+    var ueParams = Object.create(null);               // 参数名 -> {v, touched}
+    var ueParamCfg = Object.create(null);             // 参数名 -> {min,max,step}(删除后保留区间)
+    var ueSeq = 0;
+    var ueThetaA = 0, ueThetaB = Math.PI * 2;         // 极坐标 θ 区间(默认 0~2π)
+    var ueColorIdx = 0;
+    var polarGridOn = false;                          // 极坐标网格叠加层(默认关)
+
+    // 解析报错的"人话"版本:词法/语法层的错误信息对用户太晦涩
+    function ueErrMsg(e) {
+      var m = String((e && e.message) ? e.message : e);
+      if (m.indexOf('bad fn') === 0) return '不支持的函数:' + m.slice(7);
+      if (m === 'unexpected char') return '含有无法识别的字符(支持 + - * / ^ ( ) , 、数字、字母、θ、π)';
+      if (m === 'bad number') return '数字写法有误(例如 1.2.3)';
+      if (m === 'expect )') return '括号不匹配(缺少右括号)';
+      if (m === 'empty expr') return '表达式不完整(括号里缺少内容,或结尾少了操作数)';
+      if (m === 'trailing') return '表达式结尾有多余内容(检查是否漏写运算符)';
+      if (m === 'bad token') return '表达式语法有误(检查 ^ 与括号的写法)';
+      return '无法解析:' + m;
+    }
+    // 只扫名字:未知函数 / 多字母未知变量给更贴切的提示(比 "bad token" 有用得多)
+    function ueCheckNames(tks, r) {
+      var i, t, isCall;
+      for (i = 0; i < tks.length; i++) {
+        t = tks[i];
+        if (t.k !== 'id') continue;
+        isCall = (i + 1 < tks.length && tks[i + 1].k === 'op' && tks[i + 1].s === '(');
+        if (has(UE_RESERVED, t.s)) continue;
+        if (t.s.length === 1) continue;    // 单字母一律当参数(见 ueScanParams)
+        if (isCall && !has(MATH_ARITY, t.s)) { r.err = '不支持的函数:' + t.s; return; }
+        if (!isCall && !has(MATH_ARITY, t.s)) {
+          r.err = '未知变量或函数:' + t.s + '(参数只能用单个字母)';
+          return;
+        }
+      }
+    }
+    // 收集表达式里用到的单字母参数(排除 x/y/r/θ/t/u 与函数名)
+    function ueScanParams(tks) {
+      var out = [], i, t, n;
+      for (i = 0; i < tks.length; i++) {
+        t = tks[i];
+        if (t.k !== 'id') continue;
+        n = t.s;
+        if (n.length !== 1) continue;                       // 只收单字母(与界面约定一致)
+        if (has(UE_RESERVED, n)) continue;
+        if (has(MATH_ARITY, n)) continue;                   // 理论上不存在,防御性保留
+        if (out.indexOf(n) < 0) out.push(n);
+      }
+      return out;
+    }
+    // 编译一段表达式:先做名字检查(未知函数 / 多字母未知变量),再走缓存。
+    // 名字检查必须**无条件**做:隐式乘法让 'foo(x)'、'ab*x' 这类写法在语法上"能编译",
+    // 但求值恒为 NaN —— 画布上什么都没有,却连一句提示都不给,这是最糟的失败方式。
+    function ueCompile(src, r) {
+      var tks = null;
+      try { tks = tokenize(normExpr(src)); } catch (e0) { tks = null; }
+      if (tks) ueCheckNames(tks, r);
+      if (r.err) return null;
+      var f = compileExpr(src);
+      if (f) return f;
+      try {
+        if (!tks) tks = tokenize(normExpr(src));
+        parseExprTks(tks);
+      } catch (e) {
+        if (!r.err) r.err = ueErrMsg(e);
+      }
+      if (!r.err) r.err = '无法解析的表达式';
+      return null;
+    }
+    // 拆分等号:取**最外层**第一个 '='(括号里的等号不算)
+    function ueSplit(s) {
+      var d = 0, i, ch;
+      for (i = 0; i < s.length; i++) {
+        ch = s.charAt(i);
+        if (ch === '(') d++;
+        else if (ch === ')') d--;
+        else if (ch === '=' && d === 0) return { lhs: s.slice(0, i), rhs: s.slice(i + 1) };
+      }
+      return null;
+    }
+    // 解析一条用户表达式:
+    //   y = f(x)      -> kind 'y'        (只写右边也按 y= 处理)
+    //   x = g(y)      -> kind 'x'
+    //   r = f(θ)      -> kind 'r'        (θ/theta/t 都是极角)
+    //   a = 2         -> kind 'param'    (参数定义,右侧必须是常数)
+    //   含 x/y 的等式  -> kind 'implicit' (F(x,y)=0,网格符号变化 + 二分细化)
+    function ueParse(src) {
+      var raw = String(src == null ? '' : src);
+      var r = { ok: false, kind: 'empty', src: raw, lhs: '', rhs: '', err: '',
+        params: [], fn: null, fL: null, constVal: NaN };
+      var s = normExpr(raw).replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+      if (!s) return r;                                  // 空行:静默跳过,不算错误
+      var eq = ueSplit(s);
+      var lhs = eq ? normExpr(eq.lhs).replace(/^\s+|\s+$/g, '') : 'y';
+      var rhs = eq ? normExpr(eq.rhs).replace(/^\s+|\s+$/g, '') : s;
+      r.lhs = lhs; r.rhs = rhs;
+      if (!rhs) { r.err = '等号右边是空的'; r.kind = 'error'; return r; }
+      if (eq && !lhs) { r.err = '等号左边是空的'; r.kind = 'error'; return r; }
+      var kind;
+      if (/^y$/i.test(lhs)) kind = 'y';
+      else if (/^x$/i.test(lhs)) kind = 'x';
+      else if (/^r$/i.test(lhs)) kind = 'r';
+      else if (lhs.length === 1 && /^[A-Za-z]$/.test(lhs)) {
+        // 单字母左端 = 参数定义;但 x/y/r/t/θ/u 是保留名
+        if (has(UE_RESERVED, lhs)) { r.err = '“' + lhs + '”是保留变量,不能当参数名'; r.kind = 'error'; return r; }
+        kind = 'param';
+      } else {
+        kind = 'implicit';
+      }
+      r.kind = kind;
+      if (kind === 'implicit') {
+        // 隐函数要求两边都能算:左端也要是合法表达式(fL - fR = 0)
+        var fL = ueCompile(lhs, r);
+        if (!fL) { r.kind = 'error'; return r; }
+        var fR0 = ueCompile(rhs, r);
+        if (!fR0) { r.kind = 'error'; return r; }
+        r.fL = fL; r.fn = fR0;
+      } else {
+        var fR = ueCompile(rhs, r);
+        if (!fR) { r.kind = 'error'; return r; }
+        r.fn = fR;
+      }
+      var tks;
+      try { tks = tokenize(rhs); } catch (e2) { tks = []; }
+      var pl = ueScanParams(tks);
+      if (kind === 'implicit') {
+        var tls = [];
+        try { tls = tokenize(lhs); } catch (e3) { tls = []; }
+        var pl2 = ueScanParams(tls), pi2;
+        for (pi2 = 0; pi2 < pl2.length; pi2++) if (pl.indexOf(pl2[pi2]) < 0) pl.push(pl2[pi2]);
+      }
+      r.params = pl;
+      r.ok = true;
+      return r;
+    }
+    // 参数值表(每次重绘重建一份,求值器只读)
+    function ueVars() {
+      var v = Object.create(null), nm;
+      for (nm in ueParams) if (has(ueParams, nm)) v[nm] = ueParams[nm].v;
+      return v;
+    }
+    function ueVarsKey() {
+      var k = [], nm;
+      for (nm in ueParams) if (has(ueParams, nm)) k.push(nm + '=' + ueParams[nm].v);
+      k.sort();
+      return k.join(',');
+    }
+    // 参数表同步:新增默认值(-5~5,步长 0.1 由 UI 侧读取)、移除不再引用的
+    function ueSyncParams(parsed) {
+      var used = Object.create(null), i, j, names, nm, drop;
+      for (i = 0; i < parsed.length; i++) {
+        names = parsed[i].params || [];
+        for (j = 0; j < names.length; j++) used[names[j]] = 1;
+      }
+      for (nm in used) if (has(used, nm)) {
+        if (!has(ueParams, nm)) ueParams[nm] = { v: 1, touched: false };
+        if (!has(ueParamCfg, nm)) ueParamCfg[nm] = { min: -5, max: 5, step: 0.1 };
+      }
+      drop = [];
+      for (nm in ueParams) if (has(ueParams, nm) && !has(used, nm)) drop.push(nm);
+      for (i = 0; i < drop.length; i++) delete ueParams[drop[i]];
+    }
+    // 参数定义式 a = 2 的取值(支持 a = 2b 这类引用其它参数的写法,按行序依次求值)
+    function ueParamDefVal(it) {
+      if (!it || !it.ok || it.kind !== 'param' || !it.fn) return NaN;
+      var keepX = env.x, keepY = env.y, vars = ueVars();
+      env.x = 0; env.y = 0; env.vars = vars;
+      var v = NaN;
+      try { var rr = it.fn(env); if (isNum(rr)) v = rr; } catch (e) { v = NaN; }
+      env.x = keepX; env.y = keepY; env.vars = null;
+      return v;
+    }
+    function ueEval(f, vars) {
+      if (!f) return NaN;
+      try { var r = f(env); return isNum(r) ? r : NaN; } catch (e) { return NaN; }
+    }
+    /* 显函数/反函数:y=f(x) 与 x=g(y)。采样区间取当前可视范围(外扩 10%),
+       于是缩放/平移后曲线自然铺满画面;渐近线处按屏幕跳变断笔。 */
+    function ueCurveExpr(it, vert, vars) {
+      var rect = viewRect(0.1);
+      var lo = vert ? rect.ymin : rect.xmin;
+      var hi = vert ? rect.ymax : rect.xmax;
+      if (!isNum(lo) || !isNum(hi) || !(hi > lo)) return;
+      var N = 520, i, t, val, wx, wy, px, py, pen = false, pyPrev = NaN;
+      ctx.save();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = it.color;
+      ctx.beginPath();
+      for (i = 0; i <= N; i++) {
+        t = lo + (hi - lo) * i / N;
+        if (vert) { env.x = 0; env.y = t; } else { env.x = t; env.y = 0; }
+        vars.theta = t; vars.t = t;      // 直角模式下 θ/t 视作自变量(方便与极坐标写法互换)
+        val = ueEval(it.fn, vars);
+        if (!isNum(val) || Math.abs(val) > 1e7) { pen = false; continue; }
+        if (vert) { wx = val; wy = t; } else { wx = t; wy = val; }
+        px = w2sx(wx); py = w2sy(wy);
+        if (!isNum(px) || !isNum(py)) { pen = false; continue; }
+        if (pen && Math.abs(py - pyPrev) > cssH * 3) pen = false;  // 渐近线:断笔
+        if (!pen) { ctx.moveTo(px, py); pen = true; } else { ctx.lineTo(px, py); }
+        pyPrev = py;
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+    /* 极坐标 r=f(θ):换算成参数曲线 (r·cosθ, r·sinθ) 画在普通直角坐标系里。
+       r<0 时点自然落在 θ+π 方向(极坐标定义),不做取绝对值之类的改写。 */
+    function ueCurvePolar(it, vars) {
+      var a = ueThetaA, b = ueThetaB;
+      if (!isNum(a) || !isNum(b)) return;
+      if (b < a) { var sw = a; a = b; b = sw; }
+      var span = b - a;
+      if (!(span > 0)) return;
+      if (span > Math.PI * 100) { b = a + Math.PI * 100; span = b - a; }  // 区间上限
+      // 采样密度:每 2π 至少 720 点;区间越大自动加密,保证闭合曲线不出缺口
+      var N = Math.round(720 * span / (Math.PI * 2));
+      if (!isNum(N) || N < 240) N = 240;
+      if (N > 6000) N = 6000;
+      var i, th, rv, wx, wy, px, py, pen = false;
+      ctx.save();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = it.color;
+      ctx.beginPath();
+      for (i = 0; i <= N; i++) {
+        th = a + (b - a) * i / N;
+        env.x = th; env.theta = th;
+        vars.theta = th; vars.t = th;
+        rv = ueEval(it.fn, vars);
+        if (!isNum(rv) || Math.abs(rv) > 1e7) { pen = false; continue; }
+        wx = rv * Math.cos(th); wy = rv * Math.sin(th);
+        px = w2sx(wx); py = w2sy(wy);
+        if (!isNum(px) || !isNum(py) || Math.abs(px) > 1e6 || Math.abs(py) > 1e6) { pen = false; continue; }
+        if (!pen) { ctx.moveTo(px, py); pen = true; } else { ctx.lineTo(px, py); }
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+    // 隐函数 F(x,y)=0 的采样描迹:屏幕格 5px,marching squares 找符号变化,再二分细化 8 次
+    // 精度:单个格子内亚像素级;格子越大越快但尖角会钝,5px 是观感与速度的折中
+    function ueEvalXY(it, wx, wy, vars) {
+      env.x = wx; env.y = wy;
+      var a = ueEval(it.fL, vars), b = ueEval(it.fn, vars);
+      if (!isNum(a) || !isNum(b)) return NaN;
+      return a - b;
+    }
+    function ueImplicit(it, vars) {
+      var key = cssW + 'x' + cssH + '|' + cam.scale.toFixed(6) + '|' +
+        cam.ox.toFixed(2) + '|' + cam.oy.toFixed(2) + '|' + ueVarsKey() + '|' + it.rhs + '=' + it.lhs;
+      if (it._impKey === key && it._impSegs) { ueStrokeSegs(it._impSegs, it.color); return; }
+      var cell = 5;
+      var nx = Math.floor(cssW / cell), ny = Math.floor(cssH / cell);
+      if (!(nx > 2) || !(ny > 2)) return;
+      if (nx > 320) nx = 320;      // 上限:极小格子在极端缩放下会把一帧拖死
+      if (ny > 320) ny = 320;
+      var w = cssW / nx, h = cssH / ny;
+      var vals = new Float64Array((nx + 1) * (ny + 1));
+      var i, j;
+      for (j = 0; j <= ny; j++) {
+        for (i = 0; i <= nx; i++) {
+          vals[j * (nx + 1) + i] = ueEvalXY(it, s2wx(i * w), s2wy(j * h), vars);
+        }
+      }
+      var segs = [];
+      for (j = 0; j < ny; j++) {
+        for (i = 0; i < nx; i++) {
+          ueImplicitCell(it, i, j, w, h, nx, vals, vars, segs);
+        }
+      }
+      it._impKey = key;
+      it._impSegs = segs;
+      ueStrokeSegs(segs, it.color);
+    }
+    // 单格:按"上/右/下/左"顺序取符号变化点,再两两相连(鞍点也画得出来)
+    function ueImplicitCell(it, i, j, w, h, nx, vals, vars, segs) {
+      var i0 = j * (nx + 1) + i;
+      var v00 = vals[i0], v10 = vals[i0 + 1], v01 = vals[i0 + nx + 1], v11 = vals[i0 + nx + 2];
+      var x0 = i * w, y0 = j * h, x1 = (i + 1) * w, y1 = (j + 1) * h;
+      var pts = [], p;
+      if (isFinite(v00) && isFinite(v10) && (v00 >= 0) !== (v10 >= 0)) {
+        p = ueBisect(it, x0, y0, v00, x1, y0, vars); if (p) pts.push(p);
+      }
+      if (isFinite(v10) && isFinite(v11) && (v10 >= 0) !== (v11 >= 0)) {
+        p = ueBisect(it, x1, y0, v10, x1, y1, vars); if (p) pts.push(p);
+      }
+      if (isFinite(v11) && isFinite(v01) && (v11 >= 0) !== (v01 >= 0)) {
+        p = ueBisect(it, x1, y1, v11, x0, y1, vars); if (p) pts.push(p);
+      }
+      if (isFinite(v01) && isFinite(v00) && (v01 >= 0) !== (v00 >= 0)) {
+        p = ueBisect(it, x0, y1, v01, x0, y0, vars); if (p) pts.push(p);
+      }
+      var k;
+      for (k = 0; k + 1 < pts.length; k += 2) {
+        segs.push(pts[k].x, pts[k].y, pts[k + 1].x, pts[k + 1].y);
+      }
+    }
+    // 二分细化 8 次(格子 5px → 约 0.02px,肉眼看是光滑的)
+    function ueBisect(it, ax, ay, av, bx, by, vars) {
+      var k, mx, my, mv;
+      for (k = 0; k < 8; k++) {
+        mx = (ax + bx) / 2; my = (ay + by) / 2;
+        mv = ueEvalXY(it, s2wx(mx), s2wy(my), vars);
+        if (!isFinite(mv)) break;
+        if ((mv >= 0) === (av >= 0)) { ax = mx; ay = my; av = mv; }
+        else { bx = mx; by = my; }
+      }
+      return { x: (ax + bx) / 2, y: (ay + by) / 2 };
+    }
+    // 线段集合一次性描边(隐函数一帧可能上千段,逐段 stroke 会明显掉帧)
+    function ueStrokeSegs(segs, color) {
+      if (!segs || !segs.length) return;
+      var i;
+      ctx.save();
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      for (i = 0; i + 3 < segs.length; i += 4) {
+        ctx.moveTo(segs[i], segs[i + 1]);
+        ctx.lineTo(segs[i + 2], segs[i + 3]);
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+    // 每帧绘制:所有用户表达式共用一份参数表;结束后恢复 env(不影响 AI 图元求值)
+    function ueDrawAll() {
+      if (!ueList.length) return;
+      var keepX = env.x, keepY = env.y, keepTh = env.theta;
+      var vars = ueVars(), i, it;
+      env.vars = vars;
+      for (i = 0; i < ueList.length; i++) {
+        it = ueList[i];
+        if (!it.ok || !it.fn) continue;
+        try {
+          if (it.kind === 'y') ueCurveExpr(it, false, vars);
+          else if (it.kind === 'x') ueCurveExpr(it, true, vars);
+          else if (it.kind === 'r') ueCurvePolar(it, vars);
+          else if (it.kind === 'implicit') ueImplicit(it, vars);
+        } catch (e) { /* 单条表达式异常不影响其它 */ }
+      }
+      env.x = keepX; env.y = keepY; env.theta = keepTh; env.vars = null;
+    }
+    // 整表替换:解析 -> 同步参数 -> 参数定义式赋值 -> 重绘(UI 每次编辑调用一次)
+    function ueSet(list) {
+      var arr = isArr(list) ? list : [];
+      var out = [], i, it, p, src, color;
+      for (i = 0; i < arr.length; i++) {
+        it = arr[i];
+        if (isStr(it)) { src = it; color = null; }
+        else if (isObj(it)) { src = isStr(it.src) ? it.src : ''; color = isStr(it.color) ? it.color : null; }
+        else { src = ''; color = null; }
+        p = ueParse(src);
+        p.id = (isObj(it) && isStr(it.id)) ? it.id : ('ue' + (++ueSeq));
+        p.color = color || PAL_LIST[ueColorIdx++ % PAL_LIST.length];
+        out.push(p);
+      }
+      ueList = out;
+      ueSyncParams(out);
+      for (i = 0; i < out.length; i++) {
+        it = out[i];
+        if (!it.ok || it.kind !== 'param') continue;
+        var cv = ueParamDefVal(it);
+        if (!isNum(cv)) {
+          it.ok = false; it.kind = 'error';
+          it.err = '参数 ' + it.lhs + ' 需要赋一个数值(例如 ' + it.lhs + ' = 2)';
+          continue;
+        }
+        it.constVal = cv;
+        // 用户手动拖过滑块(touched)就不再被定义式覆盖,否则拖动会被"拉回去"
+        if (has(ueParams, it.lhs) && !ueParams[it.lhs].touched) ueParams[it.lhs].v = cv;
+      }
+      invalidateGeom();
+      redraw();
+      return ueInfo();
+    }
+    // 对外快照(浅拷贝,外部拿不到内部条目)
+    function ueInfo() {
+      var out = [], i, it;
+      for (i = 0; i < ueList.length; i++) {
+        it = ueList[i];
+        out.push({
+          id: it.id, src: it.src, color: it.color, kind: it.kind, ok: it.ok, err: it.err,
+          lhs: it.lhs, rhs: it.rhs, params: (it.params || []).slice(),
+          constVal: isNum(it.constVal) ? it.constVal : null
+        });
+      }
+      return out;
+    }
+    function ueParamSnapshot() {
+      var out = [], nm, cfg;
+      for (nm in ueParams) if (has(ueParams, nm)) {
+        cfg = has(ueParamCfg, nm) ? ueParamCfg[nm] : { min: -5, max: 5, step: 0.1 };
+        out.push({
+          name: nm, value: ueParams[nm].v, min: cfg.min, max: cfg.max, step: cfg.step,
+          touched: !!ueParams[nm].touched
+        });
+      }
+      // 名称排序:参数增删时滑块顺序稳定,不会跳来跳去
+      out.sort(function (a, b) { return a.name < b.name ? -1 : (a.name > b.name ? 1 : 0); });
+      return out;
+    }
+    /* 拖滑块调参:只改数值 + 失效几何缓存 + 重绘。
+       不重新解析表达式、不重建场景 —— 这是"实时"而不卡的关键。 */
+    function ueSetParam(name, value) {
+      name = String(name == null ? '' : name);
+      if (!has(ueParams, name)) return false;
+      var v = Number(value);
+      if (!isNum(v)) return false;
+      ueParams[name].v = v;
+      ueParams[name].touched = true;
+      invalidateGeom();
+      redraw();
+      return true;
+    }
+    function ueSetParamRange(name, mn, mx, st) {
+      name = String(name == null ? '' : name);
+      if (!has(ueParams, name)) return false;
+      var cfg = has(ueParamCfg, name) ? ueParamCfg[name] : (ueParamCfg[name] = { min: -5, max: 5, step: 0.1 });
+      var a = Number(mn), b = Number(mx), s = Number(st);
+      if (isNum(a)) cfg.min = a;
+      if (isNum(b)) cfg.max = b;
+      if (isNum(s) && s > 0) cfg.step = s;
+      if (!(cfg.max > cfg.min)) cfg.max = cfg.min + (Math.abs(cfg.step) > 0 ? Math.abs(cfg.step) : 1);
+      return true;
+    }
+    function ueSetTheta(a, b) {
+      var x0 = Number(a), x1 = Number(b);
+      if (isNum(x0)) ueThetaA = x0;
+      if (isNum(x1)) ueThetaB = x1;
+      invalidateGeom();
+      redraw();
+      return { a: ueThetaA, b: ueThetaB };
+    }
+    // 常数求值(UI 里 θ 区间可以写 2π / pi/2 这类写法)
+    function calcConst(src) {
+      var f = compileExpr(String(src == null ? '' : src));
+      if (!f) return NaN;
+      var keepX = env.x, keepY = env.y;
+      env.x = 0; env.y = 0; env.vars = null;
+      var v = NaN;
+      try { var r = f(env); if (isNum(r)) v = r; } catch (e) { v = NaN; }
+      env.x = keepX; env.y = keepY;
+      return v;
+    }
+    // 用户曲线取景:按采样包围盒定机位(与 fit 同一套"15% 边距"逻辑)
+    function ueFit() {
+      if (!cssW || !cssH) { syncSize(); if (!cssW || !cssH) return; }
+      var minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      function add(x, y) {
+        if (!isNum(x) || !isNum(y)) return;
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+      var keepX = env.x, keepY = env.y, keepTh = env.theta;
+      var vars = ueVars(), i, it, s, N = 160, t, r, v2;
+      env.vars = vars;
+      add(0, 0);   // 原点总纳入(与 fit 一致)
+      for (i = 0; i < ueList.length; i++) {
+        it = ueList[i];
+        if (!it.ok || !it.fn || it.kind === 'implicit') continue;
+        try {
+          if (it.kind === 'y' || it.kind === 'x') {
+            var vert = (it.kind === 'x');
+            for (s = 0; s <= N; s++) {
+              t = -10 + 20 * s / N;
+              if (vert) { env.x = 0; env.y = t; } else { env.x = t; env.y = 0; }
+              vars.theta = t; vars.t = t;
+              v2 = ueEval(it.fn, vars);
+              if (!isNum(v2) || Math.abs(v2) > 30) continue;
+              if (vert) add(v2, t); else add(t, v2);
+            }
+          } else if (it.kind === 'r') {
+            var a = ueThetaA, b = ueThetaB, M = N * 2;
+            for (s = 0; s <= M; s++) {
+              t = a + (b - a) * s / M;
+              env.x = t; env.theta = t; vars.theta = t; vars.t = t;
+              r = ueEval(it.fn, vars);
+              if (!isNum(r) || Math.abs(r) > 30) continue;
+              add(r * Math.cos(t), r * Math.sin(t));
+            }
+          }
+        } catch (e) { /* 忽略该条 */ }
+      }
+      env.x = keepX; env.y = keepY; env.theta = keepTh; env.vars = null;
+      if (minX > maxX || !isFinite(minX)) { setView({ scale: DEFAULT_SCALE, cx: 0, cy: 0 }); return; }
+      var cx = (minX + maxX) / 2, cy = (minY + maxY) / 2;
+      var bw = Math.max(maxX - minX, 1e-6), bh = Math.max(maxY - minY, 1e-6);
+      if (bh < 1e-6) bh = bw * 0.55;
+      if (bw < 1e-6) bw = bh * 0.55;
+      if (bw < 0.6) bw = 0.6;
+      if (bh < 0.6) bh = 0.6;
+      bw += bw * 0.15 + 0.4;
+      bh += bh * 0.15 + 0.4;
+      setView({ scale: Math.min(cssW / bw, cssH / bh), cx: cx, cy: cy });
+    }
+    // 自动配色:优先给"当前没用过"的颜色(与 PAL_LIST 同一套色板)
+    function ueNextColor(used) {
+      var i, c, u = isArr(used) ? used : [];
+      for (i = 0; i < PAL_LIST.length; i++) {
+        c = PAL_LIST[(ueColorIdx + i) % PAL_LIST.length];
+        if (u.indexOf(c) < 0) { ueColorIdx = (ueColorIdx + i + 1) % PAL_LIST.length; return c; }
+      }
+      c = PAL_LIST[ueColorIdx % PAL_LIST.length];
+      ueColorIdx = (ueColorIdx + 1) % PAL_LIST.length;
+      return c;
     }
 
     /* ---------- 3.16 对外 API ---------- */
@@ -1753,17 +2585,44 @@
         return {
           playing: playing,
           u: u,
-          objects: objList.length,   // 图元数
-          labels: overlayList.length // tex 标注数
+          objects: objList.length,   // 图元数(只算 AI/模板场景,不含用户表达式)
+          labels: overlayList.length, // tex 标注数
+          exprs: ueList.length,       // 用户表达式条数(3.18)
+          params: ueParamSnapshot().length
         };
       },
       fit: fit,
       redraw: redraw,
       zoomAt: zoomAt,                        // 以屏幕点为中心缩放
       panByPx: panByPx,                      // 像素平移
+      setView: setView,                      // {scale,cx,cy} 显式机位(世界坐标中心)
+      getView: getView,
+      resetView: resetView,                  // 回默认视野(有图元则取景)
       setViewPan: function (v) { viewPan = !!v; },  // 开关"空白拖拽平移 + 滚轮缩放"
       isDragging: function () { return !!(pending || dragging || panning); },
       onPick: null,                  // function(objEntry, worldPt, ev) 点选回调
+      onViewChange: null,            // function(kind) 用户手动改视野(轮/拖/双击)时回调
+      onDblClick: null,              // function(ev) 返回 true 表示双击已被外部处理
+      setPolarGrid: function (v) {   // 可选叠加层:极坐标网格(默认关)
+        polarGridOn = !!v;
+        redraw();
+        return polarGridOn;
+      },
+      polarGrid: function () { return polarGridOn; },
+      /* —— 用户表达式层(3.18):UI 侧只需要下面这几个入口 —— */
+      ueSet: ueSet,                             // [{id,src,color}] -> 解析后的快照
+      ueList: ueInfo,
+      ueParse: ueParse,                         // 单条解析(UI 预览/校验用)
+      ueParams: ueParamSnapshot,                // [{name,value,min,max,step,touched}]
+      ueSetParam: ueSetParam,                   // (name, value) 拖滑块:只改数 + 重绘
+      ueSetParamRange: ueSetParamRange,         // (name, min, max, step)
+      ueSetTheta: ueSetTheta,                   // (a, b) 极坐标 θ 区间
+      ueTheta: function () { return { a: ueThetaA, b: ueThetaB }; },
+      ueCount: function () { return ueList.length; },
+      ueClear: function () { return ueSet([]); },
+      ueFit: ueFit,                             // 按用户曲线取景
+      ueNextColor: ueNextColor,                 // (usedArray) 自动配色
+      calcConst: calcConst,                     // 常数求值(θ 区间可写 2π)
       setLabels: function (el) {
         labelsEl = el || null;
         labelsAuto = false;
@@ -1811,6 +2670,19 @@
     Object.defineProperty(dbg, 'defs', {
       enumerable: true,
       get: function () { return defList; }
+    });
+    // 用户表达式层调试口:__gl.ue / __gl.ueParams(自测脚本与排查都用它)
+    Object.defineProperty(dbg, 'ue', {
+      enumerable: true,
+      get: function () { return ueList; }
+    });
+    Object.defineProperty(dbg, 'ueParams', {
+      enumerable: true,
+      get: function () { return ueParamSnapshot(); }
+    });
+    Object.defineProperty(dbg, 'view', {
+      enumerable: true,
+      get: function () { return getView(); }
     });
     api.__gl = dbg;
     try { global.__gl = dbg; } catch (e) { /* 忽略 */ }

@@ -35,6 +35,11 @@
   /* 顶层灰色描边 .winedge 与 html.maxed .winedge 已由 css/style.css 提供
      (本页 <link rel="stylesheet" href="css/style.css"> 已引入),此处不再逐字复制,
      避免同一规则两处定义漂移。 */
+  /* 表达式列表 / 参数滑块栏(#glExprBox、#glParamBar 等)的样式不写在这里:
+     观澜有两个入口(本独立页 与 index.html 的主窗面板),两者共用 js/demo.js,
+     而 index.html 与 css/style.css 都不在可改清单里 —— 为保证两个入口观感一致,
+     这部分样式由 demo.js 的 injectExprCSS() 注入一次(内联 <style>,CSP 的
+     style-src 'unsafe-inline' 放行)。DOM 同样由 demo.js 动态插入 #glStage。 */
 </style>
 <script>
   window.__guanlanStandalone = true;   // 让 demo.js 以独立窗形态启动(隐藏标记、导入会话)
@@ -68,7 +73,7 @@
       </div>
     </div>
     <div class="gl-stage" id="glStage">
-      <div class="gl-stage-tip" id="glStageTip">提问后点「🎬 动态演示」生成可动示意图(示例:将军饮马)</div>
+      <div class="gl-stage-tip" id="glStageTip">提问后点「🎬 动态演示」生成可动示意图(示例:将军饮马);也可在左上角表达式栏直接画:y = x^2、r = 2cos(3θ)</div>
       <div class="gl-toolbar" id="glToolbar" hidden>
         <button type="button" id="glDemoBtn" title="对最近的提问生成动态演示">🎬 动态演示</button>
         <span class="gl-sep"></span>

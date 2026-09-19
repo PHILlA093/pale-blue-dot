@@ -232,16 +232,24 @@
     var tb = $('glToolbar');
     if (!tb) return;
     if (engine) tb.hidden = false;
-    // 未出图时禁用播放类按钮,🎬 动态演示始终可用
+    // 未出图时禁用播放类按钮,🎬 动态演示始终可用;
+    // 「清空画布」还要看用户表达式:只有表达式、没有 AI 图元时也该能清
     var has = canvasCount() > 0;
-    var ids = ['glPlayBtn', 'glPauseBtn', 'glStepBtn', 'glResetBtn', 'glClearCanvasBtn'];
+    var ex = exprCount();
+    var ids = ['glPlayBtn', 'glPauseBtn', 'glStepBtn', 'glResetBtn'];
     for (var i = 0; i < ids.length; i++) {
       var b = $(ids[i]);
       if (b) b.disabled = !has;
     }
+    var cb = $('glClearCanvasBtn');
+    if (cb) cb.disabled = !(has || ex > 0);
     if (!canvasActive) {
       var st = $('glDemoState');
-      if (st) st.textContent = has ? '画布:就绪' : '画布:空 · 点「🎬 动态演示」出图';
+      if (st) {
+        st.textContent = ex > 0
+          ? '画布:已输入 ' + ex + ' 条表达式' + (has ? ' + AI 图元' : '')
+          : (has ? '画布:就绪' : '画布:空 · 点「🎬 动态演示」出图');
+      }
     }
   }
   function openPanel() {
@@ -686,7 +694,7 @@
 
   /* ---------- 初始化 ---------- */
   buildImgUI();
-  if (els.glStageTip) els.glStageTip.textContent = '输入题目后点「🎬 动态演示」:优先匹配内置模板(函数图像 / 向量 / 圆锥曲线 / 平面几何 / 立体几何 / 数列概率),匹配不到时由 AI 现场生成示意图';
+  if (els.glStageTip) els.glStageTip.textContent = '输入题目后点「🎬 动态演示」:优先匹配内置模板(函数图像 / 向量 / 圆锥曲线 / 平面几何 / 立体几何 / 数列概率),匹配不到时由 AI 现场生成示意图。也可以在左上角的表达式栏自己画:y=x^2、r=2cos(3θ)(极坐标玫瑰线,自动换算到普通坐标系)、a=2(参数滑块)、隐函数圆。';
 
   /* ============ 观澜画布:引擎装载 / 工具条 / AI→模板协议(2a) ============ */
   var engine = null;
@@ -696,6 +704,597 @@
     engine = window.GL(canvasEl, labelsEl);
   }
   window.__guanlanGL = engine;
+
+  /* ============ 观澜画布:用户表达式 + 参数滑块(Desmos 式交互) ============
+   * 设计要点:
+   *   · 表达式与滑块由引擎的"用户表达式层"(glcanvas.js 3.18)独立存储,
+   *     与 AI 场景/模板互不干扰:换模板、重播动画都不会清掉用户自己写的函数;
+   *     只有「清空画布」会两者一起清(带二次确认)。
+   *   · UI 全部 DOM 动态构建:观澜有两个入口(guanlan.html 独立窗 / index.html
+   *     主窗面板)且共用本文件,而 index.html 与 css/style.css 都不在可改清单里,
+   *     因此新增样式在 injectExprCSS() 里注入一次(内联样式,CSP 的
+   *     style-src 'unsafe-inline' 放行),两个入口的观感保持一致。
+   *   · 拖滑块走 requestAnimationFrame 节流:一帧最多提交一次参数值并重绘,
+   *     不重新解析表达式、不重建场景(引擎侧只做"改数 + 失效几何 + 重绘")。
+   *   · 表达式存 localStorage(qg_gl_expr_v1),重开页面自动恢复。
+   */
+  var LS_EXPR = 'qg_gl_expr_v1';
+  var eui = {
+    box: null, listEl: null, rows: [], rowSeq: 0, thetaWrap: null,
+    bar: null, barList: null, barEmpty: null, pRecs: {},
+    thetaA: null, thetaB: null, gridBox: null, gridOn: false,
+    applyTimer: null, saveTimer: null, rafId: null, thetaTimer: null,
+    folded: false, userBarToggle: false, fittedOnce: false, pending: {}
+  };
+
+  function cel(tag, cls, txt) {
+    var d = document.createElement(tag);
+    if (cls) d.className = cls;
+    if (txt !== undefined && txt !== null) d.textContent = String(txt);
+    return d;
+  }
+  function exprCount() { return (engine && engine.ueCount) ? engine.ueCount() : 0; }
+
+  /* ---------- 样式(只注入一次,两个入口共用) ---------- */
+  function injectExprCSS() {
+    if (document.getElementById('glExprCSS')) return;
+    var css = [
+      '#glExprBox{position:absolute;left:8px;top:46px;z-index:6;width:336px;max-width:58%;',
+      'background:rgba(8,12,24,.88);border:1px solid rgba(120,160,220,.18);border-radius:10px;',
+      'box-shadow:0 8px 24px rgba(0,0,0,.45);color:#8fa3c0;font-size:12px;overflow:hidden}',
+      '#glExprBox.folded .gl-expr-body{display:none}',
+      '.gl-expr-head{display:flex;align-items:center;gap:6px;padding:6px 8px;',
+      'border-bottom:1px solid rgba(120,160,220,.14)}',
+      '.gl-expr-title{color:#cfe0f5;font-weight:600;flex:none}',
+      '.gl-expr-sub{flex:1;min-width:0;font-size:10.5px;color:#5c708f;overflow:hidden;',
+      'text-overflow:ellipsis;white-space:nowrap}',
+      '.gl-expr-fold{flex:none;width:22px;height:20px;line-height:1;padding:0;border:0;',
+      'background:transparent;color:#8fa3c0;cursor:pointer}',
+      '.gl-expr-fold:hover{color:#fff}',
+      '.gl-expr-list{max-height:34vh;overflow:auto;padding:5px 6px 2px}',
+      '.gl-expr-row{display:grid;grid-template-columns:12px 1fr 20px;align-items:center;gap:6px;',
+      'padding:1px 0}',
+      '.gl-expr-dot{width:10px;height:10px;border-radius:50%;background:#4fc3f7}',
+      '.gl-expr-in{width:100%;height:26px;padding:0 8px;border:1px solid rgba(120,160,220,.2);',
+      'border-radius:6px;background:#0a101e;color:#eaf2ff;font-size:12.5px;',
+      'font-family:Consolas,"Courier New",monospace}',
+      '.gl-expr-in:focus{border-color:#4fc3f7;outline:none}',
+      '.gl-expr-row.bad .gl-expr-in{border-color:#ff8a80;background:rgba(255,138,128,.06)}',
+      '.gl-expr-err{grid-column:2/4;color:#ff8a80;font-size:11px;line-height:1.4;',
+      'padding:1px 0 2px 2px;word-break:break-all}',
+      '.gl-expr-del{width:20px;height:22px;line-height:1;padding:0;border:0;background:transparent;',
+      'color:#5c708f;cursor:pointer;font-size:12px}',
+      '.gl-expr-del:hover{color:#ff8a80}',
+      '.gl-expr-foot,.gl-expr-foot2{display:flex;align-items:center;gap:8px;padding:5px 8px;',
+      'border-top:1px solid rgba(120,160,220,.14)}',
+      '.gl-expr-add{height:24px;padding:0 10px;border:1px solid rgba(120,160,220,.22);',
+      'border-radius:6px;background:transparent;color:#8fa3c0;font-size:12px;cursor:pointer}',
+      '.gl-expr-add:hover{color:#fff;border-color:rgba(79,195,247,.5);background:rgba(79,195,247,.14)}',
+      '.gl-expr-tip{flex:1;min-width:0;font-size:10.5px;color:#5c708f;text-align:right;',
+      'overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+      '.gl-expr-foot2.dim{opacity:.5}',
+      '.gl-theta-in{width:52px;height:22px;padding:0 5px;border:1px solid rgba(120,160,220,.22);',
+      'border-radius:5px;background:#0a101e;color:#dbe6f5;font-size:11.5px}',
+      '.gl-theta-in.bad{border-color:#ff8a80}',
+      '.gl-eq-grid{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:11px;',
+      'color:#8fa3c0;cursor:pointer;white-space:nowrap}',
+      '#glParamBar{position:absolute;right:0;top:46px;bottom:10px;width:200px;z-index:6;',
+      'display:flex;flex-direction:column;background:rgba(8,12,24,.88);',
+      'border:1px solid rgba(120,160,220,.18);border-right:0;border-radius:10px 0 0 10px;',
+      'box-shadow:-8px 8px 24px rgba(0,0,0,.4);color:#8fa3c0;font-size:12px;overflow:hidden;',
+      'transition:width .16s}',
+      '#glParamBar.folded{width:24px}',
+      '#glParamBar.folded .gl-pb-body{display:none}',
+      '.gl-pb-head{display:flex;align-items:center;gap:6px;padding:6px 8px;flex:none;',
+      'border-bottom:1px solid rgba(120,160,220,.14)}',
+      '#glParamBar.folded .gl-pb-head{padding:6px 0;justify-content:center;border-bottom:0}',
+      '.gl-pb-title{flex:1;color:#cfe0f5;font-weight:600}',
+      '#glParamBar.folded .gl-pb-title{display:none}',
+      '.gl-pb-tog{flex:none;width:20px;height:20px;line-height:1;padding:0;border:0;',
+      'background:transparent;color:#8fa3c0;cursor:pointer;font-size:13px}',
+      '.gl-pb-tog:hover{color:#fff}',
+      '.gl-pb-body{flex:1;min-height:0;overflow:auto;padding:4px 8px 8px}',
+      '.gl-pb-empty{color:#5c708f;font-size:11px;line-height:1.7;padding:6px 2px}',
+      '.gl-param{padding:6px 0;border-bottom:1px dashed rgba(120,160,220,.14)}',
+      '.gl-param-top{display:flex;align-items:center;gap:5px}',
+      '.gl-param-name{color:#eaf2ff;font-weight:600;font-family:Consolas,monospace;min-width:10px}',
+      '.gl-param-eq{color:#5c708f}',
+      '.gl-param-val{flex:1;min-width:0;height:22px;padding:0 5px;border:1px solid rgba(120,160,220,.22);',
+      'border-radius:5px;background:#0a101e;color:#dbe6f5;font-size:11.5px}',
+      '.gl-param-range{width:100%;margin:6px 0 3px;height:16px}',
+      '.gl-param-lim{display:flex;align-items:center;gap:3px;font-size:10px;color:#5c708f}',
+      '.gl-param-lim input{width:100%;min-width:0;height:18px;padding:0 3px;font-size:10px;',
+      'border:1px solid rgba(120,160,220,.18);border-radius:4px;background:#0a101e;color:#8fa3c0}',
+      '.gl-param-lim span{flex:none}',
+      '.gl-param-id{font-size:10.5px;color:#5c708f;margin-left:2px}'
+    ].join('');
+    var st = document.createElement('style');
+    st.id = 'glExprCSS';
+    st.textContent = css;
+    (document.head || document.documentElement).appendChild(st);
+  }
+
+  /* ---------- 表达式面板 ---------- */
+  function buildExprUI() {
+    var stage = $('glStage');
+    if (!stage || document.getElementById('glExprBox') || !engine || !engine.ueSet) return false;
+    injectExprCSS();
+    // —— 表达式列表(画布左上角,stage 内) ——
+    var box = cel('div');
+    box.id = 'glExprBox';
+    var head = cel('div', 'gl-expr-head');
+    head.appendChild(cel('span', 'gl-expr-title', '表达式'));
+    head.appendChild(cel('span', 'gl-expr-sub', 'y=x^2 · r=2cos(3θ) · a=2 · (x-1)^2+(y-1)^2=4'));
+    var fold = cel('button', 'gl-expr-fold', '▴');
+    fold.type = 'button';
+    fold.title = '折叠 / 展开表达式面板';
+    fold.addEventListener('click', function () {
+      eui.folded = !eui.folded;
+      box.className = eui.folded ? 'folded' : '';
+      fold.textContent = eui.folded ? '▾' : '▴';
+    });
+    head.appendChild(fold);
+    box.appendChild(head);
+    var body = cel('div', 'gl-expr-body');
+    var list = cel('div', 'gl-expr-list');
+    body.appendChild(list);
+    var foot = cel('div', 'gl-expr-foot');
+    var add = cel('button', 'gl-expr-add', '+ 添加');
+    add.type = 'button';
+    add.id = 'glExprAdd';
+    add.title = '新增一条表达式';
+    add.addEventListener('click', function () {
+      var r = addExprRow('', null);
+      applyExprs();
+      showCanvasUI();
+      try { if (r && r.inp) r.inp.focus(); } catch (e) { /* 忽略 */ }
+    });
+    foot.appendChild(add);
+    foot.appendChild(cel('span', 'gl-expr-tip', '回车立即生效'));
+    body.appendChild(foot);
+    // θ 区间(只作用于 r=f(θ)) + 可选的极坐标网格叠加
+    var foot2 = cel('div', 'gl-expr-foot2');
+    foot2.appendChild(cel('span', null, 'θ ∈ ['));
+    var tA = cel('input', 'gl-theta-in');
+    tA.type = 'text'; tA.value = '0'; tA.title = '极坐标 θ 下限(可写 0 / -PI)';
+    var tB = cel('input', 'gl-theta-in');
+    tB.type = 'text'; tB.value = '2π'; tB.title = '极坐标 θ 上限(可写 2π / 4*PI)';
+    foot2.appendChild(tA);
+    foot2.appendChild(cel('span', null, ','));
+    foot2.appendChild(tB);
+    foot2.appendChild(cel('span', null, ']'));
+    var gw = cel('label', 'gl-eq-grid');
+    var gcb = document.createElement('input');
+    gcb.type = 'checkbox';
+    gw.appendChild(gcb);
+    gw.appendChild(cel('span', null, '叠加 θ 网格'));
+    gw.title = '可选辅助层:同心圆 + 30° 射线。坐标系仍是普通直角坐标系,默认关闭';
+    gcb.addEventListener('change', function () {
+      eui.gridOn = !!gcb.checked;
+      if (engine.setPolarGrid) engine.setPolarGrid(eui.gridOn);
+      saveExprState();
+    });
+    foot2.appendChild(gw);
+    body.appendChild(foot2);
+    box.appendChild(body);
+    stage.appendChild(box);
+
+    // —— 参数滑块栏(画布右侧,可折叠) ——
+    var bar = cel('div');
+    bar.id = 'glParamBar';
+    var pbHead = cel('div', 'gl-pb-head');
+    pbHead.appendChild(cel('span', 'gl-pb-title', '参数'));
+    var pbTog = cel('button', 'gl-pb-tog', '›');
+    pbTog.type = 'button';
+    pbTog.title = '折叠 / 展开参数栏';
+    pbTog.addEventListener('click', function () {
+      eui.userBarToggle = true;
+      toggleParamBar();
+    });
+    pbHead.appendChild(pbTog);
+    bar.appendChild(pbHead);
+    var pbBody = cel('div', 'gl-pb-body');
+    var pbEmpty = cel('div', 'gl-pb-empty', '表达式里出现单字母参数(例如 a=2 或 r=a*cos(3θ))时,这里会自动出现滑块');
+    var pbList = cel('div', 'gl-pb-list');
+    pbBody.appendChild(pbEmpty);
+    pbBody.appendChild(pbList);
+    bar.appendChild(pbBody);
+    stage.appendChild(bar);
+
+    eui.box = box; eui.listEl = list; eui.bar = bar; eui.barList = pbList;
+    eui.barEmpty = pbEmpty; eui.thetaA = tA; eui.thetaB = tB;
+    eui.thetaWrap = foot2; eui.gridBox = gcb;
+
+    function onThetaInput() {
+      if (eui.thetaTimer) clearTimeout(eui.thetaTimer);
+      eui.thetaTimer = setTimeout(function () { eui.thetaTimer = null; applyTheta(); }, 400);
+    }
+    tA.addEventListener('input', onThetaInput);
+    tB.addEventListener('input', onThetaInput);
+    tA.addEventListener('change', function () { applyTheta(); });
+    tB.addEventListener('change', function () { applyTheta(); });
+    return true;
+  }
+
+  function toggleParamBar() {
+    if (!eui.bar) return;
+    var folded = eui.bar.className.indexOf('folded') < 0;
+    eui.bar.className = folded ? 'folded' : '';
+    var b = eui.bar.querySelector ? eui.bar.querySelector('.gl-pb-tog') : null;
+    if (b) b.textContent = folded ? '‹' : '›';
+  }
+
+  /* ---------- 表达式行 ---------- */
+  function addExprRow(src, color) {
+    if (!eui.listEl) return null;
+    var id = 'ue' + (++eui.rowSeq);
+    var row = cel('div', 'gl-expr-row');
+    row.setAttribute('data-id', id);
+    var dot = cel('span', 'gl-expr-dot');
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'gl-expr-in';
+    inp.spellcheck = false;
+    inp.setAttribute('autocomplete', 'off');
+    inp.placeholder = '例如 y = x^2 - 2x + 1';
+    inp.value = String(src == null ? '' : src);
+    var del = cel('button', 'gl-expr-del', '✕');
+    del.type = 'button';
+    del.title = '删除这条表达式';
+    var err = cel('div', 'gl-expr-err');
+    row.appendChild(dot); row.appendChild(inp); row.appendChild(del); row.appendChild(err);
+    var rec = { id: id, row: row, dot: dot, inp: inp, del: del, err: err, color: color || null };
+    if (!rec.color) {
+      var used = [], i;
+      for (i = 0; i < eui.rows.length; i++) if (eui.rows[i].color) used.push(eui.rows[i].color);
+      rec.color = (engine.ueNextColor) ? engine.ueNextColor(used) : '#4fc3f7';
+    }
+    dot.style.background = rec.color;
+    inp.addEventListener('input', function () { scheduleApply(); });
+    inp.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Enter') { ev.preventDefault(); applyExprs(); }
+    });
+    del.addEventListener('click', function (ev) {
+      if (ev.preventDefault) ev.preventDefault();
+      removeExprRow(rec);
+    });
+    eui.rows.push(rec);
+    eui.listEl.appendChild(row);
+    return rec;
+  }
+  function removeExprRow(rec) {
+    var i;
+    for (i = 0; i < eui.rows.length; i++) {
+      if (eui.rows[i] === rec) { eui.rows.splice(i, 1); break; }
+    }
+    if (rec.row && rec.row.parentNode) rec.row.parentNode.removeChild(rec.row);
+    applyExprs();
+  }
+  function clearExprRows() {
+    var i;
+    for (i = 0; i < eui.rows.length; i++) {
+      if (eui.rows[i].row && eui.rows[i].row.parentNode) {
+        eui.rows[i].row.parentNode.removeChild(eui.rows[i].row);
+      }
+    }
+    eui.rows = [];
+    if (engine && engine.ueClear) engine.ueClear();
+    renderParams();
+  }
+  function scheduleApply() {
+    if (eui.applyTimer) clearTimeout(eui.applyTimer);
+    // 防抖 150ms(需求上限 200ms):连续敲键只在停顿后提交一次
+    eui.applyTimer = setTimeout(function () { eui.applyTimer = null; applyExprs(); }, 150);
+  }
+
+  /* ---------- 提交表达式 -> 引擎(整表解析,参数表同步) ---------- */
+  function applyExprs() {
+    if (eui.applyTimer) { clearTimeout(eui.applyTimer); eui.applyTimer = null; }
+    if (!engine || !engine.ueSet) return;
+    var items = [], i, r, s, info;
+    for (i = 0; i < eui.rows.length; i++) {
+      r = eui.rows[i];
+      s = String(r.inp.value == null ? '' : r.inp.value);
+      if (!s.replace(/\s+/g, '')) { r.err.textContent = ''; r.row.className = 'gl-expr-row'; continue; }
+      items.push({ id: r.id, src: s, color: r.color });
+    }
+    info = engine.ueSet(items) || [];
+    var byId = {}, j, it;
+    for (j = 0; j < info.length; j++) byId[info[j].id] = info[j];
+    for (i = 0; i < eui.rows.length; i++) {
+      r = eui.rows[i];
+      it = byId[r.id];
+      if (!it) continue;
+      if (it.color && it.color !== r.color) { r.color = it.color; r.dot.style.background = it.color; }
+      if (it.ok) {
+        r.row.className = 'gl-expr-row';
+        r.err.textContent = '';
+      } else {
+        r.row.className = 'gl-expr-row bad';
+        r.err.textContent = '⚠ ' + (it.err || '无法解析');
+      }
+      // 用户手工改写了参数定义式(例如拖动滑块后又把 a = 3 改成 a = 5):
+      // 文本即真相 —— 把滑块拉到新值,避免"定义式与滑块各说各话"
+      var srcNow = String(r.inp.value == null ? '' : r.inp.value);
+      if (r.lastSrc !== undefined && r.lastSrc !== srcNow &&
+        it.ok && it.kind === 'param' && it.lhs && it.constVal !== null) {
+        engine.ueSetParam(it.lhs, it.constVal);
+      }
+      r.lastSrc = srcNow;
+    }
+    // θ 区间只在有 r=f(θ) 时才显得重要:没有就把那一行压暗
+    var hasPolar = false;
+    for (j = 0; j < info.length; j++) if (info[j].kind === 'r') hasPolar = true;
+    if (eui.thetaWrap) eui.thetaWrap.className = hasPolar ? 'gl-expr-foot2' : 'gl-expr-foot2 dim';
+    renderParams();
+    saveExprState();
+    // 画布上还没有 AI 图元时,给用户的第一条曲线自动取一次景(只做一次,不抢用户视野)
+    if (!eui.fittedOnce && canvasCount() === 0) {
+      var drawable = 0;
+      for (j = 0; j < info.length; j++) if (info[j].ok && info[j].kind !== 'param') drawable++;
+      if (drawable > 0) { eui.fittedOnce = true; if (engine.ueFit) engine.ueFit(); }
+    }
+    if (info.length && !canvasActive) setDemoState('画布:已输入 ' + info.length + ' 条表达式');
+    updateToolbarState();
+  }
+
+  /* ---------- 参数滑块栏 ---------- */
+  function renderParams() {
+    if (!eui.barList || !engine || !engine.ueParams) return;
+    var ps = engine.ueParams() || [];
+    var seen = {}, i, p, rec, name;
+    for (i = 0; i < ps.length; i++) {
+      p = ps[i];
+      seen[p.name] = 1;
+      rec = eui.pRecs[p.name];
+      if (!rec) rec = createParamRow(p);
+      syncParamRow(rec, p);
+    }
+    for (name in eui.pRecs) {
+      if (!Object.prototype.hasOwnProperty.call(eui.pRecs, name)) continue;
+      if (seen[name]) continue;
+      rec = eui.pRecs[name];
+      if (rec.row && rec.row.parentNode) rec.row.parentNode.removeChild(rec.row);
+      delete eui.pRecs[name];
+    }
+    if (eui.barEmpty) eui.barEmpty.style.display = ps.length ? 'none' : '';
+  }
+  function createParamRow(p) {
+    var row = cel('div', 'gl-param');
+    row.setAttribute('data-name', p.name);
+    var top = cel('div', 'gl-param-top');
+    top.appendChild(cel('span', 'gl-param-name', p.name));
+    top.appendChild(cel('span', 'gl-param-eq', '='));
+    var val = cel('input', 'gl-param-val');
+    val.type = 'number';
+    val.step = 'any';
+    top.appendChild(val);
+    row.appendChild(top);
+    var rg = cel('input', 'gl-param-range');
+    rg.type = 'range';
+    row.appendChild(rg);
+    var lim = cel('div', 'gl-param-lim');
+    var mn = cel('input'), mx = cel('input'), stp = cel('input');
+    mn.type = 'number'; mx.type = 'number'; stp.type = 'number';
+    mn.title = '最小值'; mx.title = '最大值'; stp.title = '步长';
+    lim.appendChild(cel('span', null, '最小'));
+    lim.appendChild(mn);
+    lim.appendChild(cel('span', null, '最大'));
+    lim.appendChild(mx);
+    lim.appendChild(cel('span', null, '步长'));
+    lim.appendChild(stp);
+    row.appendChild(lim);
+    var rec = { name: p.name, row: row, val: val, rg: rg, mn: mn, mx: mx, stp: stp };
+    rg.addEventListener('input', function () { onParamInput(rec, parseFloat(rg.value)); });
+    rg.addEventListener('change', function () {
+      onParamInput(rec, parseFloat(rg.value));
+      saveExprState();
+    });
+    val.addEventListener('input', function () { onParamInput(rec, parseFloat(val.value)); });
+    val.addEventListener('change', function () { onParamInput(rec, parseFloat(val.value)); saveExprState(); });
+    function onLim() {
+      var a = parseFloat(mn.value), b = parseFloat(mx.value), s = parseFloat(stp.value);
+      if (engine.ueSetParamRange) engine.ueSetParamRange(rec.name, a, b, s);
+      var ps = engine.ueParams ? engine.ueParams() : [];
+      for (var k = 0; k < ps.length; k++) if (ps[k].name === rec.name) syncParamRow(rec, ps[k]);
+      saveExprState();
+    }
+    mn.addEventListener('change', onLim);
+    mx.addEventListener('change', onLim);
+    stp.addEventListener('change', onLim);
+    eui.pRecs[p.name] = rec;
+    eui.barList.appendChild(row);
+    return rec;
+  }
+  function fmtParam(v) {
+    if (!isFinite(v)) return '0';
+    var r = Math.round(v * 1e6) / 1e6;
+    return String(r);
+  }
+  function syncParamRow(rec, p) {
+    rec.rg.min = fmtParam(p.min);
+    rec.rg.max = fmtParam(p.max);
+    rec.rg.step = fmtParam(p.step > 0 ? p.step : 0.1);
+    rec.rg.value = fmtParam(p.value);
+    if (document.activeElement !== rec.val) rec.val.value = fmtParam(p.value);
+    if (document.activeElement !== rec.mn) rec.mn.value = fmtParam(p.min);
+    if (document.activeElement !== rec.mx) rec.mx.value = fmtParam(p.max);
+    if (document.activeElement !== rec.stp) rec.stp.value = fmtParam(p.step);
+  }
+  /* 滑块/数值框改动:rAF 节流 —— 一帧只提交一次参数值并重绘 */
+  function onParamInput(rec, v) {
+    if (!engine || !engine.ueSetParam) return;
+    if (!isFinite(v)) return;
+    rec.pending = v;
+    eui.pending[rec.name] = v;
+    if (eui.rafId != null) return;
+    var run = function () {
+      eui.rafId = null;
+      var k;
+      for (k in eui.pending) {
+        if (!Object.prototype.hasOwnProperty.call(eui.pending, k)) continue;
+        var vv = eui.pending[k];
+        delete eui.pending[k];
+        if (engine.ueSetParam(k, vv)) {
+          // 参数有 a=2 这类定义式时,把定义行文本同步成新值(只在输入框未聚焦时改)
+          syncParamDefText(k, vv);
+          var rr = eui.pRecs[k];
+          if (rr && rr.val && document.activeElement !== rr.val) rr.val.value = fmtParam(vv);
+        }
+      }
+    };
+    if (typeof requestAnimationFrame === 'function') eui.rafId = requestAnimationFrame(run);
+    else eui.rafId = setTimeout(run, 16);
+  }
+  // 把 a = 2 这一行的文本同步为 a = 3(拖滑块后定义式与滑块不再各说各话)
+  function syncParamDefText(name, v) {
+    if (!engine.ueList) return;
+    var info = engine.ueList() || [], i, it, j, rec;
+    for (i = 0; i < info.length; i++) {
+      it = info[i];
+      if (it.kind !== 'param' || it.lhs !== name) continue;
+      for (j = 0; j < eui.rows.length; j++) {
+        rec = eui.rows[j];
+        if (rec.id !== it.id) continue;
+        if (document.activeElement === rec.inp) continue;
+        rec.inp.value = name + ' = ' + fmtParam(v);
+      }
+    }
+  }
+
+  /* ---------- θ 区间 ---------- */
+  function applyTheta() {
+    if (!engine || !engine.ueSetTheta) return;
+    var va = String(eui.thetaA.value == null ? '' : eui.thetaA.value);
+    var vb = String(eui.thetaB.value == null ? '' : eui.thetaB.value);
+    var a = engine.calcConst ? engine.calcConst(va) : parseFloat(va);
+    var b = engine.calcConst ? engine.calcConst(vb) : parseFloat(vb);
+    eui.thetaA.className = isFinite(a) ? 'gl-theta-in' : 'gl-theta-in bad';
+    eui.thetaB.className = isFinite(b) ? 'gl-theta-in' : 'gl-theta-in bad';
+    if (!isFinite(a) || !isFinite(b) || !(b > a)) return;   // 非法输入:保留上一次的有效区间
+    engine.ueSetTheta(a, b);
+    saveExprState();
+  }
+
+  /* ---------- 持久化(qg_gl_expr_v1) ---------- */
+  function saveExprState() {
+    if (eui.saveTimer) clearTimeout(eui.saveTimer);
+    eui.saveTimer = setTimeout(function () {
+      eui.saveTimer = null;
+      try {
+        var d = {
+          v: 1,
+          theta: [String(eui.thetaA ? eui.thetaA.value : '0'),
+            String(eui.thetaB ? eui.thetaB.value : '2π')],
+          grid: !!(eui.gridBox && eui.gridBox.checked),
+          exprs: [], params: {}
+        };
+        var i, r, s;
+        for (i = 0; i < eui.rows.length; i++) {
+          r = eui.rows[i];
+          s = String(r.inp.value == null ? '' : r.inp.value);
+          if (!s.replace(/\s+/g, '')) continue;
+          d.exprs.push({ src: s, color: r.color });
+        }
+        var ps = engine.ueParams ? engine.ueParams() : [];
+        for (i = 0; i < ps.length; i++) {
+          d.params[ps[i].name] = {
+            v: ps[i].value, min: ps[i].min, max: ps[i].max, step: ps[i].step,
+            touched: ps[i].touched ? 1 : 0
+          };
+        }
+        localStorage.setItem(LS_EXPR, JSON.stringify(d));
+      } catch (e) { /* 存储失败(隐私模式/配额)不影响使用 */ }
+    }, 300);
+  }
+  function loadExprState() {
+    var raw = null, d = null, i;
+    try { raw = localStorage.getItem(LS_EXPR); } catch (e) { raw = null; }
+    if (raw) { try { d = JSON.parse(raw); } catch (e2) { d = null; } }
+    if (!d || typeof d !== 'object') return false;
+    var list = Object.prototype.toString.call(d.exprs) === '[object Array]' ? d.exprs : [];
+    for (i = 0; i < list.length; i++) {
+      if (!list[i]) continue;
+      addExprRow(String(list[i].src == null ? '' : list[i].src),
+        typeof list[i].color === 'string' ? list[i].color : null);
+    }
+    if (Object.prototype.toString.call(d.theta) === '[object Array]' && eui.thetaA) {
+      eui.thetaA.value = String(d.theta[0] == null ? '0' : d.theta[0]);
+      eui.thetaB.value = String(d.theta[1] == null ? '2π' : d.theta[1]);
+    }
+    if (d.grid && eui.gridBox) {
+      eui.gridBox.checked = true;
+      eui.gridOn = true;
+      if (engine.setPolarGrid) engine.setPolarGrid(true);
+    }
+    applyTheta();
+    applyExprs();
+    // 参数:区间总是恢复;数值只恢复"用户手动调过"的(touched),
+    // 否则会把 a=2 这类定义式的初值钉死,之后改定义式就不生效了
+    var ps = d.params || {}, k;
+    for (k in ps) {
+      if (!Object.prototype.hasOwnProperty.call(ps, k)) continue;
+      var p = ps[k];
+      if (!p) continue;
+      if (engine.ueSetParamRange) engine.ueSetParamRange(k, p.min, p.max, p.step);
+      if (p.touched && engine.ueSetParam) engine.ueSetParam(k, p.v);
+    }
+    renderParams();
+    applyExprs();
+    return true;
+  }
+
+  /* ---------- 工具条联动 ---------- */
+  function updateToolbarState() {
+    ensureToolbar();
+    if (!canvasActive) {
+      var st = $('glDemoState');
+      if (st) {
+        st.textContent = exprCount()
+          ? ('画布:已输入 ' + exprCount() + ' 条表达式 · 点「🎬 动态演示」出 AI 图')
+          : '画布:空';
+      }
+    }
+  }
+
+  /* ---------- 初始化 ---------- */
+  function initExprUI() {
+    if (!buildExprUI()) return false;
+    // 引擎视野被用户接管(滚轮/拖拽/双击)后,不再让 AI 场景的自动取景抢走视野
+    engine.onViewChange = function () { engine.autoFitOnUpdate = false; };
+    // 双击复位:有用户表达式时按表达式取景,否则交给引擎的默认视野
+    engine.onDblClick = function () {
+      if (exprCount() > 0 && engine.ueFit) { engine.ueFit(); return true; }
+      return false;
+    };
+    var restored = loadExprState();
+    if (!restored || !eui.rows.length) {
+      if (!eui.rows.length) addExprRow('', null);
+      applyExprs();
+    }
+    renderParams();
+    // 窄窗(主窗浮动面板)下默认折叠参数栏,折叠后不挡画布
+    var stage = $('glStage');
+    if (stage && stage.clientWidth && stage.clientWidth < 620) {
+      if (eui.bar && eui.bar.className.indexOf('folded') < 0) {
+        eui.bar.className = 'folded';
+        var b = eui.bar.querySelector ? eui.bar.querySelector('.gl-pb-tog') : null;
+        if (b) b.textContent = '‹';
+      }
+    }
+    if (window.addEventListener) {
+      window.addEventListener('resize', function () {
+        if (eui.userBarToggle || !eui.bar || !stage) return;
+        if (eui.bar.className.indexOf('folded') >= 0) return;
+        if (stage.clientWidth && stage.clientWidth < 620) {
+          eui.bar.className = 'folded';
+          var b2 = eui.bar.querySelector ? eui.bar.querySelector('.gl-pb-tog') : null;
+          if (b2) b2.textContent = '‹';
+        }
+      });
+    }
+    return true;
+  }
 
   var lastUserText = '';     // 最近一次成功发出的提问
   var lastAiText = '';       // 最近一条 AI 回答
@@ -753,7 +1352,20 @@
       '\n  dot{pt,r,color,label,drag:"free"}、segment/arrow{a,b,color,width,dash}、' +
       'line{a,b 或 a:直线id,label}、ray{a,b}、circle{c,r 或 rPt}、' +
       'polyline/polygon{pts:[点,...],fill}、curve{fn:"含 x 的表达式",x0,x1}、' +
+      'polar{r:"含 θ 的表达式",thetaMin,thetaMax,color,width}、' +
       'text{at:点,text,offset:{x,y},size} 以及带 tex:"$公式$" 的 MathJax 标注' +
+      '\n· **极坐标曲线(玫瑰线/花瓣线/心形线/螺线/圆)一律用 polar,禁止用 curve 顶替**:' +
+      '\n  polar 是引擎的一等图元,内部按 x = r·cosθ、y = r·sinθ 换算后画在普通直角坐标系上,' +
+      'r<0 时点自然落在反方向(不要取绝对值、不要自己补负号);' +
+      '\n  写法:{"id":"rose","type":"polar","r":"cos(3*theta)","thetaMin":0,"thetaMax":6.283185307179586,"color":"#ffd54f"}' +
+      '\n  · r 是 θ 的表达式(θ 可写 theta 或 θ,π 写 PI;可用 + - * / ^ 与全部白名单函数);' +
+      '\n  · thetaMin/thetaMax 是 θ 的扫过范围,玫瑰线/心形线用 0 ~ 6.283185307179586,' +
+      '螺线 r=0.2*theta 用 0 ~ 12.566370614359172(多转几圈);' +
+      '\n  · 例:三瓣玫瑰线 r=cos(3*theta)、四瓣玫瑰线 r=cos(2*theta)、' +
+      '五瓣 r=2+cos(5*theta)、心形线 r=1-cos(theta)、圆 r=2*sin(theta)、' +
+      '阿基米德螺线 r=0.3*theta、双纽线 r=sqrt(4*cos(2*theta))' +
+      '\n  · 讲解文字里若写了"极坐标 / r = … / 玫瑰线 / 花瓣 / 螺线 / 心形线",' +
+      '画布上就必须有对应的 polar 图元,否则学生会看到"标注说玫瑰线、画的是波浪线"' +
       '\n· "点"可以写成 def/object 的 id 字符串,或 {"x":...,"y":...},或 [x,y]' +
       '\n· 表达式里只允许变量 u(动画相位 0→1)、x(曲线自变量)、PI、E,以及函数' +
       ' sin cos tan asin acos atan atan2 sqrt cbrt abs pow hypot min max exp ln log log2 floor ceil round sign;' +
@@ -767,7 +1379,7 @@
   var DEF_OPS = { fixed: 1, line: 1, onLine: 1, reflect: 1, lineIntersect: 1, mid: 1, between: 1 };
   var OBJ_TYPES = {
     dot: 1, segment: 1, line: 1, ray: 1, circle: 1,
-    polyline: 1, polygon: 1, arrow: 1, curve: 1, text: 1
+    polyline: 1, polygon: 1, arrow: 1, curve: 1, polar: 1, text: 1
   };
   var ID_RE = /^[A-Za-z0-9_-]{1,24}$/;
   function isPlainObj(v) {
@@ -793,6 +1405,15 @@
   }
   function cpStr(v, n) { return (typeof v === 'string' && v.length <= n) ? v : null; }
   function cpNum(v) { return (typeof v === 'number' && isFinite(v)) ? v : null; }
+  // 宽松数值:模型常把区间写成字符串("0" / "6.283185307179586"),一并接受
+  function cpNumLoose(v) {
+    if (typeof v === 'number' && isFinite(v)) return v;
+    if (typeof v === 'string' && v.length <= 40) {
+      var n = parseFloat(v);
+      if (isFinite(n)) return n;
+    }
+    return null;
+  }
   function cpStyle(src, out, forLine) {
     var c = cpStr(src.color, 32); if (c) out.color = c;
     var w = cpNum(src.width); if (w !== null && w > 0 && w <= 12) out.width = w;
@@ -880,6 +1501,18 @@
       if (!fn) return 'objects[' + idx + '] curve 需要 fn 表达式';
       if (!isNumExpr(o.x0) || !isNumExpr(o.x1)) return 'objects[' + idx + '] curve 需要 x0,x1';
       e.fn = fn; e.x0 = o.x0; e.x1 = o.x1;
+      cpStyle(o, e, false);
+    } else if (o.type === 'polar') {
+      // 极坐标曲线:r 是 θ 的表达式(θ/theta 都行),thetaMin/thetaMax 是 θ 的范围
+      var pr = cpStr(o.r, 200) || cpStr(o.fn, 200);
+      if (!pr) return 'objects[' + idx + '] polar 需要 r(含 θ 的表达式)';
+      e.r = pr;
+      var pt0 = cpNumLoose(o.thetaMin), pt1 = cpNumLoose(o.thetaMax);
+      e.thetaMin = (pt0 !== null) ? pt0 : 0;
+      e.thetaMax = (pt1 !== null) ? pt1 : Math.PI * 2;
+      if (!(e.thetaMax > e.thetaMin)) { e.thetaMin = 0; e.thetaMax = Math.PI * 2; }
+      // θ 范围上限:AI 偶尔给出 1e9 这类值,引擎另有一道兜底,这里先拦一次
+      if (e.thetaMax - e.thetaMin > Math.PI * 200) e.thetaMax = e.thetaMin + Math.PI * 200;
       cpStyle(o, e, false);
     } else if (o.type === 'text') {
       if (!isPointRef(o.at)) return 'objects[' + idx + '] text 需要 at';
@@ -976,8 +1609,68 @@
   }
 
   // 返回 {ok:true, scene, idFixed} 或 {ok:false, err}
+  /* ---------- 极坐标归一化(修"标注与图形不符"的关键一环) ----------
+   * 实测踩过的坑:提问"画一个花瓣线,就是极坐标 r=cos(3θ) 那种玫瑰线",AI 讲解
+   * 完全正确,却把曲线写成了笛卡尔函数 → 画布上是一条余弦波浪线,而标注写着
+   * 「三瓣玫瑰线」。除了提示词里要求用 polar 图元,这里再做一层兜底:
+   * 模型若把极坐标曲线写进 defs(op:'polar'),defs 只参与点/线求值、不会被绘制,
+   * 直接搬到 objects 当图元画,避免"讲了玫瑰线、画布上什么都没有"。
+   */
+  function normalizePolar(raw) {
+    if (!isPlainObj(raw)) return raw;
+    var defs = isArr2(raw.defs) ? raw.defs : [];
+    var objs = isArr2(raw.objects) ? raw.objects : [];
+    var i, d, found = false;
+    for (i = 0; i < defs.length; i++) {
+      d = defs[i];
+      if (isPlainObj(d) && (d.op === 'polar' || d.type === 'polar')) { found = true; break; }
+    }
+    if (!found) return raw;
+    var out = {}, k, k2;
+    for (k in raw) { if (hk(raw, k)) out[k] = raw[k]; }
+    out.defs = []; out.objects = [];
+    for (i = 0; i < defs.length; i++) {
+      d = defs[i];
+      if (isPlainObj(d) && (d.op === 'polar' || d.type === 'polar')) {
+        var m = {};
+        for (k2 in d) { if (hk(d, k2)) m[k2] = d[k2]; }
+        if (m.op === 'polar') delete m.op;
+        m.type = 'polar';
+        out.objects.push(m);
+      } else {
+        out.defs.push(d);
+      }
+    }
+    for (i = 0; i < objs.length; i++) out.objects.push(objs[i]);
+    return out;
+  }
+
+  /* ---------- "标注与图形不符"的防御性检查 ----------
+   * 讲解/标注里出现极坐标关键词(极坐标 / r=…cosθ / 玫瑰线 / 花瓣 / 螺线 / 心形线),
+   * 但场景里没有任何 polar 图元 → 图形大概率是笛卡尔函数顶替的,与标注不符。
+   * 只提示、不拦演示(用户仍能看到图),但状态栏与气泡里要说清楚。
+   * 注意:这里刻意不写 console.warn —— 自动化探针把控制台输出当异常收集,
+   * 不能因为一句提示把既有回归测试判红。 */
+  var POLAR_KW = /极坐标|玫瑰线|花瓣线|花瓣|螺线|心形线|ρ|r\s*=\s*[^,。;、]{0,12}(cos|sin)/;
+  function polarMismatch(scene) {
+    if (!isPlainObj(scene)) return false;
+    var objs = isArr2(scene.objects) ? scene.objects : [];
+    var i, o, txt, hasPolar = false, kw = false;
+    for (i = 0; i < objs.length; i++) {
+      o = objs[i];
+      if (!isPlainObj(o)) continue;
+      if (o.type === 'polar') { hasPolar = true; continue; }
+      if (o.type === 'text') {
+        txt = String(o.text == null ? '' : o.text) + ' ' + String(o.tex == null ? '' : o.tex);
+        if (POLAR_KW.test(txt)) kw = true;
+      }
+    }
+    return kw && !hasPolar;
+  }
+
   function validateScene(raw) {
     if (!isPlainObj(raw)) return { ok: false, err: 'AI 未给出 scene 对象' };
+    raw = normalizePolar(raw);   // 极坐标写进 defs 的写法先搬到 objects
     if (!isArr2(raw.defs)) raw.defs = [];
     if (!isArr2(raw.objects)) raw.objects = [];
     if (raw.defs.length > 60) return { ok: false, err: '几何定义过多(' + raw.defs.length + ' > 60)' };
@@ -1015,11 +1708,16 @@
     return { ok: true, scene: out, idFixed: plan.fixed };
   }
 
+  // AI 出新场景 = 新的一幕,恢复"自动取景"(用户此前手动缩放/平移会把
+  // engine.autoFitOnUpdate 置 false,不能让上一条演示的视野粘住新场景)
+  function followScene() { if (engine) engine.autoFitOnUpdate = true; }
+
   // 应用 AI 现场生成的场景:校验 → 绘制 → 检查有效图元比例(不合格则清空并报错)
   function applyScene(scene) {
     if (!engine) return { ok: false, err: '画布引擎未就绪' };
     var v = validateScene(scene);
     if (!v.ok) return { ok: false, err: v.err };
+    followScene();
     engine.clear();
     engine.update(v.scene);
     var objs = (engine.__gl && engine.__gl.objects) ? engine.__gl.objects : [];
@@ -1031,7 +1729,10 @@
     }
     showCanvasUI();
     engine.play();
-    return { ok: true, objects: total, okObjects: okN, idFixed: v.idFixed || 0 };
+    return {
+      ok: true, objects: total, okObjects: okN, idFixed: v.idFixed || 0,
+      mismatch: polarMismatch(v.scene)   // true = 标注提极坐标、图里却没有 polar 图元
+    };
   }
 
   // —— 生成演示(手动按钮 / 测试钩子共用) ——
@@ -1072,11 +1773,16 @@
             throw new Error(rs.err || '场景校验未通过');
           }
           note('DEMO:scene ok raw=' + rawN + ' objs=' + rs.objects + ' okObjs=' + rs.okObjects
-            + ' idFixed=' + (rs.idFixed || 0));
-          setDemoState('画布:AI 现场生成 · 播放中…');
+            + ' idFixed=' + (rs.idFixed || 0) + (rs.mismatch ? ' MISMATCH=polar-missing' : ''));
+          setDemoState(rs.mismatch
+            ? '⚠ AI 未使用极坐标图元(r=f(θ)),画面可能与标注不符'
+            : '画布:AI 现场生成 · 播放中…');
           addBubble('ai', '🎬 已按题意现场生成动态演示(' + rs.okObjects + ' 个图元)'
             + (rs.idFixed ? '(已自动修正 ' + rs.idFixed + ' 个不规范 id)' : '')
             + ((obj.caption && String(obj.caption).trim()) ? '\n' + String(obj.caption).trim() : '')
+            + (rs.mismatch ? '\n⚠ 注意:本次演示的标注提到极坐标(玫瑰线/心形线/螺线等),'
+              + '但画面里没有 r=f(θ) 图元,图形可能与标注不符 —— 可在左上角表达式栏输入 '
+              + 'r=cos(3θ) 自己画一朵核对。' : '')
             + '\n(右栏画布:播放 / 暂停 / 步进 / 重置;自由点可直接拖动)');
           return;
         }
@@ -1091,6 +1797,7 @@
         }
         if (!builder) throw new Error('模板不存在:' + obj.template);
         var descriptor = builder(obj.params || {});
+        followScene();
         engine.clear();
         engine.update(descriptor);
         showCanvasUI();
@@ -1116,10 +1823,25 @@
   on('glStepBtn', function () { if (engine) { engine.pause(); engine.step(1); } });
   on('glResetBtn', function () { if (engine) { engine.reset(); setDemoState('已回到起点'); } });
   on('glClearCanvasBtn', function () {
+    // 用户表达式与 AI 图元**一起**清(否则会出现"清空后函数还在"的困惑),
+    // 但先给一次二次确认 —— 用户手写的表达式不该被一次误点抹掉
+    var hasObj = canvasCount() > 0, hasEx = exprCount() > 0;
+    if ((hasObj || hasEx) && !window.__glNoConfirm) {
+      var msg = '清空画布将同时删除' + (hasObj ? 'AI 演示的图元' : '') +
+        (hasObj && hasEx ? '和' : '') + (hasEx ? ('你输入的 ' + hasEx + ' 条表达式') : '') +
+        ',确定继续吗?';
+      var yes = true;
+      try { yes = window.confirm(msg); } catch (e) { yes = true; }
+      if (!yes) return;
+    }
     if (engine) engine.clear();
+    clearExprRows();
+    if (engine && engine.ueClear) engine.ueClear();
+    if (eui.listEl && !eui.rows.length) addExprRow('', null);
+    applyExprs();
     canvasActive = false;
     ensureToolbar();
-    setDemoState('画布:空 · 点「🎬 动态演示」出图');
+    setDemoState('画布:空 · 点「🎬 动态演示」出图,或在左上角输入表达式自己画');
     var tip2 = els.glStageTip;
     if (tip2) tip2.style.display = '';
   });
@@ -1166,6 +1888,7 @@
       var builder = window.QG_TEMPLATES.build[templateId];
       if (!builder) return { ok: false, err: 'no template ' + templateId };
       var descriptor = builder(params || {});
+      followScene();
       engine.clear();
       engine.update(descriptor);
       showCanvasUI();
@@ -1177,6 +1900,42 @@
     applyScene: function (scene) { return applyScene(scene); },   // 测试钩子:AI 现场生成路径
     validateScene: validateScene,                                 // 测试钩子:仅校验不绘制
     templates: function () { return (window.QG_TEMPLATES && window.QG_TEMPLATES.manifest) || []; },
+    // 用户表达式 / 参数滑块 测试钩子(与真实 UI 共用同一套引擎入口)
+    expr: {
+      set: function (list) {          // 直接用文本数组设置表达式(等同逐行输入后回车)
+        clearExprRows();
+        var i, arr = Object.prototype.toString.call(list) === '[object Array]' ? list : [];
+        for (i = 0; i < arr.length; i++) addExprRow(String(arr[i]), null);
+        applyExprs();
+        return engine && engine.ueList ? engine.ueList() : [];
+      },
+      list: function () { return engine && engine.ueList ? engine.ueList() : []; },
+      params: function () { return engine && engine.ueParams ? engine.ueParams() : []; },
+      setParam: function (name, v) {
+        var ok = engine && engine.ueSetParam ? engine.ueSetParam(name, Number(v)) : false;
+        renderParams();
+        return ok;
+      },
+      setTheta: function (a, b) { return engine && engine.ueSetTheta ? engine.ueSetTheta(a, b) : null; },
+      theta: function () { return engine && engine.ueTheta ? engine.ueTheta() : null; },
+      setCoordGrid: function (v) { return engine && engine.setPolarGrid ? engine.setPolarGrid(v) : false; },
+      clear: function () { clearExprRows(); if (engine && engine.ueClear) engine.ueClear(); applyExprs(); },
+      state: function () {
+        return {
+          count: exprCount(),
+          rows: eui.rows.length,
+          errTexts: (function () {
+            var out = [], i;
+            for (i = 0; i < eui.rows.length; i++) out.push(String(eui.rows[i].err.textContent || ''));
+            return out;
+          })(),
+          params: (engine && engine.ueParams) ? engine.ueParams() : [],
+          theta: (engine && engine.ueTheta) ? engine.ueTheta() : null,
+          grid: !!(engine && engine.polarGrid && engine.polarGrid()),
+          view: (engine && engine.getView) ? engine.getView() : null
+        };
+      }
+    },
     // 视觉输入测试钩子:attachImage 接 dataURL,imgState 读当前待发图
     attachImage: function (dataUrl) { return ingestDataUrl(String(dataUrl || ''), 'test'); },
     clearImage: clearImage,
@@ -1201,4 +1960,6 @@
 
   // 独立窗口(观澜 standalone)启动
   bootStandalone();
+  // 用户表达式面板 + 参数滑块栏(引擎已在上面装载完毕)
+  try { initExprUI(); } catch (e) { /* 面板失败不影响 AI 演示 */ }
 })();
