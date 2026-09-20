@@ -840,6 +840,17 @@ html.intro-live, html.intro-live body { background: #000; }
   background: currentColor;
   animation: hintBlink 1.2s steps(2, start) 7s infinite;
 }
+/* 开场署名:唯一可见的著作者标识;字号与间距沿用 .intro-hint 一族,不新造颜色 */
+.intro-credit {
+  margin: clamp(10px, 1.6vh, 18px) 0 0;
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  color: rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  animation: introHint 1.6s ease 6.4s forwards;
+}
+/* 构建指纹 QG-20260920-5e5d5a · © 2026 PHILlA093(样式表内留存,不参与渲染) */
 @keyframes introHint {
   to { opacity: 1; }
 }

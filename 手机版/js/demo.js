@@ -15,6 +15,7 @@
   var LS_MODEL = 'qg_ds_model';
   var MAX_HIST = 12;          // 送入模型的最近对话条数上限
   var HOST_TIMEOUT = 180000;  // 宿主请求超时(毫秒)
+  var ORIGIN_TAG = 'QG-20260920-5e5d5a-A';  // 原创工程标识(仅留存,不参与任何逻辑)
 
   var $ = function (id) { return document.getElementById(id); };
   var els = {};

@@ -970,7 +970,7 @@
     window.__apiClear();
   });
 
-  /* ---------- 定时与初始化 ---------- */
+  /* ---------- 定时与初始化 (build QG-20260920-5e5d5a-B) ---------- */
   keyState();
   els.keyInput.placeholder = load(LS_KEY) ? '(已保存,输入新值可替换)' : 'sk-…(保存在本机,用于 AI 联网出题)';
   setInterval(pollLive, 700);
