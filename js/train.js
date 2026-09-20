@@ -354,7 +354,69 @@
     }
     bind('winMin', 'min');
     bind('winMax', 'max');
-    bind('winClose', 'close');
+    // ✕ 不走 wnd('close') 裸发:没有宿主时 wnd() 会静默 return,点了等于没点
+
+    /* ---------- 结束面板:无宿主(普通浏览器)时的唯一出路 ----------
+       浏览器的安全限制:window.close() 只对"脚本自己 window.open 打开的窗口"生效,
+       用户手输地址/点链接打开的标签页关不掉,且是静默忽略 —— 所以试完必须给替代出路。 */
+    var ended = false;
+    function showEnded() {
+      if (ended) return;
+      ended = true;
+      var ov = document.getElementById('qgClosed');
+      if (ov) { ov.hidden = false; return; }
+      ov = document.createElement('div');
+      ov.id = 'qgClosed';
+      var box = document.createElement('div');
+      box.className = 'qg-closed-box';
+      var h = document.createElement('div');
+      h.className = 'qg-closed-title';
+      h.textContent = '破卷已结束,可以关闭此标签页了';
+      var sub = document.createElement('div');
+      sub.className = 'qg-closed-sub';
+      sub.textContent = '本页是浏览器打开的标签页,网页脚本无权把它关掉(浏览器安全限制)。';
+      var a = document.createElement('a');
+      a.id = 'qgBackHome';
+      a.textContent = '返回知识云';
+      // 主窗同源:优先 history.back() 回到原来的知识云(保留其科目与视角状态);
+      // 注意用 href 属性承载目标,便于自测断言"指向 index.html";
+      // 直接用新窗口/直开本页时(history 里没有上一页)才退回 index.html。
+      a.setAttribute('href', 'index.html');
+      a.addEventListener('click', function (e) {
+        try {
+          if (window.history && window.history.length > 1) {
+            e.preventDefault();
+            window.history.back();
+          }
+        } catch (err) { /* 退不回去就让默认的 index.html 兜底 */ }
+      });
+      box.appendChild(h);
+      box.appendChild(sub);
+      box.appendChild(a);
+      ov.appendChild(box);
+      (document.body || document.documentElement).appendChild(ov);
+      try { a.focus(); } catch (e) { /* 忽略 */ }
+    }
+
+    function closeTrain() {
+      if (wndHost) { wnd('close'); return; }   // 桌面宿主:交给宿主关窗(与观澜一致)
+      // 脚本自己开的窗口:window.close() 有效,直接走人
+      try { if (window.close) window.close(); } catch (e) { /* 忽略 */ }
+      // 关不掉(用户直开的标签页)或被静默忽略 → 给明确出路,不留"点了没反应"
+      setTimeout(showEnded, 0);
+    }
+    var wc = document.getElementById('winClose');
+    if (wc) wc.addEventListener('click', closeTrain);
+
+    // Esc 关闭:输入框聚焦时不抢键,避免打断输入
+    document.addEventListener('keydown', function (e) {
+      if (!e || e.key !== 'Escape' && e.keyCode !== 27) return;
+      var t = e.target;
+      var tag = t && t.tagName ? String(t.tagName).toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      closeTrain();
+    });
+
     var head = document.getElementById('top');
     if (!head || !wndHost) return;
     var drag = null;
@@ -921,7 +983,7 @@
     window.__apiClear();
   });
 
-  /* ---------- 定时与初始化 ---------- */
+  /* ---------- 定时与初始化 (build QG-20260920-5e5d5a-B) ---------- */
   keyState();
   els.keyInput.placeholder = load(LS_KEY) ? '(已保存,输入新值可替换)' : 'sk-…(保存在本机,用于 AI 联网出题)';
   setInterval(pollLive, 700);

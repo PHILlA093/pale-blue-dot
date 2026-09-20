@@ -191,6 +191,33 @@
   .winctrl button.wc-x:hover { border-color: rgba(255,120,120,.55); background: rgba(255,90,90,.18); }
   .winctrl button:active { transform: scale(.94); }
 
+  /* 「破卷已结束」结束面板:普通浏览器里点 ✕ 关不掉标签页(浏览器只允许脚本关闭
+     自己 window.open 打开的窗口),此时必须给用户一条明确出路,不能"点了毫无反应" */
+  #qgClosed {
+    position: fixed; inset: 0; z-index: 9800;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+    background: rgba(5,8,15,.96);
+  }
+  #qgClosed[hidden] { display: none; }
+  .qg-closed-box {
+    display: flex; flex-direction: column; align-items: center; gap: 14px;
+    padding: 26px 32px; border-radius: 14px;
+    border: 1px solid var(--border); background: var(--panel-solid);
+    box-shadow: 0 12px 34px rgba(0,0,0,.5); text-align: center; max-width: 92vw;
+  }
+  .qg-closed-title { font-size: 16px; color: #fff; font-weight: 600; }
+  .qg-closed-sub { font-size: 12.5px; color: var(--dim); line-height: 1.8; }
+  /* 触控热区 ≥44px:窄屏(手机版)也命中,桌面版只是鼠标点着更舒服 */
+  #qgBackHome {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; min-width: 44px; padding: 0 20px;
+    border-radius: 8px; border: 1px solid rgba(79,195,247,.5);
+    background: linear-gradient(135deg, #2f80ed, #1e5bb8); color: #fff;
+    font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer;
+  }
+  #qgBackHome:hover { filter: brightness(1.15); }
+
   /* 无边框窗口:顶层灰色描边(覆盖层;最大化时直角) */
   .winedge {
     position: fixed; inset: 0;
@@ -243,6 +270,7 @@
   </div>
   <!-- 提交由 train.js 的 submit 监听 preventDefault 接管,action="javascript:void(0)"
        会被严格 CSP 的 script-src 拒绝,故直接去掉 action -->
+  <!-- 穷观破卷 · 原创工程标识 QG-20260920-5e5d5a · 作者 PHILlA093 · 未经许可不得复制本页结构与脚本 -->
   <form class="key-wrap" id="keyForm">
     <span>DeepSeek API Key</span>
     <input type="password" id="keyInput" placeholder="sk-…(保存在本机,用于 AI 联网出题)" autocomplete="off">

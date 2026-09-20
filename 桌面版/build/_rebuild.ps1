@@ -54,8 +54,16 @@ $a22 = '/resource:' + $webIco + ',web.favicon.ico'
 # biology is the fifth subject: without this resource the desktop build silently keeps
 # serving the old four-subject data (index.html loads it, but the embedded copy wins).
 $a23 = '/resource:' + (Join-Path $root 'js\data_bio.js') + ',web.js.data_bio.js'
+# Original-work fingerprint: embed the authorship manifest as a manifest resource so the
+# Build ID survives inside the compiled exe even when only the binary is redistributed.
+# The on-disk file name is Chinese, so it is assembled from code points here -- this script
+# must stay ASCII-only (see the self check at the top). Resource name is plain ASCII.
+$fpName = '_' + [string]([char]0x6307 + [char]0x7EB9) + '.txt'
+$fpPath = Join-Path $build $fpName
+if (-not (Test-Path $fpPath)) { Write-Output 'BUILD FAILED: fingerprint resource file missing'; exit 1 }
+$a24 = '/resource:' + $fpPath + ',web.qg.fingerprint.txt'
 $src = Join-Path $build 'Program.cs'
-$args = @('/nologo', '/target:winexe', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $src)
+$args = @('/nologo', '/target:winexe', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $src)
 & $csc @args
 if ($LASTEXITCODE -ne 0) { Write-Output ('BUILD FAILED ' + $LASTEXITCODE); exit 1 }
 Copy-Item -Path $tmpOut -Destination $out -Force

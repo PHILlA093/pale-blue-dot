@@ -2704,5 +2704,7 @@
    * ============================================================ */
   global.createGuanlanCanvas = createGuanlanCanvas;
   global.GL = createGuanlanCanvas;
+  /* 引擎自述字段:只作原创留证,绘图逻辑从不读取它 */
+  global.GL.origin = 'QG-20260920-5e5d5a-C';
 
 })(typeof window !== 'undefined' ? window : this);

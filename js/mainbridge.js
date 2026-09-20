@@ -382,7 +382,8 @@
   window.__qgBridge = {
     snap: snap,
     publish: publish,
-    executeLocate: executeLocate
+    executeLocate: executeLocate,
+    origin: 'QG-20260920-5e5d5a-D'
   };
 })();
 

@@ -5,7 +5,11 @@
  *   半径 R  = core(1~5)        → 越靠中心相关度越高,由中间向外递减
  *   扇区    = 板块(10 个)
  *   连线    = 知识点之间的相关性(links)
+ * ------------------------------------------------------------
+ * 原创标识 QG-20260920-5e5d5a · © 2026 PHILlA093 · 保留所有权利
  * ============================================================ */
+/* 构建指纹:仅在页面全局写入一个字符串常量,不参与渲染 / 网络 / 存储,无任何副作用。 */
+window.__QG_ORIGIN = 'QG-20260920-5e5d5a';
 (function () {
   'use strict';
 
@@ -49,6 +53,10 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
    * 缩小(拉远)视角才能看到网络全貌。
    */
   var R_MAX = 56;                     // 知识云设计半径(辅助参考)
+// 取景下移量:顶栏在画面最上方、底部还有提示条与字幕,可视区的真正中心比画面中心低,
+// 所以把相机与注视点一起抬高 CAM_DROP,云在画面里就整体下移(值是云半径的约 11%,
+// 视觉上约画幅高度的 5%,属于"往下放一点"的量级;要再低就调大这个数)。
+var CAM_DROP = 6;
   var Y_MIN = 1.5, Y_MAX = 34;        // 高度范围(低→高)
   var BOARD_COUNT = DB.boards.length;
 
@@ -222,7 +230,7 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
   // 不使用雾,防止视角拉远后画面被雾色覆盖而全黑
 
   var camera = new THREE.PerspectiveCamera(55, 16 / 9, 0.1, 1200);
-  camera.position.set(70, 50, 76);
+  camera.position.set(70, 50 + CAM_DROP, 76);
   syncSize();
 
   var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -230,7 +238,12 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
   controls.dampingFactor = 0.08;
   controls.minDistance = 12;
   controls.maxDistance = 480;
-  controls.target.set(0, 0, 0);   // 注视点 = 云的几何中心(原点),盘面内容上下均衡
+  controls.target.set(0, CAM_DROP, 0);   // 注视点 = 云的几何中心(原点),盘面内容上下均衡
+  // 待机自转:默认关闭(宣传片录制期间临时开启过,录完按用户要求还原)。
+  // 需要再次拍片时把下一行改成 true 即可,autoRotateSpeed 1.2 ≈ 7.2°/秒(约 50 秒一圈)。
+  // 注意:OrbitControls 的 autoRotate 只在没有拖拽时生效,开着也不会跟用户操作打架。
+  controls.autoRotate = false;
+  controls.autoRotateSpeed = 1.2;
   // 用户开始拖拽/滚轮时立即终止正在进行的相机动画(取景/聚焦/归位),交还操控权
   controls.addEventListener('start', function () { camAnim = null; });
 
@@ -1394,8 +1407,8 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
     var btn = document.getElementById('resetViewBtn');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      camera.position.set(70, 50, 76);
-      controls.target.set(0, 0, 0);
+      camera.position.set(70, 50 + CAM_DROP, 76);
+      controls.target.set(0, CAM_DROP, 0);
       controls.update();
     });
   })();
@@ -1712,6 +1725,15 @@ if (bootSub === 'bio' && window.BIO_DB) DB = window.BIO_DB;
       var pulse = (isSel || isHit ? 0.16 : 0.07) * (1 + Math.sin(t1));
       rec.outer.scale.setScalar(rec.outerBase * emph * (1 + pulse) * (1 + 0.05 * Math.sin(t2)));
       rec.inner.scale.setScalar(rec.innerBase * emph * (1 + pulse * 1.4) * (1 + 0.05 * Math.sin(t2 + 1.4)));
+
+      // 待机漂浮:每个光点按自身相位缓慢上下浮动(±0.26 单位,约为云半径的 1%),
+      // 相邻点相位不同 → 整片云看起来在"呼吸"。基准位置 p._pos 不变,
+      // 重排动画结束时 syncNodeViews() 会按 p._pos 复位,两者不冲突。
+      var dy = 0.26 * Math.sin(now * 0.8 + rec.ph * 1.7);
+      rec.outer.position.y = p._pos.y + dy;
+      rec.inner.position.y = p._pos.y + dy;
+      rec.hit.position.y = p._pos.y + dy;
+      if (rec.label) rec.label.position.y = p._pos.y + rec.labelOff + dy;
 
       // 标签:仅当"该显示"(板块可见 + 搜索命中/悬停/选中的 labelOn)且足够近时显示。
       // 板块判定必须在这里再查一次:labelOn 只是"意向",任何让 outer.visible 变回 true
