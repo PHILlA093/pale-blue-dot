@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- 内容安全策略:观澜独立窗与主窗同源,同样读写 localStorage 里的 qg_ds_key,故采用与
+     index.html 完全一致的策略。本页有两段内联脚本(MathJax 配置 + 独立窗标记),均由
+     script-src 的 'unsafe-inline' 放行;不含 unsafe-eval(MathJax 的 new Function /
+     eval 在本页路径下不触发);connect-src 只放行 DeepSeek 官方接口。
+     frame-ancestors 在 <meta> 形式下被浏览器强制忽略,故不写。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>穷观 · 观澜(AI 演示问答)</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a101f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="穷观">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+<style>
+  html, body { height: 100%; overflow: hidden; background: #05080f; }
+  body.gl-standalone { margin: 0; }
+  .gl-standalone #guanlan {
+    position: static;
+    left: auto; top: auto;
+    transform: none;
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: none;
+    background: #05080f;
+  }
+  .gl-standalone #guanlan[hidden] { display: flex; }
+  /* 独立窗标题栏同样由 demo.js 的 pointerdown 拖动(发 wnd/move 给宿主),
+     故指针必须是 move,原来写 default 与真实手感矛盾。
+     注:标题栏双击最大化需要 demo.js 补 dblclick→wnd('max'),本页 CSS 无法实现。 */
+  .gl-standalone #glHead { cursor: move; }
+  /* 顶层灰色描边 .winedge 与 html.maxed .winedge 已由 css/style.css 提供
+     (本页 <link rel="stylesheet" href="css/style.css"> 已引入),此处不再逐字复制,
+     避免同一规则两处定义漂移。 */
+  /* 表达式列表 / 参数滑块栏(#glExprBox、#glParamBar 等)的样式不写在这里:
+     观澜有两个入口(本独立页 与 index.html 的主窗面板),两者共用 js/demo.js,
+     而 index.html 与 css/style.css 都不在可改清单里 —— 为保证两个入口观感一致,
+     这部分样式由 demo.js 的 injectExprCSS() 注入一次(内联 <style>,CSP 的
+     style-src 'unsafe-inline' 放行)。DOM 同样由 demo.js 动态插入 #glStage。 */
+
+  /* ---------- 移动端基础 ---------- */
+  html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  @supports (height: 100dvh) { html, body { height: 100dvh; } }
+
+  /* ---------- 手机形态(≤768px) ----------
+     .gl-standalone #guanlan 的特异性高于 css/style.css 里的 #guanlan,
+     而本 <style> 又排在 <link> 之后,所以整屏高度必须在这里再声明一次,
+     否则会退回 100vh(手机地址栏伸缩时底部被裁)。 */
+  @media (max-width: 768px) {
+    .gl-standalone #guanlan {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: var(--safe-t, 0px);
+      padding-bottom: var(--safe-b, 0px);
+    }
+    /* 手机上没有宿主窗口:最小化/最大化两个按钮没有意义 */
+    #glMin, #glMax { display: none; }
+  }
+</style>
+<script>
+  window.__guanlanStandalone = true;   // 让 demo.js 以独立窗形态启动(隐藏标记、导入会话)
+</script>
+</head>
+<body class="gl-standalone">
+
+<div id="guanlan">
+  <div class="gl-head" id="glHead" title="观澜 · AI 演示问答(独立窗口)">
+    <span class="gl-title">🌊 观澜 · AI 演示问答</span>
+    <span class="gl-sub" id="glCtx">—</span>
+    <div class="gl-btns">
+      <button type="button" id="glClearText" title="清空对话">清空对话</button>
+      <button type="button" id="glMin" title="最小化">─</button>
+      <button type="button" id="glMax" title="最大化 / 还原">▢</button>
+      <button type="button" id="glClose" title="关闭窗口(关闭即清空对话)">✕</button>
+    </div>
+  </div>
+  <div class="gl-body">
+    <div class="gl-chat">
+      <div id="glMsgs"></div>
+      <!-- 提交由 demo.js 的 submit 监听 preventDefault 接管,故去掉 action="javascript:void(0)"
+           (该写法会被严格 CSP 的 script-src 拒绝) -->
+      <form id="glKeyRow" class="gl-keyrow" hidden>
+        <input type="password" id="glKeyInput" placeholder="DeepSeek API Key(与破卷共用,仅存本机)" autocomplete="off">
+        <button type="submit" id="glKeySave">保存</button>
+      </form>
+      <div class="gl-inputrow">
+        <input type="text" id="glAsk" placeholder="提问 / 让 AI 讲解题目…">
+        <button type="button" id="glSend">发送</button>
+      </div>
+    </div>
+    <div class="gl-stage" id="glStage">
+      <div class="gl-stage-tip" id="glStageTip">提问后点「🎬 动态演示」生成可动示意图(示例:将军饮马);也可在左上角表达式栏直接画:y = x^2、r = 2cos(3θ)</div>
+      <div class="gl-toolbar" id="glToolbar" hidden>
+        <button type="button" id="glDemoBtn" title="对最近的提问生成动态演示">🎬 动态演示</button>
+        <span class="gl-sep"></span>
+        <button type="button" id="glPlayBtn" title="播放">▶ 播放</button>
+        <button type="button" id="glPauseBtn" title="暂停">⏸ 暂停</button>
+        <button type="button" id="glStepBtn" title="步进一步">步进</button>
+        <button type="button" id="glResetBtn" title="回到起点">重置</button>
+        <span class="gl-sep"></span>
+        <button type="button" id="glClearCanvasBtn" title="清空画布">清空画布</button>
+        <span id="glDemoState" class="gl-state">画布:空</span>
+      </div>
+      <canvas id="glCanvas" width="900" height="600"></canvas>
+      <div id="glLabels"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="vendor/mathjax-tex-svg.js"></script>
+<!-- AI 调用层:按环境自动选择「桌面宿主 / Capacitor 原生直连 / 本地 /api/ds 代理」 -->
+<script src="js/ainet.js"></script>
+<script src="js/glcanvas.js"></script>
+<script src="js/gltemplates.js"></script>
+<script src="js/demo.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>

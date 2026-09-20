@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<!-- 内容安全策略:页面持有同源 localStorage 里的 DeepSeek API Key,宿主又下发
+     Access-Control-Allow-Origin: *,故必须锁死"脚本来源"与"外发通道":
+     · default-src 'none' 兜底,未显式放行的类型一律禁止;
+     · script-src 只允许本机内嵌资源('self')与页面自带的内联配置脚本(unsafe-inline),
+       不含 unsafe-eval —— MathJax 里那处 new Function("return this") 在 Chromium 下
+       走 globalThis 短路、eval("require") 由 typeof process 守卫,实测均不触发;
+     · connect-src 仅放行 DeepSeek 官方接口(网页版兜底直连),其余外发一律拒绝;
+     · style-src 需 unsafe-inline:MathJax 与运行期生成的色块使用内联 style;
+     · frame-ancestors 在 <meta> 形式下被浏览器强制忽略,故不写(要防嵌套须由宿主加响应头)。 -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<!-- 手机适配:viewport-fit=cover 让内容伸进刘海/圆角区(配合 env(safe-area-inset-*)),
+     user-scalable=no 关掉双击放大(画布上双击已用于"聚焦知识点",不能被浏览器抢走) -->
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>穷观 V2.4.2 · 高中数学知识网络</title>
+<!-- 穷观 logo:与 exe 的 Win32 图标同源(favicon.ico)。桌面版由宿主内嵌下发,
+     此前浏览器默认请求 /favicon.ico 一直是 404;网页版直接读同目录文件。 -->
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<!-- PWA(iOS 加主屏幕可全屏;Capacitor 打包 APK 时同样读取这些声明) -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a101f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="穷观">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 开场画面:先黑屏 → 渐变浮现标题与白线 → 淡出揭示主界面 -->
+<div id="intro">
+  <div class="intro-sky"></div>
+  <div class="intro-inner">
+    <h1 class="intro-title">穷观<span class="ver">V2.4.2</span></h1>
+    <p class="intro-quote">知识理应流通与分享</p>
+    <div class="intro-line"></div>
+    <p class="intro-hint">按任意键进入</p>
+  </div>
+</div>
+
+<div id="app">
+
+  <!-- 顶栏:侧栏开关 + 学科切换 + 标题 + 关键词搜索 -->
+  <header id="topbar">
+    <button id="sideToggle" type="button" title="打开 / 关闭侧边栏" aria-label="侧边栏">
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">
+        <path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+      </svg>
+    </button>
+
+    <!-- 学科切换:按钮形式,六科可选(数学 / 化学已开放,其余建设中) -->
+    <div id="subjectWrap">
+      <button id="subjectBtn" type="button" title="切换学科">
+        <span id="subjectLabel">数学</span>
+        <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true">
+          <path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+        </svg>
+      </button>
+      <div id="subjectMenu" hidden>
+        <button type="button" data-sub="chinese">语文</button>
+        <button type="button" data-sub="math" class="active">数学</button>
+        <button type="button" data-sub="english">英语</button>
+        <button type="button" data-sub="physics">物理</button>
+        <button type="button" data-sub="chemistry">化学</button>
+        <button type="button" data-sub="biology">生物</button>
+      </div>
+    </div>
+
+    <div class="brand">
+      <span class="logo">🧠</span>
+      <div class="brand-text">
+        <h1>穷观学习</h1>
+        <span class="sub">高中数学 · 3D 知识网络</span>
+      </div>
+    </div>
+    <div id="searchBox">
+      <input id="searchInput" type="text" placeholder="关键词搜索,如:导数 / 椭圆 / 方差 / 正弦定理 / 二面角 …" autocomplete="off">
+      <button id="searchBtn">搜索</button>
+      <button id="searchClear" title="清除搜索">✕</button>
+      <div id="searchResults" hidden></div>
+    </div>
+    <div id="statBar">节点 0 · 关联 0</div>
+    <button id="reloadBtn" type="button" title="重新加载当前科目(跳过开场)" aria-label="重新加载">⟳</button>
+          <button id="resetViewBtn" type="button" title="重置视角(回到默认机位)" aria-label="重置视角">⌖</button>
+    <div class="winctrl" id="winCtrl">
+      <button type="button" id="winMin" title="最小化" aria-label="最小化">─</button>
+      <button type="button" id="winMax" title="最大化 / 还原" aria-label="最大化">▢</button>
+      <button type="button" id="winClose" class="wc-x" title="关闭" aria-label="关闭">✕</button>
+    </div>
+  </header>
+
+  <!-- 中央 3D 画布(通栏) -->
+  <main id="canvasWrap">
+    <canvas id="scene"></canvas>
+    <div id="glError" hidden></div>
+    <div id="tip">🖱️ 拖拽旋转 · 滚轮缩放 · <b>单击光点</b>弹出知识点详情 · 双击聚焦 · 搜索后点击结果跳转</div>
+  </main>
+
+</div>
+
+<!-- 左侧抽屉:可折叠分栏(抽屉与各分栏均默认收起) -->
+<aside id="leftPanel">
+  <section class="side-sec collapsed">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">📚 板块筛选</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <div id="boardList"></div>
+    </div>
+  </section>
+  <section class="side-sec collapsed">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">🧭 坐标解读</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <ul class="legend">
+        <li><b>Y 高度</b>:重要度(越高越总体)</li>
+        <li><b>XZ 散布</b>:无中心知识云,相关知识点彼此更近</li>
+        <li><b>选中</b>:相关知识保持明亮,其余变暗</li>
+        <li><b>颜色</b>:板块 · <b>大小</b>:重要度</li>
+        <li><b>蓝色细线</b>:知识点相关性</li>
+      </ul>
+    </div>
+  </section>
+  <section class="side-sec collapsed" id="newNodeSec">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">✏️ 定义新知识点</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <form id="newNodeForm" autocomplete="off">
+        <label class="nn-label">所属板块(<span id="nnBoardTip">底层分类始终为十大板块</span>)
+          <select id="nnBoard"></select>
+        </label>
+        <label class="nn-label">光点颜色
+          <span class="color-row">
+            <input type="color" id="nnColor" value="#4fc3f7" title="自定义 RGB 颜色">
+            <span id="nnColorText" class="color-text">#4fc3f7</span>
+          </span>
+          <span id="nnColorTip" class="nn-tip">也可点下方色块直接选用十大板块的固有颜色</span>
+          <span class="swatches" id="nnSwatches"></span>
+        </label>
+        <label class="nn-label">知识点名称
+          <input type="text" id="nnName" placeholder="如:圆锥曲线的光学性质" maxlength="30">
+        </label>
+        <label class="nn-label">重要度 <span class="imp-row">
+          <input type="range" id="nnImp" min="1" max="5" step="1" value="3">
+          <span id="nnImpVal">3 / 5</span>
+        </span></label>
+        <label class="nn-label">关键词(逗号分隔)
+          <input type="text" id="nnKeys" placeholder="如:光学性质,焦点,准线">
+        </label>
+        <label class="nn-label">关联知识点(输入名称检索后点击添加)
+          <input type="text" id="nnLinkInput" placeholder="输入名称或关键词检索">
+          <span id="nnLinkHint" class="link-hint"></span>
+          <span id="nnLinkChips" class="link-chips"></span>
+        </label>
+        <label class="nn-label">详细信息(支持 **加粗** 与 $公式$)
+          <textarea id="nnContent" rows="6" placeholder="概念定位、核心公式、方法与常考要点…"></textarea>
+        </label>
+        <button type="button" id="nnSubmit">加入知识云</button>
+        <div id="nnMsg" class="nn-msg"></div>
+      </form>
+    </div>
+  </section>
+  <section class="side-sec collapsed" id="dbSec">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">🗄️ 本机资料库</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <div id="dbRows"></div>
+      <div id="dbState" class="db-busy">正在连接本机资料库…</div>
+      <p class="db-note">内置四份资料(举一反三 / 高考真题 / 一轮讲义 / 公式与二级结论);
+      当前科目知识云数据会自动上传进库,破卷出题时一并检索。</p>
+    </div>
+  </section>
+  <section class="side-sec collapsed" id="guanlanSec">
+    <div class="sec-head" title="展开 / 收起">
+      <span class="sec-title">🌊 观澜 · AI 演示问答</span>
+      <button class="sec-toggle" type="button" aria-label="展开/收起">▾</button>
+    </div>
+    <div class="sec-body">
+      <button type="button" id="guanlanOpen">打开观澜(AI 演示问答)</button>
+      <p class="db-note">AI 讲解 + 可动的数学示意图(将军饮马等模板、函数/极坐标/参数绘图、尺规作图、AI 续画)。
+      对话仅保留在内存中,关闭应用即清空。</p>
+    </div>
+  </section>
+</aside>
+
+<!-- 右侧:知识点详情(选中 / 聚焦时弹出) -->
+<aside id="detailPanel">
+  <div class="detail-head">
+    <div class="detail-title-wrap">
+      <span class="detail-eyebrow">知识点详情</span>
+      <h2 id="dName"></h2>
+    </div>
+    <button id="detailClose" type="button" title="关闭(退出聚焦)" aria-label="关闭">✕</button>
+  </div>
+  <div class="detail-scroll">
+    <div id="dMeta"></div>
+    <div id="dContent"></div>
+    <div id="dKeywords"></div>
+    <h3>🔗 相关知识</h3>
+    <ul id="dLinks"></ul>
+    <button id="dFocus">🎯 在网中聚焦</button>
+  </div>
+</aside>
+
+<!-- 轻提示 -->
+<div id="toast" hidden></div>
+
+<!-- 右下角:🎯 破卷(打开破卷新窗口) -->
+<button id="trainBtn" type="button" title="打开破卷:AI 出题精练">
+  🎯 破卷
+</button>
+
+<!-- 观澜:AI 演示问答(浮动面板;对话内存态,关闭应用即清空) -->
+<div id="guanlan" hidden>
+  <div class="gl-head" id="glHead" title="按住标题栏可拖动;⤢ 可拆为独立窗口">
+    <span class="gl-title">🌊 观澜 · AI 演示问答</span>
+    <span class="gl-sub" id="glCtx">—</span>
+    <div class="gl-btns">
+      <button type="button" id="glDetach" title="拆为独立窗口">⤢ 独立窗口</button>
+      <button type="button" id="glClearText" title="清空对话(画布保留至下一阶段)">清空对话</button>
+      <button type="button" id="glClose" title="关闭(关闭应用即清空对话)">✕</button>
+    </div>
+  </div>
+  <div class="gl-body">
+    <div class="gl-chat">
+      <div id="glMsgs"></div>
+      <!-- 表单仅用于让密码框处于表单内(避免浏览器告警);提交由 demo.js 的 submit 监听
+           preventDefault 接管,故去掉 action="javascript:void(0)"(该写法会被严格 CSP 拒绝) -->
+      <form id="glKeyRow" class="gl-keyrow" hidden>
+        <input type="password" id="glKeyInput" placeholder="DeepSeek API Key(与破卷共用,仅存本机)" autocomplete="off">
+        <button type="submit" id="glKeySave">保存</button>
+      </form>
+      <div class="gl-inputrow">
+        <input type="text" id="glAsk" placeholder="提问 / 让 AI 讲解题目…(演示图生成在后续阶段)">
+        <button type="button" id="glSend">发送</button>
+      </div>
+    </div>
+    <div class="gl-stage" id="glStage">
+      <div class="gl-stage-tip" id="glStageTip">画布与动态演示将在下一阶段接入</div>
+      <div class="gl-toolbar" id="glToolbar" hidden>
+        <button type="button" id="glDemoBtn" title="对最近的提问生成动态演示">🎬 动态演示</button>
+        <span class="gl-sep"></span>
+        <button type="button" id="glPlayBtn" title="播放">▶ 播放</button>
+        <button type="button" id="glPauseBtn" title="暂停">⏸ 暂停</button>
+        <button type="button" id="glStepBtn" title="步进一步">步进</button>
+        <button type="button" id="glResetBtn" title="回到起点">重置</button>
+        <span class="gl-sep"></span>
+        <button type="button" id="glClearCanvasBtn" title="清空画布">清空画布</button>
+        <span id="glDemoState" class="gl-state">画布:空</span>
+      </div>
+      <canvas id="glCanvas" width="900" height="600"></canvas>
+      <div id="glLabels"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 学科切换过渡遮罩:淡出→整页装载→淡入(不重放开场动画) -->
+<div id="xmask" aria-hidden="true"></div>
+
+<!-- 公式排版引擎(MathJax,离线内嵌;仅在详情卡手动触发排版) -->
+<script>
+  window.MathJax = {
+    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    startup: { typeset: false }
+  };
+</script>
+<script src="vendor/mathjax-tex-svg.js"></script>
+<script src="vendor/three.min.js"></script>
+<script src="vendor/OrbitControls.js"></script>
+<!-- AI 调用层:必须在 app.js / mainbridge.js / demo.js 之前加载。
+     它按环境自动选择「桌面宿主 / Capacitor 原生直连 / 本地 /api/ds 代理」三条路。 -->
+<script src="js/ainet.js"></script>
+<script src="js/data.js"></script>
+<script src="js/data_chem.js"></script>
+<script src="js/data-physics.js"></script>
+<script src="js/data_eng.js"></script>
+<script src="js/data_bio.js"></script>
+<script src="js/app.js"></script>
+<script src="js/mainbridge.js"></script>
+<script src="js/glcanvas.js"></script>
+<script src="js/gltemplates.js"></script>
+<script src="js/demo.js"></script>
+<!-- 窄屏交互增强:抽屉遮罩/右滑关闭、详情底部抽屉的拖拽。宽屏下自动空转。 -->
+<script src="js/mobile.js"></script>
+<script src="js/pwa.js"></script>
+</body>
+</html>
