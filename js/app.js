@@ -199,7 +199,65 @@ var CAM_DROP = 6;
     showFatal('3D 渲染初始化失败:当前环境不支持 WebGL(浏览器可能禁用了硬件加速,或显卡驱动异常)。\n' + err.message);
     return;
   }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  /* 像素比:窄屏(手机)上限 1.5、宽屏 2。
+   * 手机上 devicePixelRatio 常为 3,按 3 倍渲染等于 9 倍像素填充 ——
+   * 重负载库(英语 3053 点)时是发热 / 掉帧 / 显存吃紧的主要来源之一,
+   * 而 1.5 与 3 的肉眼差别在 3D 点云上几乎不可见。 */
+  function maxDpr() {
+    try { return (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) ? 1.5 : 2; }
+    catch (e) { return 2; }
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr()));
+
+  var glLost = false;          // WebGL 上下文是否已被系统回收
+  var firstFrameDone = false;  // 首帧是否画出来了(看门狗 / 启动期报错兜底的依据)
+
+  /* ---- 黑屏兜底 1:WebGL 上下文丢失 ----
+   * 切后台、驱动重置、显存吃紧时浏览器会直接丢弃 WebGL 上下文。
+   * 此前没有任何处理 —— 回到前台就是一块永久黑屏,只能手动重启。
+   * 这里:丢上下文时 preventDefault(允许恢复)+ 暂停渲染循环 + 明确提示;
+   * 恢复后整页刷新重建全部 GPU 资源(用 sessionStorage 限制次数,防止反复重载)。 */
+  canvas.addEventListener('webglcontextlost', function (e) {
+    try { e.preventDefault(); } catch (e2) { /* 忽略 */ }
+    glLost = true;
+    showFatal('显示上下文被系统回收(常见于切后台 / 驱动重置),正在尝试自动恢复…');
+  }, false);
+  canvas.addEventListener('webglcontextrestored', function () {
+    var n = 0;
+    try { n = parseInt(sessionStorage.getItem('qg_gl_restore') || '0', 10) || 0; } catch (e2) { /* 忽略 */ }
+    if (n < 2) {
+      try { sessionStorage.setItem('qg_gl_restore', String(n + 1)); } catch (e2) { /* 忽略 */ }
+      try { location.reload(); } catch (e2) { /* 忽略 */ }
+    } else {
+      showFatal('3D 显示被系统反复回收,已停止自动恢复。\n请关闭其它占用显存的程序,然后重开本页。');
+    }
+  }, false);
+
+  /* ---- 黑屏兜底 2:启动期异常全域可见 ----
+   * 首帧之前任何未捕获异常原本只留在控制台,用户看到的是"永远停在开场黑幕"。
+   * 这里统一转成可读的错误面板;面板可点击重试(宿主无地址栏,F5 不一定可用)。 */
+  window.addEventListener('error', function (e) {
+    if (firstFrameDone) return;
+    if (!e || (!e.message && !e.error)) return;   // 资源(图片/字体)加载失败不算脚本崩溃
+    showFatal('启动失败:' + (e.message || '脚本错误') +
+      (e.filename ? '\n' + e.filename + ':' + e.lineno : ''));
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    if (firstFrameDone) return;
+    var rr = e && e.reason;
+    showFatal('启动失败:' + ((rr && (rr.message || rr)) || '异步错误'));
+  });
+  var bootWatchAt = performance.now();
+  var bootWatchTimer = setInterval(function () {
+    if (firstFrameDone || glLost) { clearInterval(bootWatchTimer); return; }
+    if (document.hidden) { bootWatchAt = performance.now(); return; }   // 后台标签页不计时
+    if (performance.now() - bootWatchAt > 8000) {
+      clearInterval(bootWatchTimer);
+      showFatal('画面 8 秒没有出现:可能是 WebGL 初始化失败、显卡驱动异常或脚本未加载。\n点此重试;反复失败请更新显卡驱动 / Edge WebView2 运行时。');
+    }
+  }, 1000);
+  var glErrEl = document.getElementById('glError');
+  if (glErrEl) glErrEl.addEventListener('click', function () { try { location.reload(); } catch (e2) { /* 忽略 */ } });
   // 顶栏高度取自 CSS 变量 --topbar-h(style.css 是唯一来源),
   // 避免两处各写一个 58 而日后改样式时悄悄漂移。取不到时回退量 DOM 再回退 58。
   function topbarH() {
@@ -220,6 +278,8 @@ var CAM_DROP = 6;
     var h = wrap ? wrap.clientHeight : (window.innerHeight - topbarH());
     if (w < 50) w = 900;
     if (h < 50) h = 640;
+    // DPI 上限随断点重算:桌面窗口缩到窄屏 / 系统缩放变化时也跟随(不必重载页面)
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr()));
     renderer.setSize(w, h, false);   // 不写内联样式,由 CSS 100% 跟随布局
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
@@ -577,6 +637,232 @@ var CAM_DROP = 6;
     return sp;
   }
 
+  /* ---------- 重负载知识库(>900 点)的光点层:实例化渲染 ----------
+   * 旧实现每个知识点 = 2 个 Sprite(彩色光晕 + 白色亮核):英语科 3053 点
+   * → 6106 个场景对象、每帧 6106 次 draw call + 6106 次矩阵更新,外加每帧一遍
+   * 3053 点的 JS 循环 —— 手机上仅这一项就把 16.7ms 的帧预算吃光(实测每帧
+   * JS + 提交 ≈ 12~16ms),掉帧、发热、耗电都来自这里。
+   * 现在把两层光点各合并成**一次** InstancedMesh 绘制:
+   *   · 颜色 / 尺寸 / 透明度 / 强调系数 / 呼吸相位全部走逐实例属性;
+   *   · 呼吸脉动与待机漂浮挪进顶点着色器按 uTime 推进 —— 每帧 JS 零循环;
+   *   · 视觉语义与原 Sprite 一致(同款径向光斑纹理、transparent + depthWrite:false、
+   *     同样的 NormalBlending、同样的两段脉动公式与强调系数)。
+   * 轻负载库(数学 / 化学 / 物理,<900 点)仍走原 Sprite 路径,观感一字未改。 */
+  var nodeCount = 0;
+  var nodeQuadGeo = new THREE.PlaneGeometry(1, 1);
+  function nodeLayerMaterial(pulseMul, phaseOff) {
+    return new THREE.ShaderMaterial({
+      uniforms: {
+        uMap: { value: glowTex },
+        uTime: { value: 0 },
+        uPulseMul: { value: pulseMul },
+        uPhaseOff: { value: phaseOff }
+      },
+      vertexShader:
+        'attribute vec3 aPos;\n' +
+        'attribute vec3 aColor;\n' +
+        'attribute float aAlpha;\n' +
+        'attribute float aScale;\n' +
+        'attribute float aEmph;\n' +
+        'attribute float aPulse;\n' +
+        'attribute float aPhase;\n' +
+        'uniform float uTime;\n' +
+        'uniform float uPulseMul;\n' +
+        'uniform float uPhaseOff;\n' +
+        'varying vec3 vColor;\n' +
+        'varying float vAlpha;\n' +
+        'varying vec2 vUv;\n' +
+        'void main() {\n' +
+        '  vColor = aColor; vAlpha = aAlpha; vUv = uv;\n' +
+        '  float drift = 0.26 * sin(uTime * 0.8 + aPhase * 1.7);\n' +
+        '  vec4 mv = modelViewMatrix * vec4(aPos.x, aPos.y + drift, aPos.z, 1.0);\n' +
+        '  float pulse = aPulse * (1.0 + sin(uTime * 2.0 + aPhase)) * uPulseMul;\n' +
+        '  float shr = 1.0 + 0.05 * sin(uTime * 5.3 + aPhase * 2.7 + uPhaseOff);\n' +
+        '  mv.xy += position.xy * (aScale * aEmph * (1.0 + pulse) * shr);\n' +
+        '  gl_Position = projectionMatrix * mv;\n' +
+        '}',
+      fragmentShader:
+        'uniform sampler2D uMap;\n' +
+        'varying vec3 vColor;\n' +
+        'varying float vAlpha;\n' +
+        'varying vec2 vUv;\n' +
+        'void main() {\n' +
+        '  vec4 t = texture2D(uMap, vUv);\n' +
+        '  gl_FragColor = vec4(vColor * t.rgb, vAlpha * t.a);\n' +
+        '}',
+      transparent: true, depthWrite: false
+    });
+  }
+  function makeNodeLayer(pulseMul, phaseOff) {
+    var geo = nodeQuadGeo.clone();
+    var mesh = new THREE.InstancedMesh(geo, nodeLayerMaterial(pulseMul, phaseOff), 1);
+    mesh.count = 0;
+    mesh.frustumCulled = false;    // 实例铺满全场,单位四边形的包围球不可用
+    scene.add(mesh);
+    return { mesh: mesh, geo: geo, mat: mesh.material, cap: 0,
+             pos: null, phase: null, emph: null, pulse: null, color: null, alpha: null, scale: null };
+  }
+  var layerOuter = makeNodeLayer(1.0, 0.0);
+  var layerInner = makeNodeLayer(1.4, 1.4);
+
+  function nodeLayerAlloc(layer, n) {
+    var cap = Math.max(64, n + 64);
+    if (cap <= layer.cap) return;
+    var old = layer.cap > 0 ? { pos: layer.pos, phase: layer.phase, emph: layer.emph, pulse: layer.pulse,
+      color: layer.color, alpha: layer.alpha, scale: layer.scale } : null;
+    layer.cap = cap;
+    layer.pos = new Float32Array(cap * 3);
+    layer.phase = new Float32Array(cap);
+    layer.emph = new Float32Array(cap);
+    layer.pulse = new Float32Array(cap);
+    layer.color = new Float32Array(cap * 3);
+    layer.alpha = new Float32Array(cap);
+    layer.scale = new Float32Array(cap);
+    if (old) {
+      layer.pos.set(old.pos.subarray(0, Math.min(layer.pos.length, old.pos.length)));
+      layer.phase.set(old.phase.subarray(0, Math.min(layer.phase.length, old.phase.length)));
+      layer.emph.set(old.emph.subarray(0, Math.min(layer.emph.length, old.emph.length)));
+      layer.pulse.set(old.pulse.subarray(0, Math.min(layer.pulse.length, old.pulse.length)));
+      layer.color.set(old.color.subarray(0, Math.min(layer.color.length, old.color.length)));
+      layer.alpha.set(old.alpha.subarray(0, Math.min(layer.alpha.length, old.alpha.length)));
+      layer.scale.set(old.scale.subarray(0, Math.min(layer.scale.length, old.scale.length)));
+    }
+    layer.geo.setAttribute('aPos', new THREE.InstancedBufferAttribute(layer.pos, 3));
+    layer.geo.setAttribute('aPhase', new THREE.InstancedBufferAttribute(layer.phase, 1));
+    layer.geo.setAttribute('aEmph', new THREE.InstancedBufferAttribute(layer.emph, 1));
+    layer.geo.setAttribute('aPulse', new THREE.InstancedBufferAttribute(layer.pulse, 1));
+    layer.geo.setAttribute('aColor', new THREE.InstancedBufferAttribute(layer.color, 3));
+    layer.geo.setAttribute('aAlpha', new THREE.InstancedBufferAttribute(layer.alpha, 1));
+    layer.geo.setAttribute('aScale', new THREE.InstancedBufferAttribute(layer.scale, 1));
+  }
+  function nodeMarkDirty(layer, names) {
+    for (var k = 0; k < names.length; k++) {
+      var at = layer.geo.getAttribute(names[k]);
+      if (at) at.needsUpdate = true;
+    }
+  }
+  var HEAVY_DIRTY_BASE = ['aPos', 'aPhase', 'aEmph', 'aPulse', 'aScale'];
+  function ensureNodeLayerCapacity(n) {
+    if (n > layerOuter.cap) { nodeLayerAlloc(layerOuter, n); nodeLayerAlloc(layerInner, n); }
+  }
+  function nodeInit(i, pos, ph, outerBase, innerBase) {
+    var i3 = i * 3;
+    layerOuter.pos[i3] = pos.x; layerOuter.pos[i3 + 1] = pos.y; layerOuter.pos[i3 + 2] = pos.z;
+    layerInner.pos[i3] = pos.x; layerInner.pos[i3 + 1] = pos.y; layerInner.pos[i3 + 2] = pos.z;
+    layerOuter.phase[i] = ph; layerInner.phase[i] = ph;
+    layerOuter.emph[i] = 1; layerInner.emph[i] = 1;
+    layerOuter.pulse[i] = 0.07; layerInner.pulse[i] = 0.07;
+    layerOuter.scale[i] = outerBase;
+    layerInner.scale[i] = innerBase;
+    layerOuter.alpha[i] = 0.75;
+    layerInner.alpha[i] = 0.95;
+    layerInner.color[i3] = 1; layerInner.color[i3 + 1] = 1; layerInner.color[i3 + 2] = 1;
+    nodeMarkDirty(layerOuter, HEAVY_DIRTY_BASE);
+    nodeMarkDirty(layerInner, HEAVY_DIRTY_BASE.concat(['aColor']));
+  }
+  function heavyWriteStyle(rec) {
+    var i = rec.i;
+    if (i == null) return;
+    var vis = rec.heavyVis !== false && rec.boardOn !== false;
+    layerOuter.alpha[i] = vis ? rec.oAlpha : 0;
+    layerInner.alpha[i] = vis ? rec.iAlpha : 0;
+    layerOuter.color[i * 3] = rec.oR; layerOuter.color[i * 3 + 1] = rec.oG; layerOuter.color[i * 3 + 2] = rec.oB;
+    nodeMarkDirty(layerOuter, ['aAlpha', 'aColor']);
+    nodeMarkDirty(layerInner, ['aAlpha']);
+  }
+  // 最小替身:让 applyVisualState / resetNodeStyle / applyBoardFilter 原样写
+  // rec.outerMat.color.setHex() / .opacity / rec.outer.visible 即可,无需改动那些调用点
+  function heavyShim(rec, which) {
+    var sh = {};
+    Object.defineProperty(sh, 'opacity', {
+      get: function () { return which === 'o' ? rec.oAlpha : rec.iAlpha; },
+      set: function (v) { if (which === 'o') rec.oAlpha = v; else rec.iAlpha = v; heavyWriteStyle(rec); }
+    });
+    Object.defineProperty(sh, 'visible', {
+      get: function () { return rec.heavyVis !== false; },
+      set: function (v) { rec.heavyVis = !!v; heavyWriteStyle(rec); }
+    });
+    if (which === 'o') {
+      sh.color = {
+        setHex: function (h) {
+          rec.oR = ((h >> 16) & 255) / 255; rec.oG = ((h >> 8) & 255) / 255; rec.oB = (h & 255) / 255;
+          heavyWriteStyle(rec);
+        }
+      };
+    }
+    return sh;
+  }
+  function heavySyncEmphasis() {
+    if (!HEAVY_CLOUD) return;
+    for (var k = 0; k < DB.points.length; k++) {
+      var rec = nodeById[DB.points[k].id];
+      if (!rec || rec.i == null) continue;
+      var pid = rec.point.id;
+      var isSel = pid === selectedId, isHov = pid === hoverId;
+      var isHit = searchMode && !!searchSet[pid];
+      var emph = isSel ? 1.3 : (isHov ? 1.12 : (isHit ? 1.18 : 1));
+      var amp = (isSel || isHit) ? 0.16 : 0.07;
+      layerOuter.emph[rec.i] = emph; layerInner.emph[rec.i] = emph;
+      layerOuter.pulse[rec.i] = amp; layerInner.pulse[rec.i] = amp;
+    }
+    nodeMarkDirty(layerOuter, ['aEmph', 'aPulse']);
+    nodeMarkDirty(layerInner, ['aEmph', 'aPulse']);
+  }
+  function heavySyncPositions() {
+    for (var k = 0; k < DB.points.length; k++) {
+      var p = DB.points[k], rec = nodeById[p.id];
+      if (!rec || rec.i == null) continue;
+      var i3 = rec.i * 3;
+      layerOuter.pos[i3] = p._pos.x; layerOuter.pos[i3 + 1] = p._pos.y; layerOuter.pos[i3 + 2] = p._pos.z;
+      layerInner.pos[i3] = p._pos.x; layerInner.pos[i3 + 1] = p._pos.y; layerInner.pos[i3 + 2] = p._pos.z;
+    }
+    nodeMarkDirty(layerOuter, ['aPos']);
+    nodeMarkDirty(layerInner, ['aPos']);
+  }
+  /* 重负载库的名称标签上限:每张标签是一块 CanvasTexture(约 0.3~1 MB 显存),
+   * 3053 个点若被逐一悬停 / 搜索命中,无上限地建标签会吃光显存(手机直接崩)。
+   * 最多同时保留 96 张,超出时回收"最早建、当前不可见、且未被悬停/选中"的那张。 */
+  var heavyLabels = [];
+  var HEAVY_LABEL_MAX = 96;
+  function heavyTrimLabels(keepRec) {
+    while (heavyLabels.length >= HEAVY_LABEL_MAX) {
+      var victim = -1, fallback = -1;
+      for (var k = 0; k < heavyLabels.length; k++) {
+        var c = heavyLabels[k];
+        if (c === keepRec || c.point.id === selectedId || c.point.id === hoverId) continue;
+        if (!c.label || !c.label.visible) { victim = k; break; }   // 优先回收当前看不见的
+        if (fallback < 0) fallback = k;
+      }
+      if (victim < 0) victim = fallback;
+      if (victim < 0) break;    // 只剩悬停/选中被锁定:宁可多留几张,也不回收正在用的
+      var rec2 = heavyLabels.splice(victim, 1)[0];
+      if (rec2.label) {
+        scene.remove(rec2.label);
+        try { if (rec2.label.material.map) rec2.label.material.map.dispose(); } catch (e) { /* 忽略 */ }
+        try { rec2.label.material.dispose(); } catch (e) { /* 忽略 */ }
+        rec2.label = null;
+      }
+    }
+  }
+  /* 搜索命中时:只给"离相机最近的若干个命中"建名称标签。
+   * 旧逻辑在每帧循环里给 170 单位内的所有命中建标签 —— 一次宽泛搜索可能
+   * 命中上千点,等于一口气画上千张 CanvasTexture(手机直接爆显存)。 */
+  var HEAVY_SEARCH_LABELS = 48;
+  function heavyEnsureSearchLabels() {
+    var hits = [];
+    for (var k = 0; k < DB.points.length; k++) {
+      var p = DB.points[k];
+      if (!searchSet[p.id]) continue;
+      if (boardChecks[p.board] && !boardChecks[p.board].checked) continue;
+      hits.push({ id: p.id, d: camera.position.distanceToSquared(p._pos) });
+    }
+    hits.sort(function (a, b) { return a.d - b.d; });
+    for (var k2 = 0; k2 < hits.length && k2 < HEAVY_SEARCH_LABELS; k2++) {
+      var rec = nodeById[hits[k2].id];
+      if (rec && !rec.label) ensureNodeLabel(rec);
+    }
+  }
+
   // 为单个知识点创建 3D 对象(光点/命中体/名称);新增自定义知识点时复用
   function addPointRender(p) {
     var pos = p._pos;
@@ -598,25 +884,30 @@ var CAM_DROP = 6;
     var iB = p.id.length > 2 ? p.id.charCodeAt(2) : (p.id.length > 1 ? p.id.charCodeAt(1) : 0);
     var ph = ((iA + iB + p.id.length) % 7) / 7 * Math.PI * 2;
 
-    // 外层:彩色光晕
+    // 外层尺寸:彩色光晕半径;内层尺寸:白色亮核半径
     var outerBase = visualR[p.id];
-    var outerMat = new THREE.SpriteMaterial({
-      map: glowTex, color: colorHex,
-      transparent: true, opacity: 0.75, depthWrite: false
-    });
-    var outerSp = new THREE.Sprite(outerMat);
-    outerSp.position.copy(pos);
-    outerSp.scale.setScalar(outerBase);
-
-    // 内层:白色亮核
     var innerBase = 0.36 + p.importance * 0.07;
-    var innerMat = new THREE.SpriteMaterial({
-      map: glowTex, color: 0xffffff,
-      transparent: true, opacity: 0.95, depthWrite: false
-    });
-    var innerSp = new THREE.Sprite(innerMat);
-    innerSp.position.copy(pos);
-    innerSp.scale.setScalar(innerBase);
+    // 重负载库不建 Sprite —— 光点由实例化层渲染(见 makeNodeLayer)
+    var outerSp = null, innerSp = null, outerMat = null, innerMat = null;
+    if (!HEAVY_CLOUD) {
+      // 外层:彩色光晕
+      outerMat = new THREE.SpriteMaterial({
+        map: glowTex, color: colorHex,
+        transparent: true, opacity: 0.75, depthWrite: false
+      });
+      outerSp = new THREE.Sprite(outerMat);
+      outerSp.position.copy(pos);
+      outerSp.scale.setScalar(outerBase);
+
+      // 内层:白色亮核
+      innerMat = new THREE.SpriteMaterial({
+        map: glowTex, color: 0xffffff,
+        transparent: true, opacity: 0.95, depthWrite: false
+      });
+      innerSp = new THREE.Sprite(innerMat);
+      innerSp.position.copy(pos);
+      innerSp.scale.setScalar(innerBase);
+    }
 
     // 点击命中体:不可见小球(visible=false 不渲染,但仍参与射线检测)
     var hit = new THREE.Mesh(hitGeo, new THREE.MeshBasicMaterial());
@@ -638,21 +929,42 @@ var CAM_DROP = 6;
       label.userData = p.id;
     }
 
-    scene.add(outerSp); scene.add(innerSp); scene.add(hit);
-    if (label) scene.add(label);
-    var rec = {
-      point: p, label: label, labelOn: false, labelOff: labelOff,   // labelOn 由下面的 boardOn 派生,不设无条件 true
-      outer: outerSp, outerMat: outerMat, outerBase: outerBase,
-      inner: innerSp, innerMat: innerMat, innerBase: innerBase,
-      hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis
-    };
-    // 建节点时即按板块勾选状态定下显隐(与 applyBoardFilter 同一套语义),
-    // 保证新点不会在"已取消勾选"的板块里冒出来;
-    // labelOn 一律由 boardOn 派生(重负载库常态不常显名称)
-    outerSp.visible = boardVis;
-    innerSp.visible = boardVis;
-    rec.labelOn = boardVis && !HEAVY_CLOUD;
-    if (label) label.visible = rec.labelOn;
+    scene.add(hit);
+    var rec;
+    if (HEAVY_CLOUD) {
+      // 实例化路径:占一个实例位,把静态属性一次性写进实例缓冲
+      ensureNodeLayerCapacity(nodeCount + 1);
+      var ni = nodeCount++;
+      layerOuter.mesh.count = nodeCount;
+      layerInner.mesh.count = nodeCount;
+      nodeInit(ni, pos, ph, outerBase, innerBase);
+      rec = {
+        point: p, label: null, labelOn: false, labelOff: labelOff,
+        outerBase: outerBase, innerBase: innerBase, i: ni,
+        hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis,
+        oR: ((colorHex >> 16) & 255) / 255, oG: ((colorHex >> 8) & 255) / 255, oB: (colorHex & 255) / 255,
+        oAlpha: 0.75, iAlpha: 0.95, heavyVis: boardVis
+      };
+      rec.outer = rec.outerMat = heavyShim(rec, 'o');
+      rec.inner = rec.innerMat = heavyShim(rec, 'i');
+      heavyWriteStyle(rec);
+    } else {
+      scene.add(outerSp); scene.add(innerSp);
+      if (label) scene.add(label);
+      rec = {
+        point: p, label: label, labelOn: false, labelOff: labelOff,   // labelOn 由下面的 boardOn 派生,不设无条件 true
+        outer: outerSp, outerMat: outerMat, outerBase: outerBase,
+        inner: innerSp, innerMat: innerMat, innerBase: innerBase,
+        hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis
+      };
+      // 建节点时即按板块勾选状态定下显隐(与 applyBoardFilter 同一套语义),
+      // 保证新点不会在"已取消勾选"的板块里冒出来;
+      // labelOn 一律由 boardOn 派生(重负载库常态不常显名称)
+      outerSp.visible = boardVis;
+      innerSp.visible = boardVis;
+      rec.labelOn = boardVis && !HEAVY_CLOUD;
+      if (label) label.visible = rec.labelOn;
+    }
     nodeById[p.id] = rec;
     allHit.push(hit);
     return rec;
@@ -661,40 +973,102 @@ var CAM_DROP = 6;
   // 重负载库标签按需生成:首次需要显示(悬停/选中/搜索命中)时建一次并挂入场景
   function ensureNodeLabel(rec) {
     if (!rec || rec.label) return rec ? rec.label : null;
+    if (HEAVY_CLOUD) heavyTrimLabels(rec);  // 上限保护:超出即回收最老且当前没用到的那张
     var lb = makeLabel(rec.point.name);
     lb.position.copy(rec.point._pos);
     lb.position.y += rec.labelOff;
     lb.userData = rec.point.id;
     scene.add(lb);
     rec.label = lb;
+    if (HEAVY_CLOUD) heavyLabels.push(rec);
     return lb;
   }
   DB.points.forEach(addPointRender);
 
   var EDGE_COLOR = 0x3f9bff;   // 蓝色细线
-  // 连线使用动态位置缓冲:知识云重排(聚焦/回位)时可平滑跟随
-  function fillEdgeArr(arr, a, b) {
-    arr[0] = a.x; arr[1] = a.y; arr[2] = a.z;
-    arr[3] = b.x; arr[4] = b.y; arr[5] = b.z;
+
+  /* 连线渲染:整场所有连线合并进**一个** LineSegments(每帧 1 次绘制调用)。
+   * 旧实现是每条连线一个 THREE.Line —— 英语科 2756 条连线 = 每帧 2756 次绘制,
+   * 手机 GPU 的驱动开销几乎全耗在 draw call 上,掉帧 / 发热 / 耗电的主因。
+   * 颜色与透明度改用逐顶点属性(自定义着色器),语义与旧的
+   * LineBasicMaterial(transparent + depthWrite:false + 逐条 opacity)一致:
+   *   · 顶点位置随重排动画实时更新(仍是动态缓冲);
+   *   · 板块取消勾选 = 该条 alpha 记 0(不再有 line.visible 可写)。
+   * 对调用方保持原写法:e.mat.color.setHex(...) / e.mat.opacity = x / e.line.visible = b。 */
+  var edgePos = null, edgeCol = null, edgeAlp = null, edgeCap = 0, edgeCount = 0;
+  var edgeGeo = new THREE.BufferGeometry();
+  var edgeMat = new THREE.ShaderMaterial({
+    vertexShader:
+      'attribute vec3 ecolor;\n' +
+      'attribute float ealpha;\n' +
+      'varying vec3 vEC;\n' +
+      'varying float vEA;\n' +
+      'void main() {\n' +
+      '  vEC = ecolor; vEA = ealpha;\n' +
+      '  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n' +
+      '}',
+    fragmentShader:
+      'varying vec3 vEC;\n' +
+      'varying float vEA;\n' +
+      'void main() { gl_FragColor = vec4(vEC, vEA); }',
+    transparent: true, depthWrite: false
+  });
+  var edgeLines = new THREE.LineSegments(edgeGeo, edgeMat);
+  edgeLines.frustumCulled = false;    // 顶点随重排动画移动,包围球不可靠
+  scene.add(edgeLines);
+
+  function edgeAlloc(n) {             // 扩容:只在用户新增知识点时发生,次数极少
+    var cap = Math.max(64, n + 64);
+    var pos = new Float32Array(cap * 6), col = new Float32Array(cap * 6), alp = new Float32Array(cap * 2);
+    if (edgePos) pos.set(edgePos.subarray(0, Math.min(pos.length, edgePos.length)));
+    if (edgeCol) col.set(edgeCol.subarray(0, Math.min(col.length, edgeCol.length)));
+    if (edgeAlp) alp.set(edgeAlp.subarray(0, Math.min(alp.length, edgeAlp.length)));
+    edgePos = pos; edgeCol = col; edgeAlp = alp; edgeCap = cap;
+    edgeGeo.setAttribute('position', new THREE.BufferAttribute(edgePos, 3));
+    edgeGeo.setAttribute('ecolor', new THREE.BufferAttribute(edgeCol, 3));
+    edgeGeo.setAttribute('ealpha', new THREE.BufferAttribute(edgeAlp, 1));
+  }
+  function edgeWritePos(rec) {
+    var o = rec.i * 6;
+    var a = rec.edge.a._pos, b = rec.edge.b._pos;
+    edgePos[o] = a.x; edgePos[o + 1] = a.y; edgePos[o + 2] = a.z;
+    edgePos[o + 3] = b.x; edgePos[o + 4] = b.y; edgePos[o + 5] = b.z;
+  }
+  function edgeWriteColor(rec, hex) {
+    var r = ((hex >> 16) & 255) / 255, g = ((hex >> 8) & 255) / 255, b = (hex & 255) / 255;
+    var o = rec.i * 6;
+    edgeCol[o] = r; edgeCol[o + 1] = g; edgeCol[o + 2] = b;
+    edgeCol[o + 3] = r; edgeCol[o + 4] = g; edgeCol[o + 5] = b;
+    edgeGeo.getAttribute('ecolor').needsUpdate = true;
+  }
+  function edgeWriteAlpha(rec) {
+    var v = rec.hidden ? 0 : rec.alpha;
+    edgeAlp[rec.i * 2] = v; edgeAlp[rec.i * 2 + 1] = v;
+    edgeGeo.getAttribute('ealpha').needsUpdate = true;
   }
   function addEdgeRender(e) {
-    var mat = new THREE.LineBasicMaterial({
-      color: EDGE_COLOR, transparent: true, opacity: 0.3, depthWrite: false
+    if (edgeCount + 1 > edgeCap) edgeAlloc(edgeCount + 1);
+    var rec = { edge: e, i: edgeCount++, alpha: 0.34, hidden: false };
+    rec.mat = { color: { setHex: function (h) { edgeWriteColor(rec, h); } } };
+    Object.defineProperty(rec.mat, 'opacity', {
+      get: function () { return rec.alpha; },
+      set: function (v) { rec.alpha = v; edgeWriteAlpha(rec); }
     });
-    var arr = new Float32Array(6);
-    var geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-    fillEdgeArr(arr, e.a._pos, e.b._pos);
-    var line = new THREE.Line(geo, mat);
-    scene.add(line);
-    allEdges.push({ line: line, mat: mat, edge: e, arr: arr, geo: geo });
+    rec.line = {};
+    Object.defineProperty(rec.line, 'visible', {
+      get: function () { return !rec.hidden; },
+      set: function (v) { rec.hidden = !v; edgeWriteAlpha(rec); }
+    });
+    edgeWritePos(rec);
+    edgeWriteColor(rec, EDGE_COLOR);
+    edgeWriteAlpha(rec);
+    edgeGeo.getAttribute('position').needsUpdate = true;
+    allEdges.push(rec);
   }
   edges.forEach(addEdgeRender);
   function syncEdges() {
-    allEdges.forEach(function (er) {
-      fillEdgeArr(er.arr, er.edge.a._pos, er.edge.b._pos);
-      er.geo.attributes.position.needsUpdate = true;
-    });
+    for (var ei = 0; ei < allEdges.length; ei++) edgeWritePos(allEdges[ei]);
+    edgeGeo.getAttribute('position').needsUpdate = true;
   }
 
   /* ---------------- 辅助视觉:极简坐标系 ----------------
@@ -824,6 +1198,8 @@ var CAM_DROP = 6;
     resetEdgeStyle();
     resetNodeStyle();
     if (searchMode) {
+      // 重负载库:搜索命中的名称标签只给最近的一小撮建(见 heavyEnsureSearchLabels)
+      if (HEAVY_CLOUD) heavyEnsureSearchLabels();
       DB.points.forEach(function (p) {
         var rec = nodeById[p.id];
         var hit = !!searchSet[p.id];
@@ -929,6 +1305,8 @@ var CAM_DROP = 6;
         });
       }
     }
+    // 实例化光点层:选中 / 悬停 / 搜索命中的强调系数与呼吸幅度写成逐实例属性
+    heavySyncEmphasis();
   }
 
   /* ---------------- 搜索 ---------------- */
@@ -1641,6 +2019,18 @@ var CAM_DROP = 6;
 
   // 重排进行时,让光点/标签/命中体/连线跟随节点新位置
   function syncNodeViews() {
+    if (HEAVY_CLOUD) {
+      // 实例化光点层:位置写在实例属性上(重排动画期间每帧一次上传);
+      // 命中体与标签照旧逐个跟随
+      heavySyncPositions();
+      DB.points.forEach(function (p) {
+        var rec = nodeById[p.id];
+        if (!rec) return;
+        rec.hit.position.copy(p._pos);
+        if (rec.label) rec.label.position.set(p._pos.x, p._pos.y + rec.labelOff, p._pos.z);
+      });
+      return;
+    }
     DB.points.forEach(function (p) {
       var rec = nodeById[p.id];
       rec.outer.position.copy(p._pos);
@@ -1674,9 +2064,30 @@ var CAM_DROP = 6;
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
-  /* ---------------- 动画循环 ---------------- */
+  /* ---------------- 动画循环 ----------------
+   * 外层壳只做三件"保命"的事,渲染主体一行未改:
+   *   1) 任何一帧抛异常都不再是静默半死:计数,连续失败即给出可见提示;
+   *   2) 上下文丢失 / 页面后台期间不渲染;
+   *   3) 首帧落地 = 解除启动看门狗,并清掉"上下文恢复重载"计数。 */
+  var animErrors = 0;
   function animate() {
     requestAnimationFrame(animate);
+    if (glLost || document.hidden) return;
+    try {
+      animateFrame();
+      if (!firstFrameDone) {
+        firstFrameDone = true;
+        try { sessionStorage.removeItem('qg_gl_restore'); } catch (e2) { /* 忽略 */ }
+      }
+    } catch (err) {
+      animErrors++;
+      if (animErrors <= 2) console.error('[知识云] 渲染循环异常:' + ((err && err.message) || err));
+      if (animErrors === 30) {
+        showFatal('3D 渲染反复出错,画面已停止刷新。\n' + ((err && err.message) || err) + '\n点此重试。');
+      }
+    }
+  }
+  function animateFrame() {
     var now = performance.now() / 1000;
     var dt = lastFrame == null ? 1 / 60 : Math.min(now - lastFrame, 0.08);
     lastFrame = now;
@@ -1711,6 +2122,30 @@ var CAM_DROP = 6;
 
     // 动态光点:呼吸脉动 + 标签 LOD
     var camPos = camera.position;
+    if (HEAVY_CLOUD) {
+      // 重负载库:两层光点的脉动 / 漂浮 / 强调全部在顶点着色器里按 uTime 走
+      // (每帧 JS 零循环、2 次 draw call)。这里只做名称标签的 LOD ——
+      // 标签是 CanvasTexture,只对"悬停/选中/搜索命中且足够近"的点按需生成。
+      layerOuter.mat.uniforms.uTime.value = now;
+      layerInner.mat.uniforms.uTime.value = now;
+      var labelFar2 = 170 * 170;
+      DB.points.forEach(function (p) {
+        var rec = nodeById[p.id];
+        if (!rec) return;
+        var lb = rec.label;
+        // 只负责已存在标签的显隐与跟随(新建只在悬停/选中/搜索时一次完成)
+        if (rec.labelOn && rec.boardOn !== false && camPos.distanceToSquared(p._pos) < labelFar2) {
+          if (lb) {
+            lb.visible = true;
+            lb.position.set(p._pos.x, p._pos.y + rec.labelOff + 0.26 * Math.sin(now * 0.8 + rec.ph * 1.7), p._pos.z);
+          }
+        } else if (lb) {
+          lb.visible = false;
+        }
+      });
+      renderer.render(scene, camera);
+      return;
+    }
     DB.points.forEach(function (p) {
       var rec = nodeById[p.id];
       if (!rec || !rec.outer.visible) return;

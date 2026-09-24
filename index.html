@@ -270,11 +270,20 @@
 <script src="vendor/mathjax-tex-svg.js"></script>
 <script src="vendor/three.min.js"></script>
 <script src="vendor/OrbitControls.js"></script>
-<script src="js/data.js"></script>
-<script src="js/data_chem.js"></script>
-<script src="js/data-physics.js"></script>
-<script src="js/data_eng.js"></script>
-<script src="js/data_bio.js"></script>
+<!-- 数据文件按科目懒加载:此前 5 科全量加载(合计约 3.4 MB,英语单科就 2.0 MB)才轮到 app.js,
+     首屏要等全部下载 + 解析完 —— 手机上这是最明显的一笔启动开销。
+     科目判定与 js/app.js 开头一字不差:?subject= → localStorage(qg_subject) → math;
+     切科目本来就是整页刷新,新页面自然会加载对应科目那一份。 -->
+<script>
+  (function () {
+    var F = { math: 'js/data.js', chem: 'js/data_chem.js', physics: 'js/data-physics.js', eng: 'js/data_eng.js', bio: 'js/data_bio.js' };
+    var m = /[?&]subject=([a-z]+)/.exec(window.location.search);
+    var s = m && m[1];
+    if (!F[s]) { try { s = localStorage.getItem('qg_subject'); } catch (e) { s = null; } }
+    if (!F[s]) s = 'math';
+    document.write('<script src="' + F[s] + '"><\/script>');
+  })();
+</script>
 <script src="js/app.js"></script>
 <script src="js/mainbridge.js"></script>
 <script src="js/glcanvas.js"></script>
