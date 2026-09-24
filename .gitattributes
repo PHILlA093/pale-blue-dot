@@ -1,0 +1,23 @@
+# Line endings: this is a web/JS project, so text is LF both in the repository and in every
+# working tree -- that makes the built artifacts identical on any machine (an earlier CRLF
+# checkout silently produced an exe with 78,848 extra 0x0D bytes).
+* text=auto eol=lf
+# cmd.exe needs CRLF in batch files (labels and goto break on LF-only .bat).
+*.bat text eol=crlf
+# Binaries: never touched by any text conversion.
+*.exe binary
+*.dll binary
+*.ico binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.apk binary
+*.gz binary
+*.zip binary
+*.nupkg binary
+*.mp4 binary
+*.pdf binary
+*.docx binary
+*.so binary
+*.jar binary

@@ -8,7 +8,15 @@ foreach ($b in [System.IO.File]::ReadAllBytes($MyInvocation.MyCommand.Path)) {
     if ($b -gt 127) { Write-Output 'BUILD FAILED: _rebuild.ps1 must be ASCII-only'; exit 1 }
 }
 
-$root = 'E:\workspace\' + [string]([char]0x7A77 + [char]0x89C2)
+# Project root is detected from this script's own location (<root>\<app dir>\build\_rebuild.ps1),
+# so a fresh clone builds as-is on any machine. The old hard-coded dev path is kept only as a
+# fallback for the case where $PSScriptRoot is empty (dot-sourced, or piped into powershell).
+# The Chinese folder names are still assembled from code points: this file must stay ASCII-only.
+$root = ''
+if ($PSScriptRoot) { $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
+if (-not $root -or -not (Test-Path (Join-Path $root 'index.html'))) {
+    $root = 'E:\workspace\' + [string]([char]0x7A77 + [char]0x89C2)
+}
 $csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $build = Join-Path $root ([string]([char]0x684C + [char]0x9762 + [char]0x7248) + '\build')
 $tmpOut = Join-Path $build '_app_tmp.exe'
@@ -54,8 +62,16 @@ $a22 = '/resource:' + $webIco + ',web.favicon.ico'
 # biology is the fifth subject: without this resource the desktop build silently keeps
 # serving the old four-subject data (index.html loads it, but the embedded copy wins).
 $a23 = '/resource:' + (Join-Path $root 'js\data_bio.js') + ',web.js.data_bio.js'
+# Original-work fingerprint: embed the authorship manifest as a manifest resource so the
+# Build ID survives inside the compiled exe even when only the binary is redistributed.
+# The on-disk file name is Chinese, so it is assembled from code points here -- this script
+# must stay ASCII-only (see the self check at the top). Resource name is plain ASCII.
+$fpName = '_' + [string]([char]0x6307 + [char]0x7EB9) + '.txt'
+$fpPath = Join-Path $build $fpName
+if (-not (Test-Path $fpPath)) { Write-Output 'BUILD FAILED: fingerprint resource file missing'; exit 1 }
+$a24 = '/resource:' + $fpPath + ',web.qg.fingerprint.txt'
 $src = Join-Path $build 'Program.cs'
-$args = @('/nologo', '/target:winexe', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $src)
+$args = @('/nologo', '/target:winexe', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $src)
 & $csc @args
 if ($LASTEXITCODE -ne 0) { Write-Output ('BUILD FAILED ' + $LASTEXITCODE); exit 1 }
 Copy-Item -Path $tmpOut -Destination $out -Force
