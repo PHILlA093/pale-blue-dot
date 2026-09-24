@@ -8,7 +8,15 @@ foreach ($b in [System.IO.File]::ReadAllBytes($MyInvocation.MyCommand.Path)) {
     if ($b -gt 127) { Write-Output 'BUILD FAILED: _rebuild.ps1 must be ASCII-only'; exit 1 }
 }
 
-$root = 'E:\workspace\' + [string]([char]0x7A77 + [char]0x89C2)
+# Project root is detected from this script's own location (<root>\<app dir>\build\_rebuild.ps1),
+# so a fresh clone builds as-is on any machine. The old hard-coded dev path is kept only as a
+# fallback for the case where $PSScriptRoot is empty (dot-sourced, or piped into powershell).
+# The Chinese folder names are still assembled from code points: this file must stay ASCII-only.
+$root = ''
+if ($PSScriptRoot) { $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot) }
+if (-not $root -or -not (Test-Path (Join-Path $root 'index.html'))) {
+    $root = 'E:\workspace\' + [string]([char]0x7A77 + [char]0x89C2)
+}
 $csc = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 $build = Join-Path $root ([string]([char]0x684C + [char]0x9762 + [char]0x7248) + '\build')
 $tmpOut = Join-Path $build '_app_tmp.exe'
