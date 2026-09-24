@@ -83,6 +83,9 @@
 
 ## 源码结构
 
+仓库:<https://github.com/PHILlA093/pale-blue-dot> —— `main` 分支为桌面版;`mobile-apk` 分支额外含
+`手机版/`(PWA + Android APK),两分支的 `js/ css/ vendor/` 与三个 html 同源。
+
 ```
 index.html        主窗(知识云 + 侧栏 + 详情卡)
 train.html        破卷窗(AI 出题)
@@ -96,7 +99,10 @@ js/glcanvas.js    动态演示画布引擎(自有表达式解析器,不用 eval)
 js/gltemplates.js 数学演示模板库(31 个模板)
 js/data*.js       各科知识库数据
 vendor/           three.js r128 + OrbitControls + MathJax(均已本地化,零外链)
-桌面版/build/      宿主源码与构建脚本
+桌面版/build/      宿主源码与构建脚本(Program.cs / _rebuild.ps1 / _makeicon.ps1 / _qa 回归探针)
+docs/DESIGN.md     架构设计说明
+docs/研究资料/      各科知识库的重建资料、工具脚本与统计报告(原始大体积语料不入库,见该目录 README)
+docs/宣传片/        宣传片生成流水线(脚本与说明;渲染帧、wav 等中间产物不入库)
 ```
 
 ## 构建桌面版
@@ -109,7 +115,7 @@ powershell -File 桌面版\build\_rebuild.ps1
 train.html / guanlan.html` 全部作为资源内嵌(`web.*`),先输出到 ASCII 临时路径再复制成品
 (中文路径下 csc 无法直接写 `/out:`)。
 
-架构细节见 `DESIGN.md`。
+架构细节见 `docs/DESIGN.md`。
 
 ---
 
