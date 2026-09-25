@@ -57,7 +57,12 @@
     if (!raw) return;
     var c = null;
     try { c = JSON.parse(raw); } catch (e) { return; }
-    if (!c || !c.seq || c.seq <= doneSeq) return;
+    if (!c || !c.seq || c.seq <= doneSeq) {
+      // 陈旧指令:标记并清掉。原先这里只 return 不删除,这条指令会一直躺在 LS_CMD 里占位,
+      // 配合"重开破卷窗后序号可能回退"就会造成静默失效(界面说已选中、主窗毫无反应)。
+      try { localStorage.removeItem(LS_CMD); } catch (e) { /* 忽略 */ }
+      return;
+    }
     if (!c.t || c.t < bootAt - 500) { doneSeq = c.seq; return; }   // 陈旧指令:只标记不执行
     doneSeq = c.seq;
     // 执行后立刻清除,避免陈旧指令重放(原先只靠 2 秒时间戳窗口挡)
@@ -145,14 +150,28 @@
       try { if (topbar.setPointerCapture) topbar.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
       try { if (e.preventDefault) e.preventDefault(); } catch (err) { /* 忽略 */ }
     });
+    // 每个 pointermove 都发一条 postMessage 会有 60+ 条/秒,宿主每条都要移一次窗口。
+    // 这里把增量累加、每帧最多发一条 —— 拖动一样跟手,但不会刷爆消息通道。
+    var pendX = 0, pendY = 0, rafOn = false;
+    function flushDrag() {
+      rafOn = false;
+      if (!pendX && !pendY) return;
+      var dx = pendX, dy = pendY;
+      pendX = 0; pendY = 0;
+      wnd('move', dx, dy);
+    }
     topbar.addEventListener('pointermove', function (e) {
       if (!drag) return;
-      var dx = e.screenX - drag.sx;
-      var dy = e.screenY - drag.sy;
+      pendX += e.screenX - drag.sx;
+      pendY += e.screenY - drag.sy;
       drag.sx = e.screenX; drag.sy = e.screenY;
-      wnd('move', dx, dy);
+      if (!rafOn) {
+        rafOn = true;
+        var raf = window.requestAnimationFrame || function (f) { setTimeout(f, 16); };
+        raf(flushDrag);
+      }
     });
-    function endDrag() { drag = null; }
+    function endDrag() { drag = null; flushDrag(); }
     topbar.addEventListener('pointerup', endDrag);
     topbar.addEventListener('pointercancel', endDrag);
     topbar.addEventListener('dblclick', function (e) {

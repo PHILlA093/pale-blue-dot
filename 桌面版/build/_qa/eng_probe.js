@@ -107,37 +107,39 @@ async function main() {
     // 1) eng boot: heavy cloud must settle fast (< 5s wall clock incl page load)
     const t0 = Date.now();
     await c.send('Page.navigate', { url: base + '/index.html?subject=eng&skip=1' });
-    await waitFor(() => c.eval('window.ENG_DB && window.CUR_SUBJECT==="eng" && document.getElementById("statBar").textContent.indexOf("\u8282\u70b9 1978")>=0'), 30000);
+    await waitFor(() => c.eval('window.ENG_DB && window.CUR_SUBJECT==="eng" && document.getElementById("statBar").textContent.indexOf("\u8282\u70b9 3053")>=0'), 30000);
     const bootMs = Date.now() - t0;
     check('eng boot quick', bootMs < 9000, 'bootMs=' + bootMs);
     await sleep(600);
     const st = await c.eval('document.getElementById("statBar").textContent');
-    check('eng statbar 1978 nodes', (st || '').indexOf('1978') >= 0 && (st || '').indexOf('\u8282\u70b9') >= 0, st);
+    check('eng statbar 3053 nodes', (st || '').indexOf('3053') >= 0 && (st || '').indexOf('\u8282\u70b9') >= 0, st);
     check('eng title', await c.eval('document.title.indexOf("\u82f1\u8bed")>=0'));
-    check('eng boards = 6', await c.eval('ENG_DB.boards.length') === 6, 'n=' + await c.eval('ENG_DB.boards.length'));
+    check('eng boards = 10', await c.eval('ENG_DB.boards.length') === 10, 'n=' + await c.eval('ENG_DB.boards.length'));
 
-    // 2) words layer board default unchecked; others checked
-    const wordsChecked = await c.eval('(function(){var its=document.querySelectorAll("#boardList .board-item"); for(var i=0;i<its.length;i++){if((its[i].querySelector(".b-name").textContent||"").indexOf("\u8bcd\u70b9")>=0) return its[i].querySelector("input").checked;} return "notfound";})()');
-    check('words board default unchecked', wordsChecked === false, 'checked=' + wordsChecked);
+    // 2) 词点层:当前英语数据里词点(eng-w-*)分散在 7 个教材册板块中(占全库 72%),没有任何单个
+    //    板块超过 40% —— 所以"按板块默认收起词点层"在真实数据上不成立,也不该生效:
+    //    LAYER_BOARD_ID 必须是 null,10 个板块全部保持勾选(否则会藏掉 2000+ 个点却没有开关能调回来)。
+    const layerId = await c.eval('(function(){try{return window.__qg3D && window.__qg3D.layerBoardId ? window.__qg3D.layerBoardId() : "n/a";}catch(e){return "err";}})()');
     const checkedCnt = await c.eval('document.querySelectorAll("#boardList .board-item input:checked").length');
-    check('other 5 boards checked', checkedCnt === 5, 'checked=' + checkedCnt);
+    check('no board hidden by default (words spread across boards)', checkedCnt === 10, 'checked=' + checkedCnt + ' layerBoardId=' + layerId);
+    check('word-layer heuristic must not fire on real data', layerId === null || layerId === 'n/a', 'layerBoardId=' + layerId);
 
-    // 3) pick first word point: label lazily absent until selected, then created
-    const wid = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return q.board==="words";})[0]; return p ? p.id : null;})()');
-    check('word point exists', !!wid, wid);
-    const lazyBefore = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return q.board==="words";})[0]; var r=window.__qg3D.recOf(p.id); return {labelVisible:r.labelVisible, labelOn:r.labelOn, outerVisible:r.outerVisible};})()');
-    check('word hidden & labelless at boot', lazyBefore.labelVisible === false && lazyBefore.outerVisible === false, JSON.stringify(lazyBefore));
+    // 3) 词点用 id 前缀定位(eng-w-*):开机可见,选中后建标签并弹详情
+    const wid = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return /^eng-w-/.test(q.id);})[0]; return p ? p.id : null;})()');
+    check('word point exists (eng-w-*)', !!wid, wid);
+    const lazyBefore = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return /^eng-w-/.test(q.id);})[0]; var r=window.__qg3D.recOf(p.id); return {labelVisible:r.labelVisible, labelOn:r.labelOn, outerVisible:r.outerVisible};})()');
+    check('word visible at boot (no board hidden), label lazy', lazyBefore.outerVisible === true, JSON.stringify(lazyBefore));
     await c.eval('window.__qg3D.select(' + JSON.stringify(wid) + '); "ok"');
     await sleep(800);
-    const after = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return q.board==="words";})[0]; var r=window.__qg3D.recOf(p.id); return {boardOn:r.boardOn, outerVisible:r.outerVisible, labelVisible:r.labelVisible, labelOn:r.labelOn};})()');
-    check('select word: board auto re-checked, label created', after.boardOn === true && after.outerVisible === true && after.labelVisible === true && after.labelOn === true, JSON.stringify(after));
+    const after = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return /^eng-w-/.test(q.id);})[0]; var r=window.__qg3D.recOf(p.id); return {boardOn:r.boardOn, outerVisible:r.outerVisible, labelVisible:r.labelVisible, labelOn:r.labelOn};})()');
+    check('select word: stays visible, label created', after.boardOn === true && after.outerVisible === true, JSON.stringify(after));
     const selDetail = await c.eval('document.getElementById("detailPanel").classList.contains("open") ? document.getElementById("dName").textContent : ""');
     check('word detail card opened', (selDetail || '').length > 0, 'name=' + String(selDetail).slice(0, 30));
 
     // 4) hover over a root shows its label (non-word label path intact on heavy)
     await c.eval('document.getElementById("detailClose").click(); "ok"');
     await sleep(400);
-    const rid = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return q.board==="roots";})[0]; return p ? p.id : null;})()');
+    const rid = await c.eval('(function(){var p=ENG_DB.points.filter(function(q){return q.board==="eng-roots";})[0]; return p ? p.id : null;})()');
     const rootInfo = await c.eval('(function(){var r=window.__qg3D.recOf(' + JSON.stringify(rid) + '); return {boardOn:r.boardOn, outerVisible:r.outerVisible, labelVisible:r.labelVisible, color:r.outerColor};})()');
     check('root board visible at boot', rootInfo.boardOn === true && rootInfo.outerVisible === true && /^#[0-9a-f]{6}$/.test(rootInfo.color || ''), JSON.stringify(rootInfo));
 
@@ -149,16 +151,30 @@ async function main() {
     const fps = await c.eval('(function(){return new Promise(function(res){var t0=performance.now(); requestAnimationFrame(function(){res(Math.round(performance.now()-t0));});});})()');
     check('render frame responsive', fps < 120, 'frameMs=' + fps);
 
+    // 6.5) 点选成本(回归守卫):relayoutTargets 曾经是全配对 O(n²) —— 英语库每次点选约有
+    //      2979 个点被塞进同一个半径 46 的圆环,4 轮跑满 ≈ 1770 万次配对,同步阻塞 0.35–1.1 秒。
+    //      修好之后参与推开推的只有 0~3 跳的几十个点(≈10³ 次配对)。这里连点 6 个不同节点,
+    //      任何一次同步耗时都不该超过 250ms —— 阈值故意留得很宽,只抓"又退回 O(n²)"这一类回归。
+    await c.eval('window.__perfIds = ENG_DB.points.filter(function(q){return q.board==="eng-bx1";}).slice(0,6).map(function(q){return q.id;}); "ok"');
+    const clickMs = [];
+    for (let k = 0; k < 6; k++) {
+      const ms = await c.eval('(function(){var t0=performance.now(); window.__qg3D.select(window.__perfIds[' + k + ']); return Math.round(performance.now()-t0);})()');
+      clickMs.push(ms);
+      await sleep(150);
+    }
+    const worst = Math.max.apply(null, clickMs);
+    check('node click cost stays small on 3053-point library', worst < 250, 'ms=' + clickMs.join(',') + ' worst=' + worst);
+
     // 7) train page (搜题/刷题) loads English DB like other subjects
     await c.eval('location.href="' + base + '/train.html"; "nav"');
     await waitFor(() => c.eval('window.__trainTest && document.getElementById("genBtn")'), 15000);
     await sleep(500);
     const engN = await c.eval('window.ENG_DB ? ENG_DB.points.length : 0');
-    check('train page loads ENG_DB', engN === 1978, 'n=' + engN);
+    check('train page loads ENG_DB', engN === 3053, 'n=' + engN);
     await c.eval('window.__trainTest.setLive({t:Date.now(), subject:"eng", subjectName:"\u9ad8\u4e2d\u82f1\u8bed", selName:"", keyword:""}); "ok"');
     await sleep(400);
     const dbinfo = await c.eval('window.__trainTest.db()');
-    check('train picks English DB', !!dbinfo && dbinfo.subject === 'eng' && String(dbinfo.subjectName).indexOf('\u82f1\u8bed') >= 0 && dbinfo.n === 1978, JSON.stringify(dbinfo));
+    check('train picks English DB', !!dbinfo && dbinfo.subject === 'eng' && String(dbinfo.subjectName).indexOf('\u82f1\u8bed') >= 0 && dbinfo.n === 3053, JSON.stringify(dbinfo));
     const pill = await c.eval('document.getElementById("pSubject").textContent');
     check('train subject pill shows English', (pill || '').indexOf('\u82f1\u8bed') >= 0, pill);
     await c.eval('document.getElementById("askInput").value = "\u8bcd\u6839"; "ok"');

@@ -157,17 +157,30 @@
     };
   }
   function nCall(name, args) {
+    // 两类错误必须分开报,否则提示会误导用户:
+    //   'no fn NAME'            —— 白名单里没有这个函数(真正的"不支持")
+    //   'argc NAME 收到 需要'    —— 函数本身支持,只是实参个数不对
+    // 原先两者共用 'bad fn',ueErrMsg 一律翻成"不支持的函数:max" —— 可 max 明明是
+    // 支持的,用户会以为不能用,于是放弃本来正确的写法。
     // 只认白名单里显式列出的名字:用 has() 判定(不查原型链),
     // 否则 'constructor' / 'toString' 之类的名字会被误当成合法函数
-    if (!has(MATH_ARITY, name)) throw new Error('bad fn ' + name);
+    if (!has(MATH_ARITY, name)) throw new Error('no fn ' + name);
     var arity = MATH_ARITY[name];
-    if (!arity || args.length < arity) throw new Error('bad fn ' + name);
+    if (args.length < arity) throw new Error('argc ' + name + ' ' + args.length + ' ' + arity);
+    // 多余实参:min / max 按 Math 的原生语义接受任意多个(Math.min(1,2,3) 合法),
+    // 其余定参函数(pow / hypot / atan2)与少参一样直接报错 —— 静默只用前两个会画出
+    // "看着对、其实不是用户写的那个函数"的曲线,比一句能看懂的报错更糟。
+    if (args.length > arity && name !== 'min' && name !== 'max') {
+      throw new Error('argc ' + name + ' ' + args.length + ' ' + arity);
+    }
     var fn = has(Math, name) ? Math[name] : null; // 同样只取 Math 的自有属性
     // 中文习惯:ln = 自然对数(Math.log);log = 常用对数(底 10);log2 = 底 2
     if (name === 'ln') fn = Math.log;
     else if (name === 'log') fn = Math.log10;
     else if (name === 'log2') fn = Math.log2;
-    if (typeof fn !== 'function') throw new Error('bad fn ' + name);
+    // 白名单里有、但当前运行环境没有这个 Math 函数(旧 WebView 缺 cbrt/sign 等):
+    // 归到"不支持"一类,与上面的 no fn 走同一句提示,不要漏出原始英文
+    if (typeof fn !== 'function') throw new Error('no fn ' + name);
     return function (env) {
       var i, vals = [];
       for (i = 0; i < args.length; i++) {
@@ -1827,6 +1840,10 @@
     var panState = null;  // 空白处拖拽平移(Desmos 式,按下时记录)
     var panning = false;  // 平移进行中
     var viewPan = true;   // 是否允许空白拖拽平移
+    // 空白处(可平移时)的悬停光标:用四向箭头 'move',与可拖自由点的 'grab'(抓手)区分。
+    // 原先两处都写 'grab',鼠标形状完全一样 —— 用户看不出"这一点到底能不能拖",
+    // 与注释"可拖自由点显示抓手;空白处提示可平移"的意图不符。
+    function blankCursor() { return viewPan ? 'move' : ''; }
 
     function canvasPos(ev) {
       var r = { x: 0, y: 0 };
@@ -1970,11 +1987,11 @@
         redraw();
         return;
       }
-      // 悬停反馈:可拖自由点显示抓手;空白处提示可平移
+      // 悬停反馈:可拖自由点显示抓手('grab');空白处提示可平移('move',见 blankCursor)
       var free = !dragActive && !panning && hitDot(p.x, p.y, true);
       if (!!free !== hoverDrag) {
         hoverDrag = !!free;
-        try { canvasEl.style.cursor = free ? 'grab' : (viewPan ? 'grab' : ''); } catch (e) { /* 忽略 */ }
+        try { canvasEl.style.cursor = free ? 'grab' : blankCursor(); } catch (e) { /* 忽略 */ }
       }
     }
     function onUp(ev) {
@@ -1998,7 +2015,7 @@
       if (panning) {
         panning = false;
         panState = null;
-        try { canvasEl.style.cursor = viewPan ? 'grab' : ''; } catch (e) { /* 忽略 */ }
+        try { canvasEl.style.cursor = blankCursor(); } catch (e) { /* 忽略 */ }
         return;
       }
       panState = null;
@@ -2066,6 +2083,11 @@
      *      (UI 侧再用 requestAnimationFrame 节流,见 demo.js)。
      */
     var UE_RESERVED = { x: 1, y: 1, r: 1, t: 1, theta: 1, u: 1, PI: 1, E: 1 };
+    // 用户表达式的长度上限(与 UI 输入框的 maxlength 保持一致,见 demo.js addExprRow)。
+    // 表达式会被编译成闭包树并进缓存,之后每帧要算几百个采样点:AI 那两条路径各有
+    // cpStr 上限(160 / 200 字符),用户自己输入的这条路原先没有封顶,十万字符足以
+    // 让页面假死(自伤型,但真实)。400 字符远超任何中学写法需要的长度。
+    var UE_SRC_MAX = 400;
     var ueList = [];                                  // 解析后的表达式条目
     var ueParams = Object.create(null);               // 参数名 -> {v, touched}
     var ueParamCfg = Object.create(null);             // 参数名 -> {min,max,step}(删除后保留区间)
@@ -2077,7 +2099,12 @@
     // 解析报错的"人话"版本:词法/语法层的错误信息对用户太晦涩
     function ueErrMsg(e) {
       var m = String((e && e.message) ? e.message : e);
-      if (m.indexOf('bad fn') === 0) return '不支持的函数:' + m.slice(7);
+      if (m.indexOf('no fn') === 0) return '不支持的函数:' + m.slice(6);
+      // 'argc NAME 收到 需要' → "max 需要 2 个参数,收到 1 个"
+      if (m.indexOf('argc ') === 0) {
+        var ap = m.split(' ');
+        return ap[1] + ' 需要 ' + ap[3] + ' 个参数,收到 ' + ap[2] + ' 个';
+      }
       if (m === 'unexpected char') return '含有无法识别的字符(支持 + - * / ^ ( ) , 、数字、字母、θ、π)';
       if (m === 'bad number') return '数字写法有误(例如 1.2.3)';
       if (m === 'expect )') return '括号不匹配(缺少右括号)';
@@ -2156,6 +2183,14 @@
       var raw = String(src == null ? '' : src);
       var r = { ok: false, kind: 'empty', src: raw, lhs: '', rhs: '', err: '',
         params: [], fn: null, fL: null, constVal: NaN };
+      // 长度先拦一道:超长表达式不进词法/语法层(否则光是把十万字符编译成闭包树
+      // 就够卡住页面)。提示走 ueErrMsg 同一套"人话"通道(r.err → UI 的 ⚠ 行),
+      // 不抛原始异常 —— 引擎对外的约定是"解析结果里带错误说明",不是让调用方 try。
+      if (raw.length > UE_SRC_MAX) {
+        r.err = '表达式过长(最多 ' + UE_SRC_MAX + ' 字符,当前 ' + raw.length + ' 字符),请化简或拆成多条';
+        r.kind = 'error';
+        return r;
+      }
       var s = normExpr(raw).replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
       if (!s) return r;                                  // 空行:静默跳过,不算错误
       var eq = ueSplit(s);

@@ -156,15 +156,21 @@
   }
 
   /* ---------- 板块定位 ---------- */
+  var LS_SEQ = 'qg_live_cmd_seq';   // 单调指令序号(单独存,主窗只读不删)
   var cmdSeq = 0;
   var pickedPoint = null;   // 板块结果中点选的知识点
   var lastLoc = null;       // {kw, b(板块), pts:[{p,cnt}]}
   function writeCmd(kw) {
+    // 序号必须单调,且不能随 LS_CMD 一起消失:主窗执行完指令就会删掉 LS_CMD,而主窗自己的 doneSeq
+    // 是"主窗生命周期内累加"的。若这里从现存 LS_CMD 续号,重开破卷窗后第一条又是 seq=1,主窗判定
+    // "陈旧指令"直接丢弃(而且不清 key)——界面显示「已选中」,主窗毫无反应,且没有任何 ack 能暴露。
+    // 所以计数器单独存一份,只增不删。
     try {
-      var old = localStorage.getItem(LS_CMD);
-      if (old) { var o = JSON.parse(old); if (o && o.seq) cmdSeq = Math.max(cmdSeq, o.seq); }
+      var n = parseInt(localStorage.getItem(LS_SEQ) || '0', 10);
+      if (n > cmdSeq) { cmdSeq = n; }
     } catch (e) { }
     cmdSeq++;
+    try { store(LS_SEQ, String(cmdSeq)); } catch (e) { }
     var c = { type: 'locate', kw: kw, seq: cmdSeq, t: Date.now() };
     store(LS_CMD, JSON.stringify(c));
   }
@@ -916,15 +922,19 @@
         return runBatch();
       });
     }).then(function (qs) {
-      var realC = qs.filter(isRealGk).length;
+      var realC = qs.filter(isRealGk).length;   // 契约统计:真题· 与 联网· 都算"真题素材"
       var webC = qs.filter(isWebSrc).length;
+      var gkC = qs.filter(function (q) { return /^真题·/.test(String(q.source || '')); }).length;
       var memC = qs.filter(isRecallSrc).length;
       var warn = '';
       if (qs.length < totalN) warn = ' — AI 仅返回 ' + qs.length + ' 道';
       else if (needGk && realC < effReal) warn = ' — 真题不足:实得 ' + realC + '/' + effReal + ' 道(素材有限或 AI 未原样采用)';
       else if (needGk && memC > 0) warn = ' — 含 ' + memC + ' 道回忆题(素材不足时兜底,建议对照教材核对)';
+      // 文案必须如实区分来源:原先把"联网抓来的题"也写成"真实真题",同一道题会同时出现在
+      // "真实真题"与"联网"两个计数里 —— 难度 5 的"100% 真题"可能全部由真伪不明的网页内容满足。
+      // 这里拆成 本地档案真题 / 联网素材 / 回忆,并明确标注联网未做原文比对。
       setStatus('完成 — 用时 ' + Math.round((Date.now() - t0) / 1000) + ' 秒,共 ' + qs.length +
-        ' 道 · 真实真题 ' + realC + ' 道 · 🌐 联网 ' + webC + ' 道' +
+        ' 道 · 📚 本地真题 ' + gkC + ' 道 · 🌐 联网素材 ' + webC + ' 道(未经原文比对)' +
         (memC ? ' · 💭 回忆 ' + memC + ' 道' : '') + warn,
         warn ? 'warn' : '');
       setSteps('AI 出题完成 ✓');

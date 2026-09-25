@@ -358,12 +358,44 @@ var CAM_DROP = 6;
    */
   var HEAVY_LIMIT = 900;
   var HEAVY_CLOUD = DB.points.length > HEAVY_LIMIT;
-  var LAYER_BOARD_ID = null;    // 词点层板块(英语:words);无则返回 null
-  if (HEAVY_CLOUD) {
-    for (var li = 0; li < DB.boards.length; li++) {
-      if (DB.boards[li].id === 'words') { LAYER_BOARD_ID = 'words'; break; }
+
+  /* —— 「词点层」板块探测(替代原先硬编码的 DB.boards[i].id === 'words') ——
+   * 旧实现只认 id 恰好等于 'words' 的板块,而 data_eng.js 的真实板块 id 是
+   * eng-bx1/eng-bx2/eng-bx3/eng-xx1~4/eng-roots/eng-sentence/eng-grammar ——
+   * 没有任何板块叫 words,于是 LAYER_BOARD_ID 恒为 null:"词点层默认收起 / 词点分组 /
+   * 词点绕词根排成小环 / 标签豁免"这整套重负载降载逻辑从未生效。
+   * 改为按数据特征探测,不再依赖单个硬编码 id:
+   *   ① 板块显式带 layer:true 标记 → 直接采用(数据将来打了标记即刻生效);
+   *   ② 否则取点数最多的板块,且它占全库 40% 以上才认定为词点层 ——
+   *      "词点层"的特征就是一个板块吃掉绝大多数条目;
+   *   ③ 只有重负载库(>HEAVY_LIMIT)才启用这个概念:数学/化学/物理/生物的
+   *      板块数都远达不到 40% 且都不满足重负载,永远返回 null,绝不会被误判成
+   *      "该默认藏起来的板块",行为与改动前完全一致。 */
+  function detectLayerBoardId() {
+    if (!HEAVY_CLOUD) return null;
+    var i, n, marked = null, best = null, bestN = 0;
+    var cnt = {};
+    DB.points.forEach(function (p) { cnt[p.board] = (cnt[p.board] || 0) + 1; });
+    for (i = 0; i < DB.boards.length; i++) {
+      if (DB.boards[i].layer === true && marked === null) marked = DB.boards[i].id;   // ① 显式标记优先
+      n = cnt[DB.boards[i].id] || 0;
+      if (n > bestN) { bestN = n; best = DB.boards[i].id; }                           // ② 点数最多的板块
     }
+    if (marked !== null) return marked;
+    return (bestN * 100 > DB.points.length * 40) ? best : null;
   }
+  /* 「词根 / 词缀」板块探测(id 或 name 命中 root|词根|词缀 的那个):
+   * 旧实现硬编码 p.board === 'roots',而英语数据的真实 id 是 eng-roots,
+   * 于是重负载静态布局里"词点绕词根排成小环"的锚点表 rootPolar 恒为空。 */
+  function detectRootBoardId() {
+    for (var i = 0; i < DB.boards.length; i++) {
+      var b = DB.boards[i];
+      if (/root|词根|词缀/i.test(String(b.id) + ' ' + String(b.name || ''))) return b.id;
+    }
+    return null;
+  }
+  var LAYER_BOARD_ID = detectLayerBoardId();   // 词点层板块;无则 null
+  var ROOT_BOARD_ID = detectRootBoardId();     // 词根/词缀板块;无则 null
 
   /* —— 重负载库:确定性静态布局(O(n),单次完成) ——
    * · 概念节点(词根/主题/句型/语法/词组):由内向外逐圈入座——
@@ -408,12 +440,17 @@ var CAM_DROP = 6;
           var rr = row.r + jit;
           var aa = seatAng + jit / rr;
           p._pos = new THREE.Vector3(rr * Math.cos(aa), 0, rr * Math.sin(aa));
-          if (p.board === 'roots') rootPolar[p.id] = { r: rr, a: aa };
+          if (p.board === ROOT_BOARD_ID) rootPolar[p.id] = { r: rr, a: aa };   // 词根板块见 detectRootBoardId()
           break;
         }
       });
     });
-    // 词点层:按所属词根分组后小环环绕
+    /* 词点层:按所属词根分组后小环环绕(卫星式)。
+     * 生效前提:词点的 links 里存在指向"词根板块"节点的连线。当前数据(英语 3053 点)
+     * 并不满足 —— root-* 词根的连接度数为 0,词点的 links 指向的是单元词表点
+     * (eng-u-bx1-0 之类),所以每个词点都会落进下面的 '@<自身 id>' 孤点组,
+     * 卫星分支(anchor 非空)当前不会执行。这里保留代码:数据补齐"词点 → 词根"
+     * 连线后自动生效,不为了让分支跑起来而编造连线。 */
     var wGroups = {}, wOrder = [];
     layerArr.forEach(function (w) {
       var rid = (w.links && w.links.length && rootPolar[w.links[0]]) ? w.links[0] : null;
@@ -760,6 +797,13 @@ var CAM_DROP = 6;
     nodeMarkDirty(layerOuter, HEAVY_DIRTY_BASE);
     nodeMarkDirty(layerInner, HEAVY_DIRTY_BASE.concat(['aColor']));
   }
+  /* 把 rec 的样式写进实例缓冲:透明度 + 颜色 + 尺寸。
+   * 隐藏(板块取消勾选 / visible=false)时不能只把 alpha 归零:场景材质都是
+   * depthWrite:false、NormalBlending,alpha=0 的实例照样走完顶点/片元管线
+   * (英语库取消勾选一个板块就是上千个光点在白烧填充率,手机上最明显,而深度缓冲
+   * 救不了它们)。因此隐藏时把实例尺寸也写 0 —— 三角形退化即零片元;
+   * 恢复可见时写回 rec.outerBase / rec.innerBase。唯一写尺寸的地方就是这里,
+   * 与 heavyShim 的 scale 写入共用同一条路径,不会两处打架。 */
   function heavyWriteStyle(rec) {
     var i = rec.i;
     if (i == null) return;
@@ -767,11 +811,18 @@ var CAM_DROP = 6;
     layerOuter.alpha[i] = vis ? rec.oAlpha : 0;
     layerInner.alpha[i] = vis ? rec.iAlpha : 0;
     layerOuter.color[i * 3] = rec.oR; layerOuter.color[i * 3 + 1] = rec.oG; layerOuter.color[i * 3 + 2] = rec.oB;
-    nodeMarkDirty(layerOuter, ['aAlpha', 'aColor']);
-    nodeMarkDirty(layerInner, ['aAlpha']);
+    layerOuter.scale[i] = vis ? (rec.outerBase || 1) : 0;
+    layerInner.scale[i] = vis ? (rec.innerBase || 1) : 0;
+    nodeMarkDirty(layerOuter, ['aAlpha', 'aColor', 'aScale']);
+    nodeMarkDirty(layerInner, ['aAlpha', 'aScale']);
   }
-  // 最小替身:让 applyVisualState / resetNodeStyle / applyBoardFilter 原样写
-  // rec.outerMat.color.setHex() / .opacity / rec.outer.visible 即可,无需改动那些调用点
+  /* 最小替身:让 applyVisualState / resetNodeStyle / applyBoardFilter 原样写
+   * rec.outerMat.color.setHex() / .opacity / rec.outer.visible 即可,无需改动那些调用点。
+   * 接口必须补齐:refreshAllNodesDefault 会写 rec.outer.scale.setScalar(...) 与
+   * rec.*Mat.needsUpdate,__qg3D.recOf 会读 color.getHexString() —— 少一个接口,
+   * 英语页每次取消聚焦都会在 setTimeout 回调里抛未捕获 TypeError(window.onerror 在
+   * 首帧后直接 return,只在控制台留一行),并把该函数后面的连线复位 / syncNodeViews()
+   * 整段跳过。 */
   function heavyShim(rec, which) {
     var sh = {};
     Object.defineProperty(sh, 'opacity', {
@@ -782,11 +833,31 @@ var CAM_DROP = 6;
       get: function () { return rec.heavyVis !== false; },
       set: function (v) { rec.heavyVis = !!v; heavyWriteStyle(rec); }
     });
+    /* scale:实例化层没有对象级 scale,把写入落到"基准尺寸"上 ——
+     * setScalar(v) 改 rec.outerBase / rec.innerBase,再由 heavyWriteStyle 统一
+     * 写进实例缓冲(隐藏归零也在那里),尺寸只有一个写入点,不会两处互相覆盖。 */
+    sh.scale = {
+      setScalar: function (v) {
+        if (which === 'o') rec.outerBase = v; else rec.innerBase = v;
+        heavyWriteStyle(rec);
+      },
+      set: function (x, y, z) {
+        // 光点是单位正方形四边形,只取 x(与 SpriteMaterial 等比缩放语义一致)
+        sh.scale.setScalar(x);
+      }
+    };
+    // 实例属性走 buffer 上传,没有"整材质重编译"这回事:保留一个可读可写的空操作属性
+    sh.needsUpdate = false;
     if (which === 'o') {
       sh.color = {
         setHex: function (h) {
           rec.oR = ((h >> 16) & 255) / 255; rec.oG = ((h >> 8) & 255) / 255; rec.oB = (h & 255) / 255;
           heavyWriteStyle(rec);
+        },
+        // recOf 会读 getHexString():由实例颜色反算 6 位十六进制,否则英语页直接抛异常
+        getHexString: function () {
+          var r = Math.round(rec.oR * 255), g = Math.round(rec.oG * 255), b = Math.round(rec.oB * 255);
+          return ('000000' + (((r << 16) | (g << 8) | b) >>> 0).toString(16)).slice(-6);
         }
       };
     }
@@ -1443,9 +1514,10 @@ var CAM_DROP = 6;
       item.className = 'board-item';
       var cb = document.createElement('input');
       cb.type = 'checkbox';
-      // 重负载库的词点层(w- 词点,如英语 1113 点)默认收起:入口清爽流畅,
-      // 需要全量词点时在左侧勾选"词汇总览·词点层"即可随时展开
-      cb.checked = !(HEAVY_CLOUD && b.id === LAYER_BOARD_ID);
+      // 重负载库的词点层默认收起:入口清爽流畅,需要全量词点时在左侧勾选它即可展开。
+      // LAYER_BOARD_ID 由 detectLayerBoardId() 按数据特征探测(不再是硬编码 'words'),
+      // 非重负载科目恒为 null → 这里的默认值与改动前完全一致,不会把数学/化学的点藏起来
+      cb.checked = !(LAYER_BOARD_ID && b.id === LAYER_BOARD_ID);
       cb.value = b.id;
       boardChecks[b.id] = cb;
       item.appendChild(cb);
@@ -1945,21 +2017,34 @@ var CAM_DROP = 6;
     });
     var hop = {};
     var q = [centerId];
-    hop[centerId] = 0;
-    while (q.length) {
-      var c = q.shift();
+    var qi = 0;                 // 下标游标取代 q.shift():shift 每次都要搬移整个队列,
+    hop[centerId] = 0;          // 数据密集后会退化成 O(n²)
+    while (qi < q.length) {
+      var c = q[qi++];
       var nh = hop[c] + 1;
       if (nh > 4) continue;
       adj[c].forEach(function (nb) {
         if (hop[nb] === undefined) { hop[nb] = nh; q.push(nb); }
       });
     }
-    // 分层半径:直接相关最近,无关最远
+    /* 分层半径:直接相关最近,向外依次远离(0/1/2/3 跳)。
+     * 关键:不可达 / 4 跳以上的点**不是**"相关度第 4 层",而是"与聚焦点无关"——
+     * 旧实现把它们统统塞进第 4 层、均匀铺在同一个半径 46 的圆环上:英语库 3053 点里
+     * 平均约 2985 个点落进这一桶(词点之间几乎没有连线,4 跳内互不可达),环上相邻间距
+     * 只剩 0.1,远小于最小间距 ms(2.4),密度超标 25 倍 → 下面那段"互相推开"每轮
+     * moved 都是百万级、if (!moved) break 永不触发、4 轮跑满约 1770 万次配对,
+     * 于是点一下节点主线程同步卡住 0.35~1.1 秒(实测英语库 632ms)。
+     * 现在这些"无关点"保持默认云原位(沿用 _defX/_defZ,聚焦前后零位移),
+     * 参与重新分层的通常只有几十个点(英语一个单元簇约 56 个)。 */
     var layerR = { 0: 0, 1: 12, 2: 24, 3: 36, 4: 46 };
     var layerList = {};
+    var moveIds = [];           // 参与"互相推开"的点:只有 0~3 跳的相关点(有界)
     pts.forEach(function (p) {
-      var h = p.id === centerId ? 0 : (hop[p.id] === undefined ? 4 : Math.min(hop[p.id], 4));
+      if (p.id === centerId) { (layerList[0] = layerList[0] || []).push(p.id); moveIds.push(p.id); return; }
+      var h = hop[p.id];
+      if (h === undefined || h >= 4) return;   // 无关点:不参与分层,位置见下方兜底
       (layerList[h] = layerList[h] || []).push(p.id);
+      moveIds.push(p.id);
     });
     var base = Math.random() * Math.PI * 2;
     Object.keys(layerList).forEach(function (h) {
@@ -1977,17 +2062,22 @@ var CAM_DROP = 6;
       });
     });
     targets[centerId] = { x: 0, z: 0 };
-    // 保底:高度不同但水平投影接近的节点互相推开,避免重合
-    var idl = pts.map(function (p) { return p.id; });
-    var sepMax = HEAVY_CLOUD ? 4 : 140;   // 重负载:仅少量推开迭代,避免 O(n²) 卡顿
+    // 兜底:不相关(含孤点)的知识点一律留在默认云原位,既不是"最相关",也不该被拉进环里
+    pts.forEach(function (p) {
+      if (!targets[p.id]) targets[p.id] = { x: p._defX, z: p._defZ };
+    });
+    /* 保底:高度不同但水平投影接近的节点互相推开,避免重合。
+     * 只对 moveIds(0~3 跳,通常几十个)做精确推开:与无关点之间不再做全配对,
+     * 单次点击的配对次数从 ~1.8×10^7 降到 ~10^3 量级,同步耗时回到 1ms 量级。 */
+    var sepMax = HEAVY_CLOUD ? 4 : 140;   // 重负载:仅少量推开迭代(与改动前一致)
     for (var it = 0; it < sepMax; it++) {
       var moved = 0;
-      for (var i = 0; i < idl.length; i++) {
-        for (var j = i + 1; j < idl.length; j++) {
-          var A = targets[idl[i]], B = targets[idl[j]];
+      for (var i = 0; i < moveIds.length; i++) {
+        for (var j = i + 1; j < moveIds.length; j++) {
+          var A = targets[moveIds[i]], B = targets[moveIds[j]];
           var dx = A.x - B.x, dz = A.z - B.z;
           var d2 = dx * dx + dz * dz;
-          var ms = Math.max(2.4, (visualR[idl[i]] + visualR[idl[j]]) * 0.62);
+          var ms = Math.max(2.4, (visualR[moveIds[i]] + visualR[moveIds[j]]) * 0.62);
           if (d2 < ms * ms && d2 > 1e-8) {
             var d = Math.sqrt(d2);
             var pu = (ms - d) / d * 0.5;
@@ -2177,7 +2267,10 @@ var CAM_DROP = 6;
         // 重负载库的标签按需生成:只有真正要显示时才建这一张画布纹理,
         // 不再开屏预建上千张(概念节点原先预生成 → 改为首次需要时生成,显示行为不变);
         // 词点层仍只在悬停/选中时由 ensureNodeLabel 生成,避免选中词根时
-        // 一帧之内连建上千张纹理
+        // 一帧之内连建上千张纹理。
+        // 注:本循环只在轻负载库(非 HEAVY_CLOUD)执行,而 LAYER_BOARD_ID 仅重负载库
+        // 才可能非空 —— 所以这里的词点层豁免在新探测函数下依旧不会触发(重负载库的
+        // 标签本来就全部按需生成,豁免语义已由 ensureNodeLabel 的调用点天然满足)。
         var lb2 = rec.label;
         if (!lb2 && (!HEAVY_CLOUD || p.board !== LAYER_BOARD_ID)) lb2 = ensureNodeLabel(rec);
         if (lb2) lb2.visible = true;

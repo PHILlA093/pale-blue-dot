@@ -248,34 +248,83 @@ namespace KnowledgeNetApp
     /* ================= 公共:资源 / 日志 / 消息代理 / 语料 ================= */
     internal static class Shared
     {
-        public static readonly string LogPath = Path.Combine(Path.GetTempPath(), "knet_run.log");
+        // 日志放 %LOCALAPPDATA%\穷观学习\,不放 %TEMP%:
+        //  ① 临时目录会被各种清理工具整体清掉;
+        //  ② 共享 Temp 下用一个固定文件名,别的东西可以抢先占位,而我们还往里写消息摘要。
+        public static readonly string LogPath = BuildLogPath();
+
+        private static string BuildLogPath()
+        {
+            try
+            {
+                string dir = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "穷观学习");
+                Directory.CreateDirectory(dir);
+                return Path.Combine(dir, "knet_run.log");
+            }
+            catch
+            {
+                return Path.Combine(Path.GetTempPath(), "knet_run.log");   // 兜底:至少还能记
+            }
+        }
+
         private static CoreWebView2Environment env;
 
         // 日志上限 2 MB:超过即轮转一次(只留最近一份备份),避免长期运行无限增长
         private const long LogMaxBytes = 2 * 1024 * 1024;
 
-        public static void Log(string msg)
+        // "清除本机记录"之后不再写日志 —— 原先 wipe 删掉文件后,下一条消息立刻把它重建,
+        // 等于"不留记录"的承诺是空的。另外 Log 会被 UI 线程与多个线程池线程并发调用,
+        // 而 File.AppendAllText 抢占会抛 IOException 再被 catch 吞掉 → 丢日志(日志是唯一的排障手段)。
+        private static volatile bool logDisabled = false;
+        private static readonly object LogLock = new object();
+
+        public static void DisableLog()
         {
-            try
-            {
-                var fi = new FileInfo(LogPath);
-                if (fi.Exists && fi.Length > LogMaxBytes)
-                {
-                    string bak = LogPath + ".1";
-                    try { if (File.Exists(bak)) File.Delete(bak); File.Move(LogPath, bak); } catch { }
-                }
-                File.AppendAllText(LogPath, DateTime.Now.ToString("HH:mm:ss") + " " + msg + "\r\n");
-            }
-            catch { }
+            logDisabled = true;
         }
 
-        public static async Task<CoreWebView2Environment> EnsureEnv()
+        public static void Log(string msg)
         {
-            if (env == null)
+            if (logDisabled) { return; }
+            lock (LogLock)
             {
-                env = await CoreWebView2Environment.CreateAsync(null, null);
-                Log("WEBVIEW2:ready " + env.BrowserVersionString);
+                try
+                {
+                    var fi = new FileInfo(LogPath);
+                    if (fi.Exists && fi.Length > LogMaxBytes)
+                    {
+                        string bak = LogPath + ".1";
+                        try { if (File.Exists(bak)) File.Delete(bak); File.Move(LogPath, bak); } catch { }
+                    }
+                    File.AppendAllText(LogPath, DateTime.Now.ToString("HH:mm:ss") + " " + msg + "\r\n");
+                }
+                catch { }
             }
+        }
+
+        // 异步单例要防并发("env == null" 与 await 之间会 yield,两个窗口同时启动会各建一个环境),
+        // 但**绝对不能**用 ContinueWith 在线程池线程上取结果 —— CoreWebView2Environment 的 RCW 是
+        // STA 线程亲和的,一旦在 MTA 线程上被触碰,WebView2 之后一路报
+        //   "Unable to cast to Microsoft.Web.WebView2.Core.Raw.ICoreWebView2Environment"
+        // 整个 WebView2 初始化直接打死(实测:窗口能开、页面全白、日志里没有 WEBVIEW2:ready)。
+        // 所以这里只用锁保证"只创建一次",对象仍在调用方的 UI 线程上 await 出来。
+        private static readonly object EnvLock = new object();
+        private static Task<CoreWebView2Environment> envTask = null;
+
+        public static Task<CoreWebView2Environment> EnsureEnv()
+        {
+            lock (EnvLock)
+            {
+                if (envTask == null) { envTask = CreateEnvOnce(); }
+                return envTask;
+            }
+        }
+
+        private static async Task<CoreWebView2Environment> CreateEnvOnce()
+        {
+            env = await CoreWebView2Environment.CreateAsync(null, null);
+            Log("WEBVIEW2:ready " + env.BrowserVersionString);
             return env;
         }
 
@@ -312,10 +361,19 @@ namespace KnowledgeNetApp
             }
         }
 
-        // 页面是否来自内嵌资源(app.local)
+        // 页面是否来自内嵌资源(https://app.local/…)
+        // 必须解析成 Uri 比 Host,不能做子串匹配:https://evil.example/?x=app.local 以前也算"本地页",
+        // 而它正是消息桥(读语料 / 写知识库 / 代发请求)唯一的准入判断。
         public static bool IsAppLocal(string uri)
         {
-            return uri != null && uri.IndexOf("app.local", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (string.IsNullOrEmpty(uri)) { return false; }
+            try
+            {
+                Uri u;
+                if (!Uri.TryCreate(uri, UriKind.Absolute, out u)) { return false; }
+                return string.Compare(u.Host, "app.local", StringComparison.OrdinalIgnoreCase) == 0;
+            }
+            catch { return false; }
         }
 
         // 外部链接交给系统默认浏览器:无边框窗没有地址栏,在窗内打开会成为死胡同
@@ -398,7 +456,12 @@ namespace KnowledgeNetApp
                 {
                     if (x.WindowState == FormWindowState.Maximized || x.WindowState == FormWindowState.Minimized)
                     {
-                        x.Region = null; // 最大化/最小化时保持直角,避免屏幕边缘缺角
+                        // 最大化/最小化时保持直角,避免屏幕边缘缺角。
+                        // Region 必须显式 Dispose(WinForms 不接管它的生命周期):直接置 null 会让
+                        // 每次最大化/还原都漏一个 GDI Region,反复切换会稳定累积。
+                        Region oldReg = x.Region;
+                        x.Region = null;
+                        if (oldReg != null) oldReg.Dispose();
                         return;
                     }
                     var rc = x.ClientRectangle;
@@ -421,12 +484,37 @@ namespace KnowledgeNetApp
         }
 
         // cw → 所属 Form(无边框观澜窗等需要宿主代为移动/最小化/关闭)
+        // 两个必须守住的点:① 窗口关闭时要摘掉引用,否则被关掉的 Form + CoreWebView2(连着整棵
+        // 控件树)会被这张静态字典永久强引用;② 写入发生在 UI 线程,读取来自线程池(HandleWnd 的
+        // Task.Run),而 Dictionary 不支持并发读写 —— 统一走下面三个加锁的小函数。
+        private static readonly object CwMapLock = new object();
         private static readonly Dictionary<CoreWebView2, Form> CwOwnerMap =
             new Dictionary<CoreWebView2, Form>();
 
+        private static void CwOwnerSet(CoreWebView2 cw, Form f)
+        {
+            try { lock (CwMapLock) { CwOwnerMap[cw] = f; } } catch { }
+        }
+
+        private static Form CwOwnerGet(CoreWebView2 cw)
+        {
+            try { lock (CwMapLock) { Form f; return CwOwnerMap.TryGetValue(cw, out f) ? f : null; } }
+            catch { return null; }
+        }
+
+        private static void CwOwnerDrop(CoreWebView2 cw)
+        {
+            try { lock (CwMapLock) { CwOwnerMap.Remove(cw); } } catch { }
+        }
+
         public static void AttachCommon(Form owner, WebView2 wv, CoreWebView2 cw)
         {
-            try { CwOwnerMap[cw] = owner; } catch { }
+            CwOwnerSet(cw, owner);
+            if (owner != null)
+            {
+                // 窗口关掉就摘掉引用:否则 Form + CoreWebView2 永远不会被回收
+                owner.FormClosed += delegate { CwOwnerDrop(cw); };
+            }
             cw.Settings.AreDefaultContextMenusEnabled = true;
             cw.Settings.IsStatusBarEnabled = false;
             cw.Settings.AreDevToolsEnabled = false;
@@ -437,10 +525,36 @@ namespace KnowledgeNetApp
                 Log("NAV:ok=" + e2.IsSuccess + " code=" + e2.WebErrorStatus);
             };
             cw.DocumentTitleChanged += delegate { Log("TITLE:" + cw.DocumentTitle); };
+            // 消息桥必须先校验来源:chrome.webview 的桥是"按控件"注入的,任何被加载进这个 WebView2
+            // 的文档(哪怕远端页面)都能 postMessage。而协议里有 mats(读走本机 47MB 语料)、
+            // dbAdd(往用户知识库写任意内容)、webq(借用户 IP 发请求)—— 不校验来源等于全开放。
             cw.WebMessageReceived += delegate(object s, CoreWebView2WebMessageReceivedEventArgs e2)
             {
+                if (!Shared.IsAppLocal(e2.Source))
+                {
+                    Log("MSG-DROP:" + (e2.Source == null ? "(null)" : e2.Source));
+                    return;
+                }
                 Log("MSG:" + SanitizeMsg(e2.WebMessageAsJson));
                 HandleWebMessage(wv, cw, e2.WebMessageAsJson);
+            };
+            // 非本地页不许在主框架里打开:一来外部链接在无边框窗里是死胡同(交给系统浏览器),
+            // 二来这也让"消息桥只挂在本地页"这条前提真正成立。只拦 http/https,
+            // about:/blob:/data: 这类内部导航照旧放行(页面预览会用到)。
+            cw.NavigationStarting += delegate(object s, CoreWebView2NavigationStartingEventArgs e2)
+            {
+                try
+                {
+                    string u = e2.Uri == null ? "" : e2.Uri;
+                    bool httpish = u.StartsWith("http://", StringComparison.OrdinalIgnoreCase)
+                                || u.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
+                    if (httpish && !Shared.IsAppLocal(u))
+                    {
+                        e2.Cancel = true;
+                        Shared.OpenExternal(u);
+                    }
+                }
+                catch { }
             };
         }
 
@@ -449,8 +563,7 @@ namespace KnowledgeNetApp
         {
             try
             {
-                Form f = null;
-                if (cw != null && CwOwnerMap.ContainsKey(cw)) f = CwOwnerMap[cw];
+                Form f = CwOwnerGet(cw);
                 string op = msg.ContainsKey("op") ? Convert.ToString(msg["op"]) : "";
                 if (f == null) return Json(new { kind = "wndResp", ok = false, err = "无宿主窗口" });
                 if (op == "move")
@@ -465,12 +578,15 @@ namespace KnowledgeNetApp
                         // —— 至少保证 120×40 留在工作区内。
                         try
                         {
-                            var wa = Screen.FromHandle(f.Handle).WorkingArea;
+                            // 用整个虚拟桌面判断"至少留多少可见"。原先用 Screen.FromHandle 取**当前所在
+                            // 那块屏**的工作区做硬钳制,而它永远返回同一块屏 → 窗口永远拖不到第二台显示器
+                            // (显示器摆在主屏上方、Top 为负时同理)。虚拟桌面是所有屏的并集,不会自锁。
+                            Rectangle vs = SystemInformation.VirtualScreen;
                             const int keepX = 120, keepY = 40;
-                            if (np.X < wa.Left - f.Width + keepX) np.X = wa.Left - f.Width + keepX;
-                            if (np.X > wa.Right - keepX) np.X = wa.Right - keepX;
-                            if (np.Y < wa.Top) np.Y = wa.Top;
-                            if (np.Y > wa.Bottom - keepY) np.Y = wa.Bottom - keepY;
+                            if (np.X < vs.Left - f.Width + keepX) np.X = vs.Left - f.Width + keepX;
+                            if (np.X > vs.Right - keepX) np.X = vs.Right - keepX;
+                            if (np.Y < vs.Top) np.Y = vs.Top;
+                            if (np.Y > vs.Bottom - keepY) np.Y = vs.Bottom - keepY;
                         }
                         catch { }
                         f.Location = np;
@@ -559,7 +675,10 @@ namespace KnowledgeNetApp
         {
             try
             {
-                var ser = new JavaScriptSerializer();
+                // MaxJsonLength 默认只有 2,097,152 字符,超长会直接抛异常 —— 而 dbAdd 是整包上传
+                // (英语 3053 点、每点 content ≤2500 字符,折算 JSON 约 85 万字符,余量只剩 2.4 倍)。
+                // 一旦踩线,页面看到的是"莫名其妙的超时",而不是任何有用信息。
+                var ser = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
                 var msg = ser.Deserialize<Dictionary<string, object>>(json);
                 string kind = msg != null && msg.ContainsKey("kind") ? Convert.ToString(msg["kind"]) : "";
                 object seq = null;
@@ -592,8 +711,45 @@ namespace KnowledgeNetApp
             catch (Exception ex)
             {
                 Log("MSG-ERR:" + ex.Message);
-                PostJson(wv, cw, Json(new { kind = "dsResp", ok = false, err = "宿主消息解析失败:" + ex.Message }));
+                // 兜底回包必须把 _seq 带回去:页面完全靠 _seq 配对(train.js 超时 180s、mainbridge 60s),
+                // 丢了它就永远等不到回应 —— 表现成"卡住 → 超时 → 无限重试",且毫无可诊断信息。
+                // JSON 已经坏了,只能从原始串里宽容地把 _seq / kind 抠出来。
+                string kind2 = ExtractKind(json);
+                PostJson(wv, cw, WithSeq(Json(new
+                {
+                    kind = (string.IsNullOrEmpty(kind2) ? "ds" : kind2) + "Resp",
+                    ok = false,
+                    err = "宿主消息解析失败:" + ex.Message
+                }), ExtractSeq(json)));
             }
+        }
+
+        // 从"已经坏掉的"JSON 里宽容地抠出 _seq / kind —— 解析失败时唯一的补救手段
+        private static readonly Regex SeqRe = new Regex("\"_seq\"\\s*:\\s*(-?\\d+)", RegexOptions.Compiled);
+        private static readonly Regex KindRe = new Regex("\"kind\"\\s*:\\s*\"([A-Za-z]+)\"", RegexOptions.Compiled);
+
+        private static object ExtractSeq(string json)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(json)) { return null; }
+                Match m = SeqRe.Match(json);
+                int n;
+                if (m.Success && int.TryParse(m.Groups[1].Value, out n)) { return n; }
+                return null;
+            }
+            catch { return null; }
+        }
+
+        private static string ExtractKind(string json)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(json)) { return ""; }
+                Match m = KindRe.Match(json);
+                return m.Success ? m.Groups[1].Value : "";
+            }
+            catch { return ""; }
         }
 
         // 页面用 _seq 配对请求/响应,宿主回包必须原样回带
@@ -633,7 +789,7 @@ namespace KnowledgeNetApp
 
         private static string Json(object o)
         {
-            return new JavaScriptSerializer().Serialize(o);
+            return new JavaScriptSerializer { MaxJsonLength = int.MaxValue }.Serialize(o);
         }
 
         private static Dictionary<string, object> Obj(object o)
@@ -920,7 +1076,15 @@ namespace KnowledgeNetApp
                         if (File.Exists(bak)) File.Delete(bak);
                         File.Replace(tmp, f, bak);
                     }
-                    catch { File.Delete(f); File.Move(tmp, f); }
+                    catch
+                    {
+                        // File.Replace 失败(被占用/杀软/权限/磁盘)时的兜底:先把当前文件复制成备份再替换。
+                        // 原先这里先 Delete 再 Move —— 一旦 Move 也失败,就是"旧文件已删、新文件未就位",
+                        // 而上面刚把旧 .bak 删过 → 数据与备份同时消失(用户此时关掉程序就全丢了)。
+                        string bak2 = f + ".bak";
+                        try { if (File.Exists(f)) File.Copy(f, bak2, true); } catch { }
+                        File.Delete(f); File.Move(tmp, f);
+                    }
                 }
                 else File.Move(tmp, f);
                 return true;
@@ -1087,6 +1251,9 @@ namespace KnowledgeNetApp
                 catch (Exception ex1) { ok = false; err = "日志删除失败:" + ex1.Message; }
                 try { string bak = LogPath + ".1"; if (File.Exists(bak)) File.Delete(bak); } catch { }
                 if (!ok) return Json(new { kind = "wipeResp", ok = false, err = err });
+                // 删完就停止记录:否则页面下一条消息(每条消息都进日志)会立刻把文件重建,
+                // "不留下任何记录"这个承诺就是空的。进程重启后自动恢复记录。
+                DisableLog();
                 return Json(new { kind = "wipeResp", ok = true, hadKey = hadKey });
             }
             catch (Exception ex)
@@ -1095,18 +1262,25 @@ namespace KnowledgeNetApp
             }
         }
 
-        // 日志脱敏:任何带 "key": 的消息只保留 ***,防止 Key 落入日志
+        // 日志脱敏:任何带 key 的消息只保留 ***,防止 API Key 落入日志。
+        // 原先实现很脆:只匹配字面量 "key":"(不容空格)、只替换**第一处**,而且匹配不到转义形式
+        // (页面若用字符串发消息,JSON 里是 \"key\":\"…\")—— 任何一种情况都会让 Key 明文落盘。
+        // 现在改成:按字段名(容忍空格)+ 多处的正则,再用 sk- 模式兜一层,最后才截断。
+        private static readonly Regex KeyFieldRe =
+            new Regex("\"key\"\\s*:\\s*\"[^\"]*\"", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        private static readonly Regex KeyLikeRe =
+            new Regex("sk-[A-Za-z0-9_\\-]{8,}", RegexOptions.Compiled);
+
         private static string SanitizeMsg(string j)
         {
-            if (j == null) return "";
-            int i = j.IndexOf("\"key\":\"", StringComparison.Ordinal);
-            if (i >= 0)
+            if (j == null) { return ""; }
+            try
             {
-                int s = i + 7;
-                int e = j.IndexOf('"', s);
-                if (e > s) j = j.Substring(0, s) + "***" + j.Substring(e);
+                j = KeyFieldRe.Replace(j, "\"key\":\"***\"");
+                j = KeyLikeRe.Replace(j, "sk-***");
             }
-            if (j.Length > 90) j = j.Substring(0, 90) + "…";
+            catch { }
+            if (j.Length > 90) { j = j.Substring(0, 90) + "…"; }
             return j;
         }
 
@@ -1211,7 +1385,10 @@ namespace KnowledgeNetApp
                         usedIdx.Add(k);
                         string bk = pool[k];
                         int sep = bk.IndexOf('\n');
-                        if (k == i0) src = sep > 0 ? bk.Substring(8, sep - 8) : "";
+                        // "###SRC:" 是 7 个字符(# # # S R C :),原先从索引 8 开始切 → 每个来源标签
+                        // 都少掉第一个字(zt/全卷解析 → t/全卷解析,连"真题/讲义"的类型前缀都被吃掉);
+                        // 空来源(sep==7)时 Substring(8, -1) 还会抛异常,整个 matsResp 变成失败。
+                        if (k == i0) src = sep > 7 ? bk.Substring(7, sep - 7) : "";
                         string body = sep > 0 ? bk.Substring(sep + 1) : bk;
                         if (sb.Length > 0) sb.Append('\n');
                         if (sb.Length + body.Length <= perCap) sb.Append(body);

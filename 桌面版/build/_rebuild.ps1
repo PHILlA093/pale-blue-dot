@@ -71,7 +71,7 @@ $fpPath = Join-Path $build $fpName
 if (-not (Test-Path $fpPath)) { Write-Output 'BUILD FAILED: fingerprint resource file missing'; exit 1 }
 $a24 = '/resource:' + $fpPath + ',web.qg.fingerprint.txt'
 $src = Join-Path $build 'Program.cs'
-$args = @('/nologo', '/target:winexe', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $src)
+$args = @('/nologo', '/target:winexe', '/optimize+', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $src)
 & $csc @args
 if ($LASTEXITCODE -ne 0) { Write-Output ('BUILD FAILED ' + $LASTEXITCODE); exit 1 }
 Copy-Item -Path $tmpOut -Destination $out -Force
