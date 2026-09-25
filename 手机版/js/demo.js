@@ -23,7 +23,10 @@
    'glKeyRow', 'glKeyInput', 'glKeySave', 'glAsk', 'glSend', 'glStageTip']
     .forEach(function (id) { els[id] = $(id); });
 
-  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 忽略 */ } }
+  // 返回是否写入成功:拆独立窗要靠它判断"握手数据到底写进去没有"。
+  // 原实现把 QuotaExceededError 一吞了之 —— 超配额时新窗口读不到数据,
+  // 用户点「⤢ 独立窗口」后对话凭空消失,却没有任何提示。
+  function store(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
   /* ---------- 对话状态(仅内存) ---------- */
@@ -347,13 +350,31 @@
   /* ---------- 拆为独立窗口(观澜 standalone,对话经 localStorage 握手迁移) ---------- */
   function detachWindow() {
     try {
+      // 只迁移**文字**:最多 30 条消息里可能夹着 base64 图片(单张 dataUrl 上限约 2.2M 字符),
+      // 1~2 张就顶到 localStorage 配额,写入失败 → 新窗口静默变成空会话。
+      // 而 bootStandalone 本来也只还原 role/content(从不读回 img),图片在白占配额,
+      // 剥掉它既不丢功能,也让超配额几乎不可能发生。
+      var src = conv.slice(-30), list = [], i, m, imgDropped = 0;
+      for (i = 0; i < src.length; i++) {
+        m = src[i];
+        if (!m) continue;
+        if (m.img) imgDropped++;
+        list.push({ role: m.role, content: m.content });
+      }
       var payload = {
-        conv: conv.slice(-30),
+        conv: list,
         ctx: (els.glCtx ? els.glCtx.textContent : '') || ''
       };
       // 不再把对话塞进 URL:宿主会把新窗口的完整 URI 原样写进运行日志(NWREQ:),
       // URL 也会进浏览历史 —— 与"对话仅保留在内存、关闭即清空"的承诺直接冲突。
-      store('qg_guanlan_conv', JSON.stringify(payload));
+      var ok = store('qg_guanlan_conv', JSON.stringify(payload));
+      // 写失败必须说出来(非阻塞提示):否则用户看到的是"点一下独立窗,对话没了",无从判断原因
+      if (!ok) {
+        addBubble('err', '⚠ 对话内容过大,独立窗口里只带过去文字部分(图片不迁移),' +
+          '但这次连文字也没能写进浏览器本地存储(配额已满或本地存储不可用)—— 新窗口会是空会话,请留在本窗继续。');
+      }
+      note('DETACH:conv=' + list.length + ' imgDropped=' + imgDropped +
+        ' store=' + (ok ? 'ok' : 'FAIL'));
       if (!window.open('guanlan.html', 'qg_guanlan')) { try { openPanel(); } catch (e) { } }
       // 兜底清除(独立窗正常读取后会立即自删)
       setTimeout(function () {
@@ -662,7 +683,10 @@
     }
     var t0 = Date.now();
     var sentWithImg = withImg;
-    dsAsk(msgs, key, withImg ? { model: VISION_MODEL } : null)
+    // purpose 是**显式**的"这是讲解请求"标志(供文件末尾的 dsAsk 包装器记录最近问答)。
+    // 不能用"有没有 opts"来推断:带图讲解为了换视觉模型必然要传 opts,null 判定会漏记,
+    // 于是"文字提问 → 图片提问 → 点🎬"会拿上一条文字提问去生成演示。
+    dsAsk(msgs, key, withImg ? { purpose: 'chat', model: VISION_MODEL } : { purpose: 'chat' })
       .then(function (content) {
         conv.push({ role: 'assistant', content: content });
         addBubble('ai', content);
@@ -993,6 +1017,10 @@
     inp.spellcheck = false;
     inp.setAttribute('autocomplete', 'off');
     inp.placeholder = '例如 y = x^2 - 2x + 1';
+    // 长度兜底:与 glcanvas.js 的 UE_SRC_MAX(400 字符)一致。
+    // 超长表达式会被编译成巨大的闭包树并缓存,之后每帧几百个采样点求值 → 页面假死;
+    // 输入框先拦一道,引擎侧(ueParse)另有一道,覆盖测试钩子与本地恢复进来的表达式。
+    inp.maxLength = 400;
     inp.value = String(src == null ? '' : src);
     var del = cel('button', 'gl-expr-del', '✕');
     del.type = 'button';
@@ -1710,21 +1738,30 @@
    * 讲解/标注里出现极坐标关键词(极坐标 / r=…cosθ / 玫瑰线 / 花瓣 / 螺线 / 心形线),
    * 但场景里没有任何 polar 图元 → 图形大概率是笛卡尔函数顶替的,与标注不符。
    * 只提示、不拦演示(用户仍能看到图),但状态栏与气泡里要说清楚。
+   * 扫描范围必须覆盖**所有会显示给用户的标注**:
+   *   · text 图元的 text / tex
+   *   · dot / line / ray 的 label(cleanObject 与 cpStyle 会保留它)
+   *   · 调度层的 caption(会原样进气泡,见 applyScene 的第二个参数)
+   * 原先只扫 type === 'text' 的 text/tex,于是"标注写在 caption 里、写在点的 label 上"
+   * 的场景整条漏检 —— 历史教训正是"标注写着三瓣玫瑰线、画出来却是余弦波",
+   * 漏检等于这道防线不存在。
    * 注意:这里刻意不写 console.warn —— 自动化探针把控制台输出当异常收集,
    * 不能因为一句提示把既有回归测试判红。 */
   var POLAR_KW = /极坐标|玫瑰线|花瓣线|花瓣|螺线|心形线|ρ|r\s*=\s*[^,。;、]{0,12}(cos|sin)/;
-  function polarMismatch(scene) {
+  // 会显示给用户的标注字段(text 图元两种写法 + dot/line/ray 的 label)。
+  // 按类型细分没有必要:多扫一个字段只多一次关键词匹配,不会误伤,漏扫才会。
+  var LBL_KEYS = ['text', 'tex', 'label'];
+  function kwHit(s) { return POLAR_KW.test(String(s == null ? '' : s)); }
+  function polarMismatch(scene, extraTxt) {
     if (!isPlainObj(scene)) return false;
     var objs = isArr2(scene.objects) ? scene.objects : [];
-    var i, o, txt, hasPolar = false, kw = false;
+    var i, j, o, hasPolar = false, kw = false;
+    if (kwHit(extraTxt)) kw = true;   // caption:不参与绘制,但会显示给用户
     for (i = 0; i < objs.length; i++) {
       o = objs[i];
       if (!isPlainObj(o)) continue;
       if (o.type === 'polar') { hasPolar = true; continue; }
-      if (o.type === 'text') {
-        txt = String(o.text == null ? '' : o.text) + ' ' + String(o.tex == null ? '' : o.tex);
-        if (POLAR_KW.test(txt)) kw = true;
-      }
+      for (j = 0; j < LBL_KEYS.length; j++) if (kwHit(o[LBL_KEYS[j]])) kw = true;
     }
     return kw && !hasPolar;
   }
@@ -1740,19 +1777,22 @@
     // 先归一化 id 与引用,再做原有逐字段校验(否则一个中文 id 就会让整段失败)
     var plan = buildIdPlan(raw.defs, raw.objects);
     if (plan.fixed > 0) raw = remapScene(raw, plan);
-    var i, ids = {}, d;
+    // 无原型字典:普通对象 {} 会让 id 为 'constructor' 的合法名字(符合 ID_RE)
+    // 沿原型链读回 Object.prototype.constructor(真值),误报"id 重复:constructor"
+    // 并让整段演示失败。glcanvas 侧同类判定早已改成无原型字典 + has(),这里对齐。
+    var i, ids = Object.create(null), d;
     var out = { defs: [], objects: [] };
     for (i = 0; i < raw.defs.length; i++) {
       d = cleanDef(raw.defs[i], i);
       if (typeof d === 'string') return { ok: false, err: d };
-      if (ids[d.id]) return { ok: false, err: 'defs id 重复:' + d.id };
+      if (hk(ids, d.id)) return { ok: false, err: 'defs id 重复:' + d.id };
       ids[d.id] = 1;
       out.defs.push(d);
     }
     for (i = 0; i < raw.objects.length; i++) {
       d = cleanObject(raw.objects[i], i);
       if (typeof d === 'string') return { ok: false, err: d };
-      if (ids[d.id]) return { ok: false, err: 'id 重复:' + d.id };
+      if (hk(ids, d.id)) return { ok: false, err: 'id 重复:' + d.id };
       ids[d.id] = 1;
       out.objects.push(d);
     }
@@ -1774,8 +1814,12 @@
   function followScene() { if (engine) engine.autoFitOnUpdate = true; }
 
   // 应用 AI 现场生成的场景:校验 → 绘制 → 检查有效图元比例(不合格则清空并报错)
-  function applyScene(scene) {
+  // caption 单独传入:它在 validateScene 的白名单之外会被丢掉,而它是**会显示给用户**
+  // 的一段标注,必须参与 polarMismatch 的关键词扫描(测试钩子把 caption 放在 scene
+  // 里传也能识别 —— 见下面的兜底取值)。
+  function applyScene(scene, caption) {
     if (!engine) return { ok: false, err: '画布引擎未就绪' };
+    if (caption == null || caption === '') caption = isPlainObj(scene) ? scene.caption : '';
     var v = validateScene(scene);
     if (!v.ok) return { ok: false, err: v.err };
     followScene();
@@ -1792,7 +1836,7 @@
     engine.play();
     return {
       ok: true, objects: total, okObjects: okN, idFixed: v.idFixed || 0,
-      mismatch: polarMismatch(v.scene)   // true = 标注提极坐标、图里却没有 polar 图元
+      mismatch: polarMismatch(v.scene, caption)   // true = 标注/caption 提极坐标、图里却没有 polar 图元
     };
   }
 
@@ -1827,7 +1871,7 @@
           // AI 现场生成的场景:先白名单校验,再绘制;失败则抛错走统一兜底
           var rawSc = obj.scene || {};
           var rawN = ((rawSc.objects && rawSc.objects.length) || 0) + ((rawSc.defs && rawSc.defs.length) || 0);
-          var rs = applyScene(obj.scene);
+          var rs = applyScene(obj.scene, obj.caption);
           if (!rs.ok) {
             // 失败原因必须进日志,否则用户只能看到气泡、事后无从排查
             note('DEMO:scene FAIL raw=' + rawN + ' err=' + String(rs.err || '校验未通过'));
@@ -1958,7 +2002,7 @@
       return { ok: true, objects: engine.getState ? engine.getState().objects : -1 };
     },
     engine: function () { return engine; },
-    applyScene: function (scene) { return applyScene(scene); },   // 测试钩子:AI 现场生成路径
+    applyScene: function (scene) { return applyScene(scene, scene && scene.caption); },   // 测试钩子:AI 现场生成路径
     validateScene: validateScene,                                 // 测试钩子:仅校验不绘制
     templates: function () { return (window.QG_TEMPLATES && window.QG_TEMPLATES.manifest) || []; },
     // 用户表达式 / 参数滑块 测试钩子(与真实 UI 共用同一套引擎入口)
@@ -2006,13 +2050,30 @@
   };
 
   // 记录最近问答(供 🎬 使用)
+  // 判定依据是**显式标志** opts.purpose === 'chat'(由 doSend 打上),不再靠"opts 是否存在":
+  // 带图讲解要传 { model: VISION_MODEL } 也有 opts,旧写法直接漏记那一轮,
+  // 而 runDemoRequest 只在 lastUserText 为空时才回退扫对话 —— 于是"文字提问 → 图片提问
+  // → 点🎬"用上一条文字提问生成演示,文不对题。
+  // 带图消息的 content 是内容块数组([{type:'text'},{type:'image_url'}]),String() 会得到
+  // "[object Object]",所以取其中的文字块 —— 🎬 才有题面可用。
+  function lastMsgText(content) {
+    var i, b;
+    if (isArr2(content)) {
+      for (i = 0; i < content.length; i++) {
+        b = content[i];
+        if (isPlainObj(b) && b.type === 'text' && b.text != null) return String(b.text);
+      }
+      return '';
+    }
+    return String(content == null ? '' : content);
+  }
   var dsOrig = dsAsk;
   dsAsk = function (messages, key, opts) {
-    // 拦截“讲解发送”,记录最近一问一答(不动协议调用)
+    // 拦截“讲解发送”,记录最近一问一答(不动协议调用:演示调度用的是 json:true,无 purpose)
     return dsOrig(messages, key, opts).then(function (content) {
       var lastRole = messages[messages.length - 1];
-      if (lastRole && lastRole.role === 'user' && !opts) {
-        lastUserText = String(lastRole.content || '');
+      if (lastRole && lastRole.role === 'user' && opts && opts.purpose === 'chat') {
+        lastUserText = lastMsgText(lastRole.content);
         lastAiText = String(content || '');
       }
       return content;

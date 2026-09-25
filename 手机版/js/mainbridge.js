@@ -57,7 +57,13 @@
     if (!raw) return;
     var c = null;
     try { c = JSON.parse(raw); } catch (e) { return; }
-    if (!c || !c.seq || c.seq <= doneSeq) return;
+    if (!c || !c.seq || c.seq <= doneSeq) {
+      // 陈旧指令:标记并清掉。原先这里只 return 不删除,这条指令会一直躺在 LS_CMD 里占位,
+      // 配合"重开破卷窗后序号可能回退"(见 train.js 的 LS_SEQ)就会造成静默失效:
+      // 界面说已选中、主窗毫无反应。清 key 让下一条指令总能被正常处理。
+      try { localStorage.removeItem(LS_CMD); } catch (e) { /* 忽略 */ }
+      return;
+    }
     if (!c.t || c.t < bootAt - 500) { doneSeq = c.seq; return; }   // 陈旧指令:只标记不执行
     doneSeq = c.seq;
     // 执行后立刻清除,避免陈旧指令重放(原先只靠 2 秒时间戳窗口挡)
@@ -91,17 +97,32 @@
   // 打开破卷。手机版(浏览器 / Capacitor APK)里必须走「同一个 WebView 内跳转」:
   // Capacitor 的原生壳里没有"第二个窗口",window.open 通常会失效或把页面甩到系统浏览器,
   // 破卷页里点「← 返回知识云」就回不来了。破卷页自带返回按钮,故这里直接改地址。
+  // 顺手把「当前选中的知识点」用 URL 参数带过去(见 trainUrl):破卷页据此预填/显示
+  // 出题目标。取不到名字时退化成不带参数的普通跳转,不影响功能。
+  function trainUrl() {
+    var url = 'train.html';
+    var q = [];
+    try {
+      var dName = document.getElementById('dName');
+      var name = dName ? String(dName.textContent || '').replace(/\s+/g, ' ').trim() : '';
+      if (name) q.push('point=' + encodeURIComponent(name));
+      if (window.CUR_SUBJECT) q.push('subject=' + encodeURIComponent(window.CUR_SUBJECT));
+    } catch (e) { /* 忽略:退化成普通跳转 */ }
+    return q.length ? (url + '?' + q.join('&')) : url;
+  }
+
   function openTrain(url) {
     try { location.href = url; }
     catch (e) { qgNotice('无法打开破卷:' + e); }
   }
 
-  // 「🎯 破卷」按钮:同 WebView 内跳转到破卷页
+  // 「🎯 破卷」按钮(#dTrain):知识点详情抽屉里的破卷入口,同 WebView 内跳转到破卷页。
+  // 原右下角浮动按钮 #trainBtn 已按需求删除,破卷入口只此一处。
   function bindTrainBtn() {
-    var btn = document.getElementById('trainBtn');
+    var btn = document.getElementById('dTrain');
     if (!btn || btn.__qgBound) return;
     btn.__qgBound = true;
-    btn.addEventListener('click', function () { openTrain('train.html'); });
+    btn.addEventListener('click', function () { openTrain(trainUrl()); });
   }
 
   // 顶栏「⟳」:重新加载当前科目(保留科目、跳过开场,直接回到知识云)
@@ -151,14 +172,30 @@
       try { if (topbar.setPointerCapture) topbar.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
       try { if (e.preventDefault) e.preventDefault(); } catch (err) { /* 忽略 */ }
     });
+    // 每个 pointermove 都发一条 postMessage 会有 60+ 条/秒,宿主每条都要移一次窗口。
+    // 这里把增量累加、每帧最多发一条 —— 拖动一样跟手(合成器帧率就是"跟手"的上限),
+    // 但不会刷爆消息通道。松手时 flush 一次,保证最后一段位移不丢。
+    var pendX = 0, pendY = 0, rafOn = false;
+    function flushDrag() {
+      rafOn = false;
+      if (!pendX && !pendY) return;
+      var dx = pendX, dy = pendY;
+      pendX = 0; pendY = 0;
+      wnd('move', dx, dy);
+    }
     topbar.addEventListener('pointermove', function (e) {
       if (!drag) return;
-      var dx = e.screenX - drag.sx;
-      var dy = e.screenY - drag.sy;
+      // 仍用屏幕坐标算增量:窗口随手指移动时 clientX 会自变导致抖动
+      pendX += e.screenX - drag.sx;
+      pendY += e.screenY - drag.sy;
       drag.sx = e.screenX; drag.sy = e.screenY;
-      wnd('move', dx, dy);
+      if (!rafOn) {
+        rafOn = true;
+        var raf = window.requestAnimationFrame || function (f) { setTimeout(f, 16); };
+        raf(flushDrag);
+      }
     });
-    function endDrag() { drag = null; }
+    function endDrag() { drag = null; flushDrag(); }
     topbar.addEventListener('pointerup', endDrag);
     topbar.addEventListener('pointercancel', endDrag);
     topbar.addEventListener('dblclick', function (e) {

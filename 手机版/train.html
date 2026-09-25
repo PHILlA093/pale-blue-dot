@@ -199,7 +199,9 @@
   .winctrl button:active { transform: scale(.94); }
 
   /* 「← 返回知识云」:手机浏览器 / APK 里没有宿主窗口可关,这是最直接的出路。
-     做成真 <a href="index.html">,即使脚本异常也仍然可点、可跳。 */
+     做成真 <a>,即使脚本异常也仍然可点、可跳。
+     href 带 ?skip=1:跳过开场动画,落地即知识云主界面(与顶栏「⟳」重载同一约定),
+     避免"退出破卷 → 又看一遍开场黑屏"被当成黑屏故障。 */
   #qgBack {
     flex: none; display: none;
     align-items: center; justify-content: center; gap: 4px;
@@ -210,32 +212,10 @@
   }
   #qgBack:hover { background: rgba(79,195,247,.22); color: #fff; }
 
-  /* 「破卷已结束」结束面板:普通浏览器里点 ✕ 关不掉标签页(浏览器只允许脚本关闭
-     自己 window.open 打开的窗口),此时必须给用户一条明确出路,不能"点了毫无反应" */
-  #qgClosed {
-    position: fixed; inset: 0; z-index: 9800;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    background: rgba(5,8,15,.96);
-  }
-  #qgClosed[hidden] { display: none; }
-  .qg-closed-box {
-    display: flex; flex-direction: column; align-items: center; gap: 14px;
-    padding: 26px 32px; border-radius: 14px;
-    border: 1px solid var(--border); background: var(--panel-solid);
-    box-shadow: 0 12px 34px rgba(0,0,0,.5); text-align: center; max-width: 92vw;
-  }
-  .qg-closed-title { font-size: 16px; color: #fff; font-weight: 600; }
-  .qg-closed-sub { font-size: 12.5px; color: var(--dim); line-height: 1.8; }
-  /* 触控热区 ≥44px */
-  #qgBackHome {
-    display: inline-flex; align-items: center; justify-content: center;
-    min-height: 44px; min-width: 44px; padding: 0 20px;
-    border-radius: 8px; border: 1px solid rgba(79,195,247,.5);
-    background: linear-gradient(135deg, #2f80ed, #1e5bb8); color: #fff;
-    font-size: 14px; font-weight: 600; text-decoration: none; cursor: pointer;
-  }
-  #qgBackHome:hover { filter: brightness(1.15); }
+  /* 「破卷已结束」全屏遮罩(#qgClosed / .qg-closed-box / #qgBackHome)已整体删除:
+     它正是"从破卷退出黑屏"的来源(整屏 rgba(5,8,15,.96) 近乎纯黑,
+     唯一出路 history.back() 在 WebView 历史为空时退不回去)。
+     手机端 ✕ / Esc 现在直接回知识云,不再需要、也不再存在这个遮罩。 */
 
   /* 无边框窗口:顶层灰色描边(覆盖层;最大化时直角) */
   .winedge {
@@ -291,12 +271,8 @@
        (原实现把整个 .winctrl 隐藏,等于手机上根本没有关闭/退出入口。) */
     #winMin, #winMax { display: none; }
     .winctrl button { width: 44px; height: 44px; font-size: 16px; border-radius: 10px; }
-    /* 常驻「← 返回知识云」:APK / 浏览器里的主要退出路径 */
+    /* 常驻「← 返回知识云」:APK / 浏览器里的主要退出路径(带 ?skip=1,落地即主界面) */
     #qgBack { display: inline-flex; }
-    /* 结束面板在窄屏下的内边距与热区 */
-    .qg-closed-box { padding: 22px 18px; gap: 12px; max-width: 94vw; }
-    .qg-closed-title { font-size: 15px; }
-    #qgBackHome { min-height: 48px; padding: 0 22px; font-size: 15px; }
 
     .pills { gap: 5px; }
     .pill { font-size: 11.5px; padding: 5px 10px; max-width: 100%; }
@@ -353,8 +329,8 @@
 <header id="top">
   <div class="pills">
     <!-- 手机浏览器 / Capacitor APK 里没有"第二个窗口"可关,这是最直接的退出入口。
-         宽屏(桌面破卷窗)由 CSS 隐藏,不影响桌面观感。 -->
-    <a id="qgBack" href="index.html" title="返回知识云" aria-label="返回知识云">← 返回知识云</a>
+         ?skip=1:落地直接进知识云主界面,不重播开场动画。宽屏(桌面破卷窗)由 CSS 隐藏。 -->
+    <a id="qgBack" href="index.html?skip=1" title="返回知识云" aria-label="返回知识云">← 返回知识云</a>
     <span class="pill" id="pSubject">科目:—</span>
     <span class="pill sel" id="pPoint">主系统当前:—</span>
     <span class="pill" id="pKw">搜索词:—</span>
@@ -405,7 +381,7 @@
 
   <div id="qaArea"></div>
 
-  <p class="footnote">破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。系统先查本地高考真题档案(2008-2026,仅数学);不足或化学/物理/英语等科目会自动用必应<b>联网检索</b>,并强制题目组含足量真实真题。来源标记:<b style="color:#ffd54f">真题</b>=本地档案原样采用;<b style="color:#67e8f9">🌐 联网</b>=必应网页采用;<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);其余为 AI 原创。答案与解析仅供参考。</p>
+  <p class="footnote">破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。系统先查本地高考真题档案(2008-2026,仅数学);不足或化学/物理/英语等科目会自动用必应<b>联网检索</b>,并尽量让题目组含足量真题素材(其中来自网页的部分未经原文比对)。来源标记:<b style="color:#ffd54f">真题</b>=本地档案原样采用;<b style="color:#67e8f9">🌐 联网</b>=必应网页采用(未与原文比对);<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);其余为 AI 原创。答案与解析仅供参考。</p>
 </main>
 
 <script>

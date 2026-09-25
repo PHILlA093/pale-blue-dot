@@ -5,6 +5,10 @@
  * 能力:
  *   A.「在主系统中定位」:写 localStorage('qg_live_cmd'),主窗桥接执行搜索点选;
  *   B. AI 出题:经宿主代理调 DeepSeek(网页版无宿主时尝试直连),窗口只呈现题目。
+ *   C. 本机资料库(真题素材 / 本机知识点档案):
+ *      有宿主(桌面版)→ kind:'mats' 交给宿主,读电脑上的 数据库\qg_corpus.txt;
+ *      无宿主(手机 APK / 手机浏览器)→ 读**打进包里的同一份语料**,
+ *        由 js/corpus.js 按宿主 Program.cs 的同一口径解析与检索(首次用到才加载)。
  * ============================================================ */
 (function () {
   'use strict';
@@ -66,8 +70,24 @@
   }
   var DBs = collectDBs();
 
-  var live = { subject: '', subjectName: '', selName: '', keyword: '', t: 0 };
-  var curDB = DBs.length ? DBs[0].db : null;   // 回退默认第一科
+  /* ---------- URL 参数:主界面把「当前知识点」带过来 ----------
+   * 主界面详情抽屉的「🎯 破卷」跳转时带 ?point=<知识点名>&subject=<科目码>
+   * (见 js/mainbridge.js 的 trainUrl)。好处:
+   *   · 不依赖主窗心跳(localStorage qg_live_state)是否已经写过 —— 冷启动直接进来也有目标;
+   *   · 页面顶栏与「目标:…」行立刻显示这次要出题的知识点,出题直接围着它走。
+   * 两者都没有时就保持原样(显示"未选中"),不影响任何既有能力。 */
+  var urlPoint = '', urlSubject = '';
+  (function readUrl() {
+    try {
+      var m = {};
+      location.search.replace(/[?&]([^=]+)=([^&]*)/g, function (_, k, v) { m[k] = decodeURIComponent(v); });
+      urlPoint = String(m.point || '').replace(/\s+/g, ' ').trim();
+      urlSubject = String(m.subject || '').trim();
+    } catch (e) { /* 忽略:退化成不带参数 */ }
+  })();
+
+  var live = { subject: urlSubject, subjectName: '', selName: '', keyword: '', t: 0 };
+  var curDB = pickDB();                        // 回退默认第一科(?subject= 优先)
 
   function dbMatches(d, name, subject) {
     var sn = d.subjectName || '';
@@ -148,23 +168,33 @@
   }
   function renderPills() {
     els.pSubject.innerHTML = '科目:<b>' + esc(live.subjectName || '—') + '</b>';
+    // 优先主系统心跳里的选中点;心跳还没写(或没选中)时用 URL 带来的本次目标兜底,
+    // 并把标签改成"破卷目标",不谎称是主系统当前选中。
     var sel = live.selName || '';
-    els.pPoint.textContent = '主系统当前:' + (sel || '未选中');
+    var fromUrl = false;
+    if (!sel && urlPoint) { sel = urlPoint; fromUrl = true; }
+    els.pPoint.textContent = (fromUrl ? '破卷目标:' : '主系统当前:') + (sel || '未选中');
     els.pPoint.title = sel;
     els.pKw.textContent = live.keyword ? '搜索词:' + live.keyword : '搜索词:—';
     els.pKw.title = live.keyword || '';
   }
 
   /* ---------- 板块定位 ---------- */
+  var LS_SEQ = 'qg_live_cmd_seq';   // 单调指令序号(单独存,主窗只读不删)
   var cmdSeq = 0;
   var pickedPoint = null;   // 板块结果中点选的知识点
   var lastLoc = null;       // {kw, b(板块), pts:[{p,cnt}]}
   function writeCmd(kw) {
+    // 序号必须单调,且不能随 LS_CMD 一起消失:主窗执行完指令就会删掉 LS_CMD,而主窗自己的
+    // doneSeq 是"主窗生命周期内累加"的。若这里从现存 LS_CMD 续号,重开破卷窗后第一条又是
+    // seq=1,主窗判定"陈旧指令"直接丢弃(而且不清 key)——界面显示「已选中」,主窗毫无反应,
+    // 且没有任何 ack 能暴露这个问题。所以计数器单独存一份,只增不删。
     try {
-      var old = localStorage.getItem(LS_CMD);
-      if (old) { var o = JSON.parse(old); if (o && o.seq) cmdSeq = Math.max(cmdSeq, o.seq); }
-    } catch (e) { }
+      var n = parseInt(localStorage.getItem(LS_SEQ) || '0', 10);
+      if (n > cmdSeq) { cmdSeq = n; }
+    } catch (e) { /* 取不到就以内存里的 cmdSeq 续号 */ }
     cmdSeq++;
+    store(LS_SEQ, String(cmdSeq));   // store() 自身吞掉异常(隐私模式 / 配额满)
     var c = { type: 'locate', kw: kw, seq: cmdSeq, t: Date.now() };
     store(LS_CMD, JSON.stringify(c));
   }
@@ -277,8 +307,8 @@
       var hits = rankPoints(curDB, tokenize(kw));
       if (hits.length) return { p: hits[0].p, via: 'ask', matched: hits.length, kw: kw };
     }
-    // 4) 主系统当前选中点
-    var sel = live.selName || '';
+    // 4) 主系统当前选中点(心跳);心跳为空时用主界面跳转带来的 ?point= 兜底
+    var sel = live.selName || urlPoint || '';
     var p = findPointByName(curDB, sel);
     if (p) return { p: p, via: 'sel' };
     return null;
@@ -360,68 +390,34 @@
     bind('winMax', 'max');
     // ✕ 不走 wnd('close') 裸发:没有宿主时 wnd() 会静默 return,点了等于没点
 
-    // 「← 返回知识云」按钮(常驻顶栏;手机浏览器 / APK 里没有宿主窗口可关,
-    // 这是最直接的出路)。同源跳回 index.html;能 history.back() 就优先退回去,
-    // 保留知识云的科目与视角状态。
-    var backBtn = document.getElementById('qgBack');
-    if (backBtn) backBtn.addEventListener('click', function (e) {
-      try {
-        if (window.history && window.history.length > 1) {
-          e.preventDefault();
-          window.history.back();
-          return;
-        }
-      } catch (err) { /* 退不回去就让 href="index.html" 兜底 */ }
-    });
-
-    /* ---------- 结束面板:无宿主(手机浏览器 / APK)时的唯一出路 ----------
-       浏览器的安全限制:window.close() 只对"脚本自己 window.open 打开的窗口"生效,
-       用户手输地址/点链接打开的标签页关不掉,且是静默忽略 —— 所以试完必须给替代出路。 */
-    var ended = false;
-    function showEnded() {
-      if (ended) return;
-      ended = true;
-      var ov = document.getElementById('qgClosed');
-      if (ov) { ov.hidden = false; return; }
-      ov = document.createElement('div');
-      ov.id = 'qgClosed';
-      var box = document.createElement('div');
-      box.className = 'qg-closed-box';
-      var h = document.createElement('div');
-      h.className = 'qg-closed-title';
-      h.textContent = '破卷已结束,可以关闭此标签页了';
-      var sub = document.createElement('div');
-      sub.className = 'qg-closed-sub';
-      sub.textContent = '本页是浏览器打开的标签页,网页脚本无权把它关掉(浏览器安全限制)。';
-      var a = document.createElement('a');
-      a.id = 'qgBackHome';
-      a.textContent = '返回知识云';
-      a.setAttribute('href', 'index.html');
-      a.addEventListener('click', function (e) {
-        try {
-          if (window.history && window.history.length > 1) {
-            e.preventDefault();
-            window.history.back();
-          }
-        } catch (err) { /* 退不回去就让默认的 index.html 兜底 */ }
-      });
-      box.appendChild(h);
-      box.appendChild(sub);
-      box.appendChild(a);
-      ov.appendChild(box);
-      (document.body || document.documentElement).appendChild(ov);
-      try { a.focus(); } catch (e) { /* 忽略 */ }
+    /* ---------- 退出破卷:手机端必须"一步回到知识云" ----------
+     * 曾经的实现(已删除,正是"从破卷退出黑屏"的根因):
+     *   无宿主 → window.close()(浏览器/WebView 静默忽略)→ setTimeout(showEnded)
+     *   → 弹出 #qgClosed 全屏遮罩(background rgba(5,8,15,.96),整屏近乎纯黑),
+     *     面板上唯一的出路是 history.back();WebView 历史为空 / 竞态时退不回去,
+     *     用户就卡在这一整屏黑色上,只能重开应用 —— 用户反馈"很大概率弹出一个
+     *     东西,直接黑屏,要重新进入"。
+     * 现在:无宿主(手机浏览器 / Capacitor APK)一律直接跳回知识云主界面,
+     *      不调 window.close()、不弹任何遮罩,因此不存在黑屏的中间态。
+     *      ?skip=1:跳过开场动画,落地即主界面(与顶栏「⟳」重载按钮同一约定),
+     *      否则每次退出破卷都要再看一遍开场黑屏。科目由 localStorage(qg_subject)
+     *      保留,与 ?skip=1 组合不会串科。
+     * 桌面宿主分支(wndHost)保持原样:交给宿主关窗。 */
+    var HOME = 'index.html?skip=1';
+    function goHome() {
+      try { location.href = HOME; }
+      catch (e) { /* 极少数情况下连赋值都抛:再退一步用 replace,避免留下历史残影 */ }
     }
 
     function closeTrain() {
       if (wndHost) { wnd('close'); return; }   // 桌面宿主:交给宿主关窗(与观澜一致)
-      try { if (window.close) window.close(); } catch (e) { /* 忽略 */ }
-      setTimeout(showEnded, 0);                // 关不掉 → 明说结局并给返回入口
+      goHome();                               // 手机 / 无宿主:直接回知识云,无遮罩、无二次确认
     }
     var wc = document.getElementById('winClose');
     if (wc) wc.addEventListener('click', closeTrain);
 
-    // Esc 关闭(外接键盘 / 桌面浏览器):输入框聚焦时不抢键
+    // Esc 关闭(外接键盘 / 桌面浏览器):输入框聚焦时不抢键。
+    // 与 ✕ 走同一条路径:宿主交给宿主,手机端回知识云。
     document.addEventListener('keydown', function (e) {
       if (!e || e.key !== 'Escape' && e.keyCode !== 27) return;
       var t = e.target;
@@ -506,16 +502,58 @@
     return k;
   }
 
-  /* ---------- 真实高考真题素材(本地 zt 源 + 必应联网) ---------- */
-  function gkMats(query) {
-    if (!hasHost) return Promise.resolve([]);
-    return hostReq({ kind: 'mats', src: 'zt', loose: true, query: query }).then(function (r) {
-      if (r && r._timeout) return [];
-      if (!r || !r.ok || !r.hits) return [];
-      return r.hits;
+  /* ---------- 本机资料库通道:桌面宿主 or 手机版内置语料 ----------
+   * 桌面版:kind:'mats' 交给 WinForms 宿主(读电脑上的 数据库\qg_corpus.txt)。
+   * 手机版:没有宿主,改读**同一个文件**(已随 www 打进包里的 数据库\qg_corpus.txt),
+   *   由 js/corpus.js 按宿主 Program.cs 的同一口径解析 —— 两条路的
+   *   返回形状完全一致({kind:'matsResp', ok, hits:[{src,text,year}], total}),
+   *   所以下面的消费代码不需要分环境。
+   * corpus.js 体积很小(约 10KB)且**首次真正用到才注入**,冷启动/首屏不承担它的开销。 */
+  var corpusLib = null, corpusLibLoading = null;
+  function loadCorpusLib() {
+    if (corpusLib) return Promise.resolve(corpusLib);
+    if (window.QGCorpus) { corpusLib = window.QGCorpus; return Promise.resolve(corpusLib); }
+    if (corpusLibLoading) return corpusLibLoading;
+    corpusLibLoading = new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'js/corpus.js';
+      s.async = true;
+      s.onload = function () {
+        if (window.QGCorpus) { corpusLib = window.QGCorpus; resolve(corpusLib); }
+        else { corpusLibLoading = null; reject(new Error('js/corpus.js 载入后没有注册 window.QGCorpus')); }
+      };
+      s.onerror = function () {
+        corpusLibLoading = null;
+        reject(new Error('js/corpus.js 载入失败(文件缺失或被 CSP 拦下)'));
+      };
+      (document.head || document.documentElement).appendChild(s);
+    });
+    return corpusLibLoading;
+  }
+
+  // 上一次素材检索的失败原因(可读中文)。有值时界面必须显示出来,绝不静默吞掉。
+  var matsErr = '';
+  function matsReq(payload) {
+    if (hasHost) return hostReq(payload);
+    return loadCorpusLib().then(function (C) {
+      return C.mats(payload);
+    }).catch(function (e) {
+      return { kind: 'matsResp', ok: false, err: (e && e.message) || '内置语料模块不可用' };
     });
   }
+  function takeHits(r) {
+    if (r && r._timeout) { matsErr = '宿主检索超时(桌面版)'; return []; }
+    if (!r || !r.ok) { matsErr = (r && r.err) || '本机资料库检索失败'; return []; }
+    if (r.warn) matsErr = '';                 // warn 不是错误
+    return r.hits || [];
+  }
+
+  /* ---------- 真实高考真题素材(本地 zt 源 + 必应联网) ---------- */
+  function gkMats(query) {
+    return matsReq({ kind: 'mats', src: 'zt', loose: true, query: query }).then(takeHits);
+  }
   function webMats(query, terms) {
+    // 必应联网检索由桌面宿主发起;手机版(无宿主)没有这条路。
     if (!hasHost) return Promise.resolve([]);
     return hostReq({ kind: 'webq', query: query, terms: terms }).then(function (r) {
       if (r && r._timeout) return [];
@@ -523,17 +561,12 @@
       return r.hits;
     });
   }
-  // 【本机知识点档案】= 主窗「自动上传」进来的当前科目知识云。
+  // 【本机知识点档案】= 主窗「自动上传」进来的当前科目知识云(###SUBJ: 区段)。
   // 注意它**不是真题**,只能当命题角度/概念表述/易错点的参考。
   // 以前从不检索这一路(src 过滤只查 zt),所以界面承诺的
   // "破卷出题时一并检索"实际上是个死功能 —— 上传了也永远用不上。
   function subjMats(query) {
-    if (!hasHost) return Promise.resolve([]);
-    return hostReq({ kind: 'mats', src: 'subj', loose: true, query: query }).then(function (r) {
-      if (r && r._timeout) return [];
-      if (!r || !r.ok || !r.hits) return [];
-      return r.hits;
-    });
+    return matsReq({ kind: 'mats', src: 'subj', loose: true, query: query }).then(takeHits);
   }
 
   /* ---------- AI Prompt 组装 ----------
@@ -546,7 +579,8 @@
     var kwLine = ((p.keywords || []).length ? '关键词:' + p.keywords.join('、') + '。' : '');
     var hasGk = !!(gkHits && gkHits.length);
     var hasWeb = !!(webHits && webHits.length);
-    var noLocal = !((curDB && curDB.subject) === 'math');   // 本地档案现仅数学
+    // 本地档案已覆盖六科(数学 + 语文/英语/物理/化学/生物五科真题),不再对模型说"本科目没有本地档案"
+    var noLocal = false;
     var typeRule = '';
     if (typeCfg.jsonType === '单选') typeRule = '单选题:恰好 4 个选项,且恰有一个正确;';
     else if (typeCfg.jsonType === '多选') typeRule = '多选题:4~5 个选项,至少两个正确(选项文字前勿标注“正确”);';
@@ -697,8 +731,8 @@
       }
       var src = q.source || '';
       var isWeb = /(https?:\/\/|www\.|\.(?:com|cn|net|org|edu|gov))/.test(src) || /^联网·/.test(src);
-      var isLocal = /^真题·/.test(src) && !noLocal;   // 金色「真题」仅限本地档案(目前只有数学)
-      if (!isLocal && /^真题·/.test(src)) {           // 非数学科目误标"真题·" → 降级为回忆
+      var isLocal = /^真题·/.test(src) && !noLocal;   // 金色「真题」= 本地档案原样采用(六科语料都已内置)
+      if (!isLocal && /^真题·/.test(src)) {           // 本地库确实没有该科目素材时,误标"真题·" → 降级为回忆
         src = '回忆·' + src.replace(/^真题·/, '');
       }
       var isMem = /^回忆/.test(src) || (!isWeb && !isLocal && /(20\d\d|真题|高考|卷)/.test(src));
@@ -766,15 +800,18 @@
     var realN = ratio <= 0 ? 0 : Math.max(1, Math.min(totalN, Math.round(totalN * ratio)));
     var t0 = Date.now();
 
-    // 本地真题库仅含数学;任何科目都可用必应"联网"补真题素材
+    // 本地真题库(桌面版宿主读电脑上的 数据库\qg_corpus.txt;手机版读包内同一份语料)
+    // 现在**六科都有**:数学(2008-2026 全卷/讲义/举一反三)+ 语文·英语·物理·化学·生物
+    // (2010-2024 真题,###SRC:zt/五科真题/…),所以所有科目都先查本地库。
+    // 手机版没有必应联网那条路(它由桌面宿主发起),本地查不到时只能靠模型回忆/原创。
     var subjKey = (curDB && curDB.subject) ? curDB.subject : (live.subject || '');
-    var gkLib = subjKey === 'math';
-    var effReal = realN;                       // 联网可补 → 各科目都按档位要真题
+    var gkLib = true;                          // 六科语料都在本机库里,一律先查本地
+    var effReal = realN;                       // 桌面版:联网可补 → 各科目都按档位要真题
 
     var labelDiff = '难度' + ['一', '二', '三', '四', '五'][diff - 1] + '·真题 ' + Math.round(ratio * 100) + '%';
-    var libWarn = (!gkLib && realN > 0)
-      ? '  ⚠ 本地真题库仅含数学,将通过必应联网检索' + (curDB ? curDB.subjectName : '') + '真题'
-      : '';
+    // 只有"本地库确实没有本科目素材"时才提示(语文没有对应科目页,不在破卷的科目里)
+    var libWarn = '';
+
     setStatus('开始:' + typeCfg.label + ' ' + totalN + ' 道 · ' + labelDiff + (libWarn || '') + '…', libWarn ? 'warn' : '');
 
     // 来源判定必须"锚定开头",不能包含匹配 —— 原先用的
@@ -802,7 +839,7 @@
       return false;
     }
 
-    // ① 素材检索:本地(仅数学)→ 不足或非数学时必应联网补
+    // ① 素材检索:本地真题库(六科都有)→ 不足时桌面版再用必应联网补
     var needGk = effReal > 0;
     var query = t.p.name + ' ' + ((t.p.keywords || []).join(' ')) + ' ' + t.p.board;
     var webQuery = (curDB ? curDB.subjectName : live.subjectName || '') + ' 高考真题 ' + t.p.name
@@ -817,6 +854,7 @@
     var bestSubj = [];
     // 先取【本机知识点档案】(任何科目都可能上传过),再取【本地真题】(目前只有数学)
     var localStep = Promise.resolve().then(function () {
+      setSteps('<span class="spinner"></span>① 本机资料库检索中…');
       return subjMats(t.p.name);
     }).then(function (sj) {
       bestSubj = sj || [];
@@ -885,33 +923,50 @@
     localStep.then(function (gk) {
       bestGk = gk || [];
       var has = bestGk.length;
+      var libName = hasHost ? '本地真题库' : '内置语料';
+      // 素材检索失败(语料读不到 / 格式不符 / 宿主超时)必须让用户看见:
+      // 以前这里静默返回 [],界面只会说"无命中",用户根本不知道是文件出了问题。
+      if (matsErr) {
+        setStatus('⚠ ' + matsErr, 'warn');
+        setSteps('⚠ 本机资料库不可用:' + esc(matsErr) + ' —— 本组将不含本地真题片段');
+      }
       var needWeb = needGk && (!gkLib || has < effReal);
+      // 手机版没有必应联网(它由桌面宿主发起),不能再假装"② 联网检索中"
+      var webStep = hasHost ? '② 必应联网检索中…' : '② 手机版无联网检索,AI 直接出题…';
       if (!needWeb) {
         setSteps(needGk
-          ? (has ? '① 本地真题库命中 ' + has + ' 段 ✓ | AI 出题中…' : '① 本地真题库无命中,AI 出题中…')
+          ? (has ? '① ' + libName + '命中 ' + has + ' 段 ✓ | AI 出题中…'
+                 : '① ' + libName + '无命中,AI 出题中…')
           : '本档不含真题(纯原创),AI 出题中…');
         tag(needGk ? 'gk' : 'ds');
         return runBatch();
       }
       setSteps(has
-        ? '① 本地命中 ' + has + ' 段(不足 ' + effReal + ') → ② 必应联网检索中…'
-        : '① 本地库无命中 → ② 必应联网检索中…');
+        ? '① 本地命中 ' + has + ' 段(不足 ' + effReal + ') → ' + webStep
+        : '① ' + libName + '无命中 → ' + webStep);
       return webMats(webQuery, terms).then(function (web) {
         bestWeb = web || [];
-        setSteps('① 本地 ' + has + ' 段 | 🌐 联网命中 ' + bestWeb.length + ' 条 | AI 出题中…');
+        setSteps('① 本地 ' + has + ' 段 | ' + (hasHost ? '🌐 联网命中 ' + bestWeb.length + ' 条' : '🌐 联网不可用')
+          + ' | AI 出题中…');
         tag('gk');
         return runBatch();
       });
     }).then(function (qs) {
-      var realC = qs.filter(isRealGk).length;
+      var realC = qs.filter(isRealGk).length;   // 契约统计:真题· 与 联网· 都算"真题素材"
       var webC = qs.filter(isWebSrc).length;
+      var gkC = qs.filter(function (q) { return /^真题·/.test(String(q.source || '')); }).length;
       var memC = qs.filter(isRecallSrc).length;
       var warn = '';
       if (qs.length < totalN) warn = ' — AI 仅返回 ' + qs.length + ' 道';
       else if (needGk && realC < effReal) warn = ' — 真题不足:实得 ' + realC + '/' + effReal + ' 道(素材有限或 AI 未原样采用)';
       else if (needGk && memC > 0) warn = ' — 含 ' + memC + ' 道回忆题(素材不足时兜底,建议对照教材核对)';
+      if (matsErr) warn += ' — ⚠ ' + matsErr;
+      // 文案必须如实区分来源:原先把"联网抓来的题"也写成"真实真题",同一道题于是同时出现在
+      // "真实真题"与"联网"两个计数里 —— 难度 5 的"100% 真题"可能全部由未经原文比对的网页内容满足。
+      // 这里只拆文案与计数口径:出题契约一个字不动(isRealGk 仍把"联网·"计入真题额,
+      // 否则会改变非数学科目的行为);契约统计仍用 realC,展示改用 gkC/webC。
       setStatus('完成 — 用时 ' + Math.round((Date.now() - t0) / 1000) + ' 秒,共 ' + qs.length +
-        ' 道 · 真实真题 ' + realC + ' 道 · 🌐 联网 ' + webC + ' 道' +
+        ' 道 · 📚 本地真题 ' + gkC + ' 道 · 🌐 联网素材 ' + webC + ' 道(未经原文比对)' +
         (memC ? ' · 💭 回忆 ' + memC + ' 道' : '') + warn,
         warn ? 'warn' : '');
       setSteps('AI 出题完成 ✓');
@@ -970,6 +1025,26 @@
     window.__apiClear();
   });
 
+  // 【手机版】页脚说明纠偏:train.html 里的说明是按桌面版写的("不足或化学/物理/英语等
+  // 科目会自动用必应联网检索")。没有宿主时那条路并不存在,照原样显示等于骗用户。
+  // 只在 !hasHost 时改写;桌面宿主下原文一字不动。
+  (function fixFootnote() {
+    if (hasHost) return;
+    try {
+      var f = document.querySelector('.footnote');
+      if (!f) return;
+      f.innerHTML = '破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。'
+        + '系统先查内置高考真题档案(数学 2008-2026 + 语文/英语/物理/化学/生物 五科 2010-2024;'
+        + '这份语料已打进安装包,手机离线可用);'
+        + '本地素材不足时,桌面版会自动用必应<b>联网检索</b>,手机版没有联网检索,'
+        + '由模型凭知识回忆/原创兜底。来源标记:'
+        + '<b style="color:#ffd54f">真题</b>=本地档案原样采用;'
+        + '<b style="color:#67e8f9">🌐 联网</b>=必应网页采用;'
+        + '<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);'
+        + '其余为 AI 原创。答案与解析仅供参考。';
+    } catch (e) { /* 忽略 */ }
+  })();
+
   /* ---------- 定时与初始化 (build QG-20260920-5e5d5a-B) ---------- */
   keyState();
   els.keyInput.placeholder = load(LS_KEY) ? '(已保存,输入新值可替换)' : 'sk-…(保存在本机,用于 AI 联网出题)';
@@ -989,7 +1064,15 @@
     hasHost: hasHost,
     keySet: function () { return !!load(LS_KEY); },
     renderQuestions: renderQuestions,
-    setLive: function (s) { live = s || live; curDB = pickDB(); renderPills(); }
+    setLive: function (s) { live = s || live; curDB = pickDB(); renderPills(); },
+    // 本机资料库(内置语料)直通钩子:自动化验收用,业务代码不走这里
+    corpus: function (payload) { return matsReq(payload || {}); },
+    corpusStat: function () {
+      return loadCorpusLib().then(function (C) { return C.stat(); },
+        function (e) { return { ok: false, err: (e && e.message) || '语料模块不可用' }; });
+    },
+    corpusErr: function () { return matsErr; },
+    corpusState: function () { return window.QGCorpus ? window.QGCorpus.state() : null; }
   };
 
   // 自动化测试通道(?auto=1&ask=… / wipe=1,由桌面版 --qa= 或训练按钮带参打开时使用;

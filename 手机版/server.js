@@ -13,12 +13,15 @@
  *   · API Key 只存在于前端 localStorage,随请求头 Authorization 透传;
  *     本进程**不读取、不解析、不落盘、不打印**任何 Key 或请求体;
  *   · 逐请求不写访问日志(只保留启动横幅与不含敏感信息的错误提示);
- *   · 只监听本机所有网卡(0.0.0.0),方便手机连入;请仅在可信局域网内使用。
+ *   · 默认只监听回环(127.0.0.1):静态站点会把整个目录(含 47 MB 真题语料与安装包)端出去,
+ *     所以"能被同网段访问"必须是显式选择,不能是默认行为。
  *
  * 用法:
- *   node server.js            # 默认 8080 端口
- *   node server.js 8080       # 指定端口
- *   node server.js 8080 127.0.0.1   # 指定端口 + 只监听回环(仅本机自测)
+ *   node server.js                   # 默认 8080 端口,只监听 127.0.0.1(仅本机自测)
+ *   node server.js 8080              # 指定端口,同样只监听回环
+ *   node server.js 8080 lan          # 开放给同网段的手机(等价 --lan / 0.0.0.0)
+ *   node server.js 8080 192.168.1.5  # 或显式指定一个网卡地址
+ *   「启动手机版.bat」会自动带上 lan,双击即用。
  * ============================================================ */
 'use strict';
 
@@ -31,7 +34,17 @@ var os = require('os');
 var ROOT = __dirname;
 var PORT = parseInt(process.argv[2], 10);
 if (!PORT || PORT < 1 || PORT > 65535) PORT = 8080;
-var HOST = process.argv[3] || '0.0.0.0';
+// 默认只监听回环:0.0.0.0 会把整个目录(47 MB 真题语料、安装包、指纹文件)端给同网段的任何人。
+// 要让手机连进来必须显式声明:第三个参数给 lan / --lan / 0.0.0.0,或直接给本机某个网卡地址。
+// 「启动手机版.bat」已经代劳(它会传 lan),所以正常用法不受影响。
+var HOST = '127.0.0.1';
+var LAN = false;
+var hostArg = process.argv[3] || '';
+if (hostArg === 'lan' || hostArg === '--lan' || hostArg === '0.0.0.0' || hostArg === '*') {
+  HOST = '0.0.0.0'; LAN = true;
+} else if (hostArg && hostArg !== '127.0.0.1' && hostArg !== 'localhost') {
+  HOST = hostArg; LAN = true;      // 也允许显式指定一个网卡地址
+}
 
 var DS_HOST = 'api.deepseek.com';
 var DS_PATH = '/chat/completions';
@@ -80,7 +93,11 @@ function sendJson(res, code, obj) {
 
 /* ---------- 静态文件伺服 ---------- */
 function serveStatic(req, res, pathname) {
-  var rel = decodeURIComponent(pathname);
+  // 畸形百分号编码(例如 /%E4%ZZ)会让 decodeURIComponent 抛异常,而这段在请求回调的同步路径上
+  // —— 未捕获就是一次进程级崩溃,同网段任何人都能触发。解码失败按 400 处理。
+  var rel;
+  try { rel = decodeURIComponent(pathname); }
+  catch (e) { sendJson(res, 400, { error: { message: '请求路径编码非法', type: 'bad_path' } }); return; }
   if (rel === '/' || rel === '') rel = '/index.html';
   // 归一化后必须仍在站点根目录内(防 ../ 目录穿越)
   var target = path.normalize(path.join(ROOT, rel));
@@ -249,7 +266,12 @@ server.listen(PORT, HOST, function () {
   console.log('   穷观手机版 · 本地服务器已启动');
   console.log('  ============================================================');
   console.log('   本机自测:      http://127.0.0.1:' + PORT + '/');
-  if (ips.length) {
+  if (!LAN) {
+    // 默认只听回环:不打印局域网地址,并明确告诉用户怎么开放(否则会误以为"手机连不上"是坏了)
+    console.log('   手机访问:      未开放(当前只监听 127.0.0.1,同网段访问不到)');
+    console.log('                  要开放请改用:  node server.js ' + PORT + ' lan');
+    console.log('                  或直接双击「启动手机版.bat」(它会自动带上 lan)');
+  } else if (ips.length) {
     ips.forEach(function (ip) {
       console.log('   手机访问(同一 Wi-Fi): http://' + ip + ':' + PORT + '/');
     });

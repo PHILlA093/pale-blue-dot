@@ -77,7 +77,9 @@ echo.
 
 start "" http://127.0.0.1:%PORT%/
 
-node server.js %PORT%
+rem The third argument "lan" tells server.js to listen on all adapters, which is what
+rem a phone on the same Wi-Fi needs. Without it the server only listens on 127.0.0.1.
+node server.js %PORT% lan
 
 echo.
 echo  Server stopped.
