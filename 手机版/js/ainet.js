@@ -100,6 +100,19 @@
     return '';
   }
 
+  /* 输出被截断时 DeepSeek 把 finish_reason 置为 'length'。桌面宿主(Program.cs)已经把它
+     回传给页面;手机版这三条通道此前只回 content —— 于是 train.js 里"截断不重复付费请求"
+     的分支永远不触发,截断会落进"格式无效"最多重试 3 次(有上限,但与桌面口径不一致)。
+     这里统一透出,让两端行为对齐。 */
+  function finishOf(j) {
+    if (!j) return '';
+    if (j.choices && j.choices[0] && j.choices[0].finish_reason) return String(j.choices[0].finish_reason);
+    if (j.data && j.data.choices && j.data.choices[0] && j.data.choices[0].finish_reason) {
+      return String(j.data.choices[0].finish_reason);
+    }
+    return '';
+  }
+
   /* ---------- 组装发往 DeepSeek 的请求体 ---------- */
   function buildBody(o) {
     var body = {
@@ -111,6 +124,9 @@
     // 提示词里含 JSON 字样时才开 json_object(与桌面宿主行为一致)
     if (o.json) body.response_format = { type: 'json_object' };
     if (o.stream) body.stream = true;
+    // 思考模式必须显式透传:页面按桌面口径只在 deepseek-reasoner 时请求 thinking,
+    // 白名单式组装会把没列出的字段静默丢掉,导致"请求了思考模式但其实没生效"。
+    if (o.thinking) body.thinking = o.thinking;
     return body;
   }
 
@@ -148,7 +164,7 @@
       var st = pickStatus(res);
       var isOk = (typeof res.ok === 'boolean') ? res.ok : (st >= 200 && st < 300);
       return pickJson(res).then(function (j) {
-        if (isOk && contentOf(j)) return { ok: true, content: contentOf(j) };
+        if (isOk && contentOf(j)) return { ok: true, content: contentOf(j), finish_reason: finishOf(j) };
         var msg = errTextOf(j);
         if (st === 401) return { ok: false, err: 'API Key 无效或已过期(401)' + (msg ? ':' + msg : '') };
         if (st === 402) return { ok: false, err: 'DeepSeek 账户余额不足(402)' + (msg ? ':' + msg : '') };
@@ -178,7 +194,7 @@
       var st = pickStatus(res);
       var isOk = (typeof res.ok === 'boolean') ? res.ok : (st >= 200 && st < 300);
       return pickJson(res).then(function (j) {
-        if (isOk && contentOf(j)) return { ok: true, content: contentOf(j) };
+        if (isOk && contentOf(j)) return { ok: true, content: contentOf(j), finish_reason: finishOf(j) };
         var msg = errTextOf(j);
         if (st === 401) return { ok: false, err: msg || 'API Key 无效或已过期(401)' };
         if (st === 404) {
@@ -209,7 +225,9 @@
       model: o.model || 'deepseek-chat',
       messages: o.messages,
       max_tokens: o.max_tokens || 2400,
-      temperature: o.temperature != null ? o.temperature : 0.3
+      temperature: o.temperature != null ? o.temperature : 0.3,
+      // 宿主(桌面版 Program.cs)已经支持 thinking;不透传的话,思考模式在宿主通道下无效。
+      thinking: o.thinking || undefined
     };
     var p;
     try { p = hostSend(payload); } catch (e) {
@@ -218,7 +236,7 @@
     return Promise.resolve(p).then(function (r) {
       if (!r) return { ok: false, err: '宿主无响应' };
       if (r._timeout) return { ok: false, err: 'AI 请求超时(请稍后重试或检查网络)' };
-      if (r.ok && typeof r.content === 'string') return { ok: true, content: r.content };
+      if (r.ok && typeof r.content === 'string') return { ok: true, content: r.content, finish_reason: r.finish_reason || '' };
       if (r.ok) return { ok: false, err: '宿主返回内容为空' };
       return { ok: false, err: r.err || 'AI 请求失败' };
     }, function (e) {

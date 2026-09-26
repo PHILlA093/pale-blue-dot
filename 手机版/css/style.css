@@ -547,7 +547,7 @@ body {
   backdrop-filter: blur(12px);
   box-shadow: -10px 0 34px rgba(0, 0, 0, 0.35);
   transform: translateX(103%);
-  /* 同 #leftPanel:关闭态整棵子树不可见 → 不可聚焦,避免 Tab 进入 #detailClose / #dFocus */
+  /* 同 #leftPanel:关闭态整棵子树不可见 → 不可聚焦,避免 Tab 进入 #detailClose / #dTrain */
   visibility: hidden;
   transition: transform .34s cubic-bezier(0.3, 0.7, 0.3, 1), visibility 0s linear .34s;
   overflow: hidden;
@@ -675,19 +675,28 @@ body {
 #dLinks li:hover { border-color: var(--accent); background: rgba(79, 195, 247, 0.12); }
 #dLinks .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
 
-#dFocus {
+/* 详情抽屉底部的「🎯 破卷」入口(原 #dFocus「在网中聚焦」的位置)
+   视觉沿用原按钮:整宽胶囊渐变蓝;热区底座 46px、窄屏 48px,均 ≥44px */
+#dTrain {
   width: 100%;
+  min-height: 46px;
   padding: 10px;
   border: none;
   border-radius: 10px;
   background: linear-gradient(135deg, #2f80ed, #1e5bb8);
   color: #fff;
   font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: .5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   transition: filter .2s, transform .12s;
 }
-#dFocus:hover { filter: brightness(1.15); }
-#dFocus:active { transform: scale(0.98); }
+#dTrain:hover { filter: brightness(1.15); }
+#dTrain:active { transform: scale(0.98); }
 
 /* ---------- 滚动条 ---------- */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -872,41 +881,9 @@ html.intro-live, html.intro-live body { background: #000; }
 /* 原 @media (max-width: 860px) 已删除:主窗 MinimumSize 为 980×640、观澜独立窗为 900×620
    (桌面版/build/Program.cs:65、193),而 style.css 只被这两页引用,该断点永不命中,属死规则。 */
 
-/* ---------- 右下角「破卷」按钮(打开破卷新窗口) ---------- */
-#trainBtn {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 45;                 /* 高于详情面板(40):面板打开时也要能点,否则用户点了没反应 */
-  padding: 8px 16px;
-  border-radius: 12px;         /* 长方形圆角框(非胶囊) */
-  border: 1px solid rgba(120, 160, 220, 0.22);
-  background: rgba(8, 12, 24, 0.92);   /* 深色,与主界面背景一致 */
-  backdrop-filter: blur(8px);
-  color: #b9cbe4;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity .6s ease, transform .15s, color .2s, border-color .2s, background .2s, box-shadow .2s;
-  user-select: none;
-}
-#trainBtn.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-#trainBtn:hover {
-  color: #dff2ff;
-  border-color: rgba(79, 195, 247, 0.45);
-  background: rgba(14, 22, 40, 0.95);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-}
-#trainBtn:active { transform: scale(0.96); }
+/* ---------- 原右下角「破卷」浮动按钮(#trainBtn)已删除 ----------
+   破卷入口移入知识点详情抽屉的「🎯 破卷」(#dTrain),主界面右下角不再有浮层遮挡。
+   原先这里的 #trainBtn / #trainBtn.show / :hover / :active 与窄屏上移规则一并移除。 */
 
 /* ---------- 顶栏「重新加载」按钮(跳过开场,保留当前科目) ---------- */
 #reloadBtn {
@@ -1578,8 +1555,7 @@ body { -webkit-tap-highlight-color: transparent; }
     font-size: 13px;
     letter-spacing: .5px;
   }
-  /* 抽屉打开时隐藏「破卷」浮动按钮(全屏抽屉下它只会碍事) */
-  html.drawer-open #trainBtn { display: none; }
+  /* 原「抽屉打开时隐藏破卷浮动按钮」规则随 #trainBtn 一并删除 */
 
   /* ---------- 详情面板:底部抽屉(bottom sheet) ---------- */
   #detailPanel {
@@ -1633,24 +1609,9 @@ body { -webkit-tap-highlight-color: transparent; }
   #dKeywords .kw { font-size: 12.5px; padding: 6px 11px; }
   #detailPanel h3 { font-size: 14px; }
   #dLinks li { min-height: 46px; font-size: 14px; padding: 10px 12px; }
-  #dFocus { min-height: 48px; font-size: 15px; }
+  #dTrain { min-height: 48px; font-size: 15px; }
 
-  /* ---------- 右下角「破卷」:不能被底部抽屉压住 ---------- */
-  #trainBtn {
-    right: calc(14px + var(--safe-r));
-    bottom: calc(14px + var(--safe-b));
-    min-height: 46px;
-    padding: 0 18px;
-    font-size: 15px;
-    z-index: 45;
-    transition: bottom .3s cubic-bezier(0.3, 0.7, 0.3, 1),
-                opacity .6s ease, transform .15s,
-                color .2s, border-color .2s, background .2s, box-shadow .2s;
-  }
-  /* 底部抽屉打开时,按钮整体上移到抽屉上沿之上 */
-  html.sheet-open #trainBtn {
-    bottom: calc(var(--sheet-h, 62dvh) + 10px + var(--safe-b));
-  }
+  /* 原右下角「破卷」浮动按钮的窄屏定位与「抽屉打开时上移」规则已随 #trainBtn 删除 */
 
   /* ---------- 轻提示 ---------- */
   #toast {
@@ -1738,5 +1699,5 @@ body { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 380px) {
   #statBar { max-width: 66px; font-size: 10px; }
   #subjectBtn { padding: 0 9px; font-size: 13.5px; }
-  #trainBtn { padding: 0 14px; font-size: 14px; }
+  #dTrain { font-size: 14px; }
 }

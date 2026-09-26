@@ -19,7 +19,7 @@
 
   var $ = function (id) { return document.getElementById(id); };
   var els = {};
-  ['pSubject', 'pPoint', 'pKw', 'askInput', 'locateBtn', 'qType', 'qDiff', 'keyInput',
+  ['pSubject', 'pPoint', 'pKw', 'askInput', 'locateBtn', 'qType', 'qDiff', 'qSource', 'keyInput',
    'saveKey', 'keyState', 'genBtn', 'status', 'steps', 'targetInfo', 'boardRes', 'qaArea'].forEach(function (id) { els[id] = $(id); });
 
   function esc(s) {
@@ -361,7 +361,9 @@
       var d = ev.data;
       if (!d || !d._seq) return;
       var seq = d._seq;
-      delete d._seq;
+      // 不再 delete d._seq:同一窗口里可能同时挂着多套宿主通道(主窗还有 demo.js 的),
+      // 谁先跑谁把 _seq 删掉,后面的监听器就再也认不出这条回执,表现为"请求石沉大海"。
+      // 事件数据一律不改写,各方只读自己那张 pending 表。
       var cb = hostPending[seq];
       if (cb) { delete hostPending[seq]; cb(d); }
     });
@@ -479,16 +481,32 @@
   // 环境由 ainet.js 统一判定,这里不再自己拼 fetch:
   //   桌面宿主 → 宿主代发;Capacitor APK → 原生直连;手机浏览器 → /api/ds 本地代理。
   // 返回契约固定为 {ok:true,content} / {ok:false,err},调用方只判 r.ok。
-  function dsAsk(messages, key) {
+  // 旧模型名已退役:deepseek-chat / deepseek-reasoner / deepseek-v4-flash 与空值统一迁移到
+  // deepseek-flash,避免用户本机存着的老名字在服务端 400。reasoner 保留思考开关,
+  // 其余模型显式 disabled —— 与桌面版 modelConfig() 一字不差。
+  function modelConfig(value) {
+    var name = String(value || '').trim();
+    return {
+      model: !name || name === 'deepseek-chat' || name === 'deepseek-reasoner' || name === 'deepseek-v4-flash'
+        ? 'deepseek-flash' : name,
+      thinking: { type: name === 'deepseek-reasoner' ? 'enabled' : 'disabled' }
+    };
+  }
+
+  function dsAsk(messages, key, maxTokens) {
     if (!window.QGAi || !window.QGAi.request) {
       return Promise.resolve({ ok: false, err: 'AI 调用层未加载(js/ainet.js 缺失)' });
     }
+    var config = modelConfig(load(LS_MODEL));
+    // response_format 由 ainet.js 依据 json:true 统一附加(宿主/原生/代理三条路都带),
+    // 这里只需把 json 打开;thinking 一并透传,保持与桌面版 dsAsk 的请求体一致。
     return window.QGAi.request({
       key: key,
       json: true,
-      model: load(LS_MODEL) || 'deepseek-chat',
+      model: config.model,
+      thinking: config.thinking,
       messages: messages,
-      max_tokens: 3200,
+      max_tokens: maxTokens || 4000,
       temperature: 0.25
     });
   }
@@ -571,7 +589,7 @@
 
   /* ---------- AI Prompt 组装 ----------
    * diff: 难度档位 1~5(本组所有题难度一致);
-   * realN: 本组中须为真实高考真题的题数((diff-1)*25% × N 取整;diff=1 时 0 道);
+   * realN: 优先采用的素材题数,与难度独立;不足时如实标记。
    * gkHits: 本地真题片段;webHits: 必应联网检索片段。 */
   function buildPrompt(t, gkHits, webHits, subjHits, diff, realN, totalN, typeCfg) {
     var p = t.p;
@@ -579,12 +597,10 @@
     var kwLine = ((p.keywords || []).length ? '关键词:' + p.keywords.join('、') + '。' : '');
     var hasGk = !!(gkHits && gkHits.length);
     var hasWeb = !!(webHits && webHits.length);
-    // 本地档案已覆盖六科(数学 + 语文/英语/物理/化学/生物五科真题),不再对模型说"本科目没有本地档案"
-    var noLocal = false;
     var typeRule = '';
     if (typeCfg.jsonType === '单选') typeRule = '单选题:恰好 4 个选项,且恰有一个正确;';
     else if (typeCfg.jsonType === '多选') typeRule = '多选题:4~5 个选项,至少两个正确(选项文字前勿标注“正确”);';
-    else if (typeCfg.jsonType === '填空') typeRule = '填空题:题干留空(用下划线示意),直接给出答案;';
+    else if (typeCfg.jsonType === '填空') typeRule = '填空题:提供完整题干,待填写的位置用下划线示意,答案单独填写;';
     else typeRule = '解答大题:可含(1)(2)分问,需写清思路与关键步骤;';
     var sys = [
       '你是一位资深中国高考出题专家,同时深谙人教版等主流教材与历年真题(含新课标)。',
@@ -594,29 +610,27 @@
       '2) 题型一致:本组全部为【' + typeCfg.label + '】,不得混入其他题型。' + typeRule,
       '3) 难度一致性:本组所有题的 difficulty 必须完全等于 ' + diff + '(整数 1~5),'
         + '不得混入其他难度;难度 ' + diff + ' = ' + (diff === 1 ? '最基础送分题' : diff === 5 ? '压轴难度' : diff === 4 ? '偏难综合' : diff === 2 ? '基础巩固' : '中档题') + ' 风格。',
-      '4) 答案简洁准确,解析讲清思路与易错点,控制在 120 字内。',
-      '5) 真题占比:本组共 ' + totalN + ' 题,其中必须恰好有 ' + realN + ' 道为【真实高考真题】'
-        + (realN > 0
-          ? '(按来源优先级采用:**本地档案真题· > 必应联网· > 回忆真题·(仅最后兜底)**;'
-            + '来源前缀铁律:只有从【本地高考真题档案片段】原样采用才写"真题·年份卷"(如"真题·2016全国卷I");'
-            + (hasWeb ? '从必应网页采用写"联网·年份卷(网页名)";' : '')
-            + '只要本地/联网片段够数,严禁使用回忆题;若片段不足 ' + realN + ' 道,缺额才可用凭知识还原的真题,'
-            + 'source 写"回忆真题·年份卷或年份待核"(如"回忆真题·2016全国卷I"),'
-            + (noLocal ? '本科目没有本地档案,' : '')
-            + '严禁把网页或回忆来源写成"真题·",禁止编造来源。)其余 ' + (totalN - realN) + ' 道由你原创,同样难度 ' + diff + ',source 注明"AI 生成"。'
-          : '(本档不需要真题,全部由你原创,严禁引用片段),source 注明"AI 生成"。'),
+      '4) 答案准确,解析讲清思路与易错点。' + (typeCfg.jsonType === '解答' ? '解答题分步说明依据、条件和得分点;英语写作给出范文及点评。' : '简短题解析尽量精练,必要的推导步骤不得省略。'),
+      '4b) 长度预算(硬约束,务必遵守):整段 JSON 控制在约 5000 个汉字以内;每题 analysis 不超过 200 字;'
+        + '解答题把步骤压成 3~5 条要点(用①②③编号),不写过渡句、不复述题干、不重复选项原文。'
+        + '宁可每题更精炼,也不要把输出写长 —— 输出一旦超长会被平台截断,整批四题全部作废,'
+        + '用户什么也拿不到(实测:四道解答题写满分步解答正好撞上输出上限)。',
+      '5) 本组共 ' + totalN + ' 题,优先采用至多 ' + realN + ' 道提供素材中的完整题目。'
+        + '本地素材采用者填写 sourceId="local-序号",网页素材填写 sourceId="web-序号"。'
+        + '题干、数据、条件、选项和选项顺序必须与该片段原文一致,不能凭年份认证来源。'
+        + '素材不足或不符合题型/难度时用 AI 原创补齐,source="AI 生成",sourceId="";禁止凭记忆伪造真题。',
       '6) 只输出 JSON,不要任何解释或 markdown 代码块。',
       'JSON 格式:{"questions":[{"type":"' + typeCfg.jsonType + '","difficulty":' + diff + ',"stem":"题目…","options":'
         + ((typeCfg.jsonType === '解答' || typeCfg.jsonType === '填空') ? 'null' : '["A. …","B. …","C. …","D. …"]')
-        + ',"answer":"答案","analysis":"解析","source":"来源"}]}',
+        + ',"answer":"答案","analysis":"解析","source":"来源","sourceId":""}]}',
+      '选择题 answer 只能填写大写选项字母,单选例如 A,多选例如 AC;不得把答案写成一句话。',
       '其中 type 必须恒为"' + typeCfg.jsonType + '";' + (typeCfg.jsonType === '解答' || typeCfg.jsonType === '填空'
         ? 'options 一律为 null;'
         : 'options 为选项数组;') + '难度必须恒为 ' + diff + '。',
       '7) 反幻觉自查(最重要,输出前逐条执行):',
-      '   a. 严禁臆造年份、试卷编号、省份组合;回忆类真题只收录你确信见过且记得完整者,'
-        + '若年份/卷别不确定,source 必须写"回忆真题·年份待核",不许猜测一个具体年份;',
+      '   a. 严禁臆造年份、试卷编号、省份组合;只能用本次提供的素材标记来源,不使用回忆真题兜底;',
       '   b. 从片段/网页采用的原题:数字、单位、条件、选项顺序必须与原文逐项一致,'
-        + '誊写后再与片段比对一遍,发现任何出入立即改正或改用回忆/原创;',
+        + '誊写后再与片段比对一遍,发现任何出入立即改正或明确改为 AI 原创;',
       '   c. 原创题(含改编):答案必须自洽,计算类在 analysis 末尾加一句校验说明'
         + '(如"代入原方程成立/量纲为xx");严禁使用无法核实的虚构数据或"某地某年统计";',
       '   d. 若对某题的正确性没把握,宁可换成更简单确定的题,也不要输出可疑内容。',
@@ -639,7 +653,10 @@
       '重要度(1~5):' + p.importance,
       kwLine,
       '知识点要点(节选):',
-      String(p.content || '').replace(/\$\$/g, '$').slice(0, 1600)
+      // 「待人工校对」的正文不得作为命题依据:它本身就标明内容未核实,
+      // 拿它出题等于把不确定内容包装成"教材结论"。此时改为要求模型按知识点名称自核教材。
+      /待人工校对/.test(p.content || '') ? '本条正文待人工校对,不作为命题依据。请根据知识点名称核对标准教材后命题。'
+        : String(p.content || '').replace(/\$\$/g, '$').slice(0, 1600)
     ].join('\n');
 
     if (hasGk) {
@@ -647,7 +664,9 @@
         + '题目数据与条件必须原样;采用后 source 以"真题·"开头):\n';
       for (var i = 0; i < gkHits.length; i++) {
         var h = gkHits[i];
-        ctx += '— 真题档案片段' + (i + 1) + ' [' + (h.src || '') + '] —\n' + String(h.text || '').slice(0, 1000) + '\n';
+        // 片段必须带 sourceId 标记:模型据此回报"用了哪一段",verifySource 才能拿
+        // 同一段原文回头逐字核对题干与选项 —— 没有 sourceId 就无法验证,只能一律"待核实"。
+        ctx += '— sourceId=local-' + (i + 1) + ' [' + (h.src || '') + '] —\n' + String(h.text || '').slice(0, 1000) + '\n';
       }
     }
     // 本机知识点档案:只能用于把握命题角度与易错点,绝不能当真题用
@@ -667,7 +686,7 @@
         + '<<<UNTRUSTED_WEB_BEGIN>>>\n';
       for (var j = 0; j < webHits.length; j++) {
         var wh = webHits[j];
-        ctx += '— 联网片段' + (j + 1) + ' [来源:' + String(wh.url || '').slice(0, 200) + '] '
+        ctx += '— sourceId=web-' + (j + 1) + ' [来源:' + String(wh.url || '').slice(0, 200) + '] '
           + String(wh.title || '').slice(0, 120) + ' —\n'
           + String(wh.text || wh.snippet || '').slice(0, 1100) + '\n';
       }
@@ -678,27 +697,93 @@
   }
 
   /* ---------- AI 输出解析 ---------- */
+  // 只做"切出 JSON、取出题目数组";字段合法性一律交给 validateBatch ——
+  // 原先这里顺手做了截断/取整(把 difficulty 四舍五入到 1~5),等于替模型掩盖错误:
+  // 难度不符也会被"修好",用户看到的难度与实际要求静默不一致。
   function parseAI(content) {
     var s = String(content || '');
-    var a = s.indexOf('{');
-    var b = s.lastIndexOf('}');
+    var a = s.indexOf('{'), b = s.lastIndexOf('}');
     if (a < 0 || b <= a) throw new Error('AI 输出不是 JSON');
     var obj = JSON.parse(s.slice(a, b + 1));
-    var qs = obj && obj.questions;
-    // 必须判数组:questions 为字符串(如 "无")时原先会在下面 .slice().map() 处
-    // 抛英文 TypeError,用户看到的是 "qs.slice is not a function"。
-    if (!Array.isArray(qs) || !qs.length) throw new Error('AI 未返回题目数组');
-    return qs.slice(0, 8).map(function (q) {
-      return {
-        type: String(q.type || '解答').slice(0, 10),
-        difficulty: Math.max(1, Math.min(5, Math.round(Number(q.difficulty) || 3))),
-        stem: String(q.stem || '').slice(0, 2400),
-        options: Array.isArray(q.options) && q.options.length ? q.options.slice(0, 6).map(String) : null,
-        answer: String(q.answer || '').slice(0, 600),
-        analysis: String(q.analysis || '').slice(0, 1500),
-        source: String(q.source || '').slice(0, 120)
-      };
-    });
+    if (!obj || !Array.isArray(obj.questions)) throw new Error('AI 未返回题目数组');
+    return obj.questions;
+  }
+
+  // 逐题检查:题型、难度、选项、答案、解析、重复题。返回 '' 表示通过,否则返回可读原因。
+  // 通过的批次才允许渲染 —— 任何一项不符就直接保留上一批(见 runGen)。
+  function validateBatch(qs, type, diff, count) {
+    if (!Array.isArray(qs) || qs.length !== count) return '必须恰好返回 ' + count + ' 道题';
+    var stems = Object.create(null);
+    for (var i = 0; i < qs.length; i++) {
+      var q = qs[i], prefix = '第 ' + (i + 1) + ' 题:';
+      if (!q || typeof q !== 'object' || Array.isArray(q)) return prefix + '格式无效';
+      if (q.type !== type || q.difficulty !== diff) return prefix + '题型或难度与选择不一致';
+      var fields = ['stem', 'answer', 'analysis'];
+      for (var j = 0; j < fields.length; j++) {
+        var text = q[fields[j]];
+        if (typeof text !== 'string' || !text.trim() || text.length > 12000) return prefix + fields[j] + '为空或格式无效';
+      }
+      var stem = q.stem.replace(/\s/g, '');
+      if (stems[stem]) return prefix + '题干重复';
+      stems[stem] = true;
+      if (type === '单选' || type === '多选') {
+        var options = q.options;
+        if (!Array.isArray(options) || options.length < 4 || options.length > (type === '单选' ? 4 : 5)) return prefix + '选项数量错误';
+        var seen = Object.create(null);
+        for (var k = 0; k < options.length; k++) {
+          if (typeof options[k] !== 'string') return prefix + '选项格式错误';
+          var label = /^\s*([A-E])[.．、:：)）\s]/.exec(options[k]);
+          if (label && label[1] !== String.fromCharCode(65 + k)) return prefix + '选项标号或顺序错误';
+          var opt = options[k].replace(/^\s*[A-E][.．、:：)）\s]+/, '').replace(/\s/g, '');
+          if (!opt || seen[opt]) return prefix + '选项为空或重复';
+          seen[opt] = true;
+        }
+        var answer = q.answer.toUpperCase().replace(/[\s,，、;；]/g, '');
+        if (!/^[A-E]+$/.test(answer) || (type === '单选' ? answer.length !== 1 : answer.length < 2)) return prefix + '答案必须为正确选项字母';
+        var letters = Object.create(null);
+        for (var c = 0; c < answer.length; c++) {
+          if (letters[answer[c]] || answer.charCodeAt(c) - 65 >= options.length) return prefix + '答案选项越界或重复';
+          letters[answer[c]] = true;
+        }
+        q.answer = answer;
+      } else if (q.options != null && (!Array.isArray(q.options) || q.options.length)) return prefix + '此题型不应有选项';
+    }
+    return '';
+  }
+
+  // 来源核验:模型自报的 source 一律不可信(q._sourceKind 永不采用它)。
+  // 只有 sourceId 指向的**本次检索片段原文**里能按原顺序逐字命中题干与每个选项,
+  // 才认定为"本地/联网原文匹配";否则一律降级为"来源待核实"。
+  // 只忽略版式空白,不删除数字、正负号、条件或公式符号。严格匹配不足时保守降级。
+  function verifySource(q, local, web) {
+    var id = typeof q.sourceId === 'string' ? q.sourceId : '';
+    var match = /^(local|web)-([1-9]\d*)$/.exec(id);
+    var hit = match && (match[1] === 'local' ? local : web)[Number(match[2]) - 1];
+    q._sourceKind = 'unverified'; // 永不信任模型自己传来的认证字段
+    var stem = q.stem.replace(/\s/g, '');
+    // 题干过短(<12 字)没有区分度,任何片段都可能"命中",不能作为原文匹配的证据。
+    if (hit && stem.length >= 12) {
+      // 与提示词给模型的片段截断长度一致(本地 1000 字 / 联网 1100 字),
+      // 否则模型照抄的部分可能正好落在片段截断之外,反而核不上。
+      var material = String(hit.text || hit.snippet || '').slice(0, match[1] === 'local' ? 1000 : 1100).replace(/\s/g, '');
+      var pos = material.indexOf(stem), cursor = pos + stem.length;
+      var matches = pos >= 0;
+      (q.options || []).forEach(function (option) {
+        var optionText = option.replace(/\s/g, '');
+        var next = material.indexOf(optionText, cursor);
+        if (next < 0) matches = false;
+        else cursor = next + optionText.length;
+      });
+      if (matches) {
+        q._sourceKind = match[1];
+        q.source = (match[1] === 'local' ? '本地原文匹配·' : '联网原文匹配·')
+          + String(hit.src || hit.title || hit.url || id).slice(0, 120);
+        return;
+      }
+    }
+    var claim = typeof q.source === 'string' ? q.source.trim() : '';
+    // 「AI 生成」只在没给素材(没写 sourceId)且模型自己声明原创时保留;其余一律待核实。
+    q.source = !id && claim === 'AI 生成' ? 'AI 生成' : '来源待核实(未匹配到本次素材原文)';
   }
 
   /* ---------- 渲染题目 ---------- */
@@ -729,26 +814,26 @@
           return '<li>' + esc(o) + '</li>';
         }).join('') + '</ul>';
       }
-      var src = q.source || '';
-      var isWeb = /(https?:\/\/|www\.|\.(?:com|cn|net|org|edu|gov))/.test(src) || /^联网·/.test(src);
-      var isLocal = /^真题·/.test(src) && !noLocal;   // 金色「真题」= 本地档案原样采用(六科语料都已内置)
-      if (!isLocal && /^真题·/.test(src)) {           // 本地库确实没有该科目素材时,误标"真题·" → 降级为回忆
-        src = '回忆·' + src.replace(/^真题·/, '');
-      }
-      var isMem = /^回忆/.test(src) || (!isWeb && !isLocal && /(20\d\d|真题|高考|卷)/.test(src));
+      // 徽章口径 = verifySource 的核验结果(_sourceKind),不再看 source 文本长什么样:
+      // 模型写什么都无法把自己标成"原文匹配",source 里的年份/网址也不例外。
+      var src = q.source || '来源待核实';
+      var isWeb = q._sourceKind === 'web';
+      var isLocal = q._sourceKind === 'local' && !noLocal;
+      var isMem = !isWeb && !isLocal && src !== 'AI 生成';
       card.innerHTML =
         '<div class="q-head">' +
         '<span class="q-n">第 ' + (i + 1) + ' 题</span>' +
         '<span class="q-type">' + esc(q.type) + '</span>' +
         '<span class="q-diff">难度 ★' + q.difficulty + '/5</span>' +
-        (isWeb ? '<span class="q-web">🌐 联网</span>'
-          : isLocal ? '<span class="q-gk">真题</span>'
-          : isMem ? '<span class="q-mem">💭 回忆</span>' : '') +
+        (isWeb ? '<span class="q-web">🌐 联网原文匹配</span>'
+          : isLocal ? '<span class="q-gk">本地原文匹配</span>'
+          : isMem ? '<span class="q-mem">待核实</span>' : '') +
         (q.source ? '<span class="q-src' + (isLocal ? ' gk' : '') + '" title="' + esc(q.source) + '">' + esc(src) + '</span>' : '') +
         '</div>' +
         '<div class="q-body"><div class="q-stem">' + esc(q.stem) + '</div>' + opts + '</div>' +
         '<div class="q-actions"><button class="sol-btn">显示答案与解析</button></div>' +
-        '<div class="sol"><div class="a">答案:' + esc(q.answer) + '</div>' +
+        // 原文匹配只说明"题干与选项来自本次片段",不代表答案经过审核 —— 每题都写明这一点
+        '<div class="sol"><div class="an">答案与解析由 AI 提供,请结合教材核对。</div><div class="a">答案:' + esc(q.answer) + '</div>' +
         (q.analysis ? '<div class="an">解析:' + esc(q.analysis) + '</div>' : '') + '</div>';
       var btn = card.querySelector('.sol-btn');
       var sol = card.querySelector('.sol');
@@ -780,8 +865,11 @@
       return;
     }
     busy = true;
-    els.genBtn.disabled = true;
-    els.qaArea.innerHTML = '';
+    // 生成期间禁用「题型 / 难度 / 素材偏好」:本批已按下面的快照取值,禁用避免
+    // "中途改档、结果对不上界面"的错觉,也保证结束时能一起恢复可用。
+    [els.genBtn, els.qType, els.qDiff, els.qSource].forEach(function (el) { if (el) el.disabled = true; });
+    // 注意:这里**不清空** #qaArea。新一批只有通过 validateBatch 才会替换旧内容
+    // (见 renderQuestions),失败时用户仍能看到上一批题与已展开的解析。
     renderTarget(t);
     tag('key');
 
@@ -796,189 +884,120 @@
     var typeCfg = TYPES[qTypeVal] || TYPES.single;
     var totalN = 4;                                          // 每批固定 4 道
     var diff = Math.max(1, Math.min(5, parseInt(els.qDiff ? els.qDiff.value : '3', 10) || 3));
-    var ratio = (diff - 1) * 0.25;                 // 难度一0% … 难度五100%
-    var realN = ratio <= 0 ? 0 : Math.max(1, Math.min(totalN, Math.round(totalN * ratio)));
+    // 难度与素材偏好彻底解耦:难度只决定 difficulty 与题风;
+    // 要几道"素材题"由 #qSource 单独选(0 / 2 / 4),非法值回退 2。
+    // 原先把真题占比写成 (diff-1)*25%,用户想"难度一 + 多来点真题"根本无法表达。
+    var requested = els.qSource ? parseInt(els.qSource.value, 10) : 2;
+    var realN = [0, 2, 4].indexOf(requested) >= 0 ? requested : 2;
     var t0 = Date.now();
 
     // 本地真题库(桌面版宿主读电脑上的 数据库\qg_corpus.txt;手机版读包内同一份语料)
     // 现在**六科都有**:数学(2008-2026 全卷/讲义/举一反三)+ 语文·英语·物理·化学·生物
     // (2010-2024 真题,###SRC:zt/五科真题/…),所以所有科目都先查本地库。
-    // 手机版没有必应联网那条路(它由桌面宿主发起),本地查不到时只能靠模型回忆/原创。
-    var subjKey = (curDB && curDB.subject) ? curDB.subject : (live.subject || '');
+    // 手机版没有必应联网那条路(它由桌面宿主发起),本地查不到时只能靠模型原创,
+    // 来源会如实落在"来源待核实"上,绝不冒充真题。
     var gkLib = true;                          // 六科语料都在本机库里,一律先查本地
-    var effReal = realN;                       // 桌面版:联网可补 → 各科目都按档位要真题
 
-    var labelDiff = '难度' + ['一', '二', '三', '四', '五'][diff - 1] + '·真题 ' + Math.round(ratio * 100) + '%';
-    // 只有"本地库确实没有本科目素材"时才提示(语文没有对应科目页,不在破卷的科目里)
-    var libWarn = '';
-
-    setStatus('开始:' + typeCfg.label + ' ' + totalN + ' 道 · ' + labelDiff + (libWarn || '') + '…', libWarn ? 'warn' : '');
-
-    // 来源判定必须"锚定开头",不能包含匹配 —— 原先用的
-    //   /(20\d\d|真题|高考|卷|联网)/
-    // 会把「回忆真题·年份待核」也算成真实真题,于是状态栏宣布"真实真题 4 道"、
-    // 卡片上却全是 💭 回忆 标,而且让"素材够数就严禁用回忆题"这条提示词铁律
-    // 在代码层完全失效。这里与 renderQuestions 的徽章口径统一:
-    //   真题· = 本地档案原样采用   联网· = 网页采用   回忆/原创 = 不计入真题额
-    function isRealGk(q) { var s = String(q.source || ''); return /^真题·/.test(s) || /^联网·/.test(s); }
-    function isWebSrc(q) {
-      return /^联网·/.test(String(q.source || '')) ||
-        /(https?:\/\/|www\.|\.(?:com|cn|net|org|edu|gov))/.test(q.source || '');
-    }
-    function isRecallSrc(q) { return /^回忆/.test(String(q.source || '')); }
-    // 可验证性:声称「真题·YYYY」的,该年份必须能在本次提供的素材里找到,
-    // 否则说明模型在编年份 → 降级为回忆并标注。
-    function yearInMats(src) {
-      var m = /^真题·\s*(20\d\d)/.exec(String(src || ''));
-      if (!m) return true;
-      var y = m[1], i;
-      for (i = 0; i < (bestGk || []).length; i++) {
-        if (String(bestGk[i].year || '') === y) return true;
-        if (String(bestGk[i].src || '').indexOf(y) >= 0) return true;
-      }
-      return false;
-    }
-
-    // ① 素材检索:本地真题库(六科都有)→ 不足时桌面版再用必应联网补
-    var needGk = effReal > 0;
     var query = t.p.name + ' ' + ((t.p.keywords || []).join(' ')) + ' ' + t.p.board;
     var webQuery = (curDB ? curDB.subjectName : live.subjectName || '') + ' 高考真题 ' + t.p.name
       + ' ' + ((t.p.keywords || []).join(' '));
     var terms = (t.p.name + ' ' + (t.p.keywords || []).join(' ')).split(/[\s,，、;；]+/).filter(function (s) { return s.length >= 2; });
-    var attemptLimit = 3;
-    var lastTry = 0;
-    var feedback = '';
-    var bestQs = null;
-    var bestGk = [];
-    var bestWeb = [];
-    var bestSubj = [];
-    // 先取【本机知识点档案】(任何科目都可能上传过),再取【本地真题】(目前只有数学)
-    var localStep = Promise.resolve().then(function () {
-      setSteps('<span class="spinner"></span>① 本机资料库检索中…');
-      return subjMats(t.p.name);
-    }).then(function (sj) {
-      bestSubj = sj || [];
-      if (!(needGk && gkLib)) return [];
-      setSteps('<span class="spinner"></span>① 本地真题库检索中…');
-      return gkMats(query);
-    });
 
-    function fireAsk() {
-      lastTry++;
-      var pr = buildPrompt(t, needGk ? bestGk : [], needGk ? bestWeb : [], bestSubj, diff, effReal, totalN, typeCfg);
-      var msgs = [
-        { role: 'system', content: pr.system },
-        { role: 'user', content: pr.user + '\n\n请命制恰好 ' + totalN + ' 道' + typeCfg.label
-          + '(难度恒为 ' + diff + ';其中恰好 ' + effReal + ' 道为真实高考真题)。'
-          + (feedback ? '\n\n注意:' + feedback : '')
-          + '\n\n请先逐条执行"反幻觉自查"再输出 JSON。' }
-      ];
-      setSteps('<span class="spinner"></span>AI 出题中(第 ' + lastTry + ' 次,约 10–60 秒)…');
-      return dsAsk(msgs, key).then(function (r) {
-        if (!r.ok) throw new Error(r.err || 'AI 请求失败');
-        return parseAI(r.content);
+    setStatus('正在为「' + (live.subjectName || curDB.subjectName) + ' · ' + t.p.name
+      + '」出题,上一批题目暂时保留。', '');
+
+    var bestGk = [], bestWeb = [], bestSubj = [], attempts = 0, feedback = '';
+
+    function attempt() {
+      attempts++;
+      // available = 本次素材里"值得优先采用的完整题目"上限。素材不足时如实降低要求,
+      // 让模型知道不必硬凑 —— 硬凑的下场就是伪造真题。
+      var available = Math.min(realN, bestGk.length + bestWeb.length);
+      var pr = buildPrompt(t, bestGk, bestWeb, bestSubj, diff, available, totalN, typeCfg);
+      var messages = [{ role: 'system', content: pr.system }, { role: 'user', content: pr.user
+        + '\n请输出恰好4道' + typeCfg.label + ',难度均为' + diff + '。'
+        + (feedback ? '\n上次格式未通过检查,请修正:' + feedback : '') }];
+      setSteps('<span class="spinner"></span>AI 出题中(第 ' + attempts + ' 次)…');
+      // 解答大题与英语写作篇幅长,给足 token 上限,否则会被截断成半截 JSON。
+      var tokenLimit = ((curDB && curDB.subject) === 'eng' || typeCfg.jsonType === '解答') ? 8000 : 4000;
+      return dsAsk(messages, key, tokenLimit).then(function (r) {
+        // 连接/服务端失败:直接抛出,不自动重试 —— 同样的错误重试只是重复付费。
+        if (!r || !r.ok) throw new Error(r && r.err || 'AI 请求失败');
+        // 输出被截断同样不重试:同样的提示词只会再截断一次,重试纯属烧钱。
+        // js/ainet.js 现已透出 finish_reason(四条通道都带),所以这条判断在手机版同样生效:
+        // 被输出上限截断时整批作废、不重复付费请求,只把原因和可行做法告诉用户。
+        if (r.finish_reason === 'length') throw new Error('AI 这次的回答被输出长度上限截断了(整批作废,上一批题目仍保留)。请改用「单选题」或降低难度后重试;解答题请把知识点/问题范围缩小一些。');
+        var qs, invalid;
+        try { qs = parseAI(r.content); invalid = validateBatch(qs, typeCfg.jsonType, diff, totalN); }
+        catch (e) { invalid = '输出格式无效,请返回完整 JSON 题目数组'; }
+        if (invalid) {
+          // 只有"格式/字段不合规"才重试,且最多 3 次;超过就带着具体原因失败,
+          // 界面上保留上一批题(全程没有清空 #qaArea)。
+          if (attempts >= 3) throw new Error('题目未通过检查:' + invalid + '。');
+          feedback = invalid;
+          return attempt();
+        }
+        // 来源核验必须在渲染前完成:界面上的每个来源标记都出自这里。
+        qs.forEach(function (q) { verifySource(q, bestGk, bestWeb); });
+        return qs;
       });
     }
 
-    function runBatch() {
-      function attempt() {
-        return fireAsk().then(function (qs) {
-          var trim = qs.slice(0, totalN);
-          // 先做年份可验证性检查,再统计(编造的年份会在这一步被降级为回忆)
-          trim.forEach(function (q) {
-            if (/^真题·/.test(String(q.source || '')) && !yearInMats(q.source)) {
-              q.source = '回忆真题·年份待核(原标' + String(q.source).replace(/^真题·/, '') + ')';
-            }
-          });
-          var real = trim.filter(isRealGk).length;
-          var webCnt = trim.filter(isWebSrc).length;
-          var memCnt = trim.filter(isRecallSrc).length;
-          // "素材够数"= 本地 + 联网片段合计达到所需真题数。
-          // 原判据写的是 !hasWebMat(只看联网):数学科本地素材充足时不走联网流程,
-          // bestWeb 为空 → hasWebMat=false → 4 道纯回忆题被直接判为合格。
-          var matN = (bestGk ? bestGk.length : 0) + (bestWeb ? bestWeb.length : 0);
-          var enoughMat = matN >= effReal;
-          // 达标:数量够、真题够,且素材够数时不得出现回忆题
-          var good = trim.length === totalN && (effReal === 0 ||
-            (real >= effReal && (!enoughMat || memCnt === 0)));
-          if (good || lastTry >= attemptLimit) return trim;
-          var parts = [];
-          if (trim.length !== totalN) parts.push('上次未给足数量(仅 ' + trim.length + ' 道),本次必须恰好 ' + totalN + ' 道');
-          if (effReal > 0 && real < effReal) parts.push('上次真实真题只有 ' + real + ' 道(需 ' + effReal
-            + '):务必从【本地真题片段】与【必应联网片段】中原样采用 ' + effReal
-            + ' 道完整原题;本地采用者 source 以"真题·"开头,联网采用者 source 以"联网·"开头(可附网页名);'
-            + '若上次出现疑似编造或年份存疑的真题,请改正为"回忆真题·年份待核"或改用片段原题,禁止编造');
-          else if (memCnt > 0 && enoughMat) parts.push('上次用了 ' + memCnt
-            + ' 道回忆题,但本次提供的素材已够 ' + effReal + ' 道(共 ' + matN
-            + ' 段):严禁使用回忆题,请改从【本地高考真题档案片段】或【必应联网检索片段】原样采用;'
-            + '若素材里确实没有合适题目请在 source 注明"素材不足"');
-          feedback = parts.join(';') + '。';
-          setSteps('<span class="spinner"></span>AI 结果未达标(第 ' + lastTry + ' 次),要求补齐后重出…');
-          return attempt();
-        });
-      }
-      return attempt();
-    }
-
-    localStep.then(function (gk) {
-      bestGk = gk || [];
+    return Promise.resolve().then(function () {
+      setSteps('<span class="spinner"></span>① 本机资料库检索中…');
+      return subjMats(t.p.name);
+    }).then(function (hits) {
+      bestSubj = hits || [];
+      return realN && gkLib ? gkMats(query) : [];
+    }).then(function (hits) {
+      bestGk = hits || [];
       var has = bestGk.length;
       var libName = hasHost ? '本地真题库' : '内置语料';
       // 素材检索失败(语料读不到 / 格式不符 / 宿主超时)必须让用户看见:
       // 以前这里静默返回 [],界面只会说"无命中",用户根本不知道是文件出了问题。
       if (matsErr) {
         setStatus('⚠ ' + matsErr, 'warn');
-        setSteps('⚠ 本机资料库不可用:' + esc(matsErr) + ' —— 本组将不含本地真题片段');
+        setSteps('⚠ 本机资料库不可用:' + esc(matsErr) + ' —— 本组不会有本地原文匹配的来源');
+      } else {
+        setSteps(realN === 0
+          ? '素材偏好=AI 原创,不检索素材,AI 出题中…'
+          : (has ? '① ' + libName + '命中 ' + has + ' 段 ✓ | AI 出题中…'
+                 : '① ' + libName + '无命中,AI 出题中…'));
       }
-      var needWeb = needGk && (!gkLib || has < effReal);
-      // 手机版没有必应联网(它由桌面宿主发起),不能再假装"② 联网检索中"
-      var webStep = hasHost ? '② 必应联网检索中…' : '② 手机版无联网检索,AI 直接出题…';
-      if (!needWeb) {
-        setSteps(needGk
-          ? (has ? '① ' + libName + '命中 ' + has + ' 段 ✓ | AI 出题中…'
-                 : '① ' + libName + '无命中,AI 出题中…')
-          : '本档不含真题(纯原创),AI 出题中…');
-        tag(needGk ? 'gk' : 'ds');
-        return runBatch();
+      tag(realN ? 'gk' : 'ds');
+      // 本地已够目标题数就不再去联网(手机版本来也没有这条路,这里等价于直接跳过)。
+      return realN && bestGk.length < realN ? webMats(webQuery, terms) : [];
+    }).then(function (hits) {
+      bestWeb = hits || [];
+      if (hasHost && realN && bestWeb.length) {
+        setSteps('① 本地 ' + bestGk.length + ' 段(不足 ' + realN + ') → 🌐 联网命中 '
+          + bestWeb.length + ' 条 | AI 出题中…');
       }
-      setSteps(has
-        ? '① 本地命中 ' + has + ' 段(不足 ' + effReal + ') → ' + webStep
-        : '① ' + libName + '无命中 → ' + webStep);
-      return webMats(webQuery, terms).then(function (web) {
-        bestWeb = web || [];
-        setSteps('① 本地 ' + has + ' 段 | ' + (hasHost ? '🌐 联网命中 ' + bestWeb.length + ' 条' : '🌐 联网不可用')
-          + ' | AI 出题中…');
-        tag('gk');
-        return runBatch();
-      });
+      return attempt();
     }).then(function (qs) {
-      var realC = qs.filter(isRealGk).length;   // 契约统计:真题· 与 联网· 都算"真题素材"
-      var webC = qs.filter(isWebSrc).length;
-      var gkC = qs.filter(function (q) { return /^真题·/.test(String(q.source || '')); }).length;
-      var memC = qs.filter(isRecallSrc).length;
-      var warn = '';
-      if (qs.length < totalN) warn = ' — AI 仅返回 ' + qs.length + ' 道';
-      else if (needGk && realC < effReal) warn = ' — 真题不足:实得 ' + realC + '/' + effReal + ' 道(素材有限或 AI 未原样采用)';
-      else if (needGk && memC > 0) warn = ' — 含 ' + memC + ' 道回忆题(素材不足时兜底,建议对照教材核对)';
-      if (matsErr) warn += ' — ⚠ ' + matsErr;
-      // 文案必须如实区分来源:原先把"联网抓来的题"也写成"真实真题",同一道题于是同时出现在
-      // "真实真题"与"联网"两个计数里 —— 难度 5 的"100% 真题"可能全部由未经原文比对的网页内容满足。
-      // 这里只拆文案与计数口径:出题契约一个字不动(isRealGk 仍把"联网·"计入真题额,
-      // 否则会改变非数学科目的行为);契约统计仍用 realC,展示改用 gkC/webC。
-      setStatus('完成 — 用时 ' + Math.round((Date.now() - t0) / 1000) + ' 秒,共 ' + qs.length +
-        ' 道 · 📚 本地真题 ' + gkC + ' 道 · 🌐 联网素材 ' + webC + ' 道(未经原文比对)' +
-        (memC ? ' · 💭 回忆 ' + memC + ' 道' : '') + warn,
-        warn ? 'warn' : '');
-      setSteps('AI 出题完成 ✓');
+      // 口径与卡片徽章、脚注完全一致:本地原文匹配 / 联网原文匹配 / 来源待核实。
+      // 不再出现"真题"字样去指代未经原文比对的网页内容。
+      var localN = qs.filter(function (q) { return q._sourceKind === 'local'; }).length;
+      var webN = qs.filter(function (q) { return q._sourceKind === 'web'; }).length;
+      var unverified = qs.filter(function (q) { return q.source !== 'AI 生成' && q._sourceKind === 'unverified'; }).length;
+      var shortfall = realN > localN + webN;
       renderQuestions(qs, !gkLib);
+      setStatus('完成 — ' + Math.round((Date.now() - t0) / 1000) + ' 秒,共4题;本地原文匹配 '
+        + localN + ' 道,联网原文匹配 ' + webN + ' 道'
+        + (unverified ? ',来源待核实 ' + unverified + ' 道' : '')
+        + (shortfall ? '。素材匹配未达目标,其余题不作为已核实真题。' : '。答案与解析仍需核对。')
+        + (matsErr ? '(⚠ ' + matsErr + ')' : ''),
+        (shortfall || unverified || matsErr) ? 'warn' : '');
+      setSteps('题目格式检查通过 ✓');
       tag(null);
     }).catch(function (err) {
-      setStatus(err && err.message ? err.message : '出题失败,请重试', 'err');
+      // 失败保留上一批题目与已展开的解析(全程没有清空 #qaArea)
+      setStatus((err && err.message || '出题失败') + ' 请重试;原有题目未清空。', 'err');
       setSteps('');
       tag('err');
     }).then(function () {
       busy = false;
-      els.genBtn.disabled = false;
+      [els.genBtn, els.qType, els.qDiff, els.qSource].forEach(function (el) { if (el) el.disabled = false; });
     });
   }
 
@@ -1025,23 +1044,21 @@
     window.__apiClear();
   });
 
-  // 【手机版】页脚说明纠偏:train.html 里的说明是按桌面版写的("不足或化学/物理/英语等
-  // 科目会自动用必应联网检索")。没有宿主时那条路并不存在,照原样显示等于骗用户。
+  // 【手机版】页脚说明纠偏:train.html 里的说明是按"桌面版能联网"写的。
+  // 手机版没有宿主,必应联网那条路不存在,照原样显示等于骗用户。
   // 只在 !hasHost 时改写;桌面宿主下原文一字不动。
   (function fixFootnote() {
     if (hasHost) return;
     try {
       var f = document.querySelector('.footnote');
       if (!f) return;
-      f.innerHTML = '破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。'
-        + '系统先查内置高考真题档案(数学 2008-2026 + 语文/英语/物理/化学/生物 五科 2010-2024;'
-        + '这份语料已打进安装包,手机离线可用);'
-        + '本地素材不足时,桌面版会自动用必应<b>联网检索</b>,手机版没有联网检索,'
-        + '由模型凭知识回忆/原创兜底。来源标记:'
-        + '<b style="color:#ffd54f">真题</b>=本地档案原样采用;'
-        + '<b style="color:#67e8f9">🌐 联网</b>=必应网页采用;'
-        + '<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);'
-        + '其余为 AI 原创。答案与解析仅供参考。';
+      f.innerHTML = '破卷说明:选择知识点、题型和难度,每批生成4题;素材偏好与难度独立。'
+        + '手机版检索的是<b>打进安装包里的六科真题档案</b>(数学 2008-2026 + 语文/英语/物理/化学/生物 2010-2024),'
+        + '手机版没有宿主,无法联网检索,素材不足时改用 AI 原创。来源标记:'
+        + '<b style="color:#ffd54f">本地原文匹配</b> / <b style="color:#67e8f9">联网原文匹配</b>'
+        + '表示题干与选项匹配本次检索片段;未匹配的来源显示'
+        + '<b style="color:#d8b4fe">待核实</b>。原文匹配不代表网页真题身份或答案已审核,'
+        + '答案与解析仍需核对。出题失败保留上一批。';
     } catch (e) { /* 忽略 */ }
   })();
 

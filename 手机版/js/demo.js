@@ -121,7 +121,9 @@
       var d = ev.data;
       if (!d || !d._seq) return;
       var seq = d._seq;
-      delete d._seq;
+      // 不再 delete d._seq:主窗里 mainbridge.js 也挂着同一个 WebView 通道的监听器,
+      // 谁先跑谁删掉 _seq,后面的监听器就认不出这条回执(资料库上传/统计会一直等到超时)。
+      // 事件数据只读不改,各方只在自己那张 pending 表里查号。
       var cb = hostPending[seq];
       if (cb) { delete hostPending[seq]; cb(d); }
     });
@@ -145,15 +147,32 @@
   //   · 桌面宿主存在 → 宿主代发(与改造前完全一致)
   //   · Capacitor APK  → 原生直连 https://api.deepseek.com(无 CORS 限制)
   //   · 手机浏览器     → POST /api/ds 由本地 server.js 反向代理
+  // 旧模型名已退役:deepseek-chat / deepseek-reasoner / deepseek-v4-flash 与空值统一迁移到
+  // deepseek-flash(用户本机存着的老名字在服务端会 400),reasoner 保留思考开关。
+  function modelConfig(value) {
+    var name = String(value || '').trim();
+    return {
+      model: !name || name === 'deepseek-chat' || name === 'deepseek-reasoner' || name === 'deepseek-v4-flash'
+        ? 'deepseek-flash' : name,
+      thinking: { type: name === 'deepseek-reasoner' ? 'enabled' : 'disabled' }
+    };
+  }
+
   function dsAsk(messages, key, opts) {
     opts = opts || {};
     if (!window.QGAi || !window.QGAi.request) {
       return Promise.reject(new Error('AI 调用层未加载(js/ainet.js 缺失)'));
     }
+    // 模型名和思考开关都先过 modelConfig:opts.model(页面指定的视觉/协议模型)优先,
+    // 其次才是本机保存的 qg_ds_model。
+    var config = modelConfig(opts.model || load(LS_MODEL));
+    // json:true 时,response_format={type:'json_object'} 由 ainet.js 的 buildBody()/
+    // requestHost() 统一附加(宿主、原生直连、本地代理三条路都会带),此处不再重复拼请求体。
     return window.QGAi.request({
       key: key,
       json: !!opts.json,      // 仅协议类请求开启 json_object(其提示词含 JSON 字样)
-      model: opts.model || load(LS_MODEL) || 'deepseek-chat',
+      model: config.model,
+      thinking: config.thinking,
       messages: messages,
       max_tokens: opts.max_tokens || 2400,
       temperature: opts.temperature != null ? opts.temperature : 0.3

@@ -295,6 +295,8 @@
     #statusRow { gap: 8px; }
     #genBtn { flex: 1 1 100%; min-height: 48px; font-size: 15px; }
     #qDiff { flex: 1 1 100%; min-height: 44px; font-size: 14px; }
+    /* 素材偏好与难度独立成两个下拉:手机上也各占一行,保证 44px 触控热区 */
+    #qSource { flex: 1 1 100%; min-height: 44px; font-size: 14px; }
     #status { min-width: 0; flex: 1 1 100%; font-size: 13px; }
 
     #targetInfo { font-size: 13px; }
@@ -366,12 +368,17 @@
 <main>
   <div id="statusRow">
     <button id="genBtn" class="primary">🎯 出题训练</button>
-    <select id="qDiff" title="难度档位(同时决定真实高考真题占比:难度一 0% → 难度五 100%)">
-      <option value="1">难度一 · 真题 0%</option>
-      <option value="2">难度二 · 真题 25%</option>
-      <option value="3" selected>难度三 · 真题 50%</option>
-      <option value="4">难度四 · 真题 75%</option>
-      <option value="5">难度五 · 真题 100%</option>
+    <select id="qDiff" title="题目难度,与素材来源独立">
+      <option value="1">难度一 · 基础</option>
+      <option value="2">难度二 · 巩固</option>
+      <option value="3" selected>难度三 · 中档</option>
+      <option value="4">难度四 · 综合</option>
+      <option value="5">难度五 · 挑战</option>
+    </select>
+    <select id="qSource" title="优先采用的素材题数,不足时如实标记,不保证真题比例">
+      <option value="0">AI 原创</option>
+      <option value="2" selected>素材优先 · 目标2题</option>
+      <option value="4">素材优先 · 目标4题</option>
     </select>
     <span id="status">就绪 · 输入板块并「板块定位」,或直接在主系统点选知识点</span>
     <span id="steps"></span>
@@ -381,7 +388,7 @@
 
   <div id="qaArea"></div>
 
-  <p class="footnote">破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。系统先查本地高考真题档案(2008-2026,仅数学);不足或化学/物理/英语等科目会自动用必应<b>联网检索</b>,并尽量让题目组含足量真题素材(其中来自网页的部分未经原文比对)。来源标记:<b style="color:#ffd54f">真题</b>=本地档案原样采用;<b style="color:#67e8f9">🌐 联网</b>=必应网页采用(未与原文比对);<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);其余为 AI 原创。答案与解析仅供参考。</p>
+  <p class="footnote">破卷说明:选择知识点、题型和难度,每批生成4题。素材偏好与难度独立;手机版可检索打进安装包里的六科真题档案(数学 2008-2026 + 语文/英语/物理/化学/生物 2010-2024),桌面版还可联网检索,网页版/手机版无宿主时使用 AI 原创。<b style="color:#ffd54f">本地原文匹配</b> / <b style="color:#67e8f9">联网原文匹配</b>表示题干与选项匹配本次检索片段;未匹配的来源显示<b style="color:#d8b4fe">待核实</b>。原文匹配不代表网页真题身份或答案已审核,答案与解析仍需核对。出题失败保留上一批。</p>
 </main>
 
 <script>

@@ -69,7 +69,7 @@ var CAM_DROP = 6;
 
   /* ---------------- 用户自定义知识点 ----------------
    * 「定义新知识点」表单创建的知识点持久化于 localStorage
-   * (qg_custom_points_v1),data.js 不被改动;
+   * (兼容旧整表 qg_custom_points_v1;新增按 qg_custom_point_v2: 逐条保存),data.js 不被改动;
    * 底层分类永远是既有十大板块:自定义节点必须归属其中某一板块,
    * 参与对应板块的筛选/扇区/颜色逻辑;光点颜色默认取板块固有颜色,
    * 也允许用户用 RGB 自定义覆盖。
@@ -78,37 +78,49 @@ var CAM_DROP = 6;
     for (var i = 0; i < DB.boards.length; i++) if (DB.boards[i].id === id) return true;
     return false;
   }
-  // 读回存储中的自定义知识点全量(所有科目共用 qg_custom_points_v1 一格)
+  // 兼容旧版整表;新增记录逐点存放,不同窗口新增时不覆盖彼此的快照。
+  // 旧实现把全部科目塞进一格整体覆盖写:两个窗口(或两个科目)先后新增,
+  // 后写的那次会拿自己内存里的旧快照把对方的记录抹掉。
+  var CUSTOM_PREFIX = 'qg_custom_point_v2:';
   function readCustomStore() {
     var arr = null;
     try {
       var raw = localStorage.getItem('qg_custom_points_v1');
       if (raw) arr = JSON.parse(raw);
     } catch (e) { /* 忽略 */ }
-    return Array.isArray(arr) ? arr : [];
-  }
-  function saveCustomPoints() {
-    var cur = DB.subject;
-    var list = DB.points.filter(function (p) { return p.user; })
-      .map(function (p) {
-        return {
-          id: p.id, name: p.name, board: p.board, subject: cur,
-          importance: p.importance, core: p.core,
-          keywords: p.keywords, content: p.content,
-          links: p.links, customColor: p.customColor || null
-        };
-      });
-    // 存储是所有科目共用的一格:直接整体覆盖只会留下当前科目 ——
-    // 数学加 1 个自定义点、切到化学再加 1 个,数学的那些就会全部消失且不可恢复。
-    // 因此写入前先读回全量,按 subject 合并后再写,其它科目的条目原样保留。
-    var keep = readCustomStore().filter(function (r) {
-      if (!r || typeof r.id !== 'string' || !r.id) return false;
-      if (r.subject) return r.subject !== cur;   // 其它科目:原样保留
-      // 旧格式条目没有 subject 字段:视为当前科目,由上面的 list 取代(不会重复);
-      // 但它若连板块都不属于当前科目,说明其实是别的科目的旧数据,同样必须保留
-      return !isRealBoard(r.board);
+    arr = Array.isArray(arr) ? arr : [];
+    // 无原型对象做去重表:'constructor' / '__proto__' 这类 id 才不会误判成"已存在"
+    var records = Object.create(null);
+    arr.forEach(function (p) {
+      if (p && typeof p.id === 'string') records[(p.subject || '') + ':' + p.id] = p;
     });
-    try { localStorage.setItem('qg_custom_points_v1', JSON.stringify(keep.concat(list))); } catch (e) { /* 忽略 */ }
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (!key || key.indexOf(CUSTOM_PREFIX) !== 0) continue;
+        try {
+          var p = JSON.parse(localStorage.getItem(key));
+          if (p && typeof p.id === 'string' && typeof p.subject === 'string') {
+            records[p.subject + ':' + p.id] = p;
+          }
+        } catch (e2) { /* 一条损坏记录不影响其它笔记,也不删除原数据 */ }
+      }
+    } catch (e3) { /* 存储不可读时仍保留已经读取的旧数据 */ }
+    return Object.keys(records).map(function (key) { return records[key]; });
+  }
+  // 逐条写入:只碰当前这一条记录,不再整体覆盖整张表。
+  // 返回布尔 —— 调用方必须据此判断是否真的保存成功(配额满 / 隐私模式下 setItem 会抛)。
+  function saveCustomPoints(p) {
+    var record = {
+      id: p.id, name: p.name, board: p.board, subject: DB.subject,
+      importance: p.importance, core: p.core,
+      keywords: p.keywords, content: p.content,
+      links: p.links, customColor: p.customColor || null
+    };
+    try {
+      localStorage.setItem(CUSTOM_PREFIX + DB.subject + ':' + p.id, JSON.stringify(record));
+      return true;
+    } catch (e) { return false; }
   }
   function loadCustomPoints() {
     var arr = readCustomStore();
@@ -132,7 +144,7 @@ var CAM_DROP = 6;
       });
     });
     if (!mine.length) return;
-    var ids = {};
+    var ids = Object.create(null);
     DB.points.forEach(function (p) { ids[p.id] = 1; });
     mine.forEach(function (p) { ids[p.id] = 1; });
     mine.forEach(function (p) {
@@ -141,8 +153,17 @@ var CAM_DROP = 6;
     });
   }
   // 调试/自救钩子:?qg_clear=1 清空全部自定义知识点并刷新
+  // 旧整表键与所有逐条前缀键都要清 —— 只清旧键会留下 v2 记录,
+  // 用户以为"已经清空",自定义点却仍然出现。
   if (/[?&]qg_clear=1/.test(window.location.search)) {
-    try { localStorage.removeItem('qg_custom_points_v1'); } catch (e) { /* 忽略 */ }
+    try {
+      localStorage.removeItem('qg_custom_points_v1');
+      // 倒序遍历:removeItem 会让 localStorage 变短,正序会漏掉元素
+      for (var ci = localStorage.length - 1; ci >= 0; ci--) {
+        var ck = localStorage.key(ci);
+        if (ck && ck.indexOf(CUSTOM_PREFIX) === 0) localStorage.removeItem(ck);
+      }
+    } catch (e) { /* 忽略 */ }
   }
   loadCustomPoints();
 
@@ -1881,7 +1902,10 @@ var CAM_DROP = 6;
       '<span class="tag kind">' + (b && b.kind === 'major' ? '大板块' : '小板块') + '</span>' +
       '<span class="tag imp">★ 重要度 ' + p.importance + '/5</span>' +
       '<span class="tag core">● 相关度 ' + p.core + '/5</span>' +
-      (bookTag ? '<span class="tag ch" title="人教版教材归属:' + escapeHtml(bookTag) + '">📖 ' + escapeHtml(bookTag) + '</span>' : '');
+      (bookTag ? '<span class="tag ch" title="人教版教材归属:' + escapeHtml(bookTag) + '">📖 ' + escapeHtml(bookTag) + '</span>' : '') +
+      // 正文里带「待人工校对」标记的条目:内容尚未与教材/词典核实过。
+      // 这里显式说出来,不能让用户把未校对内容当成权威结论。
+      (/待人工校对/.test(p.content || '') ? '<span class="tag imp">内容待校对 · 请对照教材或词典核实</span>' : '');
 
     document.getElementById('dContent').innerHTML = renderContentText(p.content);
 
@@ -2509,7 +2533,6 @@ var CAM_DROP = 6;
    * 高度仍由用户自选的重要度决定。
    * ============================================================ */
   (function customNodeUI() {
-    var CUSTOM_KEY = 'qg_custom_points_v1';
     function $(id) { return document.getElementById(id); }
     var sec = $('newNodeSec');
     if (!sec) return;
@@ -2650,6 +2673,10 @@ var CAM_DROP = 6;
     // 有关联 → 以关联点默认云位置重心为锚 + 随机偏移;无关联 → 云外缘随机;
     // 之后迭代推开保证不与既有节点重叠;高度由重要度决定。
     function commitCustomPointCore(p) {
+      // 先保存再挂入场景;配额不足时不显示虚假成功,也不清空表单。
+      // 原实现先 push 进 DB.points、最后才保存,保存失败时节点已经"长"在云上,
+      // 刷新即消失 —— 用户以为存住了。
+      if (!saveCustomPoints(p)) return null;
       // 视觉半径先就位(定位排斥计算需要),避免 NaN
       visualR[p.id] = 1.05 + p.importance * 0.22;
       var ax = 0, az = 0, cnt = 0, x, z;
@@ -2704,7 +2731,7 @@ var CAM_DROP = 6;
         edges.push(e);
         addEdgeRender(e);
       });
-      saveCustomPoints();
+      // (落盘已在函数开头完成:先保存成功,才允许挂进场景)
       // 若正处于聚焦态,回到默认云(新点本身就在默认坐标,视觉一致)
       if (selectedId !== null || layoutCenterId !== null) deselectNode();
       else applyVisualState();
@@ -2725,7 +2752,9 @@ var CAM_DROP = 6;
       if (!name) { msgEl.textContent = '请填写知识点名称'; return; }
       var board = boardSelect ? boardSelect.value : '';
       if (!isRealBoard(board)) { msgEl.textContent = '请先选择所属板块'; return; }
-      var id = 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+      // id 必须真正唯一:逐条存储以 subject:id 为键,同一毫秒内两个窗口新增
+      // 若 id 相同,后写的那条会静默覆盖前一条(原实现只用 4 位随机后缀,碰撞概率不低)。
+      var id = 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
       while (idToPoint[id]) { id = 'u' + Math.random().toString(36).slice(2, 10); }
       var imp = Math.min(5, Math.max(1, Math.round(Number(impEl.value) || 3)));
       var color = /^#[0-9a-fA-F]{6}$/.test(colorEl.value) ? colorEl.value : null;
@@ -2744,7 +2773,9 @@ var CAM_DROP = 6;
         ? ((!boardChecks[board] || boardChecks[board].checked)
           ? '✓ 已加入知识云(点 ✕ 退出聚焦回到全网)'
           : '✓ 已加入,但「' + boardName(board) + '」当前未勾选,勾选该板块后即可看到')
-        : '加入失败';
+        : '保存失败:本机存储不可用或空间不足。输入内容已保留,请先复制备份再重试。';
+      // 保存失败时保留用户输入(不清空表单),否则刚写好的内容会当场丢光
+      if (!p) return;
       nameEl.value = ''; keysEl.value = ''; contentEl.value = '';
       linkInput.value = ''; linkHint.innerHTML = '';
       pickedLinks = [];

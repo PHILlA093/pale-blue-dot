@@ -276,7 +276,19 @@
     }
     // 发号统一走 window 上的共享计数器:主窗里 mainbridge 与 demo.js(观澜面板)
     // 共用同一个 WebView 通道,各自独立计数会撞号,把响应派给错误的回调。
-    var pend = {};
+    // pend 用无原型对象:回调表以宿主回执里的 _seq 为键,普通 {} 会把
+    // "constructor"/"__proto__" 这类键名当成已存在,导致回执被派给不存在的回调。
+    var pend = Object.create(null);
+    // 统一的消息监听器:用 hasOwnProperty 认领属于自己的回执,清理超时定时器后 resolve。
+    // 事件数据一律不改写(不 delete d._seq)—— 同一窗口里还有 demo.js 的监听器要读它。
+    if (hostOk) window.chrome.webview.addEventListener('message', function (ev) {
+      var d = ev.data;
+      if (!d || !Object.prototype.hasOwnProperty.call(pend, d._seq)) return;
+      var entry = pend[d._seq];
+      delete pend[d._seq];
+      clearTimeout(entry.timer);
+      entry.resolve(d);
+    });
     function nextSeq() {
       window.__qgSeq = (window.__qgSeq || 0) + 1;
       return window.__qgSeq;
@@ -285,10 +297,23 @@
       return new Promise(function (res) {
         if (!hostOk) { res({ _nohost: true }); return; }
         var s = nextSeq();
-        obj._seq = s;
-        pend[s] = res;
-        window.chrome.webview.postMessage(obj);
-        setTimeout(function () { if (pend[s]) { delete pend[s]; res({ _timeout: true }); } }, 60000);
+        // 复制一份再挂 _seq:直接改调用方对象,同一 payload 被复用时序号会互相覆盖
+        var msg = {};
+        Object.keys(obj).forEach(function (k) { msg[k] = obj[k]; });
+        msg._seq = s;
+        var entry = { resolve: res, timer: null };
+        pend[s] = entry;
+        entry.timer = setTimeout(function () {
+          if (pend[s]) { delete pend[s]; res({ _timeout: true }); }
+        }, 60000);
+        try { window.chrome.webview.postMessage(msg); }
+        catch (e) {
+          // postMessage 抛错 = 宿主通道已断(应用正在退出 / WebView 未就绪)。
+          // 必须清掉定时器并立刻把可读原因交回调用方,否则界面会停在"正在上传…"直到 60 秒超时。
+          clearTimeout(entry.timer);
+          delete pend[s];
+          res({ ok: false, err: '无法连接本机资料库,请重启应用后重试。' });
+        }
       });
     }
     // 指纹必须覆盖"实际会上传的全部字段":原先只取 id/name/board/importance/关键词**个数**,

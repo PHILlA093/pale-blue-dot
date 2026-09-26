@@ -211,17 +211,18 @@
     <div id="dKeywords"></div>
     <h3>🔗 相关知识</h3>
     <ul id="dLinks"></ul>
-    <button id="dFocus">🎯 在网中聚焦</button>
+    <!-- 「破卷」入口:原先这里是「🎯 在网中聚焦」,按需求换成破卷。
+         破卷入口整体搬进详情抽屉,右下角浮动按钮(#trainBtn)已删除 ——
+         抽屉没打开时没有破卷入口,这是用户认可的取舍(不另留浮动入口)。 -->
+    <button id="dTrain" type="button" title="打开破卷:对当前知识点 AI 出题精练">🎯 破卷</button>
   </div>
 </aside>
 
 <!-- 轻提示 -->
 <div id="toast" hidden></div>
 
-<!-- 右下角:🎯 破卷(打开破卷新窗口) -->
-<button id="trainBtn" type="button" title="打开破卷:AI 出题精练">
-  🎯 破卷
-</button>
+<!-- 右下角浮动「🎯 破卷」按钮(#trainBtn)已按需求删除:
+     破卷入口已移入知识点详情抽屉的 #dTrain,不再需要浮层,也避免遮挡主界面右下角。 -->
 
 <!-- 观澜:AI 演示问答(浮动面板;对话内存态,关闭应用即清空) -->
 <div id="guanlan" hidden>
@@ -283,11 +284,20 @@
 <!-- AI 调用层:必须在 app.js / mainbridge.js / demo.js 之前加载。
      它按环境自动选择「桌面宿主 / Capacitor 原生直连 / 本地 /api/ds 代理」三条路。 -->
 <script src="js/ainet.js"></script>
-<script src="js/data.js"></script>
-<script src="js/data_chem.js"></script>
-<script src="js/data-physics.js"></script>
-<script src="js/data_eng.js"></script>
-<script src="js/data_bio.js"></script>
+<!-- 数据文件按科目懒加载:此前 5 科全量加载(合计约 3.4 MB,英语单科就 2.0 MB)才轮到 app.js,
+     首屏要等全部下载 + 解析完 —— 手机上这是最明显的一笔启动开销。
+     科目判定与 js/app.js 开头一字不差:?subject= → localStorage(qg_subject) → math;
+     切科目本来就是整页刷新,新页面自然会加载对应科目那一份。 -->
+<script>
+  (function () {
+    var F = { math: 'js/data.js', chem: 'js/data_chem.js', physics: 'js/data-physics.js', eng: 'js/data_eng.js', bio: 'js/data_bio.js' };
+    var m = /[?&]subject=([a-z]+)/.exec(window.location.search);
+    var s = m && m[1];
+    if (!F[s]) { try { s = localStorage.getItem('qg_subject'); } catch (e) { s = null; } }
+    if (!F[s]) s = 'math';
+    document.write('<script src="' + F[s] + '"><\/script>');
+  })();
+</script>
 <script src="js/app.js"></script>
 <script src="js/mainbridge.js"></script>
 <script src="js/glcanvas.js"></script>
