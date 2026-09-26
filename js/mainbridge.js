@@ -103,6 +103,22 @@
     });
   }
 
+  // 观澜只使用独立窗口。桌面宿主拦截 window.open 后没有可返回的 JS 窗口引用,
+  // 返回 null 不代表打开失败;普通浏览器的弹窗拦截才需要提示。
+  function openGuanlanWindow() {
+    try {
+      var hostOk = !!(window.chrome && window.chrome.webview && window.chrome.webview.postMessage);
+      var child = window.open('guanlan.html', 'qg_guanlan');
+      if (!hostOk && !child) qgNotice('浏览器拦截了观澜新窗口,请允许本站弹出窗口后重试');
+    } catch (e) { qgNotice('无法打开观澜窗口:' + (e && e.message ? e.message : e)); }
+  }
+  function bindGuanlanBtn() {
+    var btn = document.getElementById('guanlanOpen');
+    if (!btn || btn.__qgBound) return;
+    btn.__qgBound = true;
+    btn.addEventListener('click', openGuanlanWindow);
+  }
+
   // 顶栏「⟳」:重新加载当前科目(保留科目、跳过开场,直接回到知识云)
   function bindReloadBtn() {
     var btn = document.getElementById('reloadBtn');
@@ -204,10 +220,11 @@
   setInterval(pollCmd, 400);
   publish();
   bindTrainBtn();
+  bindGuanlanBtn();
   bindReloadBtn();
 
   // 页面(含切科目重载后)就绪后立刻推一次状态
-  window.addEventListener('load', function () { setTimeout(publish, 500); bindTrainBtn(); bindReloadBtn(); });
+  window.addEventListener('load', function () { setTimeout(publish, 500); bindTrainBtn(); bindGuanlanBtn(); bindReloadBtn(); });
 
   /* ---------- 侧栏「本机资料库」:当前科目知识云自动上传 ----------
    * 桌面版(exe)宿主把当前科目数据注册进 数据库\qg_subjects.txt,
@@ -252,7 +269,15 @@
     }
     // 发号统一走 window 上的共享计数器:主窗里 mainbridge 与 demo.js(观澜面板)
     // 共用同一个 WebView 通道,各自独立计数会撞号,把响应派给错误的回调。
-    var pend = {};
+    var pend = Object.create(null);
+    if (hostOk) window.chrome.webview.addEventListener('message', function (ev) {
+      var d = ev.data;
+      if (!d || !Object.prototype.hasOwnProperty.call(pend, d._seq)) return;
+      var entry = pend[d._seq];
+      delete pend[d._seq];
+      clearTimeout(entry.timer);
+      entry.resolve(d); // 不改写事件数据,同一窗口的其它监听器也会收到它
+    });
     function nextSeq() {
       window.__qgSeq = (window.__qgSeq || 0) + 1;
       return window.__qgSeq;
@@ -261,10 +286,20 @@
       return new Promise(function (res) {
         if (!hostOk) { res({ _nohost: true }); return; }
         var s = nextSeq();
-        obj._seq = s;
-        pend[s] = res;
-        window.chrome.webview.postMessage(obj);
-        setTimeout(function () { if (pend[s]) { delete pend[s]; res({ _timeout: true }); } }, 60000);
+        var msg = {};
+        Object.keys(obj).forEach(function (k) { msg[k] = obj[k]; });
+        msg._seq = s;
+        var entry = { resolve: res, timer: null };
+        pend[s] = entry;
+        entry.timer = setTimeout(function () {
+          if (pend[s]) { delete pend[s]; res({ _timeout: true }); }
+        }, 60000);
+        try { window.chrome.webview.postMessage(msg); }
+        catch (e) {
+          clearTimeout(entry.timer);
+          delete pend[s];
+          res({ ok: false, err: '无法连接本机资料库,请重启应用后重试。' });
+        }
       });
     }
     // 指纹必须覆盖"实际会上传的全部字段":原先只取 id/name/board/importance/关键词**个数**,
@@ -383,9 +418,7 @@
       setTimeout(function () { executeLocate(m.ask); }, 900);
     }
     if (m.gopen === '1') {
-      setTimeout(function () {
-        try { if (!window.open('guanlan.html', 'qg_guanlan')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开观澜窗口:' + e); }
-      }, 1800);
+      setTimeout(openGuanlanWindow, 1800);
     }
     if (m.open) {
       setTimeout(function () {

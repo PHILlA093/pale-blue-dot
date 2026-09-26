@@ -218,8 +218,11 @@ async function main() {
     await c.eval('(function(){document.getElementById("nnName").value="QA\u6d4b\u8bd5\u70b9"; document.getElementById("nnContent").value="\u5b9a\u4e49\uff1a\u6d4b\u8bd5\u5185\u5bb9 $x^2$ \u65b9\u6cd5\u3002"; document.getElementById("nnKeys").value="qa,\u6d4b\u8bd5"; document.getElementById("nnSubmit").click();})()');
     await sleep(500);
     const msg2 = await c.eval('document.getElementById("nnMsg").textContent');
-    const saved = await c.eval('(function(){try{var s=localStorage.getItem("qg_custom_points_v1")||"[]"; var a=JSON.parse(s); return a.filter(function(p){return p.name==="QA\u6d4b\u8bd5\u70b9";}).length;}catch(e){return -1;}})()');
-    check('custom point submit ok', (msg2 || '').indexOf('成功') >= 0 || saved >= 1, 'msg=' + msg2 + ' saved=' + saved);
+    // 2026-09-26 起自定义知识点改成逐条独立存储:qg_custom_point_v2:<科目>:<id>。
+    // 旧版整表键 qg_custom_points_v1 现在只在"兼容读取"时还被认。断言因此必须查新键 ——
+    // 只查旧键会把"界面明确报已加入、数据也确实写进去了"误判成失败(实测踩过这个假红)。
+    const saved = await c.eval('(function(){try{var n=0,i,k;for(i=0;i<localStorage.length;i++){k=localStorage.key(i);if(k&&k.indexOf("qg_custom_point_v2:")===0){var p=JSON.parse(localStorage.getItem(k)||"{}");if(p&&p.name==="QA\u6d4b\u8bd5\u70b9")n++;}}return n;}catch(e){return -1;}})()');
+    check('custom point submit ok', saved >= 1, 'msg=' + msg2 + ' saved=' + saved);
     const stAfter = await c.eval('document.getElementById("statBar").textContent');
     check('statbar updated to ' + (nMath + 1), new RegExp('节点\\s*' + (nMath + 1) + '\\b').test(stAfter || ''), 'DB=' + nMath + ' | ' + stAfter);
 

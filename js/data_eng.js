@@ -259,10 +259,9 @@ window.ENG_DB = {
         "星",
         "astronaut",
         "astronomer",
-        "astronomy",
-        "beast"
+        "astronomy"
       ],
-      "content": "**词根: aster/astr/astro｜星**\r\n词族成员 12 词:\r\n0260 astronaut /ˈæstrənɔːt/ n. 宇航员\r\n0261 astronomer /əˈstrɔnəmə(r)/ n. 天文学家\r\n0262 astronomy /əˈstrɔnəmɪ/ n. 天文学\r\n0362 beast /biːst/ n. 野兽；牲畜；beat (beat, beaten\r\n0577 catastrophe /kəˈtæstrəfɪ/ n. 灾难，灾祸，不幸事件；catch(caught,caught\r\n0702 coast /kəʊst/ n. 海岸；海滨\r\n0987 disaster /dɪˈzɑːstə(r); (US) dɪzˈæstər/ n. 灾难；祸患\r\n1069 east /iːst/ adj. adv. n. 东方；东部的；朝东的；从东方来 ad. 在东方；向东方；从东方 n. 东，东方；东部\r\n1070 easter /ˈiːstə(r)/ n. 复活节\r\n1071 eastern /ˈiːst(ə)n/ adj. 东方的；东部的\r\n1516 headmaster /hedˈmɑːstə(r)/ n. （英）中小学校长\r\n1877 master /ˈmɑːstə(r); (US) ˈmæstər/ vt. 精通，掌握\r\n候选派生链:\r\n  east → easter\r\n  astronomy → astronomer\r\n注: AI整理初版(派生规则+种子对), 待人工校对。\r\n",
+      "content": "**词根: aster/astr/astro｜星**\n可用于理解的词族成员:\nastronaut /ˈæstrənɔːt/ n. 宇航员\nastronomer /əˈstrɒnəmə(r)/ n. 天文学家\nastronomy /əˈstrɒnəmi/ n. 天文学\ndisaster /dɪˈzɑːstə(r)/ n. 灾难;历史词源与“不好的星象”有关,现代词义按“灾难”记忆。\n**易混提醒**\nbeast、coast、east、Easter、eastern、master、headmaster、catastrophe 不属于这个“星”词根族,不能仅凭字母相似归类。\n词汇关联:astronomy → astronomer(天文学 → 天文学家)。east → easter 不是正确的派生关系。\n注:已修正已发现的误分组;词源记忆仅作辅助,请结合词典核对。",
       "links": [],
       "book": "工具",
       "ch": "词根词缀"
@@ -3556,7 +3555,7 @@ window.ENG_DB = {
         "看守，教导",
         "tutor"
       ],
-      "content": "**词根: tut/tuit｜看守，教导**\r\n词族成员 1 词:\r\n3265 tutor /ˈtjuːtə(r)/ n. 家庭教师，私人教师，导师；TV(缩) = television\r\n注: AI整理初版(派生规则+种子对), 待人工校对。\r\n",
+      "content": "**词根: tut/tuit｜看守，教导**\r\n词族成员 1 词:\r\n3265 tutor /ˈtjuːtə(r)/ n. 家庭教师，私人教师，导师\r\n注: AI整理初版(派生规则+种子对), 待人工校对。\r\n",
       "links": [],
       "book": "工具",
       "ch": "词根词缀"
@@ -3760,7 +3759,7 @@ window.ENG_DB = {
         "evident",
         "provide"
       ],
-      "content": "**词根: vid/vis｜看**\r\n词族成员 11 词:\r\n0081 advise /ədˈvaɪz/ vt. 忠告，劝告，建议\r\n1156 evidence /ˈevɪdəns/ n. 证据，证明\r\n1157 evident /ˈevɪdənt/ adj. 清楚的，显而易见的\r\n2408 provide /prəˈvaɪd/ vt. 提供\r\n2578 revision /rɪˈvɪʒ(ə)n/ n. 复习，温习\r\n3101 television /ˈtelɪɡrɑːf; (US) -ɡræf/ n. 电视；tell (told, told\r\n3365 video /ˈvɪdɪəʊ/ n. 录像，视频\r\n3379 visa /ˈviːzə/ n. 签证，背签\r\n3380 visit /ˈviːzə/ n. vt. 参观，访问，拜访\r\n3381 visitor /ˈvɪzɪtə(r)/ n. 访问者，参观者\r\n3382 visual /ˈvɪʒjʊəl/ adj. 视力的，视觉的\r\n候选派生链:\r\n  visit → visitor\r\n注: AI整理初版(派生规则+种子对), 待人工校对。\r\n",
+      "content": "**词根: vid/vis｜看**\r\n词族成员 11 词:\r\n0081 advise /ədˈvaɪz/ vt. 忠告，劝告，建议\r\n1156 evidence /ˈevɪdəns/ n. 证据，证明\r\n1157 evident /ˈevɪdənt/ adj. 清楚的，显而易见的\r\n2408 provide /prəˈvaɪd/ vt. 提供\r\n2578 revision /rɪˈvɪʒ(ə)n/ n. 复习，温习\r\n3101 television /ˈtelɪvɪʒən/ n. 电视;电视机\r\n3365 video /ˈvɪdɪəʊ/ n. 录像，视频\r\n3379 visa /ˈviːzə/ n. 签证，背签\r\n3380 visit /ˈvɪzɪt/ n. & v. 参观，访问，拜访\r\n3381 visitor /ˈvɪzɪtə(r)/ n. 访问者，参观者\r\n3382 visual /ˈvɪʒjʊəl/ adj. 视力的，视觉的\r\n候选派生链:\r\n  visit → visitor\r\n注: AI整理初版(派生规则+种子对), 待人工校对。\r\n",
       "links": [],
       "book": "工具",
       "ch": "词根词缀"

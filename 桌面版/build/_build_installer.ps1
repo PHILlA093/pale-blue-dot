@@ -526,7 +526,7 @@ Copy-Checked $tmpInst $outInst
 $stPath = Join-Path $build '_selftest.txt'
 if (Test-Path -LiteralPath $stPath) { Remove-Item -LiteralPath $stPath -Force -ErrorAction SilentlyContinue }
 try {
-    $stp = Start-Process -FilePath $outInst -ArgumentList @('/S', ('/SELFTEST=' + $stPath)) -Wait -PassThru -ErrorAction Stop
+    $stp = Start-Process -WindowStyle Hidden -FilePath $outInst -ArgumentList @('/S', ('/SELFTEST=' + $stPath)) -Wait -PassThru -ErrorAction Stop
 } catch {
     Fail ('could not run the selftest: ' + $_.Exception.Message)
 }

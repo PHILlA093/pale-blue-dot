@@ -121,7 +121,6 @@
       var d = ev.data;
       if (!d || !d._seq) return;
       var seq = d._seq;
-      delete d._seq;
       var cb = hostPending[seq];
       if (cb) { delete hostPending[seq]; cb(d); }
     });
@@ -139,12 +138,23 @@
 
   /* ---------- DeepSeek 调用(宿主优先,fetch 兜底) ---------- */
   // 成功 resolve 为文本;失败 reject Error(错误信息 message 透出)。opts 可覆盖模型参数。
+  // 旧模型名已退役;仅迁移已知别名,保留用户指定的新模型和视觉模型。
+  function modelConfig(value) {
+    var name = String(value || '').trim();
+    return {
+      model: !name || name === 'deepseek-chat' || name === 'deepseek-reasoner' || name === 'deepseek-v4-flash'
+        ? 'deepseek-flash' : name,
+      thinking: { type: name === 'deepseek-reasoner' ? 'enabled' : 'disabled' }
+    };
+  }
+
   function dsAsk(messages, key, opts) {
     opts = opts || {};
+    var config = modelConfig(opts.model || load(LS_MODEL));
     var payload = {
       kind: 'ds', key: key,
       json: !!opts.json,      // 仅协议类请求开启 json_object(其提示词含 JSON 字样)
-      model: opts.model || load(LS_MODEL) || 'deepseek-chat',
+      model: config.model, thinking: config.thinking,
       messages: messages,
       max_tokens: opts.max_tokens || 2400,
       temperature: opts.temperature != null ? opts.temperature : 0.3
@@ -166,7 +176,8 @@
       signal: ctl ? ctl.signal : undefined,
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
       body: JSON.stringify({
-        model: payload.model, messages: payload.messages,
+        model: payload.model, messages: payload.messages, thinking: payload.thinking,
+        response_format: payload.json ? { type: 'json_object' } : undefined,
         max_tokens: payload.max_tokens, temperature: payload.temperature
       })
     }).then(function (res) {

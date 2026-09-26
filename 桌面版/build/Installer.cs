@@ -315,6 +315,26 @@ namespace QiongGuan.Installer
         // 逐级建目录, 把"哪一层不可写"讲清楚; 返回 null 表示可用
         internal static string EnsureDirUsable(string dir)
         {
+            // 盘符相对路径("E:" / "E:foo")必须在这里就掐掉: Path.GetFullPath("E:")
+            // 会把它解析成"E 盘的当前目录", 也就是调用本进程时的 CWD —— 实测
+            // /DIR=E: 会把 57 MB 载荷整个撒进当时的工作目录, 而下面的盘根判定看到的
+            // 已经是解析后的普通目录, 根本拦不住。完整路径("E:\...")不受影响。
+            string raw = dir == null ? "" : dir.Trim();
+            if (raw.Length >= 2 && raw[1] == ':')
+            {
+                string drive = raw.Substring(0, 2);
+                if (raw.Length == 2)
+                {
+                    return "不能把「" + AppName + "」直接装到盘根目录(" + drive + "\\), 请选择一个文件夹, 例如 "
+                         + drive + "\\Program Files\\" + AppName + "。";
+                }
+                if (raw[2] != '\\' && raw[2] != '/')
+                {
+                    return "请使用完整路径(例如 " + drive + "\\Program Files\\" + AppName + "), 不要用 "
+                         + drive + " 这种盘符相对路径。";
+                }
+            }
+
             string full;
             try { full = Path.GetFullPath(dir); }
             catch (Exception) { return "路径格式不正确, 请重新选择安装位置。"; }
@@ -1855,7 +1875,7 @@ namespace QiongGuan.Installer
                 string msg = "确定要卸载「" + Shared.AppName + "」吗?" + Environment.NewLine + Environment.NewLine +
                              "安装位置: " + dir + Environment.NewLine +
                              "卸载不会删除 数据库\\" + Shared.DbSubjects + " 等个人数据(若存在)。" + Environment.NewLine +
-                             "卸载会删除程序目录里的 " + Shared.Wv2CacheDir + " 缓存目录(内含已保存的 API Key 等本地缓存)。";
+                             "个人知识点、自绘函数及 API Key 所在的 " + Shared.Wv2CacheDir + " 配置目录也会保留,重装到原位置可继续使用。";
                 DialogResult r = MessageBox.Show(msg, Shared.AppName + " 卸载程序", MessageBoxButtons.OKCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
                 if (r != DialogResult.OK) { return 1; }
             }
@@ -1989,6 +2009,7 @@ namespace QiongGuan.Installer
             //     自己"不能说成"还有 1 个不属于本程序的文件", 保留在目录里的用户
             //     数据也必须明说。
             if (exists && File.Exists(keepPath)) { notes.Add("已保留您的个人数据: " + keepPath); }
+            if (Directory.Exists(Path.Combine(dir, Shared.Wv2CacheDir))) notes.Add("已保留个人学习数据和本机设置: " + Path.Combine(dir, Shared.Wv2CacheDir));
             if (exists && Directory.Exists(dir))
             {
                 int left = CountEntries(dir);
@@ -2120,6 +2141,21 @@ namespace QiongGuan.Installer
                 catch (Exception) { }
             }
 
+            // WebView2 包含真正的学习笔记与自绘函数,不是可丢弃缓存。
+            // 枚举失败时不允许整体删除,防止权限问题被当作目录不存在。
+            try
+            {
+                foreach (string entry in Directory.GetFileSystemEntries(full))
+                {
+                    if (string.Equals(Path.GetFileName(entry), Shared.Wv2CacheDir, StringComparison.OrdinalIgnoreCase))
+                    {
+                        reason = "保留个人学习数据和本机设置";
+                        return false;
+                    }
+                }
+            }
+            catch (Exception) { reason = "无法检查个人学习数据"; return false; }
+
             // 唯一的凭证: 安装时写的标记文件, 并且标记里必须写着 CleanDirectory=1
             // (安装当时这个目录是本程序新建的空目录)。这两条同时成立, 才允许把整个
             // 目录递归删掉。标记里还带着"安装前这个目录是不是空的", 那个才是能否整体
@@ -2187,7 +2223,7 @@ namespace QiongGuan.Installer
         }
 
         // 只删本程序已知写进去的东西, 其它一律不碰。任何"递归删除"都不在这里发生
-        // (唯一的例外是 WebView2 缓存目录, 那是本程序运行时自己建的, 见下)。
+        // WebView2 配置目录内有个人学习数据,必须完整保留。
         // 刻意保留: 数据库\qg_subjects.txt(用户自己积累的知识云)。
         // 语料 qg_corpus.txt 是我们装进去的载荷, 属于"已知文件", 要删 —— 49 MB,
         // 留下它等于卸载没卸干净。
@@ -2202,22 +2238,14 @@ namespace QiongGuan.Installer
                 Shared.ManualFile,
                 Shared.MarkerFile,
                 Shared.UninstallerExe,
-                Path.Combine(Shared.DbDir, Shared.DbCorpus),
-                Path.Combine(Shared.DbDir, Shared.DbSubjectsBak)
+                Path.Combine(Shared.DbDir, Shared.DbCorpus)
             };
             int i;
             for (i = 0; i < known.Length; i++)
             {
                 Shared.TryDelete(Path.Combine(dir, known[i]));
             }
-            // WebView2 缓存目录(含 API Key)属于本程序运行时产生, 可整体删。
-            // 卸载确认对话框里已经明说这一点(改保留就必须同步改那句话)。
-            try
-            {
-                string cache = Path.Combine(dir, Shared.Wv2CacheDir);
-                if (Directory.Exists(cache)) { Directory.Delete(cache, true); }
-            }
-            catch (Exception) { }
+            // 保留 WebView2 配置目录:包含 localStorage 中的笔记、自绘函数和 API Key。
             // 数据库目录只在空了之后才删, qg_subjects.txt 留着
             try
             {

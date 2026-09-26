@@ -91,7 +91,11 @@ async function main() {
     });
     const base = 'http://127.0.0.1:' + SPORT;
     await c.send('Page.enable');
-    await c.send('Page.navigate', { url: base + '/index.html?subject=math&skip=1' });
+    // 2026-09-27 起观澜面板整体移进独立窗口 guanlan.html(主窗 index.html 已移除观澜面板、
+    // "拆为独立窗口"按钮和观澜画布脚本),所以这里必须加载独立页。若仍按旧的 index.html 加载,
+    // window.__guanlanTest 与 window.QG_TEMPLATES 永远不存在,探针只会报 boot timeout ——
+    // 那不是产品坏了,而是探针过期(实测踩过:45 项里 0 项能跑)。
+    await c.send('Page.navigate', { url: base + '/guanlan.html' });
     await new Promise((res, rej) => {
       const t0 = Date.now();
       (function poll() {

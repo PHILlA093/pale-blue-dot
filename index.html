@@ -213,50 +213,6 @@
   🎯 破卷
 </button>
 
-<!-- 观澜:AI 演示问答(浮动面板;对话内存态,关闭应用即清空) -->
-<div id="guanlan" hidden>
-  <div class="gl-head" id="glHead" title="按住标题栏可拖动;⤢ 可拆为独立窗口">
-    <span class="gl-title">🌊 观澜 · AI 演示问答</span>
-    <span class="gl-sub" id="glCtx">—</span>
-    <div class="gl-btns">
-      <button type="button" id="glDetach" title="拆为独立窗口">⤢ 独立窗口</button>
-      <button type="button" id="glClearText" title="清空对话(画布保留至下一阶段)">清空对话</button>
-      <button type="button" id="glClose" title="关闭(关闭应用即清空对话)">✕</button>
-    </div>
-  </div>
-  <div class="gl-body">
-    <div class="gl-chat">
-      <div id="glMsgs"></div>
-      <!-- 表单仅用于让密码框处于表单内(避免浏览器告警);提交由 demo.js 的 submit 监听
-           preventDefault 接管,故去掉 action="javascript:void(0)"(该写法会被严格 CSP 拒绝) -->
-      <form id="glKeyRow" class="gl-keyrow" hidden>
-        <input type="password" id="glKeyInput" placeholder="DeepSeek API Key(与破卷共用,仅存本机)" autocomplete="off">
-        <button type="submit" id="glKeySave">保存</button>
-      </form>
-      <div class="gl-inputrow">
-        <input type="text" id="glAsk" placeholder="提问 / 让 AI 讲解题目…(演示图生成在后续阶段)">
-        <button type="button" id="glSend">发送</button>
-      </div>
-    </div>
-    <div class="gl-stage" id="glStage">
-      <div class="gl-stage-tip" id="glStageTip">画布与动态演示将在下一阶段接入</div>
-      <div class="gl-toolbar" id="glToolbar" hidden>
-        <button type="button" id="glDemoBtn" title="对最近的提问生成动态演示">🎬 动态演示</button>
-        <span class="gl-sep"></span>
-        <button type="button" id="glPlayBtn" title="播放">▶ 播放</button>
-        <button type="button" id="glPauseBtn" title="暂停">⏸ 暂停</button>
-        <button type="button" id="glStepBtn" title="步进一步">步进</button>
-        <button type="button" id="glResetBtn" title="回到起点">重置</button>
-        <span class="gl-sep"></span>
-        <button type="button" id="glClearCanvasBtn" title="清空画布">清空画布</button>
-        <span id="glDemoState" class="gl-state">画布:空</span>
-      </div>
-      <canvas id="glCanvas" width="900" height="600"></canvas>
-      <div id="glLabels"></div>
-    </div>
-  </div>
-</div>
-
 <!-- 学科切换过渡遮罩:淡出→整页装载→淡入(不重放开场动画) -->
 <div id="xmask" aria-hidden="true"></div>
 
@@ -286,8 +242,5 @@
 </script>
 <script src="js/app.js"></script>
 <script src="js/mainbridge.js"></script>
-<script src="js/glcanvas.js"></script>
-<script src="js/gltemplates.js"></script>
-<script src="js/demo.js"></script>
 </body>
 </html>

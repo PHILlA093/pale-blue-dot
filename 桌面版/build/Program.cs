@@ -817,7 +817,14 @@ namespace KnowledgeNetApp
             if (string.IsNullOrWhiteSpace(key))
                 return Json(new { kind = "dsResp", ok = false, err = "NO_KEY" });
 
-            string model = msg.ContainsKey("model") ? Convert.ToString(msg["model"]) : "deepseek-chat";
+            string model = msg.ContainsKey("model") ? Convert.ToString(msg["model"]) : "deepseek-flash";
+            string thinkingType = model == "deepseek-reasoner" ? "enabled" : "disabled";
+            if (string.IsNullOrWhiteSpace(model) || model == "deepseek-chat" || model == "deepseek-reasoner" || model == "deepseek-v4-flash") model = "deepseek-flash";
+            if (msg.ContainsKey("thinking"))
+            {
+                var thinking = Obj(msg["thinking"]);
+                if (thinking.ContainsKey("type") && Convert.ToString(thinking["type"]) == "enabled") thinkingType = "enabled";
+            }
             int maxTokens = msg.ContainsKey("max_tokens") ? SafeInt(msg["max_tokens"], 2400) : 2400;
             double temperature = msg.ContainsKey("temperature") ? SafeDbl(msg["temperature"], 0.6) : 0.6;
             // JSON 模式按需开启:仅当页面显式要求(破卷/演示协议等输出结构化 JSON 的提示词)
@@ -827,6 +834,7 @@ namespace KnowledgeNetApp
 
             var body = new Dictionary<string, object>();
             body["model"] = model;
+            body["thinking"] = new { type = thinkingType };
             body["max_tokens"] = maxTokens;
             body["temperature"] = temperature;
             body["stream"] = false;
@@ -912,15 +920,17 @@ namespace KnowledgeNetApp
                     var ser = new JavaScriptSerializer();
                     var obj = ser.Deserialize<Dictionary<string, object>>(respContent);
                     string content = "";
+                    string finishReason = "";
                     var choices = obj != null && obj.ContainsKey("choices") ? AsArr(obj["choices"]) : null;
                     if (choices != null && choices.Length > 0)
                     {
                         var c0 = Obj(choices[0]);
+                        if (c0.ContainsKey("finish_reason")) finishReason = Convert.ToString(c0["finish_reason"]);
                         var m0 = Obj(c0.ContainsKey("message") ? c0["message"] : null);
                         if (m0.ContainsKey("content")) content = Convert.ToString(m0["content"]);
                     }
                     Log("DS:ok http=" + httpCode + " contentChars=" + content.Length);
-                    return Json(new { kind = "dsResp", ok = true, content = content });
+                    return Json(new { kind = "dsResp", ok = true, content = content, finish_reason = finishReason });
                 }
                 catch (Exception ex)
                 {
