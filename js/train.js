@@ -606,7 +606,11 @@
       '2) 题型一致:本组全部为【' + typeCfg.label + '】,不得混入其他题型。' + typeRule,
       '3) 难度一致性:本组所有题的 difficulty 必须完全等于 ' + diff + '(整数 1~5),'
         + '不得混入其他难度;难度 ' + diff + ' = ' + (diff === 1 ? '最基础送分题' : diff === 5 ? '压轴难度' : diff === 4 ? '偏难综合' : diff === 2 ? '基础巩固' : '中档题') + ' 风格。',
-      '4) 答案准确,解析讲清思路与易错点。' + (typeCfg.jsonType === '解答' ? '解答题分步说明依据、条件和得分点;英语写作给出范文及点评,不得为字数省略必要步骤。' : '简短题解析尽量精练,必要的推导步骤不得省略。'),
+      '4) 答案准确,解析讲清思路与易错点。' + (typeCfg.jsonType === '解答' ? '解答题分步说明依据、条件和得分点;英语写作给出范文及点评。' : '简短题解析尽量精练,必要的推导步骤不得省略。'),
+      '4b) 长度预算(硬约束,务必遵守):整段 JSON 控制在约 5000 个汉字以内;每题 analysis 不超过 200 字;'
+        + '解答题把步骤压成 3~5 条要点(用①②③编号),不写过渡句、不复述题干、不重复选项原文。'
+        + '宁可每题更精炼,也不要把输出写长 —— 输出一旦超长会被平台截断,整批四题全部作废,'
+        + '用户什么也拿不到(实测:四道解答题写满分步解答正好撞上输出上限)。',
       '5) 本组共 ' + totalN + ' 题,优先采用至多 ' + realN + ' 道提供素材中的完整题目。'
         + '本地素材采用者填写 sourceId="local-序号",网页素材填写 sourceId="web-序号"。'
         + '题干、数据、条件、选项和选项顺序必须与该片段原文一致,不能凭年份认证来源。'
@@ -862,7 +866,7 @@
       var tokenLimit = context.subject === 'eng' || typeCfg.jsonType === '解答' ? 8000 : 4000;
       return dsAsk(messages, key, tokenLimit).then(function (r) {
         if (!r || !r.ok) throw new Error(r && r.err || 'AI 请求失败');
-        if (r.finish_reason === 'length') throw new Error('AI 输出达到长度上限,未返回完整题目;请缩小知识点范围后重试。');
+        if (r.finish_reason === 'length') throw new Error('AI 这次的回答被输出长度上限截断了(整批作废,上一批题目仍保留)。请改用「单选题」或降低难度后重试;解答题请把知识点/问题范围缩小一些。');
         var qs, invalid;
         try { qs = parseAI(r.content); invalid = validateBatch(qs, typeCfg.jsonType, diff, totalN); }
         catch (e) { invalid = '输出格式无效,请返回完整 JSON 题目数组'; }

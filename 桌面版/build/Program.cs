@@ -929,7 +929,10 @@ namespace KnowledgeNetApp
                         var m0 = Obj(c0.ContainsKey("message") ? c0["message"] : null);
                         if (m0.ContainsKey("content")) content = Convert.ToString(m0["content"]);
                     }
-                    Log("DS:ok http=" + httpCode + " contentChars=" + content.Length);
+                    // finish_reason 一定要记进日志:页面把 finish_reason='length' 当成"整批作废、不重试",
+                    // 而日志里原本只有 contentChars —— 排查时看不出"这次是被输出上限截断的"(实测踩过:
+                    // 四道解答题写满分步解答正好撞上 8000 token 上限,回包 11972 字)。
+                    Log("DS:ok http=" + httpCode + " contentChars=" + content.Length + " finish=" + (finishReason == "" ? "(none)" : finishReason));
                     return Json(new { kind = "dsResp", ok = true, content = content, finish_reason = finishReason });
                 }
                 catch (Exception ex)
