@@ -83,6 +83,7 @@
       if (els.glCtx) { els.glCtx.textContent = t; els.glCtx.title = pt || ''; }
       refreshSandboxBtn();   // 科目变了就跟着显示 / 收起物理沙盒入口(非物理时该函数是空转)
       refreshLabBtn();       // 同上:物理实验台入口(非物理时也是空转,连按钮都没建)
+      refreshClabBtn();      // 同上:化学实验台入口(非化学时也是空转,连按钮都没建)
     } catch (e) { /* 忽略 */ }
   }
   // 作为 messages 中的 user 上下文行,如:"当前科目:高中数学;当前知识点:导数。"
@@ -760,6 +761,7 @@
   function sandboxOpen() {
     if (!sandboxAvailable()) return false;
     labClose();          // 两个模式互斥:开沙盒先把实验台收掉(收尾会把按钮/提示还原)
+    clabClose();         // 三方互斥:化学实验台也收掉
     sandboxEnsureCSS();
     var stage = $('glStage');
     if (!window.QG_PSANDBOX.isMounted()) {
@@ -866,6 +868,7 @@
   function labOpen() {
     if (!labAvailable()) return false;
     sandboxClose();          // 两个模式互斥:开实验台先收沙盒(收尾会把按钮/提示还原)
+    clabClose();             // 三方互斥:化学实验台也收掉
     labEnsureCSS();
     var stage = $('glStage');
     if (!window.QG_PSLAB.isMounted()) {
@@ -928,6 +931,119 @@
       // Esc = 返回演示(只在实验台开着时有意义)
       window.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && labIsOpen()) labClose();
+      });
+    }
+  })();
+
+  /* ============ 化学实验台(只在**化学**科目下出现,其余科目一律不出现) ============
+   * 与物理实验台同架构、同观感、同工程约束,差别只在"测量"换成"现象":
+   * 选试剂 → 调条件 → 看现象 → 写方程式(核心自动校验配平) → 得结论。
+   * 硬约束照抄物理那一套,一处都不能松:
+   *   · 入口按钮的创建**整段**关在 if (!isChemSubject()) return; 里,连 CSS
+   *     (clabEnsureCSS)都要等入口真正用上时才注入 —— 非化学科目下不得出现任何
+   *     cl- 前缀 DOM、#clCSS 不得注入、#glClBtn 不得存在。
+   *   · 引擎在 js/clab.js(可嵌入模块):mount() 才建 DOM,close()/unmount()
+   *     连 DOM、全局事件、rAF 与 #clCSS 一起退干净。本文件只负责"入口按钮 +
+   *     挂载/卸载时机 + 与沙盒/物理实验台三方互斥"。
+   *   · 科目判定沿用既有写法(isChemSubject,读同一组键),不发明新键。
+   * ========================================================================== */
+  var CLAB_TIP_BACKUP = null;   // 进入化学实验台前的 #glStageTip 文案
+  function isChemSubject() {
+    try {
+      if (window.CUR_SUBJECT) return String(window.CUR_SUBJECT).toLowerCase() === 'chem';
+      var s = null;
+      try { s = localStorage.getItem('qg_subject'); } catch (e1) { s = null; }
+      if (!s) {
+        try { var raw = localStorage.getItem('qg_live_state'); if (raw) s = (JSON.parse(raw) || {}).subject; } catch (e2) { s = null; }
+      }
+      return String(s || '').toLowerCase() === 'chem';
+    } catch (e) { return false; }
+  }
+  function clabAvailable() {
+    return !!(window.QG_CLAB && window.QG_CLAB.mount && $('glStage') && isChemSubject());
+  }
+  function clabIsOpen() {
+    return !!(window.QG_CLAB && window.QG_CLAB.state && window.QG_CLAB.state().open);
+  }
+  // 样式只注入一次。用 cl-on 这个**独立**类名(不复用 ps-on/pl-on):三者互斥,
+  // 但独立类名能保证一方收尾时不会把另一方的舞台样式一起抹掉。
+  var clabCSSDone = false;
+  function clabEnsureCSS() {
+    if (clabCSSDone) return;
+    clabCSSDone = true;
+    var css = [
+      '#glClBtn.clOn{color:#0b1220;background:#f4f1ea;border-color:#f4f1ea}',
+      '.gl-stage.cl-on #glCanvas,.gl-stage.cl-on #glLabels,.gl-stage.cl-on #glExprBox,',
+      '.gl-stage.cl-on #glParamBar,.gl-stage.cl-on #glToolbar{visibility:hidden}'
+    ].join('');
+    var st = document.createElement('style');
+    st.id = 'glClCSS';
+    st.textContent = css;
+    (document.head || document.documentElement).appendChild(st);
+  }
+  function clabOpen() {
+    if (!clabAvailable()) return false;
+    sandboxClose();          // 三方互斥:开化学台先收沙盒与物理实验台
+    labClose();
+    clabEnsureCSS();
+    var stage = $('glStage');
+    if (!window.QG_CLAB.isMounted()) {
+      var tip = els.glStageTip;
+      CLAB_TIP_BACKUP = tip ? tip.textContent : null;
+      if (tip) tip.style.display = 'none';
+      window.QG_CLAB.mount(stage, { onUnmount: clabAfterUnmount });
+    }
+    stage.className = stage.className + ' cl-on';
+    var b = $('glClBtn');
+    if (b) { b.textContent = '↩ 返回演示'; b.className = 'clOn'; b.title = '回到观澜的表达式 / 模板画布'; }
+    note('CLAB:on subject=chem');
+    return true;
+  }
+  function clabAfterUnmount() {
+    var stage = $('glStage');
+    if (stage) stage.className = String(stage.className).replace(/(^|\s)cl-on(\s|$)/g, '$1').replace(/\s+/g, ' ').replace(/^\s|\s$/g, '');
+    var tip = els.glStageTip;
+    if (tip) { tip.style.display = ''; if (CLAB_TIP_BACKUP != null) tip.textContent = CLAB_TIP_BACKUP; }
+    var b = $('glClBtn');
+    if (b) { b.textContent = '🧪 化学实验台'; b.className = ''; b.title = '打开化学实验台:选试剂 → 调条件 → 看现象 → 写方程式(自动校验配平) → 得结论'; }
+    return true;
+  }
+  function clabClose() {
+    if (!clabIsOpen()) return false;
+    window.QG_CLAB.close();
+    note('CLAB:off');
+    return true;
+  }
+  function clabToggle() {
+    if (!clabAvailable()) return false;
+    return clabIsOpen() ? clabClose() : clabOpen();
+  }
+  // 入口按钮按科目显隐 + 非化学科目自动收起(科目在观澜开着时被切走也不会留下化学台)
+  function refreshClabBtn() {
+    var on = isChemSubject();
+    if (!on && clabIsOpen()) clabClose();
+    var b = $('glClBtn');
+    if (b) b.hidden = !on;
+    return on;
+  }
+  (function initChemistryLab() {
+    if (!isChemSubject()) return;          // 非化学:一个节点都不建
+    var head = $('glHead');
+    var btns = head ? head.querySelector('.gl-btns') : null;
+    if (!btns) return;
+    var b = cel('button', '');
+    b.type = 'button';
+    b.id = 'glClBtn';
+    b.textContent = '🧪 化学实验台';
+    b.title = '打开化学实验台:选试剂 → 调条件 → 看现象 → 写方程式(自动校验配平) → 得结论';
+    b.addEventListener('click', function () { clabToggle(); });
+    var closeBtn = $('glClose');           // 与 #glPsBtn / #glPlBtn 同级,同样插在关闭键之前
+    if (closeBtn && closeBtn.parentNode === btns) btns.insertBefore(b, closeBtn);
+    else btns.appendChild(b);
+    if (window.addEventListener) {
+      // Esc = 返回演示(只在化学台开着时有意义)
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && clabIsOpen()) clabClose();
       });
     }
   })();

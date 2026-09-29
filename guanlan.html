@@ -139,6 +139,18 @@
 <script src="js/pslab/opt.js"></script>
 <script src="js/pslab/therm.js"></script>
 <script src="js/pslab/mod.js"></script>
+<!-- 化学实验台(反应台)核心 + 六个反应组模块,同架构同约束:加载它们本身不建 DOM、
+     不起循环,组脚本只做 window.QG_CLAB.register(id, spec)。顺序同样必须是
+     "核心 → 各组",且都要在 demo.js 之前(demo.js 里"化学科目才出现 🧪 化学实验台
+     入口"那段要用 window.QG_CLAB 判断;非化学科目下一个节点都不建)。
+     缺文件时是普通 404,不阻塞后续脚本与核心(与上面 pslab 一样)。 -->
+<script src="js/clab.js"></script>
+<script src="js/clab/ions.js"></script>
+<script src="js/clab/metals.js"></script>
+<script src="js/clab/organic.js"></script>
+<script src="js/clab/electro.js"></script>
+<script src="js/clab/kinetics.js"></script>
+<script src="js/clab/analysis.js"></script>
 <script src="js/demo.js"></script>
 </body>
 </html>

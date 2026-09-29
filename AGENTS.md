@@ -277,11 +277,26 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 ## 10. 当前状态与已知未解（截至 2026-09-29 上午）
 
 **已发布（GitHub）**：
-- `main` = **5a4ae58**（2026-09-29）：在 9a8b024 的基础上又进了三块 —— **物理观澜沙盒**（§12）、**六科真题档案 + 按科目过滤**、**语料新增 2025 五科真题 419 块**；连同重建的 exe 与 zip。此前的主线修复（宿主 8 处 + 前端 5 处 + 安装程序 7 处、年份检索三档、破卷长度预算与截断可执行化、公式不排版修复、`qa.js` 的公式闸门）都在。
-- `mobile-apk` = **b66e7c7**：按科目过滤真题档案 + 语料新增 2025 五科；APK **v1.5 / versionCode 6**（20,029,651 B / `D8B3725A…`，与 v1.4 同一 debug 签名可覆盖安装）。手机版**没有**物理沙盒（包内 psandbox 条目 = 0，已验证）。
-- **桌面三件产物（2026-09-29 发布，已双向复核）**：`穷观学习.exe` 7,452,160 B / `44784466C26BFFBC71B84C7204BE55FADBEC4939C739FAE51894EABD11686446`；安装程序 13,790,208 B / `3CC4ECAB46DCB8932F5B4A2F0C0AFA8C86B88121BBEF342220851449CF373D1C`；下载 zip 13,073,873 B / `59682F0893D534E9821D9D3143BDCC7DFEF30B5C3843F6AE49F878B81EC55AD2`。
-  启动烟测 **`CORPUS:loaded 37665 blocks`**（= 语料 37,668 块中被 SplitBlocks 丢掉 3 个极短碎片后的值）+ `SUBJ:loaded 5` + `WEBVIEW2:ready` + `NAV:ok=True`，无 `Unable to cast` / `ERROR` / `404`。
-  ⚠ **基准口径提醒**：重编前的"上一版"磁盘上是 **2026-09-27 06:31–06:33** 那一版（exe 7,276,544 / `FEE2FCAB…`），不是 §10 下面 09-27 03:40 的快照数字；要复原被覆盖的上一版，可以从**重编前的安装程序**里解 `qg.payload.0.gz`。
+- **最新（2026-09-29 晚）`main` = `0e25613`**：新增**物理实验台**（§13，20 个实验）+ 修掉 4 处"裸函数名"致命缺陷
+  （左栏 `open()` 解析到 `window.open`、工具条三颗按钮的裸 `sync()`）+ 修掉 `mech.js` 的**变量遮蔽**（两个实验装置图只画一半）
+  + 核心加固（`drawErrorCount()` / `shadowAudit()` / 被吞异常可见化 / warn 节流）。
+  **桌面三件产物**：`穷观学习.exe` **7,948,288 B** / `08217C68A6225E67A1542C2E…`；安装程序 **13,944,832 B** / `D7628AB741A9197E…`；
+  下载 zip **13,228,661 B** / `8F4BD67932A625C0…`。已复核：**内嵌资源 28/28 与源码逐字节一致**（含 7 个新资源）、
+  安装程序 6 载荷逐字节、zip 三层一致、Key 闸门 0 命中、桌面 zip 与快捷方式指向的 exe 都已换新。
+  ⚠ 启动烟测的**日志四行这次没验上**（本会话里 app 的 `Shared.Log()` 静默失败：`knet_run.log` 不涨；已排查为环境问题非回归），
+  替代证据：新 exe 能起、3D 词云完整渲染、`穷观学习.exe.WebView2\EBWebView` 正常写入、关闭后进程归零。
+  ⚠ 本会话 **`Start-Process` 被策略拒**（ERROR_CANCELLED），导致 `_build_installer.ps1` 最后一步跑不了 `/SELFTEST` → **脚本 exit 1 但产物完整**；
+  已按脚本原逻辑手工复现 selftest（exit 0、10 资源、逐字节载荷比对）。
+- `main` = **5a4ae58**（2026-09-29 上午，历史）：在 9a8b024 的基础上又进了三块 —— **物理观澜沙盒**（§12）、**六科真题档案 + 按科目过滤**、**语料新增 2025 五科真题 419 块**；连同重建的 exe 与 zip。此前的主线修复（宿主 8 处 + 前端 5 处 + 安装程序 7 处、年份检索三档、破卷长度预算与截断可执行化、公式不排版修复、`qa.js` 的公式闸门）都在。
+- `mobile-apk` = **b66e7c7**：按科目过滤真题档案 + 语料新增 2025 五科；APK **v1.5 / versionCode 6**（20,029,651 B / `D8B3725A…`，与 v1.4 同一 debug 签名可覆盖安装）。手机版**没有**物理沙盒、**也没有**物理实验台（本轮不做手机版）。
+- **化学实验台（§14，已接线，待独立验收后发布）**：`js/clab.js` + 六个组文件共 **50 个反应 / 944 KB**；
+  `demo.js`（入口 `#glClBtn` + 三方互斥）、`guanlan.html`（7 个脚本）、`_rebuild.ps1`（资源 **28 → 35**）**都已接好**；
+  试编通过（**35/35 资源逐字节一致**，包内含 `QG_CLAB`/`balance`/`shadowAudit` 与化学入口），
+  接线后四套探针**保持基线**（46/46、45/45、20/20、3/3、19 项测试 39/39）。
+  ⚠ 当时的试编产物（exe 8,922,624 B / `FA55B277…`）**不是发布版** —— 要等独立验收通过后再正式重编。
+- **历史产物（已被 0e25613 取代，留档备查）**：`穷观学习.exe` 7,452,160 B / `44784466…`（更早一版 7,276,544 / `FEE2FCAB…`，
+  2026-09-27 06:31–06:33）；安装程序 13,790,208 / `3CC4ECAB…`；zip 13,073,873 / `59682F08…`。
+  ⚠ 要复原更早的版本：从**那一版的安装程序**里解 `qg.payload.0.gz`；旧二进制归档在 `穷观_归档\旧备份与旧版本\`（**不删**）。
 
 **本次发布的内容（2026-09-29，已完成并验收）**：
 1. **六科真题档案 + 按科目过滤**：`js/train.js` `gkLib = true`（原 `= subject === 'math'`，把档案里本来就有的语英物化生真题锁在门外）、`subjFilterOf`、`gkMats` 带 `subj`；宿主 `HandleMats` 读 `subj`（五科要求路径含 `五科真题/<科目>/`，数学排除五科）、回执新增 `subj{name,blocks,from,to}`、MATS 日志带 `subj=`；手机版 `corpus.js`（`filterBySubject`/`subjectPool`/`yearSpan`，`VERSION='phone-3'`）与 `train.js` 同语义。
@@ -391,6 +406,44 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 而源码注释里有一句 `各组的 js/pslab/*.js 会把实验注册进来` —— 那个 `/*` 让扫描器把后面 60 行全吞了，**它因此漏报了 `onPick` 那一行**。
 **粗糙的正则剥离会给出假绿**：必须先剥字符串、再用带状态的词法扫描处理注释。
 
+**⚠ 第二类盲区：被"空 catch"吞掉的绘制异常（比上面那个更隐蔽，务必读完这一节）**
+`mech.js` 的 `hooke-law` / `simple-pendulum` 曾因**局部变量遮蔽画线原语**而 `draw()` 每帧抛 `TypeError`，
+却被组方 `safeDraw` 的**空 catch** 吃在 body 内部 —— 结果：console 干净、`state.lastError` 空、**所有探针全绿**，
+但画面上只画了一半（单摆的摆线/摆球/悬点/摆角弧全没画）。**这类问题只能靠下面这套判据抓。**
+
+**抓不到的（都实测过，别再指望它们）**：
+① `Runtime.exceptionThrown` / `window.onerror` / console error 计数 —— 异常在 `catch` 里被吞，浏览器根本不报；
+② 核心的 `lastError` —— 它只接住"逃出 body"的异常；
+③ **"画布像素签名会变"** —— 破坏方式是中途夭折，而画面每帧都在变（读数/动画），坏版本下照样变；
+④ "非空白像素 > 0" —— 画到一半也有几万像素；
+⑤ 静态**裸调用**扫描器 —— 抓不到**变量遮蔽**（`L(...)` 里 `L` 是解析得到的局部变量）；
+⑥ 只跑 API 的探针 —— 抓不到只发生在 UI/绘制路径的问题。
+**能抓住的**：
+① `Debugger.setPauseOnExceptions({state:'all'})` + 逐帧读 `Debugger.paused` 的栈 —— 唯一能在"被吞"情况下拿到确切 file:line 的手段
+（⚠ `callFrames[i].url` 可能为空，判据要用 `params.data.description` 的栈文本或 scriptId→url 映射，否则**假绿** —— 第一版就全判成了 clean）；
+② **"画到最后一笔"指令级对照**：拦 `CanvasRenderingContext2D.prototype` 上所有函数型属性记指令序列（按 `this.canvas.id` 过滤），
+再用记录型假 ctx（Proxy 兜底未知方法，**含 `createRadialGradient`**）按同一 `params`/`state` 独立重放 `spec.draw`，
+比较**指令条数**与**末 3 条签名**：正常帧只差核心自己的 3 条前导，夭折帧断崖下降（实测 **68 vs 1825**）。**必须带负对照**（注入一次中途抛错，判据不变红就是盲的）；
+③ 失败通道 + 每帧哨兵（`safeDraw(id, body)` 写 `state.lastError`、每帧末尾画 1×1 哨兵）；
+注意**哨兵只证明包装器跑完、不证明 body 跑完**，且 1×1 在缩放/抗锯齿下不能精确比色，要判"颜色方向一致（cos>0.985）+ 明显偏离纸色"；
+④ 关键实验的**几何级特征**（按源码公式算坐标再数像素：单摆 14/14 采样点非纸色、胡克定律 3/3 标记点为纯墨色）；
+⑤ 真点击 / 真派发事件 + `window.open` 间谍。
+
+**核心为此新增的两条闸门（口径别记错）**：
+```js
+QG_PSLAB.drawErrorCount(id) === 0          // 运行时：异常"穿过 spec.draw 这一层"的次数（自挂载以来；state() 里是 drawErrors/drawErrorsTotal）
+QG_PSLAB.shadowAudit('var-called') === []   // 静态：局部 var 被当函数调用（mech 那一类）——真正能对它报红的是这条
+```
+- ⚠ **`drawErrorCount` 覆盖不到"组内自己 catch"的异常** —— 那是原理性上限（已用对照实验证明：把 `hooke-law` 的 draw 装回修前形状，
+  计数仍为 **0**，而 `shadowAudit` 报红）。所以**两条都要断言**，缺一不可。
+- ⚠ **`shadowAudit` 的警告只进 console，不进 `state().warnings`**（§13 上面那条"warning 进 `state().warnings`"指的是**参数体检**那类；
+  遮蔽扫描与 `empty-catch` 走 console）。探针要查 `QG_PSLAB.shadowAudit()` / `audit()[].suspects` 或 console，**别只查 `state().warnings`**。
+- `shadowAudit` 是**文本启发式**（基于 `spec.draw.toString()`），只扫 draw/measure/step/conclude/onPointer **这 5 个回调本身的函数体**、
+  不跟进组内 helper；已知**合法误报**形状：`var line = d.line; line(...)`（转存函数）；已排除"RHS 是调用表达式（工厂返回函数）"（`mod.js` 的 `var F = mkFontFn(gr); F(...)` 不再误报）。
+  当前对 20 个真实实验 **0 误报**；`empty-catch`（只含注释的 catch）**只列不判**（存在有理由的兜底写法，但要提醒组方：有它在，draw 里任何新异常都会再次静默缺画面）。
+- 修复的可见证据（独立复验实测）：`hooke-law` 非纸色像素 **2397 → 6085**、`simple-pendulum` **2050 → 5516**；
+  20/20 实验每帧被吞异常数 **0**、指令级对照差恒为 3、主探针 217/217。
+
 **验收基线（2026-09-29，20/20 通过 §7 的 1/2/3/4/5/6 条）**：方向性 20/20 ✓（如单摆 L↑→T↑、双缝 d↑→Δy↓、气体 V↑→p↓、
 **光电效应光强×10 → I_sat↑ 而 U_c 不变**）；19 个线性实验 r² ∈ **0.9936~0.99999**，`va-characteristic` 契约 `fit:'none'`；
 结论量级全对（g=9.824、n=1.50、λ=6.575e-7 m、d=6.165e-10 m、**h=6.616e-34 J·s**、ρ=1.087e-6、E=1.494 V/r=0.487 Ω）；
@@ -401,3 +454,73 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 `emf-internal` 的参数语义是"电流表读数 I"（变阻器电阻由模型反解）；`oil-film` 的"浓度↑→d↑"走"未充分展开→S 偏小"这条人为误差通道。
 
 **发布**：7 个新网页资源必须在 `_rebuild.ps1` 里各加一条 `/resource:` → 内嵌资源总数 **21 → 28**。
+
+---
+
+## 14. 化学实验台（反应台，`js/clab.js` + `js/clab/*.js`，化学观澜的一块）
+
+**它是什么**：与物理实验台（§13）**同架构、同观感、同工程约束**，差别只在"测量"换成"现象" ——
+选试剂 → 调条件 → **看现象** → 写方程式（核心**自动校验配平**）→ 得结论。
+**契约在 `docs/化学实验台设计.md`（写新反应前先读它）。**
+
+**文件**：核心 `js/clab.js`（注册表 + 三栏 UI + 现象表 + 结论卡 + `balance()` + 测试接口）+ 六组
+`js/clab/{ions,metals,organic,electro,kinetics,analysis}.js`。**共 50 个反应**：
+离子与溶液平衡 9（`agcl-precip` `baso4-precip` `cuoh2-precip` `feoh3-precip` `carbonate-acid` `ammonium-alkali` `hydrolysis` `precipitate-convert` `complex-ion`）、
+金属与非金属 10（`na-water` `na-oxygen` `fe-cuso4` `al-naoh` `al-thermite` `cl2-metal` `cl2-water` `s-metal` `mg-co2` `cu-hno3`）、
+有机 11（`methane-substitute` `ethylene-addition` `ethylene-polymer` `ethanol-oxidation` `ethanol-elimination` `esterification` `ester-hydrolysis` `glucose-silver` `starch-hydrolysis` `benzene-bromo` `phenol-bromine`）、
+电化学 6（`galvanic-cuzn` `electrolysis-cucl2` `electrolysis-brine` `electroplating` `iron-corrosion` `fuel-cell`）、
+速率与平衡 6（`rate-concentration` `rate-temperature` `rate-catalyst` `equilibrium-fescn` `equilibrium-no2` `weak-electrolyte`）、
+检验·分离·定量 8（`flame-test` `iron-ion-test` `anion-test` `iodine-starch` `acid-base-titration` `kmno4-titration` `gas-collection` `so2-properties`）。
+
+**只在化学科目出现**：入口 `#glClBtn` 的创建整段关在 `demo.js` 的 `if (!isChemSubject()) return;` 里；
+`#clCSS` 在 unmount/close 时会被移除；**沙盒 / 物理实验台 / 化学实验台三者互斥**（开任一个自动收另外两个），
+各自用独立类名（`ps-on` / `pl-on` / `cl-on`）与独立样式 id（`#psCSS` / `#glPlCSS` / `#glClCSS`）——
+**别"统一"它们**，独立命名才能保证一方收尾不抹掉另一方。
+
+**`balance()` 的四档状态（探针口径，别记错）**：
+```js
+{ status: 'ok'          }  // 配平（含离子电荷守恒、括号嵌套、结晶水、聚合物按 n=1 记账）
+{ status: 'no-equation' }  // 本来就没有化学方程式 —— 焰色(物理变化)/碘的萃取(物理变化)/SO₂ 品红加合物(无固定组成)
+                           //   ★ 这是**合法**写法，界面中性灰字、不记 warning、**不许判红**（否则等于惩罚"不编造化学"）
+{ status: 'unbalanced'  }  // 真不配平 —— 只有这一档是缺陷，界面标红并**指出哪个元素/电荷不守恒**
+{ status: 'unparsed'    }  // 解析失败（黄字）
+```
+**已知近似**：聚合物按 1 记账（`nC2H4 = (C2H4)n` 这类写法 ok；`nA = B` 这种不配对写法会被低估成守恒——不在中学范围）；
+`balance` 判守恒不判最简（非最简给 `minimal=false` + note）。
+
+**另外三条实现约定（组里都在用）**：① `react()` 返回"长度 n 的数组 + 末行字段挂在数组上"（`react(6)[0]` 与 `react().phenomena` 都可用）；
+② 现象表就 **4 列**（第几次/现象/方程式/条件），定量列的数字折进"条件"格里显示（7 列会把右栏挤成一字一行）；③ `ionic` 里给全电极反应式时，
+用「净离子方程式 + 中文括注」写法（核心的 `normEqText()` 会先剥含汉字的小括号括注再解析配平；**括注里不能再嵌英文括号**，否则剥不掉会判未配平）。
+
+**⚠ 这轮踩到的三个坑（写新反应前先看）**：
+① **`g.font(size)` 只返回字体串、不写 `ctx.font`** —— 不赋值就整块文字观感丢失，而**像素签名照样在变**，极难发现；自己 `c.font = font`。
+② **`balance()` 不认化学式里的裸小写 `n`**（`nC2H4`/`(C6H10O5)n` 直接解析失败）→ 组 3 把 n 写实为 1000（并另加 500 保持最简比），通式写在 principle/文字里。
+③ **局部函数/变量遮蔽**（`draw()` 体内声明 `bar()` 又被调用）会被核心的 `shadowAudit('var-called')` 抓到 —— 组 1 的 `precipitate-convert` 就中过，
+改法是**把画图原语提到文件级**（`qgKspBar(...)`），别搬回 `draw` 体内。
+④ **`isFinite(null) === true`** —— 判"是不是数字"千万别只写 `!isFinite(x)`：一个表示"无有效值"的 `null` 会穿过守卫，
+走到 `x.toExponential()` 抛 TypeError（组 1 就因此在"等物质的量"边界必炸：`0.2×0.1` 与 `0.1×0.2` 是同一个 IEEE754 值，而滑块上界正好 0.20）。
+正确写法：`x === null || x === undefined || typeof x !== 'number' || !isFinite(x)`。**滑块量程端点要当作必然会被点到的边界来设计。**
+
+**核心的判据口径（断言"化学没坏"就用这几条）**：
+```js
+QG_CLAB.react(n)                      // ★ 绝不把 spec.react 的异常冒给调用方：捕获 → 计数 → lastError → 一次 console.warn → 那一次不出行（行号仍连续）→ 返回数组
+QG_CLAB.reactErrorCount(id) === 0     // 运行时：spec.react 抛的次数（自本次挂载以来；state() 里是 reactErrors/reactErrorsTotal，另有 errorCounts:{draw,react,step,pointer,conclude}）
+QG_CLAB.drawErrorCount(id) === 0      // 口径不变；★ 这两条都覆盖不到"组内自己 catch"的异常 —— 那是原理性上限（同 §13）
+QG_CLAB.balance(eq).status            // ok | unbalanced | unparsed | no-equation（'no-equation' 合法、不标红、不记 warning）
+QG_CLAB.balance(eq).segments[]        // 多步方程式（`;` `；` `｜` `|` 分隔）**逐段**校验；reason 里写「第 k 段：元素 X 不守恒」
+QG_CLAB.graph().degenerate / fitNote  // y 恒定或 x 无分布 → fit:null + degenerate:true（r² 只在"y 非常数且 x 有分布"时可用）
+```
+`balance()` 现在认得：不带数字的 `·`（`NH3·H2O`，N1/H5/O1）、多段式、**减电子写法**（`Cu - 2e- = Cu2+`）；
+修掉的两个真 bug：箭头正则过度贪婪会把 `CH3 - CH2 - OH --催化剂--> C2H4 + H2O` 从更早的空格连字符处劈开（元素数错），
+以及减号只许当"减电子"用（带空格的单键若当分隔符会把元素减掉）。
+
+**⚠ 参数组合扫描是化学的必备闸门**：`open()` 会重置 `lastError`/计数 —— "每个反应只读一次"会漏掉**只在某个参数组合下才炸**的缺陷。
+实际做法：每个反应 ≥60 组（每个 numeric 的 min/mid/max × 每个 select 的全部选项 ＋ 同类单位参数"取相等值"的边界），**每组都读**状态。
+组 1 用它拿到 `precipitate-convert` 的**修前 6 红 → 修后 0 红**；核心用 2745 组全库扫描 + 定点穷举该反应 **1,498,224** 组确认零抛错。
+
+**验收与证据（2026-09-29）**：核心 `node --check` exit 0、离线自证 **133/133** + 真浏览器 **59/59**（真点击、真 rAF、真 `getImageData`）、
+`balance()` 正反例 **45/45**；组内自测：离子 **364**、金属 **506 + 46（真挂载）**、有机 **327 + 110 + 58 + 14 张真像素**、
+电化学/速率 **294 + 28 条配平**、检验定量 **314 + 139**；**全库 register 警告 0、`shadowAudit` 两类均 0、`drawErrorCount` 全 0**
+（我用独立脚本复核过：50 个反应、0 重复 id、0 警告、每个 `draw()` 都能真跑出指令）。
+接线后**四套探针保持基线**（`qa.js` 46/46、`tpl_probe` 45/45、`eng_probe` 20/20、`desk_fp_probe` 3/3、`node --test` 39/39）。
+**发布**：7 个新网页资源各加一条 `/resource:` → 内嵌资源总数 **28 → 35**。

@@ -58,6 +58,15 @@ $a30 = '/resource:' + (Join-Path $root 'js\pslab\mag.js') + ',web.js.pslab.mag.j
 $a31 = '/resource:' + (Join-Path $root 'js\pslab\opt.js') + ',web.js.pslab.opt.js'
 $a32 = '/resource:' + (Join-Path $root 'js\pslab\therm.js') + ',web.js.pslab.therm.js'
 $a33 = '/resource:' + (Join-Path $root 'js\pslab\mod.js') + ',web.js.pslab.mod.js'
+# Chemistry bench (added 2026-09-29): the core plus one file per reaction group. Same generic
+# path-to-name rule, so /js/clab/ions.js is served from web.js.clab.ions.js.
+$a34 = '/resource:' + (Join-Path $root 'js\clab.js') + ',web.js.clab.js'
+$a35 = '/resource:' + (Join-Path $root 'js\clab\ions.js') + ',web.js.clab.ions.js'
+$a36 = '/resource:' + (Join-Path $root 'js\clab\metals.js') + ',web.js.clab.metals.js'
+$a37 = '/resource:' + (Join-Path $root 'js\clab\organic.js') + ',web.js.clab.organic.js'
+$a38 = '/resource:' + (Join-Path $root 'js\clab\electro.js') + ',web.js.clab.electro.js'
+$a39 = '/resource:' + (Join-Path $root 'js\clab\kinetics.js') + ',web.js.clab.kinetics.js'
+$a40 = '/resource:' + (Join-Path $root 'js\clab\analysis.js') + ',web.js.clab.analysis.js'
 # One logo, two encodings. ../favicon.ico is the master (BMP entries, embedded with
 # /win32icon: so Explorer and the shortcut have a real icon); the page copy served at
 # /favicon.ico is regenerated into the build folder as a few-KB PNG-entry ico whose
@@ -86,7 +95,7 @@ $fpPath = Join-Path $build $fpName
 if (-not (Test-Path $fpPath)) { Write-Output 'BUILD FAILED: fingerprint resource file missing'; exit 1 }
 $a24 = '/resource:' + $fpPath + ',web.qg.fingerprint.txt'
 $src = Join-Path $build 'Program.cs'
-$args = @('/nologo', '/target:winexe', '/optimize+', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $a26, $a27, $a28, $a29, $a30, $a31, $a32, $a33, $src)
+$args = @('/nologo', '/target:winexe', '/optimize+', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $a26, $a27, $a28, $a29, $a30, $a31, $a32, $a33, $a34, $a35, $a36, $a37, $a38, $a39, $a40, $src)
 & $csc @args
 if ($LASTEXITCODE -ne 0) { Write-Output ('BUILD FAILED ' + $LASTEXITCODE); exit 1 }
 Copy-Item -Path $tmpOut -Destination $out -Force

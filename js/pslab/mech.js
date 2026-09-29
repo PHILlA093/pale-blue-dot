@@ -338,18 +338,24 @@
     return 'rgb(' + ((h >>> 16) & 255) + ',' + ((h >>> 8) & 255) + ',' + (h & 255) + ')';
   }
   function paintSentinel(vg, id) {
-    vg.c.save();
-    vg.c.fillStyle = sentinelColor(id);
-    vg.c.fillRect(VIR_W - 4, VIR_H - 4, 1, 1);
-    vg.c.restore();
+    /* 刻意不写成对 save/restore：万一 fillRect 抛错，也不会在画布状态栈上留下不平衡的 save。
+       （其它绘图原语都各自设置 fillStyle/strokeStyle，所以即使 fillStyle 没还原也无副作用。） */
+    var c = vg.c, old = c.fillStyle;
+    c.fillStyle = sentinelColor(id);
+    c.fillRect(VIR_W - 4, VIR_H - 4, 1, 1);
+    c.fillStyle = old;
   }
 
   /* 异常上报：console.warn 只报一次（避免每帧 60 条把控制台刷爆），
-     但 state.lastError **每帧都写**（成功时清成 null），所以"画一半"藏不住。 */
+     但 state.lastError **每帧都写**（成功时清成 null），所以"画一半"藏不住。
+     注意：先到的错误不被后到的覆盖 —— 离根因最近的那条最有用。 */
   var WARNED = {};
   function reportError(where, id, state, e) {
     var msg = String((e && e.message) || e);
-    if (state) { state.lastError = msg; }
+    if (state) {
+      if (!state.lastError) { state.lastError = msg; }
+      if (where === 'sentinel') { state.sentinelFailed = true; }
+    }
     var key = id + '|' + where + '|' + msg;
     if (!WARNED[key]) {
       WARNED[key] = 1;
@@ -375,7 +381,14 @@
       } catch (e) {
         reportError('draw', id, st, e);
       }
-      try { if (vg) { paintSentinel(vg, id); } } catch (e2) { /* 连哨兵都画不出来就只能算了 */ }
+      try {
+        if (vg) { paintSentinel(vg, id); }
+        st.sentinelFailed = false;
+      } catch (e2) {
+        /* 连"最后一笔"都画不出来：这道兜底**也必须出声**——它一旦静默，
+           draw 里任何新异常就会再次变成"console 干净 + 画面缺一半"。 */
+        reportError('sentinel', id, st, e2);
+      }
       c.restore();
     };
   }
