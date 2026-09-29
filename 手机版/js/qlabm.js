@@ -127,25 +127,47 @@
       '#plRoot .pl-ctext,#clRoot .cl-ctext{font-size:12.5px}',
 
       /* ---------- 物理沙盒 ----------
-         ① 字形面板:沙盒的面板是**固定 4×4 格**(psandbox.js 的 dockSlotEl 把第 i 个
-            字形钉在 grid-row=⌊i/4⌋+1 / grid-column=i%4+1),模块自带的窄屏规则只把
-            grid-template-columns 改成 repeat(8,1fr),那些钉死的格子并不会跟着重排
-            ——实测它们的第 3、4 行落进隐式 auto 行(高 34px,摸不到),面板也长到 185px。
-            手机版改成"4 列 × 4 行、每格 46px"的方形面板:与模块的钉格逻辑一致,
-            触控热区 46×46。
-         ② 位置:面板放**左下**、垃圾桶留在右下(模块自己把垃圾桶钉在右下,见下)。
-         ③ ⚠ 垃圾桶的 right/bottom 是 psandbox.js 用**内联 style** 写的
+         ★ 2026-09-30 重做:沙盒符号 15 → **45**(psandbox.js 的 PAL 现在 45 项),
+           原来的"4 列 × 4 行、每格 46px"必然装不下 —— 45 个字形按旧格子要 12 行,
+           面板高到把整个台面挡住。
+         ① 格子数必须**按模块的钉格常量算**,不能自己猜:psandbox.js 的 dockSlotEl()
+            把第 i 个字形钉在 grid-row=⌊i/PAL_COLS⌋+1 / grid-column=i%PAL_COLS+1,
+            而 **PAL_COLS = 6** —— 所以 45 个字形实际占 **6 列 × 8 行**(第 8 行 3 个)。
+            CSS 里声明几列**不改变**"每行钉 6 个":实测声明 repeat(8,34px) 时
+            maxCol=6 / maxRow=8,右边 2 列永远是空的(桌面版 #psCSS 的窄屏规则同样
+            声明 8 列,这里与它保持一致,不另立一套)。
+            ⚠ 上一版写死 repeat(4,46px) 的真实症状(390×844 实测):第 5、6 列落进
+            **隐式 auto 列** → 宽 33.17px / 26.09px,字形被压成 26.1×30,面板
+            290.3×330.5 触发纵向滚动,且有 3 个字形被挤出可视区(= 摸不到)。
+         ② 尺寸以**实测平台高度**定:390×844 下 .ps-table 高 **787px**,模块自带的
+            max-height:42% = **330.5px**。8 行格子 + 12px padding + 2px border 必须
+            ≤ 330.5:34px 档 = 8×34+7×4+12+2 = **314** ✓(留 16.5px 余量);
+            36px 档 = 330px(只剩 0.5px,任何字体/缩放抖动都会触发滚动)
+            → 取 **34**。34×34 是这一档能给出的最大触控热区(取代旧的 46×46)。
+            ⚠ 必须显式写 grid-template-rows:none —— 旧规则留下的 repeat(4,46px)
+            会让前 4 行仍是 46px,总高 362px 直接溢出(实测)。
+         ③ 位置:面板放**左下**、垃圾桶留在右下(模块自己把垃圾桶钉在右下,见下)。
+         ④ ⚠ 垃圾桶的 right/bottom 是 psandbox.js 用**内联 style** 写的
             (resetTrashPos(): trash.style.right='14px'; trash.style.bottom='14px'),
-            内联样式压过任何选择器。所以这里**绝不能只写 left** ——
-            那会变成 left+right 双向约束,盒子被拉成 390-12-14=364px 宽、里面的
-            30px 图标被 flex 居中到 x≈184,正好糊在字形面板上(第一版就是这么错的)。
-            正确做法:不碰它的定位,只放大图标尺寸(容器是 shrink-to-fit,自动跟着变大)。 */
+            内联样式压过任何选择器 —— 模块窄屏规则里的
+            .ps-trash{bottom:calc(42% + 12px)} 因此是**死规则**,别指望它。
+            所以这里**绝不能只写 left**:那会变成 left+right 双向约束,盒子被拉成
+            390-12-14=364px 宽、里面的 30px 图标被 flex 居中到 x≈184,正好糊在字形
+            面板上(第一版就是这么错的)。正确做法:不碰它的定位,只放大图标尺寸
+            (容器是 shrink-to-fit,自动跟着变大)。实测:面板右沿 6+314=320,
+            垃圾桶左沿 390-14-40=336 → 不重叠(16px 净空)。 */
       '#glStage .ps-bar{gap:5px;padding:5px 6px}',
       '#glStage .ps-bar button{min-height:40px;padding:0 12px;font-size:13px}',
       '#glStage .ps-sep{height:22px}',
       '#glStage .ps-panel{top:auto;bottom:6px;right:auto;left:6px;',
-      'grid-template-columns:repeat(4,46px);grid-template-rows:repeat(4,46px);gap:5px;padding:6px}',
-      '#glStage .ps-panel .ps-char{font-size:26px}',
+      'grid-template-columns:repeat(8,34px);grid-template-rows:none;grid-auto-rows:34px;gap:4px;padding:6px;',
+      'max-height:42%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;',
+      '-webkit-overflow-scrolling:touch}',
+      /* ⚠ 字形字号这里**别再写** font-size:模块给每个停靠字形写了**内联**
+         `el.style.fontSize='34px'`(dockTo / rebuildPanel 各一处),内联压过样式表
+         —— 本文件与模块自带窄屏规则里的 font-size 都是**死规则**(实测计算值恒为 34px)。
+         34px 墨迹落在 34px 格子里:最宽的字形 M 量到 36px,借 4px 间距后相邻墨迹
+         仍有 2px 净空,不碰撞(A10c 的 maxInkW 判据盯的就是这条)。 */
       '#glStage .ps-trash svg{width:40px;height:40px}',
       '#glStage .ps-menu{padding:12px 20px;font-size:16px}',
       '#glStage .ps-log{left:50%;bottom:auto;top:126px;transform:translateX(-50%);font-size:13px;padding:7px 16px}',

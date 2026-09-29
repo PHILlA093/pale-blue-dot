@@ -1866,6 +1866,40 @@
           else { c2d.strokeStyle = color || INK; c2d.lineWidth = lw || 1.2; c2d.stroke(); }
           c2d.restore();
         },
+        /* —— 容器内腔（圆底试管 / 圆底烧瓶 / 方槽）：把"内腔路径"抽出来给**液体与沉淀共用** ——
+           为什么必须有它：六个组各自那套试管（ions / organic / analysis / kinetics / electro 形状本来就不同，
+           **故意不统一**）以前都用"矩形"去填液体与沉淀 —— 圆底处矩形会伸到管壁之外、
+           还把轮廓线盖掉（实测 feoh3-precip：沉淀是一个盖住圆底、左右各溢出约 6px 的方块）。
+           约定：**调用方给了内腔就必须被裁剪**（给了 cav 却不裁剪 = 缺陷）。
+           cav 两种形状（用 r 区分）：
+             圆底腔 {cx, y, r, h}  cx = 中轴，y = 腔口 y，r = 内腔半径，h = 含圆底的总高
+             方  腔 {x, y, w, h}  左上角 + 宽高 */
+        cavityPath: function (cav) {
+          if (!cav || !c2d) return false;
+          c2d.beginPath();
+          if (cav.r > 0) {
+            var yb = cav.y + cav.h - cav.r;
+            c2d.moveTo(cav.cx - cav.r, cav.y);
+            c2d.lineTo(cav.cx - cav.r, yb);
+            c2d.arc(cav.cx, yb, cav.r, Math.PI, 0, true);   /* 下半圆 = 圆底 */
+            c2d.lineTo(cav.cx + cav.r, cav.y);
+          } else {
+            c2d.moveTo(cav.x, cav.y);
+            c2d.lineTo(cav.x + cav.w, cav.y);
+            c2d.lineTo(cav.x + cav.w, cav.y + cav.h);
+            c2d.lineTo(cav.x, cav.y + cav.h);
+          }
+          c2d.closePath();
+          return true;
+        },
+        clipCavity: function (cav) {
+          if (!this.cavityPath(cav)) return false;
+          if (!c2d.clip) return false;
+          c2d.clip();
+          return true;
+        },
+        save: function () { if (c2d) c2d.save(); },
+        restore: function () { if (c2d) c2d.restore(); },
         /* 液体：从 (x,y) 起、宽 w、深 h，带一条液面线 */
         liquid: function (x, y, w, h, color) {
           c2d.save();
@@ -1884,9 +1918,10 @@
           c2d.beginPath(); c2d.arc(x, y, Math.max(0.6, r), 0, Math.PI * 2); c2d.stroke();
           c2d.restore();
         },
-        /* 沉淀/浑浊：一团抖动的小点 */
-        cloud: function (x, y, r, color, n) {
+        /* 沉淀/浑浊：一团抖动的小点。cav 给了就**必须**被裁剪在内腔里（第 6 个参数） */
+        cloud: function (x, y, r, color, n, cav) {
           c2d.save();
+          if (cav && this.clipCavity(cav)) { /* 已裁剪到内腔 */ }
           c2d.fillStyle = color || 'rgba(38,34,28,.5)';
           var cnt = n || 14, i, a, rr;
           for (i = 0; i < cnt; i++) {

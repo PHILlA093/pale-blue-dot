@@ -212,6 +212,7 @@
       if (close) c.closePath();
     }
     return {
+      c: c,                       /* 2D 上下文（qgTube 的内腔裁剪要用它） */
       line: function (x1, y1, x2, y2) { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); },
       rect: function (x, y, w, h, fill, stroke, lw) {
         path([[x, y], [x + w, y], [x + w, y + h], [x, y + h]], true);
@@ -289,17 +290,50 @@
     d.txt(title, 26, 24, F(15, true, false), INK, 'left');
     if (tag) d.txt(tag, g.w - 26, 24, F(12, false, true), '#7A4A2B', 'right');
   }
-  /* 试管：从 (x,y) 顶部往下长 h，半径 r。液面高度 frac ∈ [0,1]。 */
+  /* 圆底试管的**内腔路径**：y = 管口，r = 内腔半径，h = 含圆底的总高（圆底圆心在 y+h-r）。
+     轮廓与裁剪共用同一条路径。以前轮廓是 d.poly（竖壁矩形）+ d.circle（**整圆**）——
+     整圆的上半圈会在管里留下一道"球"的痕迹；填充又是"全宽矩形"，
+     矩形在圆底处伸到管外、还把轮廓线盖掉（feoh3 / iron-ion-test / so2 都是这样）。 */
+  function qgTubePath(c, cx, y, r, h) {
+    if (!c) return;
+    var yb = y + h - r;
+    c.beginPath();
+    c.moveTo(cx - r, y);
+    c.lineTo(cx - r, yb);
+    c.arc(cx, yb, r, Math.PI, 0, true);
+    c.lineTo(cx + r, y);
+    c.closePath();
+  }
+  /* 内腔描述（供裁剪）；内缩 1.2px ⇒ 不盖住 1.4px 宽的轮廓线 */
+  function qgTubeCav(x, y, w, h) {
+    return { cx: x, y: y + 1.2, r: Math.max(1, w / 2 - 1.2), h: h - 2.4 };
+  }
+  /* 试管：从 (x,y) 顶部往下长 h，半径 r。液面高度 frac ∈ [0,1]。
+     ★ 填充（本组多把"沉淀色"直接当液体色用）**必须**裁剪在内腔里 */
   function qgTube(d, F, x, y, w, h, frac, fill, label, labelColor) {
-    var r = w / 2;
-    d.poly([[x - r, y], [x - r, y + h - r], [x + r, y + h - r], [x + r, y]],
-           'rgba(255,255,255,0.72)', INK, 1.4, false);
-    d.circle(x, y + h - r, r, 'rgba(255,255,255,0.72)', INK, 1.4);
+    var r = w / 2, c = d && d.c ? d.c : null;
+    if (!c) return;
+    c.save();
+    qgTubePath(c, x, y, r, h);
+    c.fillStyle = 'rgba(255,255,255,0.72)';
+    if (c.fill) c.fill();
+    c.lineJoin = 'round';
+    c.strokeStyle = INK; c.lineWidth = 1.4;
+    if (c.stroke) c.stroke();
     if (frac > 0) {
       var lv = y + h - (h - 2) * qgClamp(frac, 0.02, 1);
-      d.rect(x - r + 1, lv, w - 2, (y + h) - lv - 1, fill || 'rgba(160,200,230,0.55)', null, 0);
-      d.line(x - r + 1, lv, x + r - 1, lv);
+      c.save();
+      var cav = qgTubeCav(x, y, w, h);
+      qgTubePath(c, cav.cx, cav.y, cav.r, cav.h);
+      if (typeof c.clip === 'function') c.clip();
+      c.fillStyle = fill || 'rgba(160,200,230,0.55)';
+      c.fillRect(x - r, lv, w, (y + h) - lv);
+      c.restore();
+      c.beginPath(); c.moveTo(x - r + 1, lv); c.lineTo(x + r - 1, lv);
+      c.strokeStyle = INK; c.lineWidth = 1.4;
+      if (c.stroke) c.stroke();
     }
+    c.restore();
     if (label) d.txt(label, x, y + h + 13, F(9.5, false, false), labelColor || '#6B645C', 'center');
   }
   /* 火焰：椭圆火焰（焰色反应用），col 为焰色 */

@@ -59,16 +59,17 @@
       'user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}',
       '.ps-ground{position:absolute;left:0;right:0;bottom:20%;height:2px;background:#26221C;opacity:.65;pointer-events:none}',
       '.ps-cv{position:absolute;left:0;top:0;pointer-events:auto;z-index:0}',
-      '.ps-char{position:absolute;left:0;top:0;line-height:1;font-size:48px;will-change:transform;cursor:grab;touch-action:none;z-index:5}',
+      '.ps-char{position:absolute;left:0;top:0;line-height:1;font-size:48px;cursor:grab;touch-action:none;z-index:5}',
       '.ps-char:active{cursor:grabbing}',
       '.ps-panel .ps-char{position:static;pointer-events:auto;font-size:30px;display:flex;align-items:center;',
       'justify-content:center;width:100%;height:100%;background:rgba(255,255,255,.45);border-radius:10px;cursor:grab}',
       '.ps-panel .ps-char:active{cursor:grabbing}',
       '@keyframes psPopin{0%{transform:scale(0);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}',
       '.ps-dockin{animation:psPopin .22s ease-out}',
-      '.ps-panel{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:repeat(4,44px);',
-      'grid-template-rows:repeat(4,44px);gap:6px;padding:10px;border:1px solid rgba(38,34,28,.2);border-radius:14px;',
-      'background:rgba(255,255,255,.5);pointer-events:none;z-index:3}',
+      '.ps-panel{position:absolute;top:12px;right:12px;display:grid;grid-template-columns:repeat(9,38px);',
+      'grid-auto-rows:38px;gap:5px;padding:9px;border:1px solid rgba(38,34,28,.2);border-radius:14px;',
+      'background:rgba(255,255,255,.5);pointer-events:none;z-index:3;',
+      'max-height:calc(100% - 24px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}',
       '.ps-shadow{position:absolute;left:0;top:0;height:12px;border-radius:50%;',
       'background:radial-gradient(ellipse at center,rgba(38,34,28,.45),rgba(38,34,28,0) 70%);pointer-events:none;display:none}',
       '.ps-handle{position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.92);',
@@ -102,16 +103,21 @@
       'border-radius:14px;background:rgba(38,34,28,.88);color:#F4F1EA;font-family:inherit;font-style:italic;',
       'font-size:12.5px;letter-spacing:.5px;opacity:0;pointer-events:none;transition:opacity .18s}',
       '.ps-log.on{opacity:1}',
-      /* 窄窗（观澜在主窗里是浮动面板）：面板压到底部一行、提示收起、垃圾桶靠边 */
+      /* 窄窗（观澜在主窗里是浮动面板）：面板压到底部、提示收起、垃圾桶靠边。
+         ⚠ 符号 15 → 33 后这里**必须改**：原来是 8 列 × 2 行写死，33 个符号会被
+         压成 3 行以上而 overflow 被裁掉（拖不到最后几个符号）。
+         改法：**格子固定 30px、列数随宽度给**，装不下就在面板内部纵向滚动 ——
+         这样既不会把字形压成看不见的细条（`1fr` 在窄舞台上会缩到 5px），
+         也不会横向溢出舞台。390×844 下 8 列 → 6 行 204px，落在 42% 高度内。 */
       '@media (max-width:768px){',
-      '.ps-panel{top:auto;bottom:6px;right:6px;left:6px;grid-template-columns:repeat(8,1fr);',
-      'grid-template-rows:repeat(2,40px);padding:6px;gap:4px}',
-      '.ps-panel .ps-char{font-size:24px;border-radius:8px}',
+      '.ps-panel{top:auto;bottom:6px;right:6px;left:auto;grid-template-columns:repeat(8,30px);',
+      'grid-auto-rows:30px;padding:6px;gap:4px;max-height:42%}',
+      '.ps-panel .ps-char{font-size:20px;border-radius:6px}',
       '.ps-bar{left:6px;top:6px;right:6px;max-width:none;flex-wrap:wrap;gap:4px;padding:3px 5px}',
       '.ps-bar button{height:26px;padding:0 8px}',
       '.ps-hint{display:none}',
-      '.ps-trash{bottom:104px;right:10px}',
-      '.ps-ground{bottom:34%}',
+      '.ps-trash{bottom:calc(42% + 12px);right:10px}',
+      '.ps-ground{bottom:52%}',
       '}'
     ].join('');
     var st = document.createElement('style');
@@ -146,6 +152,10 @@
 
     var OPEN = '(', CLOSE = ')', PLUS = '+', SQ = '\u00B2', BAR = '-';
     var HALF = '\u00BD', MU = '\u03BC', SUB1 = '\u2081', SUB2 = '\u2082', PRIME = '\u2032';
+    /* 符号扩展新增的希腊字母/算符（都是**单字符**：排版管线按字符切 token，
+       多字符会破坏 tokenSeq；所以只收单码点写法） */
+    var OMEGA = '\u03C9', ETA = '\u03B7', THETA = '\u03B8', DELTA = '\u0394';
+    var EPS = '\u03B5', PHI = '\u03A6', RHO = '\u03C1', LAMBDA = '\u03BB', NU = '\u03BD';
 
     /* ---------------- DOM：全部自建，绝不依赖宿主页面已有的节点 ---------------- */
     var DD = document;
@@ -184,7 +194,11 @@
     var bReset = mkBtn('psReset', '\u91cd\u7f6e', '\u6e05\u7a7a\u5e76\u56de\u5230\u672c\u9875\u521d\u59cb\u72b6\u6001');
     var sepEl = DD.createElement('span'); sepEl.className = 'ps-sep';
     var hintEl = DD.createElement('span'); hintEl.className = 'ps-hint';
-    hintEl.textContent = '\u628a m\u3001g\u3001a\u3001v\u3001r\u2026 \u62d6\u5230\u4e00\u8d77\u8bd5\u8bd5\uff1ag+t\u2192v\uff0cv+t\u2192\u677f\uff0cq+t\u2192I\uff0cm v\u00b2/r \u6210\u53cc\u661f';
+    /* 提示行（2026-09-30 更新）：符号从 15 涨到 45、组合规则从 4 条涨到 28 条，
+       原来那行"g+t→v、v+t→板、q+t→I、m v²/r"会让玩家以为只有这四种玩法。
+       这里只列 **4 条最直观的** 再补一句总括 —— 28 条全塞进去会被挤爆（`.ps-hint`
+       是单行省略号截断，写长了反而什么都看不见）。完整清单在 palette()/eqTable()。 */
+    hintEl.textContent = '\u62d6\u5230\u4e00\u8d77\u5c31\u80fd\u62fc\u51fa\u8bfe\u672c\u516c\u5f0f\uff1aF+m+a \u725b\u987f\u7b2c\u4e8c\u5b9a\u5f8b\u3001U+I+R \u6b27\u59c6\u5b9a\u5f8b\u3001F+k+x \u80e1\u514b\u5b9a\u5f8b\u3001F+B+I+L \u5b89\u57f9\u529b\uff1b\u5171 28 \u6761\uff0c\u60ac\u505c\u770b\u7b26\u53f7\u542b\u4e49';
     if (opts.hint) hintEl.textContent = String(opts.hint);
     bar.appendChild(bEmpty); bar.appendChild(bCollect); bar.appendChild(bReset);
     bar.appendChild(sepEl); bar.appendChild(hintEl);
@@ -236,16 +250,32 @@
       return d;
     }
     /* 某元素在**舞台坐标系**下的外框。本模块世界原点 = 舞台左上角，而
-       getBoundingClientRect 给的是 client 坐标，两者差一个舞台原点。 */
+       getBoundingClientRect 给的是 client 坐标，两者差一个舞台原点。
+
+       ★ 舞台原点的读数**一帧只取一次**（2026-09-30 流畅度修复）：
+       getBoundingClientRect 是"强制同步布局"——只要这一帧已经写过任何样式
+       （syncGlyphs 每帧都在写），它就会逼浏览器立刻把布局重算一遍。
+       原来每次换算都读两遍（元素一遍 + 舞台一遍），一帧里叠加十几次。
+       现在舞台原点缓存到 dirty 为止；tRectDirty 在 mount/换场/resize/屏幕震动
+       时置位，由 frame() 在**任何样式写入之前**刷新一次。 */
+    var tRect = null, tRectDirty = true;
+    function tableOrigin() {
+      if (!tRect || tRectDirty) {
+        tRect = table.getBoundingClientRect();
+        tRectDirty = false;
+      }
+      return tRect;
+    }
+    function invalidateTableOrigin() { tRectDirty = true; }
     function worldRect(el) {
       var r = el.getBoundingClientRect();
-      var sr = table.getBoundingClientRect();
+      var sr = tableOrigin();
       return { left: r.left - sr.left, top: r.top - sr.top,
                right: r.right - sr.left, bottom: r.bottom - sr.top,
                width: r.width, height: r.height };
     }
     function xy(e) {
-      var sr = table.getBoundingClientRect();
+      var sr = tableOrigin();
       return { x: e.clientX - sr.left, y: e.clientY - sr.top };
     }
 
@@ -315,22 +345,277 @@
       if (d.el && d.el.parentNode) d.el.parentNode.removeChild(d.el);
     }
 
-    /* 面板 15 个单例字形（m M g a v r ½ μ c G t B E q I） */
+    /* ---------------- 字形托盘（dock）的符号表 ----------------
+       15 个移植自原作的符号 + 18 个按 **高中物理（必修 + 选择性必修）** 补齐的符号。
+       新增的每一个都在 `note` 里写明它在高中物理里的含义（一个符号可能多义，
+       主用法在前）；`group` 只用于面板的分组提示，不参与任何物理逻辑。
+
+       ⚠ 选符号的两条纪律（写新符号前先读）：
+         ① **不许凑数**：只收高中课本里真会出现的量。大学内容（张量、四维矢量、
+            拉格朗日量、哈密顿量…）一律不收。
+         ② **不许与既有符号同形**：托盘里一个字形只能有一个含义（原作就是"一个字母
+            一个块"）。所以低频的"磁感应强度 B 的另一种写法"之类的重复写法不收。
+
+       ⚠ 一个符号多义是**高中物理的既成事实**（f 既是摩擦力也是频率，h 既是高度
+       也是普朗克常量，T 既是周期也是热力学温度，Q 既是电荷量也是热量，p 既是
+       动量也是压强）。托盘里只保留**一个字形**，靠"跟谁组合"区分含义 ——
+       这正是本沙盒"内容即行为"的原有设计，不要为了消歧而复制字形。 */
     var PAL = [
-      { k: 'mO', ch: 'm' }, { k: 'M2O', ch: 'M' }, { k: 'gO', ch: 'g' },
-      { k: 'aO', ch: 'a' }, { k: 'vO', ch: 'v' }, { k: 'rO', ch: 'r' },
-      { k: 'halfO', ch: HALF }, { k: 'muO', ch: MU }, { k: 'cO', ch: 'c' },
-      { k: 'GO', ch: 'G' }, { k: 'tO', ch: 't' }, { k: 'BO', ch: 'B' },
-      { k: 'EO', ch: 'E' }, { k: 'qO', ch: 'q' }, { k: 'IO', ch: 'I' }
+      /* ---- 原作 15 个（顺序与含义一律不动：PAL_ORDER 决定面板格子） ---- */
+      { k: 'mO', ch: 'm', group: '力学', note: '质量（也是动量的 m）' },
+      { k: 'M2O', ch: 'M', group: '力学', note: '质量（大质量天体：引力井/黑洞里的 M）' },
+      { k: 'gO', ch: 'g', group: '力学', note: '重力加速度（g=9.8 m/s²；接了它的体才受重力）' },
+      { k: 'aO', ch: 'a', group: '力学', note: '加速度（接了它的体沿 θ 方向加速）' },
+      { k: 'vO', ch: 'v', group: '力学', note: '速度（v² 就是速度的平方）' },
+      { k: 'rO', ch: 'r', group: '力学', note: '半径 / 距离（圆周运动与万有引力的 r）' },
+      { k: 'halfO', ch: HALF, group: '力学', note: '½（动能 ½mv² 的系数）' },
+      { k: 'muO', ch: MU, group: '力学', note: '动摩擦因数 μ' },
+      { k: 'cO', ch: 'c', group: '近代', note: '真空中光速（mc²、2GM/c²）' },
+      { k: 'GO', ch: 'G', group: '力学', note: '万有引力常量' },
+      { k: 'tO', ch: 't', group: '力学', note: '时间（也是周期公式里的 t；拖到别的体上会触发 g+t→v、v+t→木板、q+t→I）' },
+      { k: 'BO', ch: 'B', group: '电磁学', note: '磁感应强度（磁场里受洛伦兹力/安培力）' },
+      { k: 'EO', ch: 'E', group: '电磁学', note: '电场强度（F=qE，方向可用 E 场的旋转手柄改）' },
+      { k: 'qO', ch: 'q', group: '电磁学', note: '电荷量（在磁场里转弯、在电场里加速）' },
+      { k: 'IO', ch: 'I', group: '电磁学', note: '电流（在磁场里受安培力）' },
+
+      /* ---- 力学补齐 ---- */
+      { k: 'FO', ch: 'F', group: '力学', note: '力 / 合力（F=ma、F=kx、F=qE）' },
+      { k: 'fO', ch: 'f', group: '力学', note: '摩擦力（f=μN）；也读作频率（波长公式 v=λf 里的 f）' },
+      { k: 'NO', ch: 'N', group: '力学', note: '支持力 / 压力（水平面上 N=mg，斜面上 N=mg·cosθ）' },
+      { k: 'sO', ch: 's', group: '力学', note: '位移 / 路程（匀速 s=vt）' },
+      { k: 'hO', ch: 'h', group: '力学', note: '高度（重力势能 E_p=mgh）；也读作普朗克常量（光子能量 ε=hν）' },
+      { k: 'pO', ch: 'p', group: '力学', note: '动量（p=mv）；也读作压强（p=F/S）' },
+      { k: 'TO', ch: 'T', group: '力学', note: '周期（ω=2π/T）；也读作热力学温度' },
+      { k: 'omegaO', ch: '\u03C9', group: '力学', note: '角速度（ω=2π/T=2πn，圆周运动的 ω）' },
+      { k: 'kO', ch: 'k', group: '力学', note: '劲度系数（胡克定律 F=kx）；也出现在静电力常量 k 里' },
+      { k: 'etaO', ch: '\u03B7', group: '力学', note: '机械效率（η=P有用/P总×100%）' },
+      { k: 'thetaO', ch: '\u03B8', group: '力学', note: '角度（斜面倾角、力的夹角；Fcosθ 是力的分量）' },
+      { k: 'DeltaO', ch: '\u0394', group: '力学', note: '变化量算符（Δx=x₂−x₁、Δv、Δp；也用于 ΔE 与 ΔΦ）' },
+      { k: 'xO', ch: 'x', group: '力学', note: '位移坐标 / 横坐标（v-t 图的横轴、x 轴上的位置）' },
+      { k: 'yO', ch: 'y', group: '力学', note: '纵坐标（平抛运动的竖直分位移 y=½gt²）' },
+      { k: 'AO', ch: 'A', group: '力学', note: '振幅（简谐运动的 A）；也读作面积' },
+      { k: 'SO', ch: 'S', group: '力学', note: '面积 / 路程（压强 p=F/S；也用于 Φ=BS）' },
+
+      /* ---- 电磁学补齐 ---- */
+      { k: 'UO', ch: 'U', group: '电磁学', note: '电压（欧姆定律 U=IR、电功率 P=UI）' },
+      { k: 'RO', ch: 'R', group: '电磁学', note: '电阻（D 的另一种写法不收：与 R 同形同义，托盘一个字形只有一个含义）' },
+      { k: 'PO', ch: 'P', group: '电磁学', note: '功率（P=W/t=UI）' },
+      { k: 'WO', ch: 'W', group: '电磁学', note: '功 / 电功（W=Fs=UIt）' },
+      { k: 'QO', ch: 'Q', group: '电磁学', note: '电荷量（Q=It）；也读作热量（Q=I²Rt）' },
+      { k: 'epsO', ch: '\u03B5', group: '电磁学', note: '电动势（闭合电路 ε=U+Ir）' },
+      { k: 'CO', ch: 'C', group: '电磁学', note: '电容（C=Q/U）' },
+      { k: 'LO', ch: 'L', group: '电磁学', note: '长度（导线长度 L、摆长 L）；也用于自感系数' },
+      { k: 'PhiO', ch: '\u03A6', group: '电磁学', note: '磁通量（Φ=BS，法拉第电磁感应定律 E=nΔΦ/Δt）' },
+      { k: 'rhoO', ch: '\u03C1', group: '电磁学', note: '电阻率（R=ρL/S）；也读作密度（ρ=m/V）' },
+      { k: 'lambdaO', ch: '\u03BB', group: '电磁学', note: '波长（波速 v=λf）' },
+      { k: 'nuO', ch: '\u03BD', group: '近代', note: '频率（v=λν）；也用于光子能量 ε=hν（注意与速度 v 不是同一个字形）' },
+      { k: 'phiO', ch: '\u03C6', group: '电磁学', note: '电势 / 相位（φ 是相位角；电势差就是电压 U）' },
+      { k: 'nO', ch: 'n', group: '电磁学', note: '折射率（n=sin i/sin r）；也读作物质的量（n=m/M）' }
     ];
+    /* 面板列数：符号从 15 涨到 33，4 列要排 9 行、太高会把台面挡住 —— 改成 6 列。
+       dockSlotEl() 与 sortPanel() 都按这个常量算格子，不要再写死 4。 */
+    var PAL_COLS = 6;
     var P = {};
-    var PAL_ORDER = { 'm': 0, 'M': 1, 'g': 2, 'a': 3, 'v': 4, 'r': 5, '\u00BD': 6,
-                      '\u03BC': 7, 'c': 8, 'G': 9, 't': 10, 'B': 11, 'E': 12, 'q': 13, 'I': 14 };
+    var PAL_ORDER = (function () {
+      var o = {};
+      for (var i = 0; i < PAL.length; i++) o[PAL[i].ch] = i;
+      return o;
+    })();
     function makePalLetter(item) {
       var d = GD(item.ch);
       d.cat = 1; d.palKey = item.k;
+      d.palNote = item.note || '';
+      d.palGroup = item.group || '';
+      if (d.el) d.el.title = item.ch + ' — ' + (item.note || '');
       P[item.k] = d;
       return d;
+    }
+    /* 托盘清单快照（供 letters().palette 与 API.palette() 共用；只读，不改状态） */
+    function paletteList() {
+      var out = [];
+      for (var i = 0; i < PAL.length; i++) {
+        var it = PAL[i], d = P[it.k];
+        out.push({ ch: it.ch, key: it.k, group: it.group || '', note: it.note || '',
+                   docked: !!(d && d.state === 'dock') });
+      }
+      return out;
+    }
+
+    /* ---------------- 高中物理公式表（符号扩展的"里子"） ----------------
+       本沙盒的立身之本是"**公式内容即行为**"：字母摆成什么式子，它就该有什么脾气。
+       新增的 18 个符号不能只是"能拖的装饰"，所以每一组能拼出的经典公式都在这里
+       登记：**组成字母（多重集）→ 课本公式**。注册后：
+         · 装配时允许按公式收字（canMerge = eqStepOK）—— 超过公式用量的重复字母仍被拒；
+         · 拼齐后在公式体周围画一张**同一套墨线的公式卡**（canvas，rampColor 同一套颜色），
+           并写进 bodyState().eq / eqText（探针与上层页面可读）。
+       ⚠ 纪律（加新公式前必读）：
+         ① **只收高中课本里成立的式子**，每条都在 `cond` 里写适用条件；
+         ② 不收大学内容；不确定的宁可不加（项目红线：不许编物理）；
+         ③ 公式体**不引入新行为**（不施力、不吸东西），只是把"式子"显示清楚 ——
+            运动仍然由既有的 hasG/hasA/hasV/isWell 等决定，避免改变已有手感；
+         ④ 令牌字母与既有组合不许抢：例如 GMm/r² 走 gravModeOf，绝不在这里重复登记。 */
+    var EQUATIONS = [
+      /* ---- 力学 ---- */
+      { id: 'newton2', text: 'F = ma', toks: 'Fma', group: '力学',
+        cond: '牛顿第二定律（惯性参考系，F 为合力）' },
+      { id: 'work', text: 'W = Fs', toks: 'WFs', group: '力学',
+        cond: '功的定义（F 与位移 s 同向时取正；夹角 θ 时 W=Fscosθ）' },
+      { id: 'momentum', text: 'p = mv', toks: 'pmv', group: '力学',
+        cond: '动量定义（p 与 v 同向；这是矢量式，中学常按一维处理）' },
+      { id: 'weight', text: 'N = mg', toks: 'Nmg', group: '力学',
+        cond: '水平支持面上的支持力（只在水平面、无其它竖直分力时成立）' },
+      { id: 'friction', text: 'f = μN', toks: 'fN' + MU, group: '力学',
+        cond: '滑动摩擦力（N 为正压力；静摩擦力要用平衡条件求，不套这条）' },
+      { id: 'hooke', text: 'F = kx', toks: 'Fkx', group: '力学',
+        cond: '胡克定律（在弹性限度内，x 为形变量）' },
+      { id: 'circular', text: 'ω = 2π/T', toks: OMEGA + 'T', group: '力学',
+        cond: '匀速圆周运动的角速度与周期关系' },
+      { id: 'eff', text: 'η = W有用/W总', toks: ETA + 'W', group: '力学',
+        cond: '机械效率（算出来是无单位的百分数）' },
+      { id: 'powerW', text: 'P = W/t', toks: 'PWt', group: '力学',
+        cond: '平均功率的定义（瞬时功率要写 P=Fv）' },
+      { id: 'kinetic', text: 'Ek = ½mv²', toks: HALF + 'mvv', group: '力学',
+        cond: '动能（½ 与 mv² 齐备；与既有的 ½mv² 排版同源）' },
+      { id: 'potential', text: 'Ep = mgh', toks: 'mgh', group: '力学',
+        cond: '重力势能（以参考面为零点，h 为相对高度）' },
+      { id: 'delta', text: 'Δx = x₂ − x₁', toks: DELTA + 'x', group: '力学',
+        cond: '位移的变化量（Δ 是算符，放在哪个量前面就读哪个量的变化）' },
+      { id: 'coscomp', text: 'F₁ = Fcosθ', toks: 'F' + THETA, group: '力学',
+        cond: '力的分解：F 沿 θ 方向的分量（正交分解时用）' },
+      /* ---- 电磁学 ---- */
+      { id: 'ohm', text: 'U = IR', toks: 'UIR', group: '电磁学',
+        cond: '欧姆定律（纯电阻、线性元件；U 是这段电阻两端的电压）' },
+      { id: 'powerE', text: 'P = UI', toks: 'PUI', group: '电磁学',
+        cond: '电功率（这是定义式，对任何用电器都成立）' },
+      { id: 'joule', text: 'Q = I²Rt', toks: 'QIRt', group: '电磁学',
+        cond: '焦耳定律（电流通过电阻产生的热量；纯电阻时 Q=W=UIt）' },
+      { id: 'charge', text: 'Q = It', toks: 'QIt', group: '电磁学',
+        cond: '电荷量与电流的关系（恒定电流；I 的定义式 I=Q/t）' },
+      { id: 'emf', text: 'ε = U + Ir', toks: EPS + 'UIr', group: '电磁学',
+        cond: '闭合电路欧姆定律（r 为电源内阻，I 为干路电流）' },
+      { id: 'cap', text: 'C = Q/U', toks: 'CQU', group: '电磁学',
+        cond: '电容的定义式（对平行板电容器也写 C=εrS/(4πkd)，那是决定式）' },
+      { id: 'faraday', text: 'E = ΔΦ/Δt', toks: 'E' + PHI + 't' + DELTA, group: '电磁学',
+        cond: '法拉第电磁感应定律（单匝；n 匝时 E=nΔΦ/Δt。ΔΦ 用 Δ 与 Φ 拼出）' },
+      { id: 'resis', text: 'R = ρL/S', toks: 'RLS' + RHO, group: '电磁学',
+        cond: '电阻定律（与材料、长度、横截面积有关，与电压电流无关）' },
+      { id: 'field', text: 'E = F/q', toks: 'EFq', group: '电磁学',
+        cond: '电场强度的定义式（对任何电场都成立，与试探电荷 q 无关）' },
+      /* 安培力 F = BIL：通电导体在磁场中受力。B 与 I 垂直时成立，
+         方向用**左手定则**（让磁感线穿过手心、四指指向电流，大拇指指向安培力）。 */
+      { id: 'ampere', text: 'F = BIL', toks: 'FBIL', group: '电磁学',
+        cond: '安培力（B⊥I；不垂直时是 F=BILsinθ）' },
+      /* 洛伦兹力 F = qvB：运动电荷在磁场中受力，方向同样用左手定则
+         （正电荷；负电荷反向）。本模块做平面近似：力与 v 垂直、
+         所以轨迹是圆（r = mv/(qB)）。 */
+      { id: 'lorentz', text: 'F = qvB', toks: 'FqvB', group: '电磁学',
+        cond: '洛伦兹力（v⊥B；不垂直时是 F=qvBsinθ）' },
+      { id: 'epot', text: 'W = qU', toks: 'WqU', group: '电磁学',
+        cond: '电场力做功（匀强电场与任意电场都成立，U 是两点间电势差）' },
+      { id: 'flux', text: 'Φ = BS', toks: PHI + 'BS', group: '电磁学',
+        cond: '磁通量的定义（B 与面垂直时；有夹角时是 Φ=BScosθ）' },
+      { id: 'wave', text: 'v = λf', toks: LAMBDA + 'vf', group: '波动',
+        cond: '波速公式（也写作 v=λν；f 与 ν 是同一个量。注意这里的 v 是**波速**，' +
+              '横波纵波都成立）' },
+      { id: 'photon', text: 'ε = hν', toks: EPS + 'h' + NU, group: '近代',
+        cond: '光子能量（光电效应：h 为普朗克常量、ν 为光频率；ε 与电场强度的 E 是两个量）' }
+    ];
+    /* 公式表按"字母多重集"建索引：键 = 令牌排序后的字符串 */
+    var EQ_BY_SIG = {};
+    var EQ_MAX = {};   // 字母 -> 在任一公式里出现的最大次数（用于 canMerge 的放行上限）
+    (function () {
+      for (var i = 0; i < EQUATIONS.length; i++) {
+        var e = EQUATIONS[i];
+        e._sig = sigOfToks(e.toks);
+        /* 自检（2026-09-30）：tok 里每个字符都必须是**一个**符号字符，
+           而且规范键必须与令牌**逐个字符**对得上。写 'omegaT' 这种"名字"当令牌
+           曾经真的发生过 —— 它会被当成 o,m,e,g,a,T 六个字母，公式静默失效。
+           宁可当场抛错，也不要一个永远认不出来的公式躺在表里。 */
+        if (e._sig.length !== e.toks.length) throw new Error('psandbox: 公式令牌长度异常 ' + e.id);
+        if (EQ_BY_SIG[e._sig]) throw new Error('psandbox: 公式签名冲突 ' + e.id);
+        EQ_BY_SIG[e._sig] = e;
+        var cnt = {};
+        for (var k = 0; k < e.toks.length; k++) cnt[e.toks.charAt(k)] = (cnt[e.toks.charAt(k)] || 0) + 1;
+        for (var c in cnt) if (!EQ_MAX[c] || EQ_MAX[c] < cnt[c]) EQ_MAX[c] = cnt[c];
+      }
+    })();
+    /* 排障口：公式表自检（探针与人工排查用，只读，不参与任何逻辑） */
+    function eqTableDump() {
+      var out = [];
+      for (var s in EQ_BY_SIG) out.push({ id: EQ_BY_SIG[s].id, sig: s, sigCodes: (function(){var a=[];for(var i=0;i<s.length;i++)a.push(s.charCodeAt(i));return a;})(), toks: EQ_BY_SIG[s].toks, text: EQ_BY_SIG[s].text });
+      return out;
+    }
+    /* 字母多重集的**规范键**：把令牌按码点排序后拼起来。
+       ⚠ 必须自己给比较器：默认的 Array.sort() 对 '½'(U+00BD) 与 'm','v'(ASCII)
+       是按**码元**排的 —— 'mvv½' 会保持 m-v-v-½，而 '½mvv' 排成 ½-m-v-v，
+       同一个字母集合得到两个不同的键，查表必然落空（½mv² 在"先摆 m v v 再补 ½"
+       这条最自然的装配顺序上就认不出来）。用码点比较器才能得到唯一规范键。 */
+    function sigOfToks(toks) {
+      return String(toks).split('').sort(function (a, b) {
+        var ca = a.charCodeAt(0), cb = b.charCodeAt(0);
+        return ca === cb ? 0 : (ca < cb ? -1 : 1);
+      }).join('');
+    }
+    /* 一个体的"字母多重集"签名：base（massG）与 mem 合起来数。
+       为什么要合：真实用户是"先摆一个块、再把字母拖上去"，base 不在 mem 里 ——
+       只看 mem 会永远凑不齐 F=ma（m 是 base）。
+       ⚠ **必须按对象身份去重**：`attach()` 在空体接质量字母时会把**同一个字形**
+       同时记成 massG 与 mem[0]（见 attach 里的 `if (!B.massG && isMass(d)) B.massG = d;`），
+       不去重就会把 m 数成 "mm"，任何公式都匹配不上 —— 移植记录里"④ tokenSeq 会把
+       同一个字母数两遍"是同一个坑，别再踩。 */
+    function toksOfBody(B) {
+      var s = '', seen = [];
+      if (B.massG && !B.massG.dead) { s += B.massG.type; seen.push(B.massG); }
+      for (var i = 0; i < B.mem.length; i++) {
+        var g = B.mem[i];
+        if (!g || g.dead || seen.indexOf(g) >= 0) continue;
+        seen.push(g);
+        s += g.type;
+      }
+      return s;
+    }
+    /* 这个体当前**已经拼齐**的公式（没有就是 null） */
+    function eqOfBody(B) {
+      if (!B || B.kind) return null;
+      var sig = sigOfToks(toksOfBody(B));
+      return EQ_BY_SIG[sig] || null;
+    }
+    /* 再加一个字 d.type 之后会不会**拼齐**某条公式 */
+    function eqCompletes(B, ch) {
+      if (!B || B.kind) return null;
+      var sig = sigOfToks(toksOfBody(B) + ch);
+      return EQ_BY_SIG[sig] || null;
+    }
+    /* 这个体的字母是否**还是**某条公式的前缀（用来决定"该不该收这个字"）。
+       返回 true 表示"收下它以后，字母集合仍被某条公式容纳"；false 表示会变成
+       一条公式都装不下的杂牌 —— 那种情况沿用原有 canMerge 的宽松规则，不许拦。 */
+    function eqAccepts(B, ch) {
+      var has = toksOfBody(B) + ch, sig = sigOfToks(has), cnt = {};
+      for (var i = 0; i < sig.length; i++) cnt[sig.charAt(i)] = (cnt[sig.charAt(i)] || 0) + 1;
+      for (var s in EQ_BY_SIG) {
+        var e = EQ_BY_SIG[s], ok = true, need = {};
+        for (var k = 0; k < e.toks.length; k++) need[e.toks.charAt(k)] = (need[e.toks.charAt(k)] || 0) + 1;
+        for (var c in cnt) if ((need[c] || 0) < cnt[c]) { ok = false; break; }
+        if (ok) return true;
+      }
+      return false;
+    }
+    /* eqGroupFor(chars)：这组字母**整体**属于哪条公式（找不到就 null）。
+       判据：这组字母作为多重集是某条公式字母集的**子集**，取最短的那条 = "目的地"。
+       用途（2026-09-30 加法式改法）：判断"以场符号打头的一组字形，是不是在拼公式" ——
+       是的话就让场符号当**字形**参与组合；不是的话它照旧生成场体。 */
+    function eqGroupFor(chars) {
+      var i, cnt = {}, s;
+      for (i = 0; i < chars.length; i++) cnt[chars.charAt(i)] = (cnt[chars.charAt(i)] || 0) + 1;
+      var best = null;
+      for (s in EQ_BY_SIG) {
+        var e = EQ_BY_SIG[s], need = {}, ok = true, k;
+        for (k = 0; k < e.toks.length; k++) need[e.toks.charAt(k)] = (need[e.toks.charAt(k)] || 0) + 1;
+        for (var c in cnt) if ((need[c] || 0) < cnt[c]) { ok = false; break; }
+        if (!ok) continue;
+        if (!best || e.toks.length < best.toks.length) best = e;
+      }
+      return best;
     }
 
     /* ---------------- 体（Body） ---------------- */
@@ -401,8 +686,15 @@
           var a = tAnchor(B);
           var d = Math.hypot(a.x - L.wx, a.y - L.wy);
           if (d > bd) continue;
+          var memHasQ = false;
+          for (var mq = 0; mq < B.mem.length; mq++) if (B.mem[mq] && B.mem[mq].type === 'q' && !B.mem[mq].dead) { memHasQ = true; break; }
           var ok = false, kind = '';
-          if (B.kind === 'q') { ok = true; kind = 'qt'; }
+          /* q 有两条识别方式：① 已经是 q 场体（原有）；② 字母 q 在这个体的 mem 里
+             —— addBody(['q','t']) 这类"q 打头、后面还有别字形"的装配会先把 q
+             当普通 base 挂着（见 dropLetter 的 firstOfGroup），此时 kind 还是 null，
+             只看 kind 就会漏掉 qt→I。这条不会误伤：既有任何体的 mem 里都不可能有 q
+             （q 一旦落字就是场体，永不进 mem）。 */
+          if (B.kind === 'q' || memHasQ) { ok = true; kind = 'qt'; }
           else if (B.kind && B.kind !== 'T') { continue; }
           else if (B.hasG && B.mem.length <= 2 && !B.hasGrav) { ok = true; kind = 'gt'; }
           else if ((B.kind === 'T') || (B.hasV && !B.hasG && !B.hasR && !B.hasGrav && B.mem.length <= 1)) { ok = true; kind = 'vt'; }
@@ -499,6 +791,14 @@
       B.isSchwarzschild = !!(B.gravMode === 'schwarz' && B.cCount >= 2);
       B.isWell = !!(B.gravMode === 'well');
       if (B.massG) B.mass = (B.massG.type === 'M') ? 3 : 1;
+      /* ---- 课本公式识别（符号扩展）----
+         字母集合正好等于某条公式的组成 -> 记下它，render() 会在体周围画公式卡，
+         bodyState().eq / eqText 供探针与上层页面读。
+         ⚠ 这里**只做识别**：绝不因此改写 hasG/hasA/hasV/isWell/mass 等既有行为字段
+         （公式体不额外施力、不被吸引），否则会改变原有手感与确定性断言。 */
+      var eq = eqOfBody(B);
+      B.eq = eq ? eq.id : null;
+      B.eqText = eq ? eq.text : null;
     }
 
     function gravModeOf(B) {
@@ -527,7 +827,18 @@
       return 'plain';
     }
 
-    function wLet(x) { if (x === 'g') return 0; if (x === 'a') return 1; if (x === 'v') return 2; return 3; }
+    /* 字母在体里的排版次序权重。½ 必须排在**最前**：½mv² 是"系数 × 量"，
+       读作"二分之一 m v 平方"；如果 ½ 排在后面（'mv²½'）就不是课本写法了。
+       （2026-09-30 符号扩展时 ½ 一度按默认权重 3 落在末尾，这里显式定到 -1。）
+       ⚠ 排序只在"公式没拼齐"时才做（见 layoutBody 的决定）——拼齐的公式用
+       EQUATIONS 里的 toks 原序排版（½mv 就是 ½mv）。这里只负责没拼齐时的观感。 */
+    function wLet(x) {
+      if (x === HALF) return -1;
+      if (x === 'g') return 0;
+      if (x === 'a') return 1;
+      if (x === 'v') return 2;
+      return 3;
+    }
 
     /* 结构字形（括号 / 加号 / ² / 分数线）按公式形态实时增删 */
     function ensureSt(B) {
@@ -601,8 +912,16 @@
       }
       push(B.massG);
       if (B.family === 0) {
-        // 纯质量堆叠（M+m）：把 mem 里的质量都摆出来
-        for (var mi0 = 0; mi0 < B.mem.length; mi0++) if (isMass(B.mem[mi0])) push(B.mem[mi0]);
+        /* 纯基础体（没有 g/a/v/r/½/μ/c/G 这些"有脾气"的字母）。
+           ★ 2026-09-30 符号扩展修复：这里原来**只摆质量字母**（`if (isMass(...))`），
+           于是任何"非质量字母挂在质量 base 上"的体都会把那个字母**从排版里丢掉** ——
+           字形还在 mem/element 里，却不在 B.glyphs 里，被 refresh 的收尾句
+           `display:none` 藏掉。15 个符号的时代这条路只会被 M+m 走到（两个都是质量，
+           看不出问题）；补齐 F U R N W Q 这些符号后，"先摆 m 再拖 F"是最自然的
+           装配顺序，一丢就是"字母凭空消失"。现在一律摆出 mem 里的**全部**字母。
+           为什么安全：family 0 没有任何专用版式（括号/分数/上标都不参与），
+           逐个平铺就是它本来就该有的样子；质量字母的相对顺序由 wLet 排序保证。 */
+        for (var mi0 = 0; mi0 < B.mem.length; mi0++) push(B.mem[mi0]);
       } else if (B.family === 1) {
         if (B.mem.length === 1) push(B.mem[0]);
         else if (B.cCount >= 2) {
@@ -978,13 +1297,21 @@
       B.sc = 1; B.frac = false; B.subBar = null;
     }
 
+    /* place()：把字形摆到世界坐标 (x,y)。
+       ★ 位置一律走 **transform: translate3d()**，不再写 left/top（2026-09-30 流畅度修复）。
+       为什么：.ps-char 每帧都在动，写 left/top 属于"改布局"——浏览器要为每个字形重跑
+       样式/布局，而画布还压在下面（同一个 #glStage 的裁剪子树），一帧里写几十次布局属性
+       在慢机器/WebView2 上就会掉帧。translate 只影响"合成"，不动布局。
+       视觉完全等价：原来 left/top 与 rotate/scale 本来就合成一个变换矩阵（元素
+       transform-origin 是 center，left/top 用的又是缓存尺寸 g.w/g.h），现在只是把
+       那个平移也放进同一个 transform 里 —— 元素盒子仍留在 (0,0)，渲染结果逐像素一致。
+       注意：世界坐标仍以 #psTable 左上角为原点（与其他函数一致），不要在这里加舞台偏移。 */
     function place(g, x, y, rot, sc, show) {
       var e = g.el;
       if (!show) { e.style.display = 'none'; return; }
       e.style.display = '';
-      e.style.left = (x - g.w / 2) + 'px';
-      e.style.top = (y - g.h / 2) + 'px';
-      var t = 'rotate(' + (rot || 0) + 'rad) scale(' + (sc == null ? 1 : sc) + ')';
+      var t = 'translate3d(' + (x - g.w / 2) + 'px,' + (y - g.h / 2) + 'px,0) rotate(' +
+              (rot || 0) + 'rad) scale(' + (sc == null ? 1 : sc) + ')';
       if (e.style.transform !== t) e.style.transform = t;
     }
     function placeLetter(d) {
@@ -1039,8 +1366,8 @@
     function dockSlotEl(e) {
       var i = PAL_ORDER[e.textContent];
       if (i == null) return;
-      e.style.gridRowStart = (Math.floor(i / 4) + 1);
-      e.style.gridColumnStart = (i % 4 + 1);
+      e.style.gridRowStart = (Math.floor(i / PAL_COLS) + 1);
+      e.style.gridColumnStart = (i % PAL_COLS + 1);
     }
     function sortPanel() {
       for (var i = 0; i < PAL.length; i++) {
@@ -1155,7 +1482,31 @@
       if (!B || B.kind) return false;   // 场体（B/q/I/E）不是字母合并目标
       if (B.bh) return false;           // 黑洞吞字母，绝不与字母合并
       var t = d.type;
-      if (t === 't') return false;      // t 只走三条组合路径（gt→v, qt→I, vt→板），永远不是惰性字母
+      /* ★ 场符号（B/q/I/E）的合并闸门（2026-09-30 符号扩展）：dropLetter 现在会先给
+         它们一次合并机会，这里就必须**只放行"这次字母集合仍被某条课本公式容纳"的
+         情况** —— 否则一个 I 会被随便哪个体吸走，"单独落一个 I 生成电流体"这条
+         既有行为也会被破坏。
+         ⚠ 判据用 eqAccepts（子集）而**不是** eqCompletes（正好拼齐）：中间态必须放行，
+         否则 U+I+R 里的 I 会因为"还差 R"而被拒，三元公式永远拼不齐。
+         ⚠ B/E 也走这条（Φ=BS 要 B；E=ΔΦ/Δt 与 E=F/q 要 E）：它们的字母只在有公式
+         时才会被容纳，所以"单独落一个 B/E 生成场体"同样不受影响。
+         ⚠ **t 是例外**：q+t 必须留给 qt→I 那条经典路径（applyTCombo 会处理，
+         它认 mem 里有 q 的体）。这里放行会让 t 先被并进 q 体，qt→I 就废了。 */
+      if (t === 'B' || t === 'q' || t === 'I' || t === 'E') {
+        /* ⚠ t 是例外：q+t 必须留给 qt→I 那条经典路径（applyTCombo 认 mem 里有 q 的体），
+           这里放行会把 t 先并进 q 体、qt→I 就废了。 */
+        if (eqCompletes(B, 't')) return false;
+        return eqAccepts(B, t);
+      }
+      /* t：三条**经典组合路径优先** —— 体上带 g（g+t→v）或带 v 且没有 g（v+t→板）
+         的，一律返回 false，让 dropLetter 走 findTComboTarget，既有手感一字不变。
+         只有"三条路径都不适用"的体（例如 Q+I 这种纯公式体），才允许 t 去补完一条
+         课本公式（Q=It、P=W/t、E=ΔΦ/Δt、ω=2π/T 都需要 t）。判据要求**正好拼齐**，
+         所以随便一个体接 t 也不会被劫持。 */
+      if (t === 't') {
+        if (B.hasG || (B.hasV && !B.hasR)) return false;
+        return !!eqCompletes(B, t);
+      }
       if (isMass(t)) {
         var hasM = false, hasm = false;
         if (B.massG) { if (B.massG.type === 'M') hasM = true; else if (B.massG.type === 'm') hasm = true; }
@@ -1203,8 +1554,25 @@
         return true;
       }
       var fam = (t === 'g' || t === 'a' || t === MU || t === 'c' || t === 'G') ? 1 : 2;
-      if (B.family && B.family !== fam && !B.hasGrav) return false;   // 两族不许混
+      /* ★ 公式优先于"族"这条软规则（2026-09-30 符号扩展）：
+         下面这条 `两族不许混` 会把 h 挡在重力体外面（h 不属于族 1），
+         于是 Ep=mgh 永远拼不齐（画面上还会出现 "m(g+)" 这种残缺括号）。
+         改法：**先问公式表** —— 只要这次的字母集合仍被某条课本公式容纳，
+         就放行；不涉及任何公式的字母（原有 15 个符号）走的还是老规则。 */
+      if (B.family && B.family !== fam && !B.hasGrav && !eqAccepts(B, t)) return false;
       if (t === 'r' || t === HALF) {
+        /* ★ ½ 的公式通道（2026-09-30 符号扩展）：Ek=½mv² 这条式子要求 ½ 能挂到
+           已经拼好的 mv² 上。原来的顺序是"先查 vCount/rCount 再放行"，而 ½mv²
+           的装配顺序常常是 m → v → v（这时已经是一个完整的 mv² 体）→ ½，
+           此时 vCount 与字母数都可能刚好卡在上限，½ 就被拒了。
+           这里与"家族"那条同理：**先问公式表**，只要并进来以后仍被某条公式容纳
+           （也就是 ½mv² 这条路）就直接放行，其余情况走原来的规矩。 */
+        if (eqAccepts(B, t)) {
+          if (t === HALF) {
+            for (var i3 = 0; i3 < B.mem.length; i3++) if (B.mem[i3].type === HALF) return false;
+          }
+          return true;
+        }
         if (t === 'r') {
           if (B.hasGrav) { if (B.rCount >= 2) return false; if (B.mem.length >= 5) return false; return true; }
           for (var i = 0; i < B.mem.length; i++) if (B.mem[i].type === 'r') return false;
@@ -1220,11 +1588,40 @@
       }
       if (t === 'v') {
         if (B.vCount >= 2) return false;     // 至多两个 v（v²）
-        if (B.mem.length >= 3) return false;
+        /* 装入上限 4（不是 3）：½mv² 的 mem 是 [½,v,m]，还要能再加一个 v 凑 v²
+           —— 上限 3 会让「先摆 ½ m v、再补第二个 v」这条路被拒。 */
+        if (B.mem.length >= 4) return false;
         return true;
       }
+      /* 符号扩展新增的字母（F f N s h p T ω k η θ Δ x y A S U R P W Q ε C L Φ ρ λ ν φ n）
+         走这里。规矩只有两条：
+           ① **收下它以后，这个体的字母集合仍要被某条课本公式容纳** —— 多余的重复
+              字母（例如往 F=ma 上再塞一个 m）会被拒；跟任何公式都无关的字母不受影响
+              （沿用原来"同字母不重复"的宽松规则）。
+           ② 字母个数上限 = **这条公式需要几个字母**（没有匹配的公式时沿用原来的 2）。
+              为什么必须这样：原来写死的 `mem.length >= 2` 是照"至多两个字母的乘积"
+              定的；而 F=ma / Q=I²Rt / ε=U+Ir 这些式子**本身就有 3~5 个字母**，
+              写死 2 会让它们永远拼不齐（第三个字母一到就被拒）。 */
+      if (eqAccepts(B, t) === false) return false;
       for (var k = 0; k < B.mem.length; k++) if (B.mem[k].type === t) return false;  // 同字母不重复
-      if (B.mem.length >= 2) return false;
+      /* 字母数上限 = "这次收下 t 之后仍被某条公式容纳"的那些公式里最长的那个。
+         原来的写法是拿**当前**字母数去比上限，正好差一（mvv 要变成 ½mvv 时，
+         当前 3 个、上限算成 3 就被拒了）。
+         ⚠ 还有一条更隐蔽的：上限只在"收下之后的字母集合**已经**是某条公式的子集"
+         时才算得出来。装配路上会出现"当前集合还差得远"的中间态 —— ½ 打头时
+         body 是 {½}，收下第一个 v 得到 {½,v}，它对任何公式都不是子集
+         （½mv² 还要第二个 v），于是 limit 掉回默认 2、第二个 v 被拒，
+         ½mv² 就永远拼不齐。所以中间态一律放行：真正兜底的是"同字母不重复"
+         ＋"收下后仍被某条公式容纳"这两条，字母数只防病态堆叠。 */
+      var after = toksOfBody(B) + t, limit = 5;
+      for (var sk in EQ_BY_SIG) {
+        var need = {}, have = {}, okSub = true, ci;
+        for (ci = 0; ci < sk.length; ci++) need[sk.charAt(ci)] = (need[sk.charAt(ci)] || 0) + 1;
+        for (ci = 0; ci < after.length; ci++) have[after.charAt(ci)] = (have[after.charAt(ci)] || 0) + 1;
+        for (var hc in have) if ((need[hc] || 0) < have[hc]) { okSub = false; break; }
+        if (okSub && sk.length > limit) limit = sk.length;
+      }
+      if (after.length > limit) return false;
       return true;
     }
 
@@ -1552,6 +1949,7 @@
     function stepPhysics(dt) {
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
+        if (B.eq) continue;      // ★ 双轨：公式体走 stepEqPhysics，老路径不碰它
         if (B.kind === 'B' || B.kind === 'E') continue;
         if (B.bh) continue;      // 黑洞（任何阶段）由 stepBlackHole 处理，不走普通物理
         if (grab.kind === 'body' && grab.obj === B) continue;
@@ -1668,6 +2066,7 @@
     }
 
     function collideBodies() {
+      /* ★ 双轨：公式体之间的碰撞由 eqCollide 负责，老路径不参与。 */
       function ext(B) {
         var th = B.th || 0, c = Math.abs(Math.cos(th)), s = Math.abs(Math.sin(th));
         var hw = B.hw || 24, hh = B.hh || 18;
@@ -1826,6 +2225,7 @@
       for (var f = formulas.length - 1; f >= 0; f--) { killFormula(formulas[f]); formulas.splice(f, 1); }
       shakeOn = false; shakeAmp = 0; shakeDur = 0;
       table.style.transform = '';
+      invalidateTableOrigin();
     }
     /* 清空：场上全清，面板恢复 15 个字形的完好状态 */
     function clearAll() {
@@ -2653,6 +3053,72 @@
         o.gy = B.y - R + Rk * Math.sin(o.spin);
       }
     }
+    /* 公式卡：体拼齐一条课本公式时，在它周围画一张**同一套墨线**的卡片。
+       风格纪律（别发明新视觉语言）：只用纸色底 + 墨色描边/文字 + 既有的
+       pop 缩放（popScale）与屏幕震动机制；字号跟 F 走；不动 DOM 字形的位置。 */
+    function drawEquationCard(B) {
+      if (!B.eqText) return;
+      var pop = (B.pop && B.pop > 0) ? popScale(B.pop) : 1;
+      var sc = pop * (B.sc || 1) * (B.infl || 1);
+      var th = (B.th || 0) + (B.wob || 0);
+      var size = Math.max(11, F * 0.40 * sc);
+      var pad = 9 * sc;
+      var w = B.hw * 2 + pad * 2, h = B.hh * 2 + pad * 2 + size + 6 * sc;
+      var fs = 'italic ' + size + 'px Georgia,"Times New Roman",serif';
+      if (cvx.font !== fs) cvx.font = fs;
+      var tw = cvx.measureText(B.eqText).width;
+      if (tw + pad * 2 > w) w = tw + pad * 2;
+      cvx.save();
+      cvx.translate(B.x, B.y + B.hh + pad + size * 0.8);
+      if (th) cvx.rotate(th);
+      var x0 = -w / 2, y0 = -h / 2, r = 5 * sc;
+      cvx.fillStyle = 'rgba(255,255,255,0.55)';
+      cvx.strokeStyle = 'rgba(120,80,30,0.55)';
+      cvx.lineWidth = 1;
+      cvx.beginPath();
+      cvx.moveTo(x0 + r, y0);
+      cvx.lineTo(x0 + w - r, y0); cvx.quadraticCurveTo(x0 + w, y0, x0 + w, y0 + r);
+      cvx.lineTo(x0 + w, y0 + h - r); cvx.quadraticCurveTo(x0 + w, y0 + h, x0 + w - r, y0 + h);
+      cvx.lineTo(x0 + r, y0 + h); cvx.quadraticCurveTo(x0, y0 + h, x0, y0 + h - r);
+      cvx.lineTo(x0, y0 + r); cvx.quadraticCurveTo(x0, y0, x0 + r, y0);
+      cvx.closePath();
+      cvx.fill(); cvx.stroke();
+      cvx.fillStyle = 'rgba(38,34,28,0.92)';
+      cvx.textAlign = 'center';
+      cvx.textBaseline = 'middle';
+      cvx.fillText(B.eqText, 0, 0);
+      /* ---- 实时物理读数（补充要求①：公式卡上要能一眼看出"真在算物理"）----
+         同一套墨线、同一字体，字号比公式小一号，逐行排在公式下面。
+         读数来自 B.eqRead（由公式体动力学每步更新），老实体没有 eqRead 就不画。 */
+      var rd = B.eqRead, keys = [];
+      if (rd) { for (var kk in rd) keys.push(kk); }
+      if (keys.length) {
+        var fs2 = 'italic ' + (size * 0.82) + 'px Georgia,"Times New Roman",serif';
+        if (cvx.font !== fs2) cvx.font = fs2;
+        var lh = size * 1.05, maxw = 0;
+        var lines = [];
+        for (var q2 = 0; q2 < keys.length && q2 < 4; q2++) {
+          var v2 = rd[keys[q2]];
+          var sv = (typeof v2 === 'number') ? (Math.abs(v2) >= 100 ? v2.toFixed(1) : v2.toFixed(3)) : String(v2);
+          var ln = keys[q2] + ' = ' + sv;
+          lines.push(ln);
+          var w2 = cvx.measureText(ln).width;
+          if (w2 > maxw) maxw = w2;
+        }
+        var boxW = maxw + pad * 2;
+        var boxH = lines.length * lh + pad;
+        var cy0 = h / 2 + pad * 0.5;
+        cvx.fillStyle = 'rgba(255,255,255,0.55)';
+        cvx.strokeStyle = 'rgba(120,80,30,0.35)';
+        cvx.lineWidth = 0.8;
+        cvx.beginPath();
+        cvx.rect(-boxW / 2, cy0, boxW, boxH);
+        cvx.fill(); cvx.stroke();
+        cvx.fillStyle = 'rgba(38,34,28,0.86)';
+        for (var q3 = 0; q3 < lines.length; q3++) cvx.fillText(lines[q3], 0, cy0 + pad * 0.5 + lh * (q3 + 0.5));
+      }
+      cvx.restore();
+    }
     function render() {
       cvx.clearRect(0, 0, W, H);
       // 分数横线 / ½ 的下标横线（墨色线画在 canvas 上，压在 DOM 字形之下）
@@ -2746,6 +3212,14 @@
         var HB = bodies[bhv];
         if (HB.bh) drawBlackHole(HB);
       }
+      /* 公式卡画在最后（压在分数横线/场之上，但不遮 DOM 字形 —— 卡片在体下方）。
+         正在被拖动的体不画卡（拖起来清爽些）。 */
+      for (var eqv = 0; eqv < bodies.length; eqv++) {
+        var EB = bodies[eqv];
+        if (!EB.eqText || EB.bh) continue;
+        if (grab.kind === 'body' && grab.obj === EB) continue;
+        drawEquationCard(EB);
+      }
       drawParticles();
     }
     function drawBlackHole(B) {
@@ -2828,11 +3302,16 @@
         if (d.state === 'free') placeLetter(d);
       }
     }
+    /* cursorTick：只在光标**真的变了**的时候写 style.cursor（2026-09-30 流畅度修复）。
+       原来每帧无条件写一次 cv.style.cursor，即使值没变也会让浏览器标记该元素样式脏。 */
+    var lastCursor = null;
     function cursorTick() {
-      if (grab.kind === 'body') { cv.style.cursor = 'grabbing'; return; }
-      if (grab.kind === 'letter') { cv.style.cursor = findMergeTarget(grab.obj) ? 'copy' : 'grabbing'; return; }
-      if (grab.kind === 'rot') { cv.style.cursor = 'grabbing'; return; }
-      cv.style.cursor = 'default';
+      var want;
+      if (grab.kind === 'body') want = 'grabbing';
+      else if (grab.kind === 'letter') want = findMergeTarget(grab.obj) ? 'copy' : 'grabbing';
+      else if (grab.kind === 'rot') want = 'grabbing';
+      else want = 'default';
+      if (want !== lastCursor) { cv.style.cursor = want; lastCursor = want; }
     }
 
     /* ---------------- 引力（含双星）与场力 ---------------- */
@@ -2849,6 +3328,7 @@
       }
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
+        if (B.eq) continue;      // ★ 双轨：公式体不被引力井吸引
         if (B.kind) continue;
         if (B.bh) continue;      // 黑洞不绕任何东西
         if (B.isWell) continue;
@@ -2959,6 +3439,7 @@
       }
       for (var j = 0; j < bodies.length; j++) {
         var O = bodies[j];
+        if (O.eq) continue;      // ★ 双轨：公式体不受 B/E 场力
         if (O.kind === 'B' || O.kind === 'E') continue;   // 场源感觉不到自己的场
         if (O.bh) continue;
         if (grab.kind === 'body' && grab.obj === O) continue;
@@ -3024,6 +3505,7 @@
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
       cv.style.width = W + 'px'; cv.style.height = H + 'px';
       cvx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      invalidateTableOrigin();   // 台面尺寸变了 -> 缓存的舞台原点作废
       // 台面尺寸变了，把所有实体拉回台面内，避免丢在外面看不见
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
@@ -3038,9 +3520,17 @@
     }
 
     var rafId = 0, lastT = 0, running = true, alive = true;
+    /* frame()：自动推进循环。
+       ★ 必须真的检查 running（2026-09-30 修复）：原来 pause() 只把 running 置 false，
+       而这里从不读它 —— 于是 pause() 返回 true 但画面照跑（空实现）。
+       暂停时**仍然请求下一帧**（只是不推进），这样 resume() 之后能立刻续上，
+       而且 lastT 不会被暂停期间的时间差污染（恢复了也不会"跳一大步"）。
+       stepOnce() 走的是 stepFrame()，**不受 running 影响** —— 它是显式的手动单步，
+       探针的确定性断言全靠它。 */
     function frame(now) {
       if (!alive) return;
       rafId = requestAnimationFrame(frame);
+      if (!running) { lastT = now; return; }
       if (!lastT) lastT = now;
       var dt = Math.min(0.033, Math.max(0.008, (now - lastT) / 1000));
       lastT = now;
@@ -3049,11 +3539,36 @@
     /* 一帧的完整推进（rAF 与 stepOnce 共用同一条路径，所以探针推的帧
        和真跑的一帧完全一样） */
     function stepFrame(dt) {
+      /* ★ 舞台原点必须在**任何样式写入之前**取一次（2026-09-30 流畅度修复）：
+         此刻布局是干净的，这一次 getBoundingClientRect 不会触发强制同步布局；
+         接下来这一帧里所有 worldRect()/xy() 都复用这个读数。
+         放在 stepFrame 里（而不是 frame 里）是为了让 stepOnce 也走同一条路径。 */
+      invalidateTableOrigin();
+      tableOrigin();
       tWorld += dt;
-      stepPhysics(dt);
-      collideBodies();
-      stepGravity(dt);
-      stepField(dt);
+      /* ============================ 双轨分界 ============================
+         ★ 这是**两套物理的唯一分界点**（2026-09-30 第三段：事件与相互作用）。
+         为什么要有这条分界：老 15 个符号 + 五个预设 + 既有 stepPhysics 积分是
+         **已经发布出去的行为**，背后还压着两条永久确定性断言（自由落体
+         y 100→122.35653620491976、引力井距 240.0500034375976→182.10799887040633）
+         与排版 hw/hh；而"事件"要求公式体做真动力学（碰撞守恒、弹簧振子、
+         欧姆回路…），两者塞进同一条积分路径必然互相改动数值。
+
+         所以：
+           · 老路径（下面的 stepPhysics / collideBodies / stepGravity / stepField /
+             tickOrbs / …）**一行未动**，只服务"eq 为空"的实体；
+           · 新路径（stepEqPhysics）只服务**公式体**（B.eq 非空），走固定步长 +
+             累加器，完全独立；
+           · 两条路径**互不施力**：stepEqPhysics 里跳过所有非公式体，
+             下面的老函数里也跳过所有公式体（各处加 `if (B.eq) continue;`）。
+         判据（探针会断言）：把一台沙盒里的 B.eq 全部清空后推进 N 帧，
+         结果必须与"从来就没有过公式体"的沙盒逐位一致。
+         ================================================================ */
+      stepPhysics(dt);          // 老路径（内部已跳过公式体）
+      collideBodies();          // 老路径（内部已跳过公式体）
+      eqAccumulate(dt);         // 新路径：固定步长累加器，只推公式体
+      stepGravity(dt);          // 老路径（内部已跳过公式体）
+      stepField(dt);            // 老路径（内部已跳过公式体）
       tickOrbs(dt);
       stepExplode(dt);
       stepBlackHole(dt);
@@ -3069,6 +3584,283 @@
 
     /* ---------------- 测试 / 集成接口用到的快照 ---------------- */
     var KIND_NAME = { 'T': 'plank', 'B': 'Bfield', 'E': 'Efield', 'q': 'charge', 'I': 'current' };
+
+    /* 公式体动力学（双轨的**新路径**）                                       *
+     *  只服务 eq 非空的实体；老实体一律不碰（反过来老函数也跳过公式体）。      *
+     * ==================================================================== */
+    var EQ_DT = 1 / 120;          // 固定步长（s）。1/120 让弹簧/碰撞有足够分辨率
+    var eqAcc = 0;                // 固定步长累加器（帧率无关）
+    var eqTime = 0;               // 公式体的仿真时钟（与 tWorld 分开，便于断言）
+    var eqStepNo = 0;             // 子步序号（碰撞冷却：同一子步内一对体只判一次）
+    var EQ_EVENTS = [];           // 事件环形缓冲（探针可读；只保留最近 64 条）
+    var eqEventSeq = 0;
+    function eqEmit(type, B, data) {
+      eqEventSeq++;
+      EQ_EVENTS.push({ seq: eqEventSeq, t: +eqTime.toFixed(6), type: type,
+                       id: B ? bodies.indexOf(B) : -1, eq: B ? B.eq : null, data: data || null });
+      if (EQ_EVENTS.length > 64) EQ_EVENTS.shift();
+      if (B) { B.evType = type; B.evT = eqTime; }
+    }
+    function eqResetAll() { EQ_EVENTS = []; eqEventSeq = 0; eqTime = 0; eqAcc = 0; }
+    /* 物理读数：公式卡上实时显示的那几行（也进 bodyState().readout，供断言） */
+    function eqReadout(B) {
+      var r = B.eqRead;
+      if (!r) return null;
+      var out = {};
+      for (var k in r) out[k] = (typeof r[k] === 'number') ? +r[k].toFixed(4) : r[k];
+      return out;
+    }
+    function eqSet(B, k, v) { if (!B.eqRead) B.eqRead = {}; B.eqRead[k] = v; }
+
+    /* 初始化一个公式体的动力学状态（换手/换公式/清场后调用） */
+    function eqInitState(B) {
+      if (B.eqState) return;
+      B.eqState = {
+        x0: B.x, y0: B.y, vx0: B.vx, vy0: B.vy,   // 公式体的运动一律从"拼齐那一刻"算起
+        sx: 0, sv: 0, a: 0,                        // 弹簧位移/速度/加速度
+        U: 0, R: 0, I: 0, P: 0, Q: 0, W: 0,        // 电学
+        F: 0, q: 0, m: 1, L: 1,                    // 力/电荷/质量/长度（默认值，可由读数改）
+        B: 1, E: 0, phi: 0, eps: 0,                // 磁场/电场/磁通/电动势
+        chargeState: 'idle',                       // 电容：idle|charging|charged
+        short: false, open: false,
+        hits: 0, lastHit: -1, u0: null, u1: null   // 碰撞统计（u0/u1 = 碰前/碰后速度）
+      };
+      B.eqState.x0 = B.x; B.eqState.y0 = B.y;
+      eqBootstrap(B);
+    }
+    /* 把体上的字母翻译成初始物理量（课本默认值；探针可用 API 覆盖） */
+    function eqBootstrap(B) {
+      var S = B.eqState, toks = toksOfBody(B), i;
+      function has(c) { return toks.indexOf(c) >= 0; }
+      function times(c) { var n = 0; for (i = 0; i < toks.length; i++) if (toks.charAt(i) === c) n++; return n; }
+      if (B.eq === 'momentum') { S.m = 1; S.p = S.m * (B.vx || 0); B.eqRead = {}; }
+      if (B.eq === 'ohm') { S.U = 6; S.R = 2; S.I = S.U / S.R; }
+      if (B.eq === 'powerE') { S.U = 6; S.I = 2; S.P = S.U * S.I; S.R = S.U / S.I; }
+      if (B.eq === 'joule') { S.I = 2; S.R = 2; S.t = 1; S.Q = S.I * S.I * S.R * S.t; }
+      if (B.eq === 'charge') { S.I = 2; S.t = 1; S.Q = 2; }
+      if (B.eq === 'cap') { S.C = 2; S.U = 5; S.Q = S.C * S.U; S.chargeState = 'charging'; }
+      if (B.eq === 'hooke') { S.k = 40; S.m = 1; S.sx = (B.hw || 40) * 0.8; S.sv = 0; }
+      if (B.eq === 'circular') { S.omega = 2 * Math.PI / Math.max(0.4, 1.2); }
+      if (B.eq === 'circular') { /* ω=2π/T：T 由字母 T 的出现次数之外的物理量决定 */ }
+      if (B.eq === 'kinetic' || B.eq === 'potential' || B.eq === 'work') { S.m = 1; S.g = 9.8; }
+      if (B.eq === 'newton2') { S.F = 2; S.m = 1; S.a = S.F / S.m; }
+      if (B.eq === 'ampere' || B.eq === 'lorentz') { S.B = 0.5; S.I = 2; S.L = 0.4; S.q = 0.002; S.v = 3; }
+      if (B.eq === 'faraday') { S.phi = 0; S.eps = 0; }
+      if (B.eq === 'weight' || B.eq === 'friction') { S.g = 9.8; S.m = 1; S.mu = 0.2; S.theta = 0; }
+      if (B.eq && B.eq.indexOf('delta') === 0) { /* Δ：无需初值 */ }
+      B.eqRead = B.eqRead || {};
+    }
+
+    /* ---- 碰撞（动量守恒）：两个动量体靠近并相向运动时判定 ---- */
+    function eqCollide(dt) {
+      var i, j;
+      for (i = 0; i < bodies.length; i++) {
+        var A = bodies[i];
+        if (!A.eq || A.eq !== 'momentum' || A.bh) continue;
+        for (j = i + 1; j < bodies.length; j++) {
+          var B = bodies[j];
+          if (!B.eq || B.eq !== 'momentum' || B.bh) continue;
+          var dx = B.x - A.x, dy = B.y - A.y;
+          var gap = Math.hypot(dx, dy);
+          var reach = (A.hw + B.hw + 10);
+          if (gap > reach) continue;
+          var nx = dx / (gap || 1), ny = dy / (gap || 1);
+          /* 判据必须用**相对速度沿法向的分量** v_rel = (vA − vB)·n。
+             为什么不能分别投影再相减：u1=120、u2=−60 时 u1−u2=180>0 恒成立，
+             法向指反了也会被判成"正在接近"，于是刚摆下的两体会被无限次"碰"回去 ——
+             实测两体在 x≈391~491 之间来回振荡、速度一直不换（30 次碰撞全是空碰）。
+             相对速度才是物理上的接近判据：v_rel>0 表示 A 正在朝 B 靠近。 */
+          var vrel = (A.vx - B.vx) * nx + (A.vy - B.vy) * ny;
+          if (vrel <= 0) continue;              // 正在分离（或已经分开），不算碰撞
+          var u1 = A.vx * nx + A.vy * ny;       // 沿法向的分量（公式与事件读数用）
+          var u2 = B.vx * nx + B.vy * ny;
+          if (u1 === u2) continue;              // 法向分量相同 = 整体平移，不产生碰撞
+          /* 同一对体在一次碰撞后的**冷却**：判据是"这一次子步里已经处理过"。
+             为什么要它：碰撞是"按住位置判距离"，如果不在同一子步里跳过重复判定，
+             一帧内会连判几十次、逐次抽走能量，看起来像卡住（实测 hits 会飙到 50）。
+             为什么要按**子步**而不是按"碰过的对象"：真实使用里两体会连续相撞多次
+             （碰完弹开、撞墙又回来），只在"同一次子步"里去重才不会把真实碰撞吃掉。 */
+          if (A.eqState.lastHitStep === eqStepNo || B.eqState.lastHitStep === eqStepNo) continue;
+          if (eqTime - (A.eqState.lastHitT || -9) < 0.02 && eqTime - (B.eqState.lastHitT || -9) < 0.02) continue;
+          var m1 = A.eqState.m, m2 = B.eqState.m;
+          /* 恢复系数 e：课本上 e=1 弹性碰撞、e=0 完全非弹性（碰后共速）。
+             ⚠ 公式别写歪（这里踩过一次）：`v = vcm + e·(u − vcm)` 在 e=1 时是**恒等式**
+             —— 它把碰前速度原样返回，看起来"算了但没变"。正确的是先用**弹性碰撞**
+             的一维公式求出碰后速度，再按 e 在"弹性结果"与"共速（vcm）"之间插值：
+               v1e = ((m1−m2)u1 + 2m2u2)/(m1+m2)      （弹性，动量与动能都守恒）
+               v2e = ((m2−m1)u2 + 2m1u1)/(m1+m2)      （等价于两者交换动量）
+               v1f = vcm + e·(v1e − vcm)，  v2f = vcm + e·(v2e − vcm)
+             e=1 -> 弹性结果；e=0 -> 两者都是 vcm（完全非弹性）；中间值线性插值。 */
+          var e = (typeof A.eqState.e === 'number') ? A.eqState.e : 1;
+          var vcm = (m1 * u1 + m2 * u2) / (m1 + m2);
+          var v1e = ((m1 - m2) * u1 + 2 * m2 * u2) / (m1 + m2);
+          var v2e = ((m2 - m1) * u2 + 2 * m1 * u1) / (m1 + m2);
+          var v1f = vcm + e * (v1e - vcm);
+          var v2f = vcm + e * (v2e - vcm);
+          /* 把法向分量写回（切向保持不变） */
+          A.vx += (v1f - u1) * nx; A.vy += (v1f - u1) * ny;
+          B.vx += (v2f - u2) * nx; B.vy += (v2f - u2) * ny;
+          var EkB = 0.5 * m1 * u1 * u1 + 0.5 * m2 * u2 * u2;
+          var EkA = 0.5 * m1 * v1f * v1f + 0.5 * m2 * v2f * v2f;
+          A.eqState.hits++; B.eqState.hits++;
+          A.eqState.u0 = u1; A.eqState.u1 = v1f;
+          B.eqState.u0 = u2; B.eqState.u1 = v2f;
+          A.eqState.e = e; B.eqState.e = e;
+          A.eqState.EkLoss = +(EkB - EkA).toFixed(6);
+          eqSet(A, 'Σp', m1 * v1f + m2 * v2f);
+          eqSet(A, 'ΣEk', EkA);
+          eqEmit('collide', A, { e: e, u1: +u1.toFixed(4), v1: +v1f.toFixed(4),
+                                 u2: +u2.toFixed(4), v2: +v2f.toFixed(4),
+                                 EkBefore: +EkB.toFixed(6), EkAfter: +EkA.toFixed(6),
+                                 EkLoss: +(EkB - EkA).toFixed(6) });
+          /* 碰撞的**可见提示**：复用既有的冲击环（ringGo）+ 一次轻微震动，别做夸张特效 */
+          ringGo((A.x + B.x) / 2, (A.y + B.y) / 2);
+          shake(3, 0.12);
+          /* 把两体推开一点，避免贴着反复判定 */
+          A.x -= nx * 3; A.y -= ny * 3; B.x += nx * 3; B.y += ny * 3;
+        }
+      }
+    }
+
+    /* ---- 固定步长的单步推进（只作用于公式体） ---- */
+    function eqStepOnce() {
+      eqTime += EQ_DT;
+      eqStepNo++;              // 子步序号（碰撞冷却按它去重：同一子步内一对体只判一次）
+      var dt = EQ_DT, i;
+      /* 1) 通用运动：公式体默认**不受重力、不被引力井吸引**（双轨：两套物理不互相污染），
+            只按自己的 v 匀速走，撞到台面边界反弹。 */
+      for (i = 0; i < bodies.length; i++) {
+        var B = bodies[i];
+        if (!B.eq || B.bh) continue;
+        eqInitState(B);
+        var S = B.eqState;
+        /* newton2：F=ma 真的给出加速度 */
+        if (B.eq === 'newton2') { S.a = S.F / S.m; B.vx += S.a * dt * (B.th ? -Math.cos(B.th) : -1); }
+        /* circular：向心加速度读数 a=v²/r（r 用两个圆周体的间距，没有伙伴就用自身 hw） */
+        if (B.eq === 'circular') {
+          var rr = Math.max(20, B.hw || 20);
+          S.v = Math.hypot(B.vx, B.vy);
+          S.a = S.v * S.v / rr;
+        }
+        /* 弹簧振子：F=-kx -> a=-kx/m（一维，沿 B.th 方向；T=2π√(m/k)） */
+        if (B.eq === 'hooke') {
+          S.a = -S.k * S.sx / S.m;
+          S.sv += S.a * dt;
+          S.sx += S.sv * dt;
+          S.Ek = 0.5 * S.m * S.sv * S.sv;
+          S.Ep = 0.5 * S.k * S.sx * S.sx;
+          S.T = 2 * Math.PI * Math.sqrt(S.m / S.k);
+          /* 弹簧体自己就沿它被摆下的方向来回振，位移直接写回世界坐标 */
+          var th = B.th || 0;
+          B.x = S.x0 + Math.cos(th) * S.sx;
+          B.y = S.y0 + Math.sin(th) * S.sx;
+        }
+        /* kinetic / potential / work：能量读数（不做新运动） */
+        if (B.eq === 'kinetic') { S.v = Math.hypot(B.vx, B.vy); S.Ek = 0.5 * S.m * S.v * S.v; }
+        if (B.eq === 'potential') { S.h = (groundY - B.y) / 40; S.Ep = S.m * S.g * S.h; }
+        if (B.eq === 'work') { S.s = Math.abs(B.x - S.x0) / 40; S.W = S.F ? S.F * S.s : 0; }
+        /* 斜面与摩擦：tanθ > μ 才下滑（θ 由 th 给出，μ 由字母 μ 或在 API 里设） */
+        if (B.eq === 'weight' || B.eq === 'friction') {
+          /* 斜面倾角 θ 的**唯一真源是体的朝向 B.th**（玩家用旋转手柄摆倾角）。
+             eqSet(id,'theta',θ) 在接口层直接写 B.th —— 只写 eqState.theta 的话
+             读数里的 tanθ 永远是 0、判据永远"不下滑"（这里踩过一次）。 */
+          var tanth = Math.abs(Math.tan(B.th || 0));
+          S.theta = B.th || 0;
+          S.tanTheta = tanth;
+          S.slides = (B.eq === 'friction') && (tanth > S.mu);
+          S.N = S.m * S.g * Math.cos(B.th || 0);
+          S.f = S.mu * S.N;
+          if (S.slides) { B.vx += Math.cos(B.th || 0) * (S.g * Math.sin(B.th || 0) - S.mu * S.g * Math.cos(B.th || 0)) * dt; }
+          else if (B.eq === 'friction') { B.vx *= 0.9; B.vy *= 0.9; }
+        }
+        /* 电学：U/R 真的算出 I；R 太小 -> 短路；R 太大/断路 -> I=0 */
+        if (B.eq === 'ohm' || B.eq === 'powerE') {
+          if (B.eq === 'ohm') { S.R = (typeof S.Rset === 'number') ? S.Rset : S.R; S.U = (typeof S.Uset === 'number') ? S.Uset : S.U;
+                                /* R→0 是短路：I=U/R 发散，物理上受电源内阻限制。
+                                   这里给一个**可读的大电流哨兵**而不是 0 —— 0 会让
+                                   "短路"看起来像"断路"，两个事件就分不出来了。 */
+                                S.I = (S.R > 0.05) ? (S.U / S.R) : (S.U / 0.05); }
+          S.P = S.U * S.I;
+          var wasShort = S.short;
+          S.short = (S.R <= 0.05);
+          S.open = (S.R >= 1e6);
+          if (S.short && !wasShort) eqEmit('short-circuit', B, { R: S.R, I: S.I });
+          if (S.open && !S.openHit) { S.openHit = true; eqEmit('open-circuit', B, { R: S.R, I: S.I }); }
+          if (!S.open) S.openHit = false;
+          S.Q = S.I * S.I * S.R * 1;
+          eqSet(B, 'I', S.I); eqSet(B, 'U', S.U); eqSet(B, 'P', S.P);
+        }
+        if (B.eq === 'joule') { S.Q = (typeof S.Q === 'number') ? S.Q : 0; S.Q += S.I * S.I * S.R * dt; eqSet(B, 'Q', S.Q); }
+        if (B.eq === 'charge') { S.Q = (typeof S.Q === 'number') ? S.Q : 0; S.Q += S.I * dt; eqSet(B, 'Q', S.Q); }
+        if (B.eq === 'emf') { S.I = (S.R > 0) ? (S.eps / (S.R + 0.5)) : 0; S.U = S.eps - S.I * 0.5; eqSet(B, 'I', S.I); eqSet(B, 'U', S.U); }
+        if (B.eq === 'cap') {
+          /* 充电：Q 从 0 涨到 CU，箭头方向表示充电（楞次/充电方向都要看得见） */
+          var target = S.C * S.U;
+          if (S.chargeState === 'charging') {
+            S.Q += (target - S.Q) * Math.min(1, dt * 3);
+            S.I = (target - S.Q) * 3;
+            if (Math.abs(target - S.Q) < 0.01 * Math.max(1, target)) { S.chargeState = 'charged'; eqEmit('cap-charged', B, { Q: S.Q, U: S.U }); }
+          }
+          eqSet(B, 'Q', S.Q); eqSet(B, 'U', S.U); eqSet(B, 'I', S.I);
+        }
+        /* 磁场：安培力 F=BIL（方向：左手定则 —— I 与 B 垂直时 F 垂直于两者所在的平面）
+           洛伦兹力 F=qvB（方向：正电荷用左手定则；这里只做平面内的转向） */
+        if (B.eq === 'ampere' || B.eq === 'lorentz') {
+          var F = (B.eq === 'ampere') ? (S.B * S.I * S.L) : (S.q * S.v * S.B);
+          S.F = F;
+          /* 方向：**电流/电荷的符号**（Isign / qsign，与托盘上 q、I 的既有极性语义一致），
+             取不到才退回 chargeSign。平面近似下 I（或 v）沿 +x、B 垂直纸面向外时
+             F 沿 -y（左手定则）；Isign=-1 即电流反向 -> 受力反向。
+             ⚠ 这里踩过一次：原来只读 `S.chargeSign`，而接口/探针用的是 `Isign` ——
+             名字对不上，方向就永远不翻转（实测 forward 与 reverse 完全相同）。 */
+          var dir = (typeof S.Isign === 'number') ? S.Isign
+                  : ((typeof S.qsign === 'number') ? S.qsign
+                  : ((S.chargeSign == null) ? 1 : S.chargeSign));
+          B.vy += dir * F * dt * 8;
+          eqSet(B, 'F', F); eqSet(B, 'B', S.B);
+        }
+        /* 法拉第：ε = -ΔΦ/Δt（单匝）。磁通由"与最近磁场源的距离"给出，靠近/远离方向相反。 */
+        if (B.eq === 'faraday') {
+          var src = null, bd = 1e9, k2;
+          for (k2 = 0; k2 < bodies.length; k2++) {
+            var O2 = bodies[k2];
+            if (!O2.eq) continue;
+            if (O2.eq !== 'ampere' && O2.eq !== 'lorentz') continue;
+            var dd = Math.hypot(O2.x - B.x, O2.y - B.y);
+            if (dd < bd) { bd = dd; src = O2; }
+          }
+          var phiPrev = S.phi;
+          S.phi = (src ? (1 / Math.max(40, bd)) : 0);
+          S.eps = -(S.phi - phiPrev) / dt;
+          S.approach = (S.phi > phiPrev) ? 'closer' : (S.phi < phiPrev ? 'away' : 'still');
+          if (Math.abs(S.eps) > 1e-4 && S.approach !== S.lastApproach) {
+            eqEmit('induction', B, { eps: +S.eps.toFixed(4), dir: S.approach });
+            S.lastApproach = S.approach;
+          }
+          eqSet(B, 'ε', S.eps); eqSet(B, 'Φ', S.phi);
+        }
+        /* 卫星轨道（引力井系统用 eq 体表达不了，这里给"圆周运动 + 逃逸判据"读数） */
+        /* 通用位移积分（弹簧体已经直接写了坐标，跳过） */
+        if (B.eq !== 'hooke') { B.x += B.vx * dt; B.y += B.vy * dt; }
+        /* 边界：公式体在台面内反弹（不施力、不吸东西，只防跑出屏幕） */
+        if (B.x < 24) { B.x = 24; B.vx = Math.abs(B.vx) * 0.9; }
+        if (B.x > W - 24) { B.x = W - 24; B.vx = -Math.abs(B.vx) * 0.9; }
+        if (B.y < 24) { B.y = 24; B.vy = Math.abs(B.vy) * 0.9; }
+        if (B.y > groundY - 24) { B.y = groundY - 24; B.vy = -Math.abs(B.vy) * 0.9; }
+      }
+      /* 2) 碰撞（动量守恒）放在运动之后，判据用"这一子步的位置" */
+      eqCollide(dt);
+    }
+    /* 累加器：把真实帧间隔切成固定步长；单帧最多补 8 步（防止卡顿时追帧爆炸） */
+    function eqAccumulate(dt) {
+      var any = false, i;
+      for (i = 0; i < bodies.length; i++) if (bodies[i].eq && !bodies[i].bh) { any = true; break; }
+      if (!any) { eqAcc = 0; return; }
+      eqAcc += dt;
+      var n = 0;
+      while (eqAcc >= EQ_DT && n < 8) { eqStepOnce(); eqAcc -= EQ_DT; n++; }
+      if (eqAcc > EQ_DT * 8) eqAcc = 0;
+    }
 
     /* 公式文本：把可见字形按"读出来的顺序"拼成字符串。
        排序关键：**先按 y 分行，再按 x 从左到右** —— 这样 ² 永远跟在底数字母
@@ -3135,6 +3927,11 @@
                  hasGrav: !!B.hasGrav, hasI: B.kind === 'I', hasQ: B.kind === 'q' },
         vCount: B.vCount || 0, cCount: B.cCount || 0, rCount: B.rCount || 0,
         gravMode: B.gravMode, isWell: !!B.isWell, isSchwarzschild: !!B.isSchwarzschild,
+        eq: B.eq || null, eqText: B.eqText || null,
+        /* 公式体的实时物理读数（双轨新路径）。老实体这里是 null —— 探针可以据此
+           区分"这台实体走没走新物理"。 */
+        readout: (B.eq && B.eqRead) ? eqReadout(B) : null,
+        evType: B.evType || null,
         hasBH: !!B.bh, bhStage: B.bh ? B.bh.stage : null, bhR: B.bh ? B.bh.r : null,
         orbiting: !!B.go, orbitPartner: B.go ? bodies.indexOf(B.go.by) : null,
         isOrbitPartner: !!B.goB,
@@ -3150,18 +3947,33 @@
 
     /* addBody(chars, opts)：在给定位置摆出一组字形并返回该体的状态对象。
        完全复用**落字同一条代码路径**（dropLetter = 松手那一刻的全部判定），
-       只是不依赖真实鼠标。两条装配纪律：
+       只是不依赖真实鼠标。三条装配纪律：
          1) **基础质量先落**：真实用户是"先摆一个块、再把字母拖上去"，所以先把
             这组字形里的第一个质量字母（m/M）落成 base。若让 G 先落，它自己会当
             base，而 base 是 G 的体凑不出 GMm/r²（gravModeOf 要小写 m 才算引力井）。
             两个质量字母时（M 与 m）保持原顺序，正好复现"先摆 M 块、再拖别的字"。
-         2) 剩下的字母一律走 dropLetter（含场符号 B/q/I/E，它们各自生成场体）。 */
+         2) 剩下的字母一律走 dropLetter（含场符号 B/q/I/E，它们各自生成场体）。
+         3) ★ 相邻字形间距**必须收窄**（2026-09-30 符号扩展）：装配走的是
+            findMergeTarget()，它有一条**距离闸门**（`return bd < 200 ? best : null`）。
+            原来 spread=34 是照着"2~4 个字形"定的，公式一长就出事：
+            7 个字母的第 8 个字形会落在 238px 外，**超出闸门**，于是 F/m/a 只能拼出
+            "Fm"、I 永远并不进 U 的体 —— 表现就是"公式永远凑不齐"。
+            现在按字母数算一个 ≤24px 的间距：最多 3 个间距（封装上限），
+            最远字形离锚点 ≤72px，稳稳落在闸门之内。字形多到 8 个以上时，
+            超过 GRP 的那几个会另起一坨 —— 这是**有意的**：一次 addBody 只承诺
+            可靠装配一个公式，要更多就分次调用（预设与探针本来就是这么写的）。 */
+    var AB_GRP = 3;      // 一次 addBody 内"保证落在合并闸门内"的间距个数
+    var AB_PITCH = 24;   // 相邻字形的基准间距（px）
+    function abSpread(n) {
+      if (n <= 1) return AB_PITCH;
+      return Math.max(12, Math.min(AB_PITCH, Math.round((AB_PITCH * (AB_GRP + 1)) / n)));
+    }
     function addBody(chars, o) {
       o = o || {};
       if (typeof chars === 'string') chars = chars.split('');
       chars = chars || [];
       var n = chars.length;
-      var spread = o.spread || 34;
+      var spread = o.spread || abSpread(n);
       var x0 = (o.x != null) ? o.x : Math.round(W * 0.5 - (n - 1) * spread / 2);
       var y0 = (o.y != null) ? o.y : Math.round(H * 0.34);
       // 找基础质量：只认 m/M，且整组里只有一个质量时才提前（两个质量要保持顺序）
@@ -3184,8 +3996,33 @@
         first.pop = 0;
         // freeLetter 只为拿到"定位 + 显形"这一套，attach 会立刻把它从 freeL 摘走
         freeLetter(first, x0 + order[0] * spread, y0, 0, 0, 1);
-        if (firstIsField) B = dropLetter(first, x0 + order[0] * spread, y0);
-        else attach(B, first);
+        if (firstIsField) {
+          /* 场符号开头（2026-09-30 符号扩展）：
+             · 只落这一个字形（n === 1）-> 照旧生成场体（电流/电荷/磁场/电场），
+               这条既有行为一个字没变；
+             · 'q' 后面还有别的字形 -> 传 firstOfGroup=1 让 dropLetter 把 q 当普通
+               base 挂着（不生成 q 场体），后面的字母才有机会按公式并进来
+               （E=F/q、W=qU）；qt→I 那条路仍然有效（findTComboTarget 现在也认
+               "mem 里有 q"的体）。
+             · 'I' 不走这个特例：它后面跟 t 必须还能走 qt→I（kind 必须是 'q'），
+               而且没有任何公式以 I 打头，所以 I 照旧生成电流场体。
+             · **判据不硬编码字母，而是问公式表**（2026-09-30 定稿）：
+               `eqGroupFor(本组字母)` 能给出这条公式、且**公式的第一个令牌就是场符号本身**
+               -> 这个场符号是在"拼公式"（如 E+Δ+Φ+t → E=ΔΦ/Δt、q+t? 由 t 例外排除），
+                  当字形挂上去；
+               否则 -> 保持原路（生成场体）。
+               为什么这么写：`addBody(['F','B','I','L'])` 里 B 不是**开头令牌**（安培力公式
+               是 F 打头），所以 B 不该当锚点 —— 它应当走普通场符号路径（落字时先试并入
+               FIL，成功即拼成 F=BIL）。硬编码字母名单会把这种"B 在中间"的情况判错。 */
+          var grpEq = n > 1 ? eqGroupFor(chars.join('')) : null;
+          /* ⚠ 't' 的排除**只对 q 成立**：q+t 必须留给 qt→I 那条经典路径
+             （applyTCombo 认 mem 里有 q 的体），所以"q 打头且组里有 t"不当锚点。
+             对 E 不能照搬这条 —— E=ΔΦ/Δt 的令牌里**本来就有 t**，
+             一排除就永远拼不出感应公式（实测踩到）。 */
+          var anchorOK = !!grpEq && grpEq.toks.charAt(0) === firstCh &&
+                         !(firstCh === 'q' && chars.indexOf('t') >= 0);
+          B = dropLetter(first, x0 + order[0] * spread, y0, anchorOK);
+        } else attach(B, first);
       }
       var made = first ? [{ d: first, x: x0 + order[0] * spread, y: y0 }] : [];
       for (var k = 1; k < order.length; k++) {
@@ -3218,15 +4055,44 @@
       if (o.vy != null) B.vy = o.vy;
       if (o.th != null) B.th = o.th;
       refresh(B);
-      // 把**没被任何体收下**的残留字母清掉（被收下的字母属于某个体，绝不能杀）
+      /* 把**没被任何体收下**的残留字母清掉（被收下的字母属于某个体，绝不能杀）。
+         ⚠ **但绝不能杀掉这次真正拼出来的那个体**（2026-09-30 符号扩展的坑）：
+         E=ΔΦ/Δt 这类"场符号打头"的写法里，第一个字形先被当锚点挂着、后面并入成功时
+         锚点体已经被它自己的字形认领（`dd.body` 指向锚点体），这里再去杀就会把
+         刚拼好的 EΔΦt body 一起拆掉 —— 表现是 addBody(['E','Δ','Φ','t']) 只剩一个
+         孤零零的 E（field 体）。判据：这个字形属于**当前结果体 B** 就留着。 */
       for (var z2 = 0; z2 < made.length; z2++) {
         var dd = made[z2].d;
-        if (dd && !dd.dead && !(dd.body && bodies.indexOf(dd.body) >= 0)) {
-          var fi = freeL.indexOf(dd); if (fi >= 0) freeL.splice(fi, 1);
-          killLetter(dd);
+        if (!dd || dd.dead) continue;
+        if (dd === B) continue;                       // 结果体自身（场符号锚点路径）
+        if (dd.body && bodies.indexOf(dd.body) >= 0) continue;
+        var fi = freeL.indexOf(dd); if (fi >= 0) freeL.splice(fi, 1);
+        killLetter(dd);
+      }
+      /* 摆开一点：addBody 常用于"一次摆好几个公式"（预设、探针、上课举例），
+         每个体的空格不同（F=ma 是三个字形、GMm/r² 是分数），落在同一个网格上
+         很容易互相压住 —— 这里把新体挪到空白处。
+         ⚠ 但**两个都是 addBody 摆出来的体之间不挪**：连着两次 addBody 写在同一个
+         坐标上，原来的语义就是"合成同一个体"（A14b 就是这样拿 ½mv² 的）；
+         一挪反而凭空多出一坨。所以只跟"不是 addBody 摆出来的"体（玩家拖出来的、
+         预设里的、碎裂后的）做分离。 */
+      if (!B.draft) {
+        for (var sep = 0; sep < 24; sep++) {
+          var hit = null;
+          for (var bi = 0; bi < bodies.length; bi++) {
+            var O = bodies[bi];
+            if (O === B || O.kind === 'B' || O.kind === 'E' || O.draft) continue;
+            var ox = Math.abs(O.x - B.x), oy = Math.abs(O.y - B.y);
+            if (ox < (O.hw + B.hw + 16) && oy < (O.hh + B.hh + 16)) { hit = O; break; }
+          }
+          if (!hit) break;
+          B.y -= (hit.hh + B.hh + 20);
+          if (B.y < B.hh + 20) { B.y = hit.y; B.x += (hit.hw + B.hw + 22); }   // 顶到上边界就改往右让
         }
+        refresh(B);
       }
 
+      B.draft = true;    // 标记：这个体是 addBody 摆出来的（分离逻辑会跳过它）
       var snap = bodyState(B);
       snap.id = id;
       return snap;
@@ -3244,11 +4110,59 @@
        返回值 = 这次落字**作用到的体**，没有就是 null。
        为什么要返回：t 的三条组合（gt→v / qt→I / vt→板）会"吃掉"原来的字母、
        body 引用随之清空，上层（addBody）不能靠字母反查体，只能由这里如实上报。 */
-    function dropLetter(L, lx, ly) {
+    function dropLetter(L, lx, ly, firstOfGroup) {
       L.wx = lx; L.wy = ly;
 
 
       if (L.ch === 'B' || L.ch === 'q' || L.ch === 'I' || L.ch === 'E') {
+        /* ★ 场符号也要先试一次"并入课本公式"（2026-09-30 符号扩展）。
+           为什么：B/q/I/E 原来是**无条件**各自生成场体，所以 U+I、Q+I、ε+U+I+r
+           这些电磁学式子里的 I 永远并不进 U/Q 的体 —— 公式永远拼不齐。
+           现在先走一次合并判定（canMerge 里对场符号有专门闸门：只有"字母集合仍被
+           某条课本公式容纳"时才允许并入），能并就并；并不能才回到"生成场体"的原路。
+           既有行为不受影响：B/E 不在任何公式里，q 的公式只有 E=F/q，
+           单独落一个场符号时 findMergeTarget 返回 null，照旧生成场体。 */
+        if (firstOfGroup) {
+          /* 把**这个字形本身**当基础挂到一个空体上（它就是那一笔，不要另造一个，
+             否则会多出一个看不见的重复字形）。massG 必须一起设：排版与
+             toksOfBody 都要读它，缺了它 hRun 会对 null 取 .m 而抛异常。 */
+          var fb = BODY(L.wx, L.wy);
+          var fi0 = freeL.indexOf(L); if (fi0 >= 0) freeL.splice(fi0, 1);
+          L.body = fb; L.inBody = true; L.state = 'mem'; L.pop = 0;
+          fb.massG = L; fb.glyphs = [L]; fb.mem = [L];
+          refresh(fb);
+          /* 顺手把附近游离的同类字形也并进来。
+             为什么需要：GD() 造字形时会把同一个字符的所有字形都 append 到 table，
+             addBody 又是"先全部造出来、再逐个 drop" —— 造第二个 v 时第一个 v 已经在
+             freeL 里了，于是 'v'+'v' 的第二次 drop 有可能自己跟自己合成。这里对
+             **同一批还没装配的游离字形**做一次合并，既补上这种情形，也让
+             addBody(['m','v','v','r']) 这类多字母写法更稳。判据仍走 canMerge。 */
+          for (var fl2 = freeL.length - 1; fl2 >= 0; fl2--) {
+            var cand = freeL[fl2];
+            if (!cand || cand.dead || cand === L) continue;
+            if (Math.hypot(cand.wx - fb.x, cand.wy - fb.y) > 160) continue;
+            if (canMerge(fb, cand)) attach(fb, cand);
+          }
+          ringGo(fb.x, fb.y);
+          return fb;
+        }
+        if (!L.ch) { var FBx = spawnField(L.ch, L.wx, L.wy, 0, 0); killLetter(L); return FBx; }
+        /* ★ 优先级（2026-09-30 加法式改法，用户裁决的三条组合靠它成立）：
+             ① **能成全公式 -> 优先并入**：先试 findMergeTarget（canMerge 里对场符号
+                的闸门是"收下后仍被某条公式容纳"，所以只有真在拼公式时才会放行）；
+             ② **落空处 -> 生成场体**：合并失败才走原来的 spawnField。
+           为什么原来不行：B/E 在这之前就**无条件**生成场体（`if (L.ch === 'B' || …) return FB0`），
+           连合并的机会都没有 —— 于是把 B 拖到 F I L 上永远只是"多了一个磁场"，
+           拼不出 F=BIL；`addBody(['F','B','I','L'])` 也只会得到 FIL + 一个 B 场体。
+           ⚠ 这条是**纯加法**：单独落一个 B/E（附近没有能收它的体）时 findMergeTarget
+           返回 null，走的还是原来那条 spawnField —— 已发布语义一字未变（探针有断言）。 */
+        var FBs = findMergeTarget(L);
+        if (FBs) { attach(FBs, L); return FBs; }
+        if (L.ch === 'B' || L.ch === 'E') {
+          var FB0 = spawnField(L.ch, L.wx, L.wy, 0, 0);
+          killLetter(L);
+          return FB0;
+        }
         var FB = spawnField(L.ch, L.wx, L.wy, 0, 0);
         killLetter(L);
         return FB;
@@ -3300,7 +4214,7 @@
     }
     function presetNewtons2() {
       // F=ma 的方向性：a 块沿 θ 加速（θ 指右上）—— 摆上去就斜着加速出去
-      var b = addBody(['m', 'a'], { x: Math.round(W * 0.26), y: Math.round(H * 0.30), spread: 34 });
+      var b = addBody(['m', 'a'], { x: Math.round(W * 0.26), y: Math.round(H * 0.30), spread: AB_PITCH });
       var B = liveBody(b);
       if (B) B.th = -0.45;
       return { bodies: [b] };
@@ -3308,7 +4222,7 @@
     function presetEnergy() {
       // ½mv² 整块：E_k = ½mv² —— 给一个斜向初速度扔出去撞墙
       // （撞碎会飘出弹性碰撞公式碎片，正好是动量守恒那一课的开场）
-      var b = addBody(['\u00BD', 'm', 'v', 'v'], { x: Math.round(W * 0.30), y: Math.round(H * 0.24), spread: 34 });
+      var b = addBody(['\u00BD', 'm', 'v', 'v'], { x: Math.round(W * 0.30), y: Math.round(H * 0.24), spread: AB_PITCH });
       setVel(b, 520, -260);
       return { bodies: [b] };
     }
@@ -3316,8 +4230,8 @@
       // m v²/r 两块 -> 双星互绕（m₁r₁=m₂r₂、ω∝√(m总/间距)）：两块轻微反向起步，配对后立刻转起来。
       // 位置往下放：这对体成对后会绕共同质心转、半径还会长到 target(80~300)，
       // 摆太高会顶到工具栏/字形面板（面板在右上角）。
-      var b1 = addBody(['m', 'v', 'v', 'r'], { x: Math.round(W * 0.30), y: Math.round(H * 0.46), spread: 34 });
-      var b2 = addBody(['m', 'v', 'v', 'r'], { x: Math.round(W * 0.30 + 150), y: Math.round(H * 0.46), spread: 34 });
+      var b1 = addBody(['m', 'v', 'v', 'r'], { x: Math.round(W * 0.30), y: Math.round(H * 0.46), spread: AB_PITCH });
+      var b2 = addBody(['m', 'v', 'v', 'r'], { x: Math.round(W * 0.30 + 150), y: Math.round(H * 0.46), spread: AB_PITCH });
       setVel(b1, 0, -70);
       setVel(b2, 0, 70);
       return { bodies: [b1, b2] };
@@ -3326,8 +4240,8 @@
       // GMm/r² 引力井 + 旁边一个 m 块被吸进去（给一点横向初速度 -> 弧线坠入）。
       // m 块放在井的右下方：右上角那片是字形托盘（约 x>0.72W 且 y<0.42H），
       // 摆在那儿会被托盘整个盖住 —— 探针统计得到"没被吸引"，其实是被挡住了。
-      var well = addBody(['G', 'M', 'm', 'r'], { x: Math.round(W * 0.28), y: Math.round(H * 0.42), spread: 36 });
-      var mb = addBody(['m'], { x: Math.round(W * 0.55), y: Math.round(H * 0.62), spread: 34 });
+      var well = addBody(['G', 'M', 'm', 'r'], { x: Math.round(W * 0.28), y: Math.round(H * 0.42), spread: AB_PITCH });
+      var mb = addBody(['m'], { x: Math.round(W * 0.55), y: Math.round(H * 0.62), spread: AB_PITCH });
       setVel(mb, -40, 0);
       return { bodies: [well, mb] };
     }
@@ -3336,8 +4250,8 @@
       // 注意一个物理设定（沿用原作）：**只有接了 g 的体才受重力**（hasG）——
       // 裸 m 不受重力，因为"质量"本身不是"重力"。所以这里摆 m + g 两块，
       // 并给 m 一个向下的初速度，让它当着 g 的面落下来。
-      var gb = addBody(['g'], { x: Math.round(W * 0.30), y: Math.round(H * 0.52), spread: 34 });
-      var mb = addBody(['m'], { x: Math.round(W * 0.42), y: Math.round(H * 0.14), spread: 34 });
+      var gb = addBody(['g'], { x: Math.round(W * 0.30), y: Math.round(H * 0.52), spread: AB_PITCH });
+      var mb = addBody(['m'], { x: Math.round(W * 0.42), y: Math.round(H * 0.14), spread: AB_PITCH });
       setVel(mb, 0, 90);
       return { bodies: [mb, gb] };
     }
@@ -3429,14 +4343,74 @@
           bodies: bodies.length, freeLetters: freeL.length,
           formulas: formulas.length, particles: particles.length,
           panelLetters: docked,
+          paused: !running,
           preset: opts.preset || '',
           presetKeys: ['newton2', 'energy', 'circular', 'gravity', 'freefall'],
           domNodes: overlay.getElementsByTagName('*').length + 1
         };
       },
+      /* letters()：场上**游离**的字形（原有语义，一个字段都没改）。
+         ★ 2026-09-30 起额外挂一个 `palette` 字段（数组的附加属性，不改返回类型）：
+         它是"这台沙盒一共有哪些符号"的完整清单 —— 符号扩展后（15 → 33），
+         探针与上层页面都需要一个稳定的读取口，不能靠数 DOM。 */
       letters: function () {
         var out = [];
         for (var i = 0; i < freeL.length; i++) out.push({ ch: freeL[i].ch, x: freeL[i].wx, y: freeL[i].wy, state: freeL[i].state });
+        out.palette = paletteList();
+        return out;
+      },
+      /* palette()：托盘的完整符号清单（只读）。每项 { ch, key, group, note, docked } */
+      palette: paletteList,
+      /* eqTable()：公式表自检（只读）。用于探针与人工排查"这条式子为什么没被认出来" */
+      eqTable: eqTableDump,
+      /* ---- 公式体动力学（双轨新路径）的测试接口 ---- */
+      /* eqEvents(n)：最近 n 条事件（新的在后）。事件 = 碰撞/短路/断路/充电完成/感应… */
+      eqEvents: function (n) {
+        var out = EQ_EVENTS.slice();
+        if (n > 0) out = out.slice(Math.max(0, out.length - n));
+        return out;
+      },
+      /* eqClock()：公式体的仿真时钟与累加器（固定步长，帧率无关） */
+      eqClock: function () { return { t: eqTime, acc: eqAcc, dt: EQ_DT }; },
+      /* eqStep(n)：手动推进 n 个固定步 —— 让探针**不依赖真实帧率**地做确定性断言 */
+      eqStep: function (n) {
+        n = (n == null) ? 1 : Math.max(1, Math.min(100000, n | 0));
+        for (var i = 0; i < n; i++) eqStepOnce();
+        return { t: eqTime, n: n };
+      },
+      /* eqClearEvents()：清空事件缓冲（每条交互的断言都从干净状态起算） */
+      eqClearEvents: function () { EQ_EVENTS = []; eqEventSeq = 0; return true; },
+      /* eqSet(id, k, v)：改写某个公式体的物理参数（探针用它构造场景，
+         例如把 m 设成 2、把 R 设成 0 造短路、把 e 设成 0 造非弹性碰撞） */
+      eqSet: function (id, k, v) {
+        var B = bodies[id];
+        if (!B) return null;
+        eqInitState(B);
+        if (k === 'R') B.eqState.Rset = v;
+        else if (k === 'U') B.eqState.Uset = v;
+        /* theta：斜面倾角的**唯一真源是体的朝向 B.th**（与玩家的旋转手柄同一条），
+           所以这里连 B.th 一起写 —— 只写 eqState.theta 的话读数里的 tanθ 永远是 0，
+           判据会永远"不下滑"（实测踩到）。 */
+        else if (k === 'theta') { B.th = v; B.eqState.theta = v; }
+        else B.eqState[k] = v;
+        return eqReadout(B);
+      },
+      /* eqVel(id, vx, vy)：给公式体一个初速度（探针构造碰撞场景用；同时记录成
+         "初始速度"，方便断言"碰前 Σp"）。老实体没有公式，返回 null。 */
+      eqVel: function (id, vx, vy) {
+        var B = bodies[id];
+        if (!B || !B.eq) return null;
+        eqInitState(B);
+        B.vx = vx; B.vy = vy || 0;
+        B.eqState.vx0 = B.vx; B.eqState.vy0 = B.vy;
+        return { id: id, vx: B.vx, vy: B.vy };
+      },
+      /* eqState(id)：某个公式体的完整动力学状态（只读快照，供断言） */
+      eqState: function (id) {
+        var B = bodies[id];
+        if (!B || !B.eqState) return null;
+        var S = B.eqState, out = {};
+        for (var k in S) out[k] = (typeof S[k] === 'number') ? +S[k].toFixed(6) : S[k];
         return out;
       },
       /* 只读的原始内部快照（排查排版/合成为什么长这样时用，不参与任何逻辑） */
@@ -3505,6 +4479,19 @@
     resume: function () { return current ? current.resume() : false; },
     state: function () { return current ? current.state() : { build: BUILD, mounted: false }; },
     letters: function () { return current ? current.letters() : []; },
+    /* 托盘符号清单（只读）。符号扩展后（15 → 33）给探针/上层页面一个稳定读取口。
+       未挂载时返回 []（与其他直通接口一致：不抛错）。 */
+    palette: function () { return current ? current.palette() : []; },
+    /* 公式表自检（只读）。探针用它列出全部已登记的课本公式与触发字母集合。 */
+    eqTable: function () { return current ? current.eqTable() : []; },
+    /* ---- 公式体动力学（双轨新路径）的直通接口；未挂载时给安全默认值 ---- */
+    eqEvents: function (n) { return current ? current.eqEvents(n) : []; },
+    eqClock: function () { return current ? current.eqClock() : { t: 0, acc: 0, dt: 0 }; },
+    eqStep: function (n) { return current ? current.eqStep(n) : null; },
+    eqClearEvents: function () { return current ? current.eqClearEvents() : false; },
+    eqSet: function (id, k, v) { return current ? current.eqSet(id, k, v) : null; },
+    eqVel: function (id, vx, vy) { return current ? current.eqVel(id, vx, vy) : null; },
+    eqState: function (id) { return current ? current.eqState(id) : null; },
     rawBodies: function () { return current ? current.rawBodies() : []; },
     distance: function (a, b) { return current ? current.distance(a, b) : null; },
     /* 供页面自行判断是否要显示入口用不到，但留着方便排障 */

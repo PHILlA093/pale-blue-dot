@@ -337,38 +337,50 @@
     if (stroke) { c.strokeStyle = stroke; c.lineWidth = lw || 1.1; c.stroke(); }
     c.restore();
   }
+  /* 圆底试管的**内腔路径**：cx = 中轴，y = 管口，r = 内腔半径，h = 含圆底的总高（圆心 y+h-r）。
+     轮廓与"液体/浑浊"的裁剪共用这一条路径 —— 以前 specks（硫的浑浊、MnO₂ 粉末、
+     Fe(OH)₃ 沉淀）用的是"整管宽的矩形"，在圆底处一片一片撒到管外去。 */
+  function tubePath(c, cx, y, r, h) {
+    if (!c) return;
+    var yb = y + h - r;
+    c.beginPath();
+    c.moveTo(cx - r, y);
+    c.lineTo(cx - r, yb);
+    c.arc(cx, yb, r, Math.PI, 0, true);
+    c.lineTo(cx + r, y);
+    c.closePath();
+  }
+  /* 内腔描述（供沉淀/浑浊裁剪）；内缩 1.2px ⇒ 不盖住 1.4px 宽的轮廓线 */
+  function tubeCav(cx, y, w, h) {
+    return { cx: cx, y: y + 1.2, r: Math.max(1, w / 2 - 1.2), h: h - 2.4 };
+  }
   /* 试管（管口朝上；x,y = 管口左上角） */
   function tube(g, x, y, w, h, liquid, level, stroke) {
     var c = ctxOf(g);
     if (!c) return;
     c.save();
-    c.beginPath();
-    c.moveTo(x, y);
-    c.lineTo(x, y + h - w / 2);
-    c.arc(x + w / 2, y + h - w / 2, w / 2, Math.PI, 0, true);
-    c.lineTo(x + w, y);
+    tubePath(c, x + w / 2, y, w / 2, h);
     c.strokeStyle = stroke || INK; c.lineWidth = 1.4; c.stroke();
     if (liquid) {
       var lh = clamp(num(level, 0.5), 0, 0.92) * h;
+      var cav = tubeCav(x + w / 2, y, w, h);
       c.save();
-      c.beginPath();
-      c.moveTo(x + 1, y + h - lh);
-      c.lineTo(x + 1, y + h - w / 2);
-      c.arc(x + w / 2, y + h - w / 2, w / 2 - 1, Math.PI, 0, true);
-      c.lineTo(x + w - 1, y + h - lh);
-      c.closePath();
-      c.fillStyle = liquid; c.fill();
+      tubePath(c, cav.cx, cav.y, cav.r, cav.h);
+      if (typeof c.clip === 'function') c.clip();
+      c.fillStyle = liquid;
+      c.fillRect(x, y + h - lh, w, lh);
       c.restore();
     }
     c.restore();
   }
-  /* 浑浊颗粒（确定性点阵；dens 0~1） */
-  function specks(g, x, y, w, h, dens, color, seed) {
+  /* 浑浊颗粒（确定性点阵；dens 0~1）。第 9 个参数 cav = 内腔：给了就**必须**被裁剪 */
+  function specks(g, x, y, w, h, dens, color, seed, cav) {
     var c = ctxOf(g), i, n, s;
     if (!c) return;
     n = Math.round(clamp(dens, 0, 1) * 110);
     s = num(seed, 1);
     c.save();
+    if (cav) { tubePath(c, cav.cx, cav.y, cav.r, cav.h); if (typeof c.clip === 'function') c.clip(); }
     c.fillStyle = color;
     for (i = 0; i < n; i++) {
       var rx = ((i * 12.9898 + s * 78.233) % 1 + 1) % 1;
@@ -566,9 +578,11 @@
       var dens1 = clamp(0.25 + 0.5 * ratio, 0, 1);
       var dens2 = clamp(0.25 + 0.5 / ratio, 0, 1);
       tube(g, x1 - tw / 2, ty, tw, th, 'rgba(236,232,214,.8)', 0.62);
-      specks(g, x1 - tw / 2, ty + th * 0.38, tw, th * 0.62, dens1, 'rgba(214,205,150,.95)', 3);
+      specks(g, x1 - tw / 2, ty + th * 0.38, tw, th * 0.62, dens1, 'rgba(214,205,150,.95)', 3,
+        tubeCav(x1, ty, tw, th));
       tube(g, x2 - tw / 2, ty, tw, th, 'rgba(236,232,214,.8)', 0.62);
-      specks(g, x2 - tw / 2, ty + th * 0.38, tw, th * 0.62, dens2, 'rgba(214,205,150,.95)', 8);
+      specks(g, x2 - tw / 2, ty + th * 0.38, tw, th * 0.62, dens2, 'rgba(214,205,150,.95)', 8,
+        tubeCav(x2, ty, tw, th));
       txt(g, 'c(Na₂S₂O₃) = ' + fx(c1, 2) + ' mol/L', x1, ty + th + 18 * sc, 11 * sc, 'center', INK);
       txt(g, '对照：0.05 mol/L', x2, ty + th + 18 * sc, 11 * sc, 'center', 'rgba(38,34,28,.7)');
       /* 十字标记（观察标准） */
@@ -755,8 +769,10 @@
       var dens1 = isfin(t) ? clamp(70 / t, 0.1, 1) : 0.4;
       var st15 = thioState(pnum(p, 'c1', 0.2), pnum(p, 'c2', 0.2), 0, 15);
       var dens2 = clamp(70 / st15.t, 0.1, 1);
-      specks(g, x1 - tw / 2, ty + th * 0.4, tw, th * 0.6, dens1, 'rgba(214,205,150,.95)', 4);
-      specks(g, x2 - tw / 2, ty + th * 0.4, tw, th * 0.6, dens2, 'rgba(214,205,150,.95)', 9);
+      specks(g, x1 - tw / 2, ty + th * 0.4, tw, th * 0.6, dens1, 'rgba(214,205,150,.95)', 4,
+        tubeCav(x1, ty, tw, th));
+      specks(g, x2 - tw / 2, ty + th * 0.4, tw, th * 0.6, dens2, 'rgba(214,205,150,.95)', 9,
+        tubeCav(x2, ty, tw, th));
       /* 温度计 */
       ln(g, x1 + bw / 2 - 16 * sc, by - 34 * sc, x1 + bw / 2 - 16 * sc, by + bh * 0.72, INK, 3.2);
       circle(g, x1 + bw / 2 - 16 * sc, by + bh * 0.74, 4 * sc, RED, null, 0);
@@ -950,7 +966,7 @@
       var tw = 40 * sc, th = 156 * sc, tx = w * 0.3 - tw / 2, ty = 104 * sc;
       tube(g, tx, ty, tw, th, 'rgba(188,215,230,.75)', 0.66);
       specks(g, tx + 2, ty + th * 0.55, tw - 4, th * 0.42, cat === 'none' ? 0.08 : 0.85,
-        info.color, 4);
+        info.color, 4, tubeCav(tx + tw / 2, ty, tw, th));
       var v = rowVal(row, 'vO2');
       var amp = isfin(v) ? clamp(v / 4, 0.05, 1.4) : 0.3;
       bubbles(g, tx, ty + th * 0.2, tw, th * 0.6, ph, Math.round(2 + 14 * amp), 'rgba(70,110,150,.6)');
@@ -1205,7 +1221,8 @@
         txt(g, '平衡基本不移动（颜色几乎不变）', (x1 + x2) / 2, ty + th * 0.5, 11 * sc, 'center', GRAYG);
       }
       if (op === 'naoh') {
-        specks(g, x1 - tw / 2 + 2, ty + th * 0.42, tw - 4, th * 0.56, 0.5, 'rgba(138,75,35,.85)', 6);
+        specks(g, x1 - tw / 2 + 2, ty + th * 0.42, tw - 4, th * 0.56, 0.5, 'rgba(138,75,35,.85)', 6,
+          tubeCav(x1, ty, tw, th));
         txt(g, '红褐色 Fe(OH)₃ 沉淀', x1, ty - 24 * sc, 10.5 * sc, 'center', 'rgba(138,75,35,.95)');
       }
       if (op === 'heat') {
