@@ -270,6 +270,7 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
     现在的兜底有三层：关 `autoload` + 给 8 个常见扩展宏做等价替身（`\boldsymbol`/`\bm` → `\mathbf` 等）+ 提示词禁用这些宏。**改动 MathJax 配置或渲染调用处后，必须跑断言：页面里渲染过的公式要出现 `mjx-container`、且文本里不再含 `$`**（`_qa/qa.js` 里有这条）。同类"静默失败"的排查思路：**先看 `%LOCALAPPDATA%\穷观学习\knet_run.log` 有没有 `404:` / `ERROR` 行，再看被 `.catch` 吞掉的 Promise**。
     **两个实测出来的细节（别再踩）**：① 断言要写在 **`MathJax.config.tex.autoload`** —— 本构建（MathJax 3.2.2 的 `tex-svg` 单文件版）里**没有** `window.MathJax.tex` 这一层（`MathJax.startup.input[0].options.autoload` 读数也不可靠，实测 `undefined`）；② **`autoload: true` 不是"恢复旧行为"** —— MathJax 期望它是一个**映射对象**，写 `true` 时 `Object.keys(true) === []`，等于**也把 autoload 关掉了**，做负对照实验时会因此复现不出 bug。
 12. **`Start-Process` 传含中文的参数会乱码**（把 UTF-8 当 GBK：`桌面版` → `妗岄潰鐗`）。起本地服务器/跑探针时用**后台作业通道**或 `node -e` / `cmd /c`，并让脚本自己 `cd`（`node 桌面版\build\_qa\server.js <绝对根目录> <端口>` 的 workdir 必须是项目根）。
+13. **`web_fetch` 读不了 PDF**（返回 `unsupported content type "application/pdf"`）。要核对教材/课标/论文里的原文时：用 `Invoke-WebRequest`（本机代理 `http://127.0.0.1:7897`）把 PDF/DOCX 下到 `%TEMP%`，再用现成的抽取工具转文本 —— `%TEMP%\qg_gk2025\tools\` 里就有 `get-doc.ps1`（一键下载+自动抽取）、`docx2txt.ps1`、`pdf2txt.py` 可复用。**只拿到搜索摘录时，必须在回报里写明"这是摘录不是全文"**（实验台各组就是这么做的）。
 
 ---
 
@@ -354,3 +355,49 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 
 **已知未做**：≤768px 移动端布局只做了代码走查（未实测）；**手机版尚未移植**（手机版观澜是整屏面板、结构不同，
 `tests/guanlan-window.cjs` 的断言也不适用，别照搬桌面版）；黑洞终局演出整套搬了但没跑完整终局探针。
+
+---
+
+## 13. 物理实验台（`js/pslab.js` + `js/pslab/*.js`，物理观澜的第二块）
+
+**它是什么**：高中物理**全部学生实验**的可交互实验台 —— 调参数 → 看现象 → 记录数据 → 作图 → 得结论。
+与沙盒（§12）并列：沙盒是"玩符号"，实验台是"做实验"。**接口契约与实验清单在 `docs/物理实验台设计.md`（写新实验前先读它，尤其 §4 与 §9）。**
+
+**文件**：核心 `js/pslab.js`（注册表 + 三栏 UI + 数据表 + 图像 + 结论卡 + 测试接口）+ 六个组文件
+`js/pslab/{mech,elec,mag,opt,therm,mod}.js`（每组只做一件事：`window.QG_PSLAB.register(id, spec)`，**不自建 DOM、不起循环** —— 惰性）。
+**20 个实验**：力学 8（`linear-motion` `newton-second` `force-composition` `hooke-law` `projectile` `mech-energy` `momentum` `simple-pendulum`）、
+电学 4（`resistivity` `multimeter` `emf-internal` `va-characteristic`）、磁场与电磁感应 3（`lenz-law` `ampere-force` `transformer`）、
+光学 2（`refraction` `double-slit`）、热学 2（`oil-film` `isothermal`）、近代 1（`photoelectric`）。
+
+**只在物理科目出现**（与沙盒同一套判据）：入口 `#glPlBtn` 的创建整段关在 `demo.js` 的 `if (!isPhysicsSubject()) return;` 里；
+`#plCSS` 在 unmount/close 时**会被移除**（沙盒保留 `#psCSS`，两者不同，别"统一"）；两个模式互斥（开一个自动关另一个）。
+
+**四条实现约定（核心落地后追认，细节见设计文档 §9）**：
+① `null` = "这次测量在该图上没有有效值"，**不是 0**（核心跳过该行、不进 fit；真实的 0 照常进图）；
+② `g.font` 宽容签名（`(size)` / `(size,bool)` / `(size,'italic bold')` / `(size,italic,bold)` 都行，内部用哨兵回读校验合法性）；
+③ 滑块 `step` 会归一化并在 `register` 时做参数体检，warning 进 `state().warnings`，`QG_PSLAB.audit()` 可一次看全；
+④ 没有 min/max 的参数必须写成 `type:'select'`（`mod.js` 的波长/阴极材料）。
+**两条探针判据事实**：**r² 必须在"扫自变量"时才有意义**（固定参数下核心返回 `fit:null` 或退化成相关系数平方）；
+**`measure()` 有两种合理语义**（独立测量 / 推进数据系列），比较"改参数前后"时**每个状态各采 24 次**（6 与 8 的公倍数）再比均值。
+
+**⚠ 这个模块踩过的最贵的坑（写任何 UI 回调前先看这条）**：核心左栏的点击处理曾写成
+`function onPick(id){ return function(){ open(id); … }; }` —— 作用域里**没有**局部 `open`，于是解析到**全局 `window.open`**，
+点一个实验变成去开新窗口（桌面 WebView2 会拦原生窗口）→ **学生点了毫无反应**，而所有 API 探针都是绿的（因为 API 路径调的是 `API.open`）。
+**教训**：① UI 回调里的裸函数名要当心 `open`/`close`/`focus`/`print`/`stop` 这类**浏览器 window 上真实存在**的名字，一律写 `API.xxx(...)`；
+② **验收必须用真点击/真交互，不能只走 API** —— 这个 bug 只有 `.click()` 能发现（顺带用 `window.open` 间谍断言零调用）。
+**同类一共 4 处**（`open` ×1 + 工具条 `📏测量一次/↺重置/清空数据` 里的裸 `sync()` ×3 —— 后者的死法是抛 `ReferenceError`，症状一样是"点了没反应"）。
+现在有一条**常驻闸门**：`%TEMP%\qg_plab\barecall_audit.js`（tokenizer 扫描全文件"前面不是 `.`"的调用，逐个查该名字有没有声明；
+当前 425 处裸调用 / 81 个名字 / **0 未解析 / 0 window 陷阱**）。**写类似扫描器时注意**：作者第一版**先剥 `/*…*/` 再剥字符串**，
+而源码注释里有一句 `各组的 js/pslab/*.js 会把实验注册进来` —— 那个 `/*` 让扫描器把后面 60 行全吞了，**它因此漏报了 `onPick` 那一行**。
+**粗糙的正则剥离会给出假绿**：必须先剥字符串、再用带状态的词法扫描处理注释。
+
+**验收基线（2026-09-29，20/20 通过 §7 的 1/2/3/4/5/6 条）**：方向性 20/20 ✓（如单摆 L↑→T↑、双缝 d↑→Δy↓、气体 V↑→p↓、
+**光电效应光强×10 → I_sat↑ 而 U_c 不变**）；19 个线性实验 r² ∈ **0.9936~0.99999**，`va-characteristic` 契约 `fit:'none'`；
+结论量级全对（g=9.824、n=1.50、λ=6.575e-7 m、d=6.165e-10 m、**h=6.616e-34 J·s**、ρ=1.087e-6、E=1.494 V/r=0.487 Ω）；
+`20/20 lastError 为空`、0 register 警告、0 console 异常；**数学科目零污染**（无按钮、无 `pl-` DOM、无 `#plCSS`、既有 8 控件与 🎬 流程照旧）。
+
+**已知未做/打折**：手机版未移植；≤768px 只做代码走查；`onPointer` 多数实验未实现（契约里是可选项）；
+各组自测的"像素被画"有些是假 canvas 调用签名（真像素由验收探针补）；部分实验的原理/器材是**搜索摘录级来源**（PDF 读不了，见 §9.13）；
+`emf-internal` 的参数语义是"电流表读数 I"（变阻器电阻由模型反解）；`oil-film` 的"浓度↑→d↑"走"未充分展开→S 偏小"这条人为误差通道。
+
+**发布**：7 个新网页资源必须在 `_rebuild.ps1` 里各加一条 `/resource:` → 内嵌资源总数 **21 → 28**。

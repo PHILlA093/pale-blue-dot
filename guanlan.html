@@ -124,6 +124,21 @@
      必须放在 demo.js 之前:demo.js 里"物理科目才出现 🧪 物理沙盒入口"那段
      要用 window.QG_PSANDBOX 判断。非物理科目下 demo.js 一个节点都不会建。 -->
 <script src="js/psandbox.js"></script>
+<!-- 物理实验台核心 + 六个组模块(可嵌入模块,加载它们本身不建 DOM、不起循环;
+     组脚本只做一件事:window.QG_PSLAB.register(id, spec))。
+     顺序必须是"核心 → 各组",且都要在 demo.js 之前:demo.js 里"物理科目才出现
+     🧪 物理实验台入口"那段要用 window.QG_PSLAB 判断。非物理科目下 demo.js
+     一个节点都不会建,也就不会注入 #plCSS。
+     ⚠ 六个 js/pslab/*.js 由各自的组分别提交:文件还没到位时这里的 <script>
+     会 404(控制台留下加载失败记录),**但不影响核心与页面其余功能** ——
+     注册表为空时左栏会显示"还没有登记实验",已有实验照常可用。 -->
+<script src="js/pslab.js"></script>
+<script src="js/pslab/mech.js"></script>
+<script src="js/pslab/elec.js"></script>
+<script src="js/pslab/mag.js"></script>
+<script src="js/pslab/opt.js"></script>
+<script src="js/pslab/therm.js"></script>
+<script src="js/pslab/mod.js"></script>
 <script src="js/demo.js"></script>
 </body>
 </html>

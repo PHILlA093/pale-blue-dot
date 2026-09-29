@@ -82,6 +82,7 @@
       var t = (subj || '—') + ' · 当前知识点:' + (pt || '未选中');
       if (els.glCtx) { els.glCtx.textContent = t; els.glCtx.title = pt || ''; }
       refreshSandboxBtn();   // 科目变了就跟着显示 / 收起物理沙盒入口(非物理时该函数是空转)
+      refreshLabBtn();       // 同上:物理实验台入口(非物理时也是空转,连按钮都没建)
     } catch (e) { /* 忽略 */ }
   }
   // 作为 messages 中的 user 上下文行,如:"当前科目:高中数学;当前知识点:导数。"
@@ -758,6 +759,7 @@
   }
   function sandboxOpen() {
     if (!sandboxAvailable()) return false;
+    labClose();          // 两个模式互斥:开沙盒先把实验台收掉(收尾会把按钮/提示还原)
     sandboxEnsureCSS();
     var stage = $('glStage');
     if (!window.QG_PSANDBOX.isMounted()) {
@@ -820,6 +822,112 @@
       // Esc = 返回演示(只在沙盒开着时有意义)
       window.addEventListener('keydown', function (e) {
         if (e.key === 'Escape' && window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted()) sandboxClose();
+      });
+    }
+  })();
+
+  /* ============ 物理实验台(只在**物理**科目下出现,其余科目一律不出现) ============
+   * 与上面的物理沙盒**并列**的第二块:沙盒是"玩符号",实验台是"做实验"
+   * (调参数 → 看现象 → 记录数据 → 作图 → 得结论)。
+   * 同一套硬约束,一处都不能松:
+   *   · 入口按钮的创建**整段**关在 if (!isPhysicsSubject()) return; 里,连 CSS
+   *     (labEnsureCSS)都要等入口真正用上时才注入 —— 非物理科目下不得出现任何
+   *     pl- 前缀 DOM、#plCSS 不得注入、#glPlBtn 不得存在。
+   *   · 引擎在 js/pslab.js(可嵌入模块):mount() 才建 DOM,close()/unmount()
+   *     连 DOM、全局事件、rAF 与 #plCSS 一起退干净。本文件只负责"入口按钮 +
+   *     挂载/卸载时机 + 与沙盒互斥"。
+   *   · 科目判定沿用既有写法(isPhysicsSubject),不发明新键。
+   * ========================================================================== */
+  var LAB_TIP_BACKUP = null;   // 进入实验台前的 #glStageTip 文案
+  function labAvailable() {
+    return !!(window.QG_PSLAB && window.QG_PSLAB.mount && $('glStage') && isPhysicsSubject());
+  }
+  function labIsOpen() {
+    return !!(window.QG_PSLAB && window.QG_PSLAB.state && window.QG_PSLAB.state().open);
+  }
+  // 样式只注入一次(与 sandboxEnsureCSS / injectExprCSS 同一约定:CSS 内容在 JS 里、
+  // 由 style-src 'unsafe-inline' 放行)。非物理科目永远不会走到这里。
+  // 用 pl-on 这个**独立**类名(不复用沙盒的 ps-on):两者互斥,但独立类名能保证
+  // 一方收尾时不会把另一方的舞台样式一起抹掉。
+  var labCSSDone = false;
+  function labEnsureCSS() {
+    if (labCSSDone) return;
+    labCSSDone = true;
+    var css = [
+      '#glPlBtn.plOn{color:#0b1220;background:#f4f1ea;border-color:#f4f1ea}',
+      '.gl-stage.pl-on #glCanvas,.gl-stage.pl-on #glLabels,.gl-stage.pl-on #glExprBox,',
+      '.gl-stage.pl-on #glParamBar,.gl-stage.pl-on #glToolbar{visibility:hidden}'
+    ].join('');
+    var st = document.createElement('style');
+    st.id = 'glPlCSS';
+    st.textContent = css;
+    (document.head || document.documentElement).appendChild(st);
+  }
+  function labOpen() {
+    if (!labAvailable()) return false;
+    sandboxClose();          // 两个模式互斥:开实验台先收沙盒(收尾会把按钮/提示还原)
+    labEnsureCSS();
+    var stage = $('glStage');
+    if (!window.QG_PSLAB.isMounted()) {
+      var tip = els.glStageTip;
+      LAB_TIP_BACKUP = tip ? tip.textContent : null;
+      if (tip) tip.style.display = 'none';
+      window.QG_PSLAB.mount(stage, { onUnmount: labAfterUnmount });
+    }
+    // 隐藏(不是移出 DOM):引擎的对象与画布都还在,退出后原样回来
+    stage.className = stage.className + ' pl-on';
+    var b = $('glPlBtn');
+    if (b) { b.textContent = '↩ 返回演示'; b.className = 'plOn'; b.title = '回到观澜的表达式 / 模板画布'; }
+    note('PSLAB:on subject=physics');
+    return true;
+  }
+  // 卸载后的收尾。挂在引擎的 onUnmount 上而不是只写在按钮回调里 ——
+  // 无论是点按钮、切科目还是外部直接调 QG_PSLAB.unmount()/close(),宿主 UI 都会还原。
+  function labAfterUnmount() {
+    var stage = $('glStage');
+    if (stage) stage.className = String(stage.className).replace(/(^|\s)pl-on(\s|$)/g, '$1').replace(/\s+/g, ' ').replace(/^\s|\s$/g, '');
+    var tip = els.glStageTip;
+    if (tip) { tip.style.display = ''; if (LAB_TIP_BACKUP != null) tip.textContent = LAB_TIP_BACKUP; }
+    var b = $('glPlBtn');
+    if (b) { b.textContent = '🧪 物理实验台'; b.className = ''; b.title = '打开物理实验台:调参数 → 看现象 → 记录数据 → 作图 → 得结论'; }
+    return true;
+  }
+  function labClose() {
+    if (!labIsOpen()) return false;
+    window.QG_PSLAB.close();   // 收尾走 onUnmount 那条路
+    note('PSLAB:off');
+    return true;
+  }
+  function labToggle() {
+    if (!labAvailable()) return false;
+    return labIsOpen() ? labClose() : labOpen();
+  }
+  // 入口按钮按科目显隐 + 非物理科目自动收起(科目在观澜开着时被切走也不会留下实验台)
+  function refreshLabBtn() {
+    var on = isPhysicsSubject();
+    if (!on && labIsOpen()) labClose();
+    var b = $('glPlBtn');
+    if (b) b.hidden = !on;
+    return on;
+  }
+  (function initPhysicsLab() {
+    if (!isPhysicsSubject()) return;       // 非物理:一个节点都不建
+    var head = $('glHead');
+    var btns = head ? head.querySelector('.gl-btns') : null;
+    if (!btns) return;
+    var b = cel('button', '');
+    b.type = 'button';
+    b.id = 'glPlBtn';
+    b.textContent = '🧪 物理实验台';
+    b.title = '打开物理实验台:调参数 → 看现象 → 记录数据 → 作图 → 得结论';
+    b.addEventListener('click', function () { labToggle(); });
+    var closeBtn = $('glClose');           // 与 #glPsBtn 同级,同样插在关闭键之前
+    if (closeBtn && closeBtn.parentNode === btns) btns.insertBefore(b, closeBtn);
+    else btns.appendChild(b);
+    if (window.addEventListener) {
+      // Esc = 返回演示(只在实验台开着时有意义)
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && labIsOpen()) labClose();
       });
     }
   })();
@@ -2128,6 +2236,23 @@
         return b ? { exists: true, hidden: !!b.hidden, text: String(b.textContent || '') } : { exists: false };
       },
       refresh: refreshSandboxBtn
+    },
+    // 物理实验台(与沙盒并列的第二块,同样只在物理科目下真的能开):入口是否在 /
+    // 是否已挂载 / 开关 / 科目判定。非物理科目下 plAvailable()===false、
+    // plOpen() 返回 false,不会建任何 DOM。
+    lab: {
+      available: labAvailable,
+      isPhysics: isPhysicsSubject,
+      isMounted: function () { return !!(window.QG_PSLAB && window.QG_PSLAB.isMounted()); },
+      isOpen: labIsOpen,
+      open: labOpen,
+      close: labClose,
+      toggle: labToggle,
+      button: function () {
+        var b = $('glPlBtn');
+        return b ? { exists: true, hidden: !!b.hidden, text: String(b.textContent || '') } : { exists: false };
+      },
+      refresh: refreshLabBtn
     },
     imgState: function () {
       return imgCur ? { w: imgCur.w, h: imgCur.h, bytes: imgCur.bytes, model: VISION_MODEL } : null;
