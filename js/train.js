@@ -670,7 +670,7 @@
     if (!info || info.checked === false) {
       var why = info && info.why === 'source0'
         ? '你选择了 AI 原创(素材题数 0),本次未检索本机真题档案'
-        : '本次未检索本机真题档案(真题档案检索当前只对数学启用)';
+        : '本次未检索本机真题档案';
       return head + ':' + why + ';不会凭记忆补写 ' + y + ' 年真题。';
     }
     if (typeof info.filtered !== 'number') {
@@ -678,8 +678,12 @@
         + (info.hits ? ',已取的 ' + info.hits + ' 段素材里标为 ' + y + ' 年的有 ' + (info.tookYear || 0) + ' 段' : '')
         + ';素材不保证是 ' + y + ' 年原题,也不会凭记忆补写 ' + y + ' 年真题。';
     }
-    var range = (info.yearFrom && info.yearTo)
-      ? '(档案年份 ' + info.yearFrom + '-' + info.yearTo + ')' : '';
+    // 本科目档案的年份区间优先:对物理用户说"档案年份 1952-2026"等于把可查范围说大了
+    // (物理档案实际只到 2010-2024)。宿主回执带 subj{name,blocks,from,to};旧宿主没有该字段
+    // 时退回整体区间 —— 页面绝不自己编数字。
+    var range = (info.subjFrom && info.subjTo)
+      ? '(' + (info.subjName ? info.subjName + '档案 ' : '档案年份 ') + info.subjFrom + '-' + info.subjTo + ')'
+      : ((info.yearFrom && info.yearTo) ? '(档案年份 ' + info.yearFrom + '-' + info.yearTo + ')' : '');
     if (typeof info.strict === 'number' && !info.strict) {
       return head + ':本机档案里没有 ' + y + ' 年的题' + range
         + '。请换年份,或去掉年份按知识点出题。'
@@ -705,6 +709,13 @@
   }
 
   /* ---------- 真实高考真题素材(本地 zt 源 + 必应联网) ---------- */
+  // 中文科目名:五科真题档案按 zt/五科真题/<中文科目>/ 分目录,页面据此告诉宿主"只查这一科"。
+  // 从 subjectName(如「高中物理」)里取,不去猜科目 key;数学不返回科目名 → 宿主按"排除五科档案"处理。
+  // 没有这层过滤,物理查询会捞到数学片段、数学查询也会捞到五科片段(素材串科会毁掉整批题)。
+  function subjFilterOf(subjectName) {
+    var m = /语文|英语|物理|化学|生物/.exec(String(subjectName || ''));
+    return m ? m[0] : '';
+  }
   // meta:可选出参。宿主 matsResp 的年份识别结果(该年份几段候选/几段真原卷/几份试卷/
   //      档案年份区间)原样留一份给状态栏 —— 页面必须照实说,不能自己猜"有/没有"。
   // req :年份检索参数 {year, yearOnly}。查询串里本来就有年份,这里再显式说一遍,
@@ -712,7 +723,11 @@
   function gkMats(query, meta, req) {
     if (!hasHost) return Promise.resolve([]);
     var payload = { kind: 'mats', src: 'zt', loose: true, query: query };
-    if (req) { payload.year = req.year || 0; payload.yearOnly = !!req.yearOnly; }
+    if (req) {
+      payload.year = req.year || 0;
+      payload.yearOnly = !!req.yearOnly;
+      if (req.subj) payload.subj = req.subj;      // 只查这一科的档案(见 subjFilterOf)
+    }
     return hostReq(payload).then(function (r) {
       if (r && r._timeout) return [];
       if (r && r.ok && meta) {
@@ -726,6 +741,14 @@
         meta.fallback = r.fallback;
         meta.only = r.yearOnly;
         meta.hostYear = r.year;
+        // 科目口径(与手机版 corpus.js 的回执同形):{name,blocks,from,to}。
+        // 宿主旧版没有这个字段 → 保持缺省,状态栏就照旧说整体区间(不编数字)。
+        if (r.subj && r.subj.name) {
+          meta.subjName = r.subj.name;
+          meta.subjBlocks = r.subj.blocks;
+          meta.subjFrom = r.subj.from;
+          meta.subjTo = r.subj.to;
+        }
       }
       if (!r || !r.ok || !r.hits) return [];
       return r.hits;
@@ -880,7 +903,7 @@
       if (yInfo.checked === false) {
         ctx += (yInfo.why === 'source0'
             ? '- 用户选择了 AI 原创(素材题数 0),本次未检索本机真题档案。\n'
-            : '- 本次未检索本机真题档案(真题档案检索当前只对数学启用)。\n')
+            : '- 本次未检索本机真题档案。\n')
           + '- 硬约束:不得凭记忆写 ' + yearCfg.year + ' 年真题,不得给任何题目标注 '
           + yearCfg.year + ' 年;只出 AI 原创并标注 source="AI 生成"、sourceId="";'
           + '需要在说明里提到年份时,只能说"用户要的是 ' + yearCfg.year + ' 年",不得声称题目来自该年份。\n';
@@ -889,7 +912,9 @@
           + '- 硬约束:不得凭记忆写 ' + yearCfg.year + ' 年真题;采用片段时只能按片段自身年份标注。\n';
       } else if (typeof yInfo.strict === 'number' && !yInfo.strict) {
         ctx += '- 本机档案里没有 ' + yearCfg.year + ' 年的题'
-          + ((yInfo.yearFrom && yInfo.yearTo) ? '(档案年份 ' + yInfo.yearFrom + '-' + yInfo.yearTo + ')' : '')
+          + ((yInfo.subjFrom && yInfo.subjTo)
+              ? '(' + (yInfo.subjName ? yInfo.subjName + '档案 ' : '档案年份 ') + yInfo.subjFrom + '-' + yInfo.subjTo + ')'
+              : ((yInfo.yearFrom && yInfo.yearTo) ? '(档案年份 ' + yInfo.yearFrom + '-' + yInfo.yearTo + ')' : ''))
           + '。\n- 硬约束:绝对不得凭记忆编造 ' + yearCfg.year + ' 年真题;'
           + '下方若附有其他年份的素材,只能按其真实年份标注使用,或改用 AI 原创(source="AI 生成");'
           + '不得把任何题目说成/标成 ' + yearCfg.year + ' 年。\n';
@@ -1120,7 +1145,10 @@
     var bumped = realN > pickRealN(requested, false);
     var yearStat = {};                                  // gkMats 回填的年份统计
     var yearCfg = null;                                 // 传给 buildPrompt 的年份锚定
-    var gkLib = context.subject === 'math';
+    // 六科真题档案都在本机(数学 2000-2026;语英物化生 zt/五科真题/ 2010-2024),
+    // 所以一律先查本地,再由 subjFilterOf 把范围锁到当前科目 —— 以前这里写的是
+    // subject === 'math',等于把已有的五科档案锁在门外(界面还会显示"只对数学启用")。
+    var gkLib = true;
     var bestGk = [], bestWeb = [], bestSubj = [], attempts = 0, feedback = '';
     var t0 = Date.now();
     busy = true;
@@ -1162,7 +1190,7 @@
       return (hasPoint && !yearDriven) ? subjMats(t.p.name) : [];
     }).then(function (hits) {
       bestSubj = hits || [];
-      return realN && gkLib ? gkMats(query, yearStat, { year: si.year || 0, yearOnly: yearOnly }) : [];
+      return realN && gkLib ? gkMats(query, yearStat, { year: si.year || 0, yearOnly: yearOnly, subj: subjFilterOf(context.subjectName) }) : [];
     }).then(function (hits) {
       bestGk = hits || [];
       // 年份统计 + 独立复核:取走的片段里 year 字段确实等于目标年份的段数

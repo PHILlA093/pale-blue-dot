@@ -43,6 +43,11 @@ $a17 = '/resource:' + (Join-Path $root 'js\demo.js') + ',web.js.demo.js'
 $a18 = '/resource:' + (Join-Path $root 'js\glcanvas.js') + ',web.js.glcanvas.js'
 $a19 = '/resource:' + (Join-Path $root 'js\gltemplates.js') + ',web.js.gltemplates.js'
 $a20 = '/resource:' + (Join-Path $root 'guanlan.html') + ',web.guanlan.html'
+# Physics sandbox engine (added 2026-09-29): guanlan.html loads js/psandbox.js only when the
+# current subject is physics. No Program.cs change is needed -- the host derives the resource
+# name from the request path generically (asm.GetManifestResourceStream(resName)), so
+# /js/psandbox.js simply maps to web.js.psandbox.js.
+$a26 = '/resource:' + (Join-Path $root 'js\psandbox.js') + ',web.js.psandbox.js'
 # One logo, two encodings. ../favicon.ico is the master (BMP entries, embedded with
 # /win32icon: so Explorer and the shortcut have a real icon); the page copy served at
 # /favicon.ico is regenerated into the build folder as a few-KB PNG-entry ico whose
@@ -71,7 +76,7 @@ $fpPath = Join-Path $build $fpName
 if (-not (Test-Path $fpPath)) { Write-Output 'BUILD FAILED: fingerprint resource file missing'; exit 1 }
 $a24 = '/resource:' + $fpPath + ',web.qg.fingerprint.txt'
 $src = Join-Path $build 'Program.cs'
-$args = @('/nologo', '/target:winexe', '/optimize+', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $src)
+$args = @('/nologo', '/target:winexe', '/optimize+', $a1, '/r:System.dll', '/r:System.Core.dll', '/r:System.Drawing.dll', '/r:System.Windows.Forms.dll', '/r:System.Web.Extensions.dll', $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11, $a12, $a13, $a14, $a15, $a16, $a17, $a18, $a19, $a20, $a21, $a22, $a23, $a24, $a26, $src)
 & $csc @args
 if ($LASTEXITCODE -ne 0) { Write-Output ('BUILD FAILED ' + $LASTEXITCODE); exit 1 }
 Copy-Item -Path $tmpOut -Destination $out -Force

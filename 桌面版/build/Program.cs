@@ -1451,6 +1451,11 @@ namespace KnowledgeNetApp
                 EnsureCorpus();
                 string q = msg.ContainsKey("query") ? Convert.ToString(msg["query"]) : "";
                 string srcFilter = msg.ContainsKey("src") ? Convert.ToString(msg["src"]) : "";
+                // 科目过滤(2026-09-27 新增):五科真题档案在 zt/五科真题/<中文科目>/ 下(2010-2024),
+                // 数学则散在 zt/全卷解析、zt/版本2、jyfs、yl、gs 里。页面按当前科目传中文科目名;
+                // 数学(或未传)时不带 subj,按"排除五科档案"处理。不做这层过滤的话,物理查询会捞到
+                // 数学片段、数学查询也会捞到五科片段 —— 素材串科会直接毁掉整批题的命题质量。
+                string subjFilter = msg.ContainsKey("subj") ? Convert.ToString(msg["subj"]).Trim() : "";
                 bool loose = msg.ContainsKey("loose") && Convert.ToBoolean(msg["loose"]);
                 string[] tokens = q.Split(new char[] { ' ', ',', '，', '、', ';', '；' },
                     StringSplitOptions.RemoveEmptyEntries);
@@ -1462,6 +1467,9 @@ namespace KnowledgeNetApp
                 // 取到快照后即可在锁外做耗时的全量扫描,既不阻塞上传也不会读到半成品。
                 lock (CorpusLock) { pool = mergedBlocks != null ? mergedBlocks : new string[0]; }
                 string prefix = srcFilter.Length > 0 ? "###SRC:" + srcFilter + "/" : "";
+                // 科目过滤的两个判据(见上面 subjFilter 的注释):五科要"必含",数学要"必不含"。
+                string subjNeed = subjFilter.Length > 0 ? "五科真题/" + subjFilter + "/" : "";
+                bool subjSkipWuKe = subjFilter.Length == 0;
                 int needScore = loose ? 1 : 2;                 // loose:放宽到命中 1 词
                 // ---------- 年份意图(「2026」「2026高考题」「2026 函数单调性」)----------
                 // 分两档(与 js/train.js 的 parseSearchIntent 同一套语义):
@@ -1527,6 +1535,11 @@ namespace KnowledgeNetApp
                     {
                         string b = pool[i];
                         if (prefix.Length > 0 && !b.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                        if (subjNeed.Length > 0)
+                        {
+                            if (b.IndexOf(subjNeed, StringComparison.Ordinal) < 0) continue;
+                        }
+                        else if (subjSkipWuKe && b.IndexOf("五科真题/", StringComparison.Ordinal) >= 0) continue;
                         string head = limitYear ? BlockHead(b) : null;
                         if (limitYear && !HeadHasYear(head, yearTag)) continue;
                         bool inYear = limitYear && BlockYearOfHead(head) == qYear;
@@ -1615,6 +1628,27 @@ namespace KnowledgeNetApp
                 }
                 int yFrom = 0, yTo = 0;
                 if (yearMode) ArchiveYearRange(pool, out yFrom, out yTo);
+                // 科目口径(与手机版 corpus.js 回执里的 subj 同形):让状态栏能说"物理档案 2010-2024",
+                // 而不是把整个档案的 1952-2026 报给物理用户 —— 那等于把可查范围说大了,属误导。
+                // name 为空串表示"数学/未指定科目"(此时排除五科档案,from/to 就是整个档案的区间)。
+                int subjBlocks = 0, subjFrom = 0, subjTo = 0;
+                for (int sj = 0; sj < pool.Length; sj++)
+                {
+                    string sbj = pool[sj];
+                    if (prefix.Length > 0 && !sbj.StartsWith(prefix, StringComparison.Ordinal)) continue;
+                    if (subjNeed.Length > 0)
+                    {
+                        if (sbj.IndexOf(subjNeed, StringComparison.Ordinal) < 0) continue;
+                    }
+                    else if (subjSkipWuKe && sbj.IndexOf("五科真题/", StringComparison.Ordinal) >= 0) continue;
+                    subjBlocks++;
+                    int sjy = BlockYear(sbj);
+                    if (sjy > 0)
+                    {
+                        if (subjFrom == 0 || sjy < subjFrom) subjFrom = sjy;
+                        if (sjy > subjTo) subjTo = sjy;
+                    }
+                }
                 // 日志尾部固定带 year=/intent=/filtered= —— 下次排查一眼就能看出年份意图有没有生效。
                 // filtered = 头部含该年份的候选数(规格口径);strict = 其中自身年份就是该年份的真原卷数;
                 // matched  = 实际进入排序的段数(限定档=真原卷里关键词命中的);only=1 表示年份主导
@@ -1628,13 +1662,16 @@ namespace KnowledgeNetApp
                         " yrange=" + yFrom + "-" + yTo;
                 Log("MATS:query=" + Trunc(q, 40) + " src=" + (srcFilter.Length > 0 ? srcFilter : "*") +
                     " loose=" + loose + " hits=" + outHits.Count + " recent=" + nOutRecent +
-                    "/" + RecentFrom + "-" + RecentTo + " scanned=" + pool.Length + yearLog);
+                    "/" + RecentFrom + "-" + RecentTo + " scanned=" + pool.Length + yearLog +
+                    " subj=" + (subjFilter.Length > 0 ? subjFilter : "(数学/未指定)") +
+                    "/" + subjBlocks + "/" + subjFrom + "-" + subjTo);
                 return Json(new { kind = "matsResp", ok = true, hits = outHits.ToArray(),
                     total = pool.Length, where = baseWhere,
                     year = qYear, intent = qIntent, yearMode = yearMode, yearOnly = qYearOnly,
                     filtered = yearCand, strict = yearStrict, otherYears = yearOther,
                     matched = yearMatched, papers = paperNames.Count, fallback = yearFallback,
-                    yearFrom = yFrom, yearTo = yTo });
+                    yearFrom = yFrom, yearTo = yTo,
+                    subj = new { name = subjFilter, blocks = subjBlocks, from = subjFrom, to = subjTo } });
             }
             catch (Exception ex)
             {

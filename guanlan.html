@@ -120,6 +120,10 @@
 <script src="vendor/mathjax-tex-svg.js"></script>
 <script src="js/glcanvas.js"></script>
 <script src="js/gltemplates.js"></script>
+<!-- 物理符号沙盒引擎(可嵌入模块,加载它本身不建 DOM、不起循环)。
+     必须放在 demo.js 之前:demo.js 里"物理科目才出现 🧪 物理沙盒入口"那段
+     要用 window.QG_PSANDBOX 判断。非物理科目下 demo.js 一个节点都不会建。 -->
+<script src="js/psandbox.js"></script>
 <script src="js/demo.js"></script>
 </body>
 </html>

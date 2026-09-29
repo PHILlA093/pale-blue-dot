@@ -191,7 +191,7 @@ function runContext(responder, onMaterials, opts = {}) {
   if (opts.target) Object.assign(p, opts.target);
   const ctx = context(['runGen', 'buildPrompt', 'parseAI', 'validateBatch', 'verifySource',
     'parseYearIntent', 'parseSearchIntent', 'yearTopic', 'pickRealN', 'targetLabel', 'sourceLabels',
-    'yearIntentNote'].map(n => fn(train, n)), {
+    'yearIntentNote', 'subjFilterOf'].map(n => fn(train, n)), {
     busy: false, curDB: 'curDB' in opts ? opts.curDB : { subject: opts.subject || 'math', subjectName: opts.subjectName || '高中数学', boards: [] }, els,
     currentTarget: () => (opts.noTarget ? null : { p, kw: opts.kw }),
     keyState: () => 'mock-only', tag() {}, setSteps() {},
@@ -290,7 +290,7 @@ test('desktop database acknowledgments resolve independently and do not mutate m
  * 年份检索(「2026」/「2026高考题」/「2026 函数单调性」)与"只给检索词也能搜"
  * ============================================================ */
 const yi = context(['parseYearIntent', 'parseSearchIntent', 'yearTopic', 'pickRealN',
-  'yearIntentNote', 'sourceLabels'].map(n => fn(train, n)));
+  'yearIntentNote', 'sourceLabels', 'subjFilterOf'].map(n => fn(train, n)));
 const okBatch = () => ({ ok: true, content: JSON.stringify({ questions: [0, 1, 2, 3].map(question) }) });
 
 test('year intent: a four-digit 1900-2099 year plus an exam-intent word is recognised', () => {
@@ -353,8 +353,23 @@ test('year status text reports the archive honestly: hits, papers taken and a mi
   const blind = yi.yearIntentNote(2026, { hits: 4, tookYear: 1 });
   assert.match(blind, /未取到本机档案的年份统计/);
   assert.match(blind, /标为 2026 年的有 1 段/);
-  assert.match(yi.yearIntentNote(2026, { checked: false, why: 'subject' }), /本次未检索本机真题档案\(真题档案检索当前只对数学启用\)/);
+  // 旧文案是"真题档案检索当前只对数学启用" —— 那是自设闸门(gkLib = subject === 'math')的产物:
+  // 档案里 zt/五科真题/ 本来就有语英物化生 2010-2024 的真题(带答案解析),却被这门闸锁在门外。
+  // 2026-09-27 起 gkLib 放开,改由 subjFilterOf 把检索锁到当前科目;所以这里只断言"如实说没检索",
+  // 不再断言那句已经不成立的理由。
+  assert.match(yi.yearIntentNote(2026, { checked: false, why: 'subject' }), /本次未检索本机真题档案/);
   assert.match(yi.yearIntentNote(2026, { checked: false, why: 'source0' }), /你选择了 AI 原创\(素材题数 0\)/);
+  // 本科目档案区间优先:物理档案只到 2010-2024,对物理用户说"档案年份 1952-2026"等于把可查
+  // 范围说大了(那是整个档案的区间)。宿主回执带 subj{name,blocks,from,to} 时用本科目区间;
+  // 没有该字段(旧宿主)时退回整体区间 —— 见 js/train.js 里 yearIntentNote 的 range 逻辑。
+  assert.match(
+    yi.yearIntentNote(2026, { checked: true, filtered: 100, strict: 0, matched: 0, papers: 0, hits: 0,
+      yearFrom: 1952, yearTo: 2026, subjName: '物理', subjBlocks: 230, subjFrom: 2010, subjTo: 2024 }),
+    /本机档案里没有 2026 年的题\(物理档案 2010-2024\)/);
+  assert.match(
+    yi.yearIntentNote(2026, { checked: true, filtered: 100, strict: 0, matched: 0, papers: 0, hits: 0,
+      yearFrom: 1952, yearTo: 2026 }),
+    /本机档案里没有 2026 年的题\(档案年份 1952-2026\)/, '没有 subj 字段时保持整体区间(不编数字)');
 });
 
 test('material source labels are archive file names, deduped and capped with a count', () => {
@@ -520,4 +535,45 @@ test('desktop host filters by year, prefers real papers and logs the decision', 
   // 年份主导档不按关键词过滤,且试卷优先
   assert.ok(host.includes('scores[i] = (IsPaperHead(head) ? 100000.0 : 0.0) + BlockWeight(b);'));
   assert.ok(host.includes('原卷|真题|全卷解析|解析|全国卷|新高考|上海卷|北京卷|天津卷|浙江卷|模拟|一模|二模'), '试卷优先标记');
+});
+
+test('subject names map to the archive folders; math deliberately maps to nothing', () => {
+  // 五科真题档案按 zt/五科真题/<中文科目>/ 分目录;数学散在 zt/全卷解析、zt/版本2、jyfs、yl、gs。
+  // 所以"中文科目名"是给宿主的唯一线索:有名字 → 只查那一科;没名字(数学) → 排除五科档案。
+  const { subjFilterOf } = context(['subjFilterOf'].map(n => fn(train, n)), {});
+  assert.equal(subjFilterOf('高中物理'), '物理');
+  assert.equal(subjFilterOf('高中英语'), '英语');
+  assert.equal(subjFilterOf('高中化学'), '化学');
+  assert.equal(subjFilterOf('高中生物'), '生物');
+  assert.equal(subjFilterOf('高中数学'), '', '数学档案不在五科目录下,空串表示"排除五科"');
+  assert.equal(subjFilterOf(''), '');
+  assert.equal(subjFilterOf(undefined), '');
+});
+
+test('every subject searches its own archive now: gkLib is open and the request carries the subject', async () => {
+  // 旧行为:gkLib = (subject === 'math') —— 学科网档案里明明有语英物化生的真题(2010-2024,带答案解析),
+  // 却被这门闸锁在门外,界面还会显示"真题档案检索当前只对数学启用"。这条断言把放开后的行为钉住。
+  const valid = () => ({ ok: true, content: JSON.stringify({ questions: [0, 1, 2, 3].map(question) }) });
+  const phy = runContext(valid, null, { subject: 'physics', subjectName: '高中物理' });
+  await phy.ctx.runGen();
+  assert.equal(phy.mats.length, 1, '物理也要查本机真题档案(旧行为是 0 次)');
+  assert.equal(phy.mats[0].req.subj, '物理', '请求要带中文科目,宿主据此只查 zt/五科真题/物理/');
+  assert.equal(phy.ctx.busy, false);
+
+  const math = runContext(valid, null, { subject: 'math', subjectName: '高中数学' });
+  await math.ctx.runGen();
+  assert.equal(math.mats.length, 1);
+  assert.equal(math.mats[0].req.subj, '', '数学不带科目名 → 宿主按"排除五科档案"处理');
+});
+
+test('the desktop host scopes the archive by subject so materials can never mix subjects', () => {
+  const host = fs.readFileSync(path.join(root, '桌面版/build/Program.cs'), 'utf8');
+  assert.ok(host.includes('string subjNeed = subjFilter.Length > 0 ? "五科真题/" + subjFilter + "/" : "";'),
+    '五科:素材路径必含该科目录');
+  assert.ok(host.includes('bool subjSkipWuKe = subjFilter.Length == 0;'), '数学:页面不带科目名');
+  assert.ok(host.includes('if (b.IndexOf(subjNeed, StringComparison.Ordinal) < 0) continue;'), '五科:筛掉别的科目');
+  assert.ok(host.includes('else if (subjSkipWuKe && b.IndexOf("五科真题/", StringComparison.Ordinal) >= 0) continue;'),
+    '数学:排除五科档案(否则数学查询会捞到物理/化学片段)');
+  // 实测口径(2026-09-27,语料 49,945,760 B / 37,249 块):五科真题 3,991 块 =
+  // 语文 947 + 英语 1,994 + 物理 230 + 化学 393 + 生物 427;数学(subj 为空)命中其余 33,258 块。
 });

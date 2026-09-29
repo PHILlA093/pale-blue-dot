@@ -81,6 +81,7 @@
       var pt = readPoint();
       var t = (subj || '—') + ' · 当前知识点:' + (pt || '未选中');
       if (els.glCtx) { els.glCtx.textContent = t; els.glCtx.title = pt || ''; }
+      refreshSandboxBtn();   // 科目变了就跟着显示 / 收起物理沙盒入口(非物理时该函数是空转)
     } catch (e) { /* 忽略 */ }
   }
   // 作为 messages 中的 user 上下文行,如:"当前科目:高中数学;当前知识点:导数。"
@@ -425,6 +426,12 @@
     } catch (e) { /* 忽略:空会话进入 */ }
     try { localStorage.removeItem('qg_guanlan_conv'); } catch (e) { /* 忽略 */ }
     if (!hadCtx) refreshCtx();
+    // 主窗会继续切换科目、选择知识点;标题应与下一次提问读取的上下文同步。
+    window.addEventListener('storage', function (e) {
+      if (e.key === 'qg_live_state' || e.key === null) refreshCtx();
+    });
+    // 从后台回到观澜时补一次刷新,不重载页面或清空当前对话。
+    window.addEventListener('focus', refreshCtx);
     // 启动留痕:排查问题时能确认"观澜是什么时候开的、会话迁移了几条"
     note('观澜独立窗已启动 conv=' + conv.length + (hadCtx ? ' 已迁移上下文' : ''));
     ensureToolbar();
@@ -705,6 +712,118 @@
 
   /* ---------- 绑定事件 ---------- */
   function on(id, fn) { var el = $(id); if (el) el.addEventListener('click', fn); }
+
+  /* ============ 物理沙盒(只在**物理**科目下出现,其余科目一律不出现) ============
+   * 设计要点:
+   *   · 硬约束:非物理科目下观澜必须与改动前**完全一致** —— 不建按钮、不碰既有
+   *     DOM。所以下面所有东西都关在 if (isPhysicsSubject()) 里面,连 CSS 样式表
+   *     都要等入口真正用上时才注入(见 sandboxEnsureCSS),非物理路径一个节点都
+   *     不会新增。科目判定沿用既有写法:主窗 window.CUR_SUBJECT(app.js 里由
+   *     ?subject= → localStorage('qg_subject') → math 得出);独立窗没有
+   *     window.CUR_SUBJECT,改读主窗发布的心跳 localStorage('qg_live_state')
+   *     的 subject 字段(mainbridge.js 的 snap() 写的就是它)。读不到即视为
+   *     非物理 —— 不显示入口、不报错。
+   *   · 引擎本身在 js/psandbox.js 里(可嵌入模块):mount() 才建 DOM,unmount()
+   *     连全局事件与 rAF 一起退干净。本文件只负责"入口按钮 + 挂载/卸载时机"。
+   * ========================================================================== */
+  var PHYS_TIP_BACKUP = null;    // 进入沙盒前的 #glStageTip 文案
+  function isPhysicsSubject() {
+    try {
+      if (window.CUR_SUBJECT) return String(window.CUR_SUBJECT).toLowerCase() === 'physics';
+      var raw = load('qg_live_state');       // 独立窗:读主窗心跳
+      if (!raw) return false;
+      var o = null;
+      try { o = JSON.parse(raw); } catch (e0) { o = null; }
+      return !!(o && String(o.subject || '').toLowerCase() === 'physics');
+    } catch (e) { return false; }
+  }
+  function sandboxAvailable() {
+    return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.mount && $('glStage') && isPhysicsSubject());
+  }
+  // 样式只注入一次(与 injectExprCSS 同一约定:CSS 内容在 JS 里、由 style-src
+  // 'unsafe-inline' 放行)。非物理科目永远不会走到这里。
+  var sandboxCSSDone = false;
+  function sandboxEnsureCSS() {
+    if (sandboxCSSDone) return;
+    sandboxCSSDone = true;
+    var css = [
+      '#glPsBtn.psOn{color:#0b1220;background:#f4f1ea;border-color:#f4f1ea}',
+      '.gl-stage.ps-on #glCanvas,.gl-stage.ps-on #glLabels,.gl-stage.ps-on #glExprBox,',
+      '.gl-stage.ps-on #glParamBar,.gl-stage.ps-on #glToolbar{visibility:hidden}'
+    ].join('');
+    var st = document.createElement('style');
+    st.id = 'glPsCSS';
+    st.textContent = css;
+    (document.head || document.documentElement).appendChild(st);
+  }
+  function sandboxOpen() {
+    if (!sandboxAvailable()) return false;
+    sandboxEnsureCSS();
+    var stage = $('glStage');
+    if (!window.QG_PSANDBOX.isMounted()) {
+      var tip = els.glStageTip;
+      PHYS_TIP_BACKUP = tip ? tip.textContent : null;
+      if (tip) tip.style.display = 'none';
+      window.QG_PSANDBOX.mount(stage, { preset: '', onUnmount: sandboxAfterUnmount });
+    }
+    // 隐藏(不是移出 DOM):引擎的世界尺寸与画布都还在,退出后原样回来
+    stage.className = stage.className + ' ps-on';
+    var b = $('glPsBtn');
+    if (b) { b.textContent = '↩ 返回演示'; b.className = 'psOn'; b.title = '回到观澜的表达式 / 模板画布'; }
+    note('PSANDBOX:on subject=physics');
+    return true;
+  }
+  // 卸载后的收尾。挂在引擎的 onUnmount 上而不是只写在按钮回调里 ——
+  // 无论是点按钮、切科目还是外部直接调 QG_PSANDBOX.unmount(),宿主 UI 都会还原。
+  function sandboxAfterUnmount() {
+    var stage = $('glStage');
+    if (stage) stage.className = String(stage.className).replace(/(^|\s)ps-on(\s|$)/g, '$1').replace(/\s+/g, ' ').replace(/^\s|\s$/g, '');
+    var tip = els.glStageTip;
+    if (tip) { tip.style.display = ''; if (PHYS_TIP_BACKUP != null) tip.textContent = PHYS_TIP_BACKUP; }
+    var b = $('glPsBtn');
+    if (b) { b.textContent = '🧪 物理沙盒'; b.className = ''; b.title = '打开物理符号沙盒:把 m、g、a、v、r… 拖到一起'; }
+    return true;
+  }
+  function sandboxClose() {
+    if (!window.QG_PSANDBOX || !window.QG_PSANDBOX.isMounted()) return false;
+    window.QG_PSANDBOX.unmount();   // 收尾走 onUnmount 那条路
+    note('PSANDBOX:off');
+    return true;
+  }
+  function sandboxToggle() {
+    if (!sandboxAvailable()) return false;
+    return window.QG_PSANDBOX.isMounted() ? sandboxClose() : sandboxOpen();
+  }
+  // 入口按钮按科目显隐 + 非物理科目自动收起(科目在观澜开着时被切走也不会留下沙盒)
+  function refreshSandboxBtn() {
+    var on = isPhysicsSubject();
+    if (!on && window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted()) sandboxClose();
+    var b = $('glPsBtn');
+    if (b) b.hidden = !on;
+    return on;
+  }
+  (function initPhysicsSandbox() {
+    if (!isPhysicsSubject()) return;       // 非物理:一个节点都不建
+    var head = $('glHead');
+    var btns = head ? head.querySelector('.gl-btns') : null;
+    if (!btns) return;
+    var b = cel('button', '');
+    b.type = 'button';
+    b.id = 'glPsBtn';
+    b.textContent = '🧪 物理沙盒';
+    b.title = '打开物理符号沙盒:把 m、g、a、v、r… 拖到一起';
+    b.addEventListener('click', function () { sandboxToggle(); });
+    var closeBtn = $('glClose');           // 插在关闭键之前:入口属于"功能键"那一段
+    if (closeBtn && closeBtn.parentNode === btns) btns.insertBefore(b, closeBtn);
+    else btns.appendChild(b);
+    if (window.addEventListener) {
+      // Esc = 返回演示(只在沙盒开着时有意义)
+      window.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted()) sandboxClose();
+      });
+    }
+  })();
+
   // 侧栏「观澜」入口:直接打开无边框独立窗口(桌面版由宿主拦截;网页版开新标签页)
   on('guanlanOpen', function () {
     try { if (!window.open('guanlan.html', 'qg_guanlan')) openPanel(); } catch (e) { openPanel(); }
@@ -1995,6 +2114,21 @@
     // 视觉输入测试钩子:attachImage 接 dataURL,imgState 读当前待发图
     attachImage: function (dataUrl) { return ingestDataUrl(String(dataUrl || ''), 'test'); },
     clearImage: clearImage,
+    // 物理沙盒(只在物理科目下真的能开):入口是否在 / 是否已挂载 / 开关 / 科目判定。
+    // 非物理科目下 psAvailable()===false、psOpen() 返回 false,不会建任何 DOM。
+    sandbox: {
+      available: sandboxAvailable,
+      isPhysics: isPhysicsSubject,
+      isMounted: function () { return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted()); },
+      open: sandboxOpen,
+      close: sandboxClose,
+      toggle: sandboxToggle,
+      button: function () {
+        var b = $('glPsBtn');
+        return b ? { exists: true, hidden: !!b.hidden, text: String(b.textContent || '') } : { exists: false };
+      },
+      refresh: refreshSandboxBtn
+    },
     imgState: function () {
       return imgCur ? { w: imgCur.w, h: imgCur.h, bytes: imgCur.bytes, model: VISION_MODEL } : null;
     }
