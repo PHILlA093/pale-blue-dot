@@ -9,6 +9,8 @@
  *      有宿主(桌面版)→ kind:'mats' 交给宿主,读电脑上的 数据库\qg_corpus.txt;
  *      无宿主(手机 APK / 手机浏览器)→ 读**打进包里的同一份语料**,
  *        由 js/corpus.js 按宿主 Program.cs 的同一口径解析与检索(首次用到才加载)。
+ *      语料是**六科混装**的:检索请求按当前科目带 subj(见 subjFilterOf),
+ *        五科只查 zt/五科真题/<中文科目>/,数学排除全部五科块 —— 否则会串科。
  * ============================================================ */
 (function () {
   'use strict';
@@ -141,7 +143,9 @@
    *   realN: 本批素材题数
    *   taken: 本次真正拿到的片段段数
    *   err  : 本机资料库检索失败的可读原因(有值时优先如实说"检索失败")
-   *   ui   : {names:[文件名...], total:N} —— 命中素材的来源(最多 3 条 + "等 N 段")
+   *   ui   : {names:[文件名...], total:N, subj:{name,blocks,from,to}} —— 命中素材的来源
+   *          (最多 3 条 + "等 N 段");subj 是本科目档案的实测口径(手机版内置语料才有,
+   *          宿主没有 → 不传,区间退回 info.range 的原有说法)
    * 文案里出现的每个数字都来自检索端,不在这里编;每段都以"。"收尾。 */
   function yearStatusText(yi, info, realN, taken, err, ui) {
     if (!yi || !yi.year) return '';
@@ -182,14 +186,20 @@
         + (yi.mode === 'yearOnly' ? '该年份素材与检索式对不上' : '该年份素材与本次知识点/关键词对不上')
         + '),已退回普通检索,下面取到的素材不是 ' + y + ' 年真题' + raised + '。';
     }
-    // 该年份一段真原卷都没有:如实说清楚"档案里没有",并给出能查的年份区间
-    var rng = (info && info.range && info.range.from)
-      ? info.range.from + '-' + info.range.to : '档案年份未知';
+    // 该年份一段真原卷都没有:如实说清楚"档案里没有",并给出能查的年份区间。
+    // 区间优先用**本科目档案**的实测跨度(检索回执里的 subj.from/to):
+    // 六科混装的档案整体是 1952-2026,而物理档案实际只有 2010-2024 ——
+    // 对物理用户说"档案年份 1952-2026"会把能查的范围说大,属于误导。
+    var su = (ui && ui.subj && ui.subj.from) ? ui.subj : null;
+    var rng = su ? (su.from + '-' + su.to)
+      : ((info && info.range && info.range.from)
+        ? info.range.from + '-' + info.range.to : '档案年份未知');
+    var rngWhat = su ? ((su.name || '数学') + '档案 ') : '档案年份 ';
     var cand = (info && info.candidates) ? '头部含"' + y + '"的 ' + info.candidates
       + ' 段都不是 ' + y + ' 年原卷(是"2008-' + y + '"这类合集目录命中),不当作 ' + y + ' 年真题。' : '';
     var extra = (info && info.archiveYear) ? '本机档案里另有 ' + info.archiveYear
       + ' 段提到 ' + y + ' 年的资料,但不是真题卷(讲义/复习资料),不当作 ' + y + ' 年真题。' : '';
-    return head + '本机档案里没有 ' + y + ' 年的题(档案年份 ' + rng + ')'
+    return head + '本机档案里没有 ' + y + ' 年的题(' + rngWhat + rng + ')'
       + '。请换年份,或去掉年份按知识点出题。' + cand
       + extra + '已退回普通检索,下面取到的素材不是 ' + y + ' 年真题' + raised + '。';
   }
@@ -825,6 +835,30 @@
   //   整卷真题,原卷/解析/各地卷排前面,而不是"2026 年某知识点的题"。
   var gkYearInfo = null;      // 上一次真题检索回报的年份信息(状态栏只用这里的数字)
 
+  /* 中文科目名:五科真题档案按 zt/五科真题/<中文科目>/ 分目录(2010-2024),
+   * 数学散在别处。页面据此告诉检索端"只查这一科"(见 gkMats 的 payload.subj):
+   * 从 subjectName(如「高中物理」)里取,不去猜科目 key;数学返回空串 → 检索端按
+   * "排除五科档案"处理。语义与桌面版 js/train.js 的 subjFilterOf 逐字一致。
+   * 没有这层过滤的实测后果:物理 230 块对数学 33255 块 —— 物理查询会捞到成片数学片段、
+   * 数学查询也会捞到五科片段,素材串科会直接毁掉整批题的命题质量。 */
+  function subjFilterOf(subjectName) {
+    var m = /语文|英语|物理|化学|生物/.exec(String(subjectName || ''));
+    return m ? m[0] : '';
+  }
+
+  // 上一次检索回报的"本科目档案"信息(内置语料才会回:{name,blocks,from,to})。
+  // 界面用它如实说明"本次查的是哪一科、该科目档案覆盖哪些年份";桌面宿主没有这个字段
+  // → null,文案退回原来的说法(绝不自己编年份区间)。
+  var gkSubjInfo = null;
+  function subjInfoOf(r) {
+    var s = r && r.subj;
+    if (!s || typeof s !== 'object') return null;
+    return {
+      name: String(s.name == null ? '' : s.name),
+      blocks: s.blocks || 0, from: s.from || 0, to: s.to || 0
+    };
+  }
+
   /* 年份回执归一化(纯函数):两条路形状不同,这里拉平,后面 realN/提示词/状态栏
    * 就不用分环境 ——
    *   手机版内置语料(js/corpus.js):{ year: { pool, strict, candidates, matched, ... } }
@@ -845,15 +879,20 @@
     };
   }
 
-  function gkMats(query, year, paperFirst) {
+  // subj:当前科目的中文名(见 subjFilterOf)。桌面宿主(Program.cs HandleMats)与手机版
+  //   内置语料(js/corpus.js)认同一个字段:五科 → 候选必须命中 五科真题/<中文科目>/;
+  //   数学(''/不传)→ 排除全部五科块。不传就等于按老的"六科混装"检索(会串科)。
+  function gkMats(query, year, paperFirst, subj) {
     var payload = { kind: 'mats', src: 'zt', loose: true, query: query };
     if (year > 0) payload.year = year;
+    if (subj) payload.subj = subj;
     if (paperFirst) {
       payload.paperFirst = true;
       payload.yearOnly = true;   // 桌面宿主 Program.cs 认这个字段(同一档位,名字对齐)
     }
     return matsReq(payload).then(function (r) {
       gkYearInfo = yearInfoOf(r);
+      gkSubjInfo = subjInfoOf(r);
       return takeHits(r);
     });
   }
@@ -1241,6 +1280,8 @@
     // 本地真题库(桌面版宿主读电脑上的 数据库\qg_corpus.txt;手机版读包内同一份语料)
     // 现在**六科都有**:数学(2008-2026 全卷/讲义/举一反三)+ 语文·英语·物理·化学·生物
     // (2010-2024 真题,###SRC:zt/五科真题/…),所以所有科目都先查本地库。
+    // 但六科是**混装在同一个文件**里的,所以检索必须带科目(见 subjFilterOf):
+    // 五科只查 zt/五科真题/<中文科目>/,数学排除全部五科块 —— 不带就会串科。
     // 手机版没有必应联网那条路(它由桌面宿主发起),本地查不到时只能靠模型原创,
     // 来源会如实落在"来源待核实"上,绝不冒充真题。
     var gkLib = true;                          // 六科语料都在本机库里,一律先查本地
@@ -1268,6 +1309,7 @@
     yearI = null;              // 年份档信息(+ 检索回报的真实数字);模块级,QA 可读
     yearNote = '';             // 状态栏那一段话(由 yearStatusText 生成)
     gkYearInfo = null;         // 上一次检索回执:本轮重新取,不沿用上一批
+    gkSubjInfo = null;         // 上一次检索回报的本科目档案口径(同上,本轮重新取)
     if (bq.mode !== 'none') {
       yearI = {
         year: bq.year, intent: '真题', word: bq.word, hit: true, mode: bq.mode,
@@ -1351,12 +1393,24 @@
       return (yearI && yearI.mode === 'yearOnly') ? [] : subjMats(t.p ? t.p.name : (t.kw || askKw()));
     }).then(function (hits) {
       bestSubj = hits || [];
+      // 本次检索的科目:当前科目库的 subjectName(如「高中物理」)→ 中文科目名;
+      // 数学(与所有非五科科目)得到空串 → 检索端排除五科档案(见 subjFilterOf)。
       return realN && gkLib
-        ? gkMats(query, yearI ? yearI.year : 0, !!(yearI && yearI.mode === 'yearOnly')) : [];
+        ? gkMats(query, yearI ? yearI.year : 0, !!(yearI && yearI.mode === 'yearOnly'),
+                 subjFilterOf(curDB ? curDB.subjectName : live.subjectName)) : [];
     }).then(function (hits) {
       bestGk = hits || [];
       var has = bestGk.length;
+      // 如实说明"本次查的是哪一科的档案、它覆盖哪些年份":手机版内置语料是六科混装的
+      // (数学散在 zt/全卷解析 等;语文/英语/物理/化学/生物 在 zt/五科真题/<科目>/,2010-2024),
+      // 检索已按当前科目过滤,这里的科目名与年份区间全部来自检索回执的**实测值**,
+      // 不写死、也不猜;桌面宿主没这个字段 → 退回原来的"本地真题库"。
+      var subjName = subjFilterOf(curDB ? curDB.subjectName : live.subjectName);
       var libName = hasHost ? '本地真题库' : '内置语料';
+      if (gkSubjInfo) {
+        libName += '·' + (subjName || '数学') + '档案'
+          + (gkSubjInfo.from ? '(' + gkSubjInfo.from + '-' + gkSubjInfo.to + ')' : '');
+      }
       var sn = srcNames(bestGk, 3);
       // 年份意图:状态栏/提示词里的年份数字只认检索端回报的 info(gkYearInfo),
       // 检索端说"该年份 0 段"就照实说 0 段,绝不拿"查到了几段"糊过去。
@@ -1375,7 +1429,8 @@
             : (!yearI.matched ? (yearI.mode === 'yearOnly' ? '该年份素材与检索式对不上'
                                                            : '该年份素材与本次知识点/关键词对不上') : ''))
           : (matsErr || '');
-        yearNote = yearStatusText(yearI, gkYearInfo, realN, bestGk.length, matsErr, sn);
+        yearNote = yearStatusText(yearI, gkYearInfo, realN, bestGk.length, matsErr,
+          { names: sn.names, total: sn.total, subj: gkSubjInfo });
       }
       // 未指定知识点(或年份档忽略了知识点):把"这批题到底从档案里调出了哪些文件"
       // 显示在目标行下面,用户能看见题目确实来自档案(窄屏只显示文件名,可换行)。
@@ -1532,12 +1587,16 @@
         return C.yearIntent ? C.yearIntent(q) : null;
       }, function () { return null; });
     },
-    yearStatus: function (yi, info, realN, taken, err) {
-      return yearStatusText(yi, info, realN, taken, err);
+    // ui(可选,第 6 个)= {names,total,subj}:状态栏里的来源清单与"本科目档案"口径;
+    // 传了才用本科目档案的年份区间说话,不传 = 宿主路径的原文案(见 yearStatusText)。
+    yearStatus: function (yi, info, realN, taken, err, ui) {
+      return yearStatusText(yi, info, realN, taken, err, ui);
     },
     resolveRealN: function (requested, yi) { return resolveRealN(requested, yi); },
     // 搜索框原话 → 年份档位 / 入口判定 / 来源文件名(自动化验收用,与页面同一套纯函数)
     yearAskMode: function (kw) { return yearAskMode(kw); },
+    // 当前科目 → 中文科目名(五科档案的子目录名;数学得到 '' = 排除五科档案)
+    subjFilter: function (subjectName) { return subjFilterOf(subjectName); },
     gateRun: function (hasDB, target, kw) { return gateRun(!!hasDB, target, kw); },
     srcNames: function (hits, max) { return srcNames(hits, max); },
     askTarget: askTarget,

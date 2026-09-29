@@ -20,6 +20,10 @@
  *                           → 检索先按"头部含该年份"筛出该年份子池,再做原有匹配;
  *                           子池为空时退回普通检索,并把真实情况回报给界面。
  *                           同一口径由 train.js 用于 realN / 提示词 / 状态栏。
+ *   · 按科目过滤(新增)   —— msg.subj = 当前科目的中文名(语文/英语/物理/化学/生物),
+ *                           与桌面宿主 HandleMats 的 subjNeed/subjSkipWuKe 同一口径:
+ *                           五科档案(zt/五科真题/<中文科目>/)只在本科目检索时参与,
+ *                           数学(或未传 subj)则排除全部五科块 —— 见 filterBySubject()。
  *   逐条对应见下面每个函数上方的 "宿主对应" 注释。
  *
  * 刻意保留的宿主怪癖(改了才会"两边不一致",所以照样复刻):
@@ -40,7 +44,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'phone-2';
+  var VERSION = 'phone-3';
 
   /* 包内资源:与桌面版 数据库\qg_corpus.txt / qg_subjects.txt **同一个文件**
      (构建时按字节复制,见 _gaokao_work\语料内置说明.md 的 SHA256 对拍) */
@@ -74,6 +78,11 @@
    * 所以按路径里是否出现下列词做一层优先,让原卷/解析/各地卷排前面。 */
   var PAPER_HINTS = ['原卷', '真题', '全卷解析', '解析', '全国卷', '新高考',
     '上海卷', '北京卷', '天津卷', '浙江卷', '模拟', '一模', '二模'];
+
+  /* 五科真题档案的目录前缀(科目过滤用,见 filterBySubject):
+   * 语英物化生六科里的五科按 zt/五科真题/<中文科目>/<年份>年高考<科目>….txt 归档;
+   * 数学不在这棵树里(散在 zt/全卷解析、zt/版本2、jyfs、yl、gs),所以"数学"= 排除它。 */
+  var WUKE_DIR = '五科真题/';
 
   /* 桌面版同期的块数(仅用于"疑似不完整"提示,不参与任何判定逻辑) */
   var EXPECT_BLOCKS = 33255;
@@ -306,6 +315,75 @@
     return { candidates: cand, strict: strict };
   }
 
+  /* ============================================================
+   * 科目过滤(2026-09-27 新增;与桌面宿主 HandleMats 的过滤同一口径)
+   * ------------------------------------------------------------
+   * 背景:这一份 qg_corpus.txt 是**六科混装**的 —— 数学散在 zt/全卷解析、
+   *   zt/版本2：数学（按省份分类）2008-2026、jyfs、yl、gs 里;语文/英语/物理/
+   *   化学/生物按 zt/五科真题/<中文科目>/<年份>年高考<科目>（卷名）<题型>.txt
+   *   归档(2010-2024,带【答案】【解析】)。不做过滤时各科候选块实测:
+   *   语文 947 / 英语 1994 / 物理 230 / 化学 393 / 生物 427 对 数学 33255 ——
+   *   物理查询会捞到成片的数学片段,数学查询也会捞到五科片段,
+   *   素材串科会直接毁掉整批题的命题质量。
+   * 判据(与宿主逐字一致,页面按当前科目传中文科目名):
+   *   · subj 非空(五科)  → 候选**必须含** "五科真题/<subj>/";
+   *   · subj 为空/未传    → 候选**必须不含** "五科真题/"(数学,以及本机知识点档案
+   *                         src='subj' 那一类 —— 它们本来就不在五科树里,照样通过)。
+   * 只作用于**候选集**:返回的仍是原池里的块引用、顺序不变;年份口径一个字不改 ——
+   *   strict 仍是"块自身年份 == 目标年份"(见 yearSets),
+   *   位置也与宿主一致(宿主同样在扫描循环开头就 continue 掉不合科目的块,
+   *   且在年份计数之前),所以年份候选数/真原卷数只统计本科目的块。
+   * ============================================================ */
+  function filterBySubject(pool, prefix, subjFilter) {
+    var subj = subjFilter == null ? '' : String(subjFilter).replace(/^\s+|\s+$/g, '');
+    var need = subj.length > 0 ? WUKE_DIR + subj + '/' : '';
+    var out = [];
+    for (var i = 0; i < (pool ? pool.length : 0); i++) {
+      var b = pool[i];
+      if (prefix && b.indexOf(prefix) !== 0) continue;
+      if (need.length > 0) {
+        if (b.indexOf(need) < 0) continue;            // 五科:必含本科目目录
+      } else if (b.indexOf(WUKE_DIR) >= 0) {
+        continue;                                     // 数学/未指定:排除全部五科块
+      }
+      out.push(b);
+    }
+    return out;
+  }
+
+  /* 一个池子的年份跨度(纯函数,不缓存):口径与 archiveYearRange 相同(块首第一个
+   * (19|20)\d{2}),但只统计**传进来的池子** —— 用来如实说明"该科目档案覆盖哪些年份"
+   * (档案整体是 1952-2026,但物理档案其实只有 2010-2024,拿整体跨度说事会把范围说大)。 */
+  function yearSpan(pool) {
+    var from = 0, to = 0;
+    for (var i = 0; i < (pool ? pool.length : 0); i++) {
+      var m = YEAR_Q_RE.exec(headOf(pool[i]));
+      if (!m) continue;
+      var y = parseInt(m[0], 10);
+      if (!(y >= 1900 && y <= 2099)) continue;
+      if (!from || y < from) from = y;
+      if (!to || y > to) to = y;
+    }
+    return { from: from, to: to };
+  }
+
+  /* 科目候选集 + 缓存:候选集每次检索重建都要对全池(37k 块)做一遍 indexOf 扫描,
+   * 手机上每次出题都白扫一遍太亏。只缓存**最近一次**的 (检索池引用, 前缀, 科目):
+   * 用户在一个科目的破卷页里连续出题,命中率接近 100%,同时不会长期扣住多份候选数组
+   * (最大一份 = 数学 33k 个块引用,约 270 KB 指针,可接受)。
+   * 检索池引用变了(语料重载 / 上传区重建)自动失效,不会拿旧池子当新池子用。 */
+  var subjPoolCache = null;
+  function subjectPool(pool, prefix, subjFilter) {
+    var subj = subjFilter == null ? '' : String(subjFilter).replace(/^\s+|\s+$/g, '');
+    var key = prefix + '\u0000' + subj;
+    if (subjPoolCache && subjPoolCache.pool === pool && subjPoolCache.key === key) {
+      return subjPoolCache;
+    }
+    var blocks = filterBySubject(pool, prefix, subj);
+    subjPoolCache = { pool: pool, key: key, subj: subj, blocks: blocks, span: yearSpan(blocks) };
+    return subjPoolCache;
+  }
+
   /* 年份限定档的召回放宽(与桌面 HandleMats 同一手法):
    * 中文没有词边界,「函数单调性」整串去匹配常常 0 命中 —— 实测真原卷池(2026 年 536 段)
    * 命中 0 段,而年份主导档全池命中 536 段,限定档就等于白干。
@@ -473,6 +551,9 @@
    *   year.fallback / year.pool=0,由界面决定怎么说。绝不假装命中。
    *   msg.paperFirst=true(年份主导检索)→ 年份子池内再按"试卷优先"排序
    *   (路径含 原卷/真题/全卷解析/解析/各地卷/模拟…的排前),其余口径不变。
+   *   msg.subj=中文科目名(语文/英语/物理/化学/生物,""/未传 = 数学)→ 先按科目收窄
+   *   候选集(见 filterBySubject),再在本科目的块里做年份与关键词检索;
+   *   回执里带 subj{name,blocks,from,to},界面据此如实说明"查的是哪一科、覆盖哪些年份"。
    * ============================================================ */
   function search(pool, msg) {
     msg = msg || {};
@@ -490,15 +571,21 @@
     var prefix = srcFilter.length > 0 ? SRC_TAG + srcFilter + '/' : '';
     var needScore = loose ? 1 : 2;
 
+    // —— 科目过滤:先把候选集收窄到"本学科的档案"(见 filterBySubject) ——
+    // 位置与桌面宿主一致:在年份筛选**之前**。所以下面的年份候选数/真原卷数
+    // (yearInfo.candidates/strict)天然只统计本科目的块,与宿主报的数字同一口径。
+    var sp = subjectPool(pool, prefix, msg.subj);
+    var poolSubj = sp.blocks;
+
     // —— 年份意图:显式 msg.year 优先,其次由 query 自身识别 ——
     var yi = parseYearIntent(q);
     var wantYear = parseInt(msg.year, 10) || 0;
     if (!(wantYear >= 1900 && wantYear <= 2099)) wantYear = yi.hit ? yi.year : 0;
 
-    var scanPool = pool;
+    var scanPool = poolSubj;
     var yearInfo = null;
     if (wantYear) {
-      var sets = yearSets(pool, wantYear, prefix);
+      var sets = yearSets(poolSubj, wantYear, prefix);
       if (sets.strict.length) {
         scanPool = sets.strict;
         var pi = paperInfo(sets.strict, 3);
@@ -517,10 +604,12 @@
           candidates: sets.candidates.length, strict: 0,
           otherYears: sets.candidates.length,
           papers: 0, names: [],
-          archiveYear: filterByYear(pool, wantYear, '').length,
+          // "另有 N 段提到该年份的资料"也只统计**本科目**的块(whole-pool 会把别的
+          // 科目的块算进来,对着物理用户说"本机另有 300 段 2026 资料"是误导)。
+          archiveYear: filterByYear(poolSubj, wantYear, '').length,
           from: msg.year ? 'msg' : 'query',
           src: srcFilter,
-          range: archiveYearRange(pool, '')
+          range: archiveYearRange(pool, '')          // 与桌面一致:区间按整个池子统计
         };
       }
     }
@@ -557,6 +646,10 @@
 
     var res = { hits: outHits, matched: scan.matched, total: pool.length, scanned: scanPool.length };
     if (yearInfo) res.year = yearInfo;
+    /* 本次检索的科目口径(界面如实说明"查的是哪一科、它覆盖哪些年份"):
+     *   name='' 表示数学/未指定(即"已排除全部五科档案");
+     *   blocks  = 本科目候选块数(过滤后),from/to = 本科目档案的年份跨度(实测,非写死)。 */
+    res.subj = { name: sp.subj, blocks: poolSubj.length, from: sp.span.from, to: sp.span.to };
     return res;
   }
 
@@ -726,6 +819,9 @@
       // 年份意图的回执必须原样透出去(子池段数/命中段数/是否退回普通检索):
       // 界面靠它如实报数,漏了它就会把"有年份素材"说成"档案里没有该年份"。
       if (r.year) out.year = r.year;
+      // 科目口径也要原样透出去:界面靠 subj.blocks/from/to 如实说明"本次查的是哪一科、
+      // 该科目档案覆盖哪些年份",漏了它界面就只能含糊其辞。
+      if (r.subj) out.subj = r.subj;
       if (r.scanned !== undefined) out.scanned = r.scanned;
       if (state.warn) out.warn = state.warn;
       return out;
@@ -774,6 +870,7 @@
       scanHits: scanHits, emitHits: emitHits,
       parseYearIntent: parseYearIntent, headOf: headOf, headHasYear: headHasYear,
       filterByYear: filterByYear, yearSets: yearSets, paperInfo: paperInfo,
+      filterBySubject: filterBySubject, subjectPool: subjectPool, yearSpan: yearSpan,
       expandCjkTerms: expandCjkTerms,
       archiveYearRange: archiveYearRange, paperRank: paperRank,
       yearNamedRank: yearNamedRank, countYearNamed: countYearNamed,
@@ -785,7 +882,7 @@
       constants: {
         MIN_BLOCK: MIN_BLOCK, SUBJ_CHUNK_CHARS: SUBJ_CHUNK_CHARS,
         RECENT_FROM: RECENT_FROM, RECENT_TO: RECENT_TO, W_RECENT: W_RECENT, W_NORMAL: W_NORMAL,
-        INTENT_WORDS: INTENT_WORDS, PAPER_HINTS: PAPER_HINTS
+        INTENT_WORDS: INTENT_WORDS, PAPER_HINTS: PAPER_HINTS, WUKE_DIR: WUKE_DIR
       }
     }
   };
