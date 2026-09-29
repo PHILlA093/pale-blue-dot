@@ -34,7 +34,8 @@ function question(i = 0) {
   return { type: '单选', difficulty: 3, stem: '已知函数 f(x)=x+' + i + ',求函数在指定点的值。',
     options: ['A. 1', 'B. 2', 'C. 3', 'D. 4'], answer: 'A', analysis: '代入函数式计算并核对。', source: 'AI 生成', sourceId: '' };
 }
-const quality = context(['parseAI', 'validateBatch', 'verifySource', 'buildPrompt', 'modelConfig'].map(n => fn(train, n)));
+const quality = context(['parseAI', 'validateBatch', 'verifySource', 'buildPrompt', 'modelConfig',
+  'isPickedTarget', 'boardNameOf'].map(n => fn(train, n)));
 
 test('all scripts parse and all five databases retain valid IDs, boards and links', () => {
   for (const name of fs.readdirSync(path.join(root, 'js')).filter(n => n.endsWith('.js'))) {
@@ -185,18 +186,20 @@ function runContext(responder, onMaterials, opts = {}) {
   const els = { qType: { value: 'single' }, qDiff: { value: '3' }, qSource: { value: '2' }, genBtn: {},
     askInput: { value: '' },
     qaArea: { innerHTML: 'old questions', insertBefore() {}, firstChild: null } };
-  const status = [], messages = [], mats = [], cards = [];
+  const status = [], messages = [], mats = [], cards = [], subjQueries = [];
   if (opts.ask !== undefined) els.askInput.value = opts.ask;
   if (opts.source !== undefined) els.qSource.value = opts.source;
   if (opts.target) Object.assign(p, opts.target);
   const ctx = context(['runGen', 'buildPrompt', 'parseAI', 'validateBatch', 'verifySource',
     'parseYearIntent', 'parseSearchIntent', 'yearTopic', 'pickRealN', 'targetLabel', 'sourceLabels',
-    'yearIntentNote', 'subjFilterOf'].map(n => fn(train, n)), {
+    'yearIntentNote', 'subjFilterOf', 'isPickedTarget', 'boardNameOf'].map(n => fn(train, n)), {
     busy: false, curDB: 'curDB' in opts ? opts.curDB : { subject: opts.subject || 'math', subjectName: opts.subjectName || '高中数学', boards: [] }, els,
-    currentTarget: () => (opts.noTarget ? null : { p, kw: opts.kw }),
+    // 真实 currentTarget 一定会带 via:'picked'|'sel'|'board'|'ask';桩默认 'sel'(= 主系统当前选中点),
+    // 需要"只由输入反推出来的点"时显式传 via:'ask'。
+    currentTarget: () => (opts.noTarget ? null : { p, kw: opts.kw, via: opts.via || 'sel' }),
     keyState: () => 'mock-only', tag() {}, setSteps() {},
     setStatus: (s, kind) => status.push({ s, kind }),
-    subjMats: async () => { if (onMaterials) onMaterials(ctx); return []; },
+    subjMats: async q => { subjQueries.push(q); if (onMaterials) onMaterials(ctx); return []; },
     gkMats: async (query, meta, req) => {
       mats.push({ query, req, meta });
       if (!opts.matsMeta) return [];
@@ -208,7 +211,7 @@ function runContext(responder, onMaterials, opts = {}) {
     renderQuestions: qs => { els.qaArea.innerHTML = JSON.stringify(qs); },
     document: { createElement: () => ({ set textContent(v) { cards.push(v); }, className: '' }) }
   });
-  return { ctx, els, status, messages, mats, cards, p };
+  return { ctx, els, status, messages, mats, cards, subjQueries, p };
 }
 test('a network failure leaves the previous batch intact and unlocks all controls', async () => {
   const r = runContext(() => { throw new Error('模拟断网'); });
@@ -439,13 +442,23 @@ test('a year plus content words only scopes the year and keeps the user choice o
   assert.match(r.status.at(-1).s, /识别到你要 2026 年真题:本机档案 2026 年命中 4 段,已取 1 段作为素材/);
 });
 
-test('without a year the knowledge point keeps driving retrieval exactly as before', async () => {
-  const r = runContext(okBatch, null, { ask: '函数与导数', kw: '函数与导数' });
+test('without a year the user input drives retrieval; the selected point only biases the prompt', async () => {
+  // 用户口径:「出题由输入的内容决定,只有显式选择了知识点才让知识点做偏向」。
+  // 旧行为是把"知识点名 + 关键词"拼在输入前面(搜「函数与导数」→ 检索式「导数 导数 函数与导数」),
+  // 于是用户随便打一句话,出题范围都被悄悄换成那个知识点。
+  const r = runContext(okBatch, null, { ask: '函数与导数', kw: '函数与导数', via: 'sel' });
   await r.ctx.runGen();
-  assert.match(r.mats[0].query, /^导数 导数 函数与导数$/);
+  assert.equal(r.mats[0].query, '函数与导数', '输入优先:检索式 = 用户输入原文');
+  assert.doesNotMatch(r.mats[0].query, /^导数 /, '不再前置知识点名/关键词');
   assert.equal(r.mats[0].req.year, 0);
   assert.equal(r.mats[0].req.yearOnly, false);
-  assert.match(r.messages[0][1].content, /知识点:导数/);
+  const user = r.messages[0][1].content;
+  assert.doesNotMatch(user, /知识点:导数/, '显式选点 + 有输入时,不再以知识点为主因');
+  assert.match(user, /【可选偏向,不是命题范围】导数\(板块:calc · 重要度 ★3\/5\)/);
+  assert.match(user, /用户输入决定本批的范围与主题/);
+  assert.match(user, /不得把它当成命题范围/);
+  assert.match(user, /两者冲突时以用户输入为准/);
+  assert.deepEqual(r.subjQueries, ['导数'], '显式选点仍可取该点讲解素材(它是"偏向"材料)');
   assert.doesNotMatch(r.status.at(-1).s, /素材题数提到 4 题/);
   assert.equal(r.status.at(-1).kind, 'warn', '无素材时的既有提示不变');
 });
@@ -483,7 +496,8 @@ test('a search-only query with no knowledge point is allowed; an empty one is re
   await searched.ctx.runGen();
   assert.equal(searched.messages.length, 1, '只给检索词也要能出题');
   assert.equal(searched.mats[0].query, '导数新题型', '无知识点时检索式就是搜索框原话');
-  assert.match(searched.status[0].s, /检索式:导数新题型/);
+  // 状态栏必须说清这批按什么出题:只给了输入 → "按你说的「…」出题(未选知识点)"
+  assert.match(searched.status[0].s, /按你说的「导数新题型」出题\(未选知识点\)/);
   assert.match(searched.messages[0][1].content, /知识点:未指定\(用户只输入了检索式/);
   assert.match(searched.messages[0][1].content, /素材为空时如实说明/);
 
@@ -495,6 +509,110 @@ test('a search-only query with no knowledge point is allowed; an empty one is re
   assert.match(empty.status.at(-1).s, /请输入要搜的题\(例如:2026高考题\),或在主系统点选知识点/);
 });
 
+/* ============================================================
+ * 出题口径:「出题由输入的内容决定,只有显式选择了知识点才让知识点做偏向」
+ *   —— 输入优先(硬) / 知识点降级为"偏向"(软) / 只有"选点 + 空输入"才回到按知识点出题。
+ * 这一组是本轮改动的核心证据:旧口径下(改前)前两条必红(检索式会被拼成
+ * "法拉第电磁感应定律 磁通量变化率 感应电动势 电磁感应 楞次定律",提示词里出现
+ * "知识点:法拉第电磁感应定律"、系统提示词写死"围绕给定知识点")。
+ * ============================================================ */
+const EMF = { name: '法拉第电磁感应定律', board: 'em', importance: 4, core: 4,
+  keywords: ['磁通量变化率', '感应电动势'],
+  content: '甲'.repeat(600) + '<这段超过 600 字,只应出现在"按知识点出题"那一档>' };
+
+test('input-first: with no picked point the query is the raw input and the prompt has no knowledge point', async () => {
+  const r = runContext(okBatch, null, {
+    ask: '电磁感应 楞次定律', kw: '电磁感应 楞次定律', via: 'ask', target: EMF,
+    subject: 'physics', subjectName: '高中物理',
+    matsMeta: {}, matsHits: [{ year: 0, src: 'zt/全卷解析/某原卷.txt', text: '素材原文片段。' }]
+  });
+  await r.ctx.runGen();
+  assert.equal(r.mats[0].query, '电磁感应 楞次定律', '检索式 = 用户输入原文(一个字都不加)');
+  assert.doesNotMatch(r.mats[0].query, /法拉第电磁感应定律|磁通量变化率|感应电动势/,
+    '由输入反推出来的点不得进入检索式');
+  const sys = r.messages[0][0].content, user = r.messages[0][1].content;
+  assert.doesNotMatch(user, /知识点/, '未选择知识点时,提示词里不出现"知识点"');
+  assert.doesNotMatch(user, /法拉第电磁感应定律/);
+  assert.doesNotMatch(sys, /围绕给定知识点/);
+  assert.match(sys, /任务:按用户输入的范围与主题命制一组高质量训练题/);
+  assert.match(sys, /本批的范围与主题由用户在搜索框里写的内容「电磁感应 楞次定律」决定/);
+  assert.deepEqual(r.subjQueries, [], '不取该点讲解素材');
+  assert.match(r.status[0].s, /按你说的「电磁感应 楞次定律」出题\(未选知识点\)/);
+});
+
+test('input-first: a picked point only biases the prompt and never moves the query', async () => {
+  const r = runContext(okBatch, null, {
+    ask: '电磁感应 楞次定律', kw: '电磁感应 楞次定律', via: 'sel', target: EMF,
+    subject: 'physics', subjectName: '高中物理', matsMeta: {}
+  });
+  await r.ctx.runGen();
+  assert.equal(r.mats[0].query, '电磁感应 楞次定律', '显式选点也不改检索式:仍以输入为准');
+  assert.doesNotMatch(r.mats[0].query, /法拉第电磁感应定律|磁通量变化率/);
+  const sys = r.messages[0][0].content, user = r.messages[0][1].content;
+  assert.doesNotMatch(user, /知识点:法拉第电磁感应定律/, '不能再出现"知识点:X"这种命题范围字段');
+  const at = user.indexOf('【可选偏向,不是命题范围】');
+  assert.ok(at > 0, '降级说明必须在要点之前');
+  const spots = [...user.matchAll(/法拉第电磁感应定律/g)].map(m => m.index);
+  assert.ok(spots.length > 0 && spots.every(i => i >= at), '点名只允许出现在"偏向"说明里');
+  assert.match(user, /只用于偏向其角度、相关考点与常见考法/);
+  assert.match(user, /不得把它当成命题范围,不得用它替换或收窄用户输入的主题;两者冲突时以用户输入为准/);
+  assert.match(user, /仅作参考的要点摘录,不是命题范围/);
+  assert.equal(user.indexOf('这段超过 600 字'), -1, '要点摘录收到 600 字,不许压过用户那一句输入');
+  assert.match(user, /甲{600}/, '要点本身仍然保留(它只是降级为参考)');
+  assert.doesNotMatch(sys, /任务:围绕给定知识点命制/);
+  assert.match(sys, /不得把它当成命题范围,不得用它替换或收窄用户输入的主题;两者冲突时以用户输入为准/);
+  assert.deepEqual(r.subjQueries, ['法拉第电磁感应定律'], '显式选点仍可取该点讲解素材');
+  assert.match(r.status[0].s, /按你说的「电磁感应 楞次定律」出题,偏向知识点:法拉第电磁感应定律/);
+  assert.match(r.status[0].s, /本批范围由你的输入决定,知识点「法拉第电磁感应定律」只作偏向/);
+});
+
+test('point-driven only when nothing was typed: the picked point keeps its full excerpt and materials', async () => {
+  const r = runContext(okBatch, null, { ask: '', via: 'sel', target: EMF, subject: 'physics', subjectName: '高中物理' });
+  await r.ctx.runGen();
+  assert.equal(r.mats[0].query, '法拉第电磁感应定律 磁通量变化率 感应电动势', '输入为空 → 回到按知识点拼检索式');
+  const sys = r.messages[0][0].content, user = r.messages[0][1].content;
+  assert.match(user, /知识点:法拉第电磁感应定律/);
+  assert.match(user, /知识点要点\(节选\):/);
+  assert.match(user, /这段超过 600 字/, '这一档保留原有 1600 字上限(知识点是唯一依据)');
+  assert.match(sys, /任务:围绕给定知识点命制/);
+  assert.doesNotMatch(user, /可选偏向/);
+  assert.deepEqual(r.subjQueries, ['法拉第电磁感应定律'], 'subjMats 照取');
+  assert.match(r.status[0].s, /按知识点 法拉第电磁感应定律 出题\(你没写关键词\)/);
+});
+
+test('the two year tiers are untouched by the input-first rule', async () => {
+  const bare = runContext(okBatch, null, {
+    ask: '2026', kw: '2026', via: 'sel', target: EMF,
+    matsMeta: { filtered: 3666, strict: 537, matched: 537, papers: 12, yearFrom: 1952, yearTo: 2026 },
+    matsHits: [{ year: 2026, src: 'zt/全卷解析/2026年上海卷(春)原卷.txt', text: '2026 年真题原文' }]
+  });
+  await bare.ctx.runGen();
+  assert.equal(bare.mats[0].query, '2026', '年份主导:检索式只含年份与意图词');
+  assert.equal(bare.mats[0].req.yearOnly, true);
+  assert.doesNotMatch(bare.messages[0][1].content, /法拉第电磁感应定律/, '年份档仍然忽略当前知识点');
+  assert.deepEqual(bare.subjQueries, []);
+  const scoped = runContext(okBatch, null, {
+    ask: '2026 函数单调性', kw: '2026 函数单调性', via: 'sel', target: EMF,
+    matsMeta: { filtered: 3666, strict: 537, matched: 4, papers: 3, yearFrom: 1952, yearTo: 2026 },
+    matsHits: [{ year: 2026, src: 'zt/全卷解析/2026年全国I卷解析.txt', text: '2026 全国I卷原文' }]
+  });
+  await scoped.ctx.runGen();
+  assert.equal(scoped.mats[0].query, '2026 函数单调性');
+  assert.equal(scoped.mats[0].req.yearOnly, false);
+  assert.match(scoped.messages[0][1].content, /2026 年 \+ 函数单调性/);
+  assert.doesNotMatch(scoped.messages[0][1].content, /法拉第电磁感应定律/);
+});
+
+test('the pick test is one shared rule: ask is never a pick, picked/sel/board always are', () => {
+  const { isPickedTarget } = context(['isPickedTarget'].map(n => fn(train, n)));
+  const p = { name: 'X' };
+  for (const via of ['picked', 'sel', 'board']) assert.equal(isPickedTarget({ p, via }), true, via);
+  assert.equal(isPickedTarget({ p, via: 'ask' }), false, '由输入反推出来的点不算"选择"');
+  assert.equal(isPickedTarget({ p, via: undefined }), false);
+  assert.equal(isPickedTarget({ p: null, via: 'sel' }), false);
+  assert.equal(isPickedTarget(null), false);
+});
+
 test('a missing subject database still refuses to run, with the original hint', async () => {
   const r = runContext(okBatch, null, { ask: '2026高考题', noTarget: true, curDB: null });
   await r.ctx.runGen();
@@ -504,19 +622,33 @@ test('a missing subject database still refuses to run, with the original hint', 
   assert.match(r.status.at(-1).s, /先选目标:在主系统点选知识点,或输入关键词并定位/);
 });
 
-test('the target line shows the search expression and says the knowledge point is ignored', () => {
+test('the target line says which basis the batch uses: input first, a picked point only as bias', () => {
   const els = { targetInfo: { innerHTML: '' }, askInput: { value: '2026高考题' } };
-  const ctx = context(['esc', 'parseYearIntent', 'parseSearchIntent', 'yearTopic', 'renderTarget'].map(n => fn(train, n)),
-    { els, curDB: { boards: [] }, live: { selName: '' } });
+  const ctx = context(['esc', 'parseYearIntent', 'parseSearchIntent', 'yearTopic', 'renderTarget',
+    'isPickedTarget', 'boardNameOf'].map(n => fn(train, n)),
+    { els, curDB: { boards: [{ id: 'em', name: '电磁感应' }] }, live: { selName: '' } });
+  // ① 年份档:提示文案保持原样(本次忽略当前知识点)
   ctx.renderTarget(null);
   assert.match(els.targetInfo.innerHTML, /检索式:<b>2026高考题<\/b> ｜ 2026 年高考真题 ｜ 已按年份检索,本次忽略当前知识点/);
+  // ② 只给了输入、没选知识点
   els.askInput.value = '函数与导数';
   ctx.renderTarget(null);
-  assert.match(els.targetInfo.innerHTML, /检索式:<b>函数与导数<\/b> ｜ 未指定知识点,按素材出题/);
-  els.askInput.value = '函数与导数';
-  ctx.renderTarget({ p: { name: '导数', board: 'calc', importance: 3, keywords: ['导数'], core: 3 }, via: 'ask', matched: 1 });
-  assert.match(els.targetInfo.innerHTML, /目标:<b>导数<\/b>/);
+  assert.match(els.targetInfo.innerHTML, /按你说的「<b>函数与导数<\/b>」出题\(未选知识点\)/);
+  // ③ via==='ask'(由输入反推出来的点)不算"选择":不能显示成"目标:导数"
+  ctx.renderTarget({ p: { name: '法拉第电磁感应定律', board: 'em', importance: 4, keywords: ['磁通量'], core: 4 }, via: 'ask', matched: 1 });
+  assert.match(els.targetInfo.innerHTML, /按你说的「<b>函数与导数<\/b>」出题\(未选知识点\)/);
+  assert.doesNotMatch(els.targetInfo.innerHTML, /偏向知识点/);
+  assert.match(els.targetInfo.innerHTML, /检索命中的「法拉第电磁感应定律」不作为命题范围/);
+  // ④ 显式选择了知识点 + 有输入 → 输入出题,知识点只作"偏向"
+  els.askInput.value = '电磁感应 楞次定律';
+  ctx.renderTarget({ p: { name: '法拉第电磁感应定律', board: 'em', importance: 4, keywords: ['磁通量'], core: 4 }, via: 'sel' });
+  assert.match(els.targetInfo.innerHTML, /按你说的「<b>电磁感应 楞次定律<\/b>」出题,偏向知识点:<b>法拉第电磁感应定律<\/b>/);
+  assert.match(els.targetInfo.innerHTML, /不是命题范围/);
+  // ⑤ 只选了知识点、没写关键词 → 知识点是唯一依据
   els.askInput.value = '';
+  ctx.renderTarget({ p: { name: '法拉第电磁感应定律', board: 'em', importance: 4, keywords: ['磁通量'], core: 4 }, via: 'sel' });
+  assert.match(els.targetInfo.innerHTML, /按知识点 <b>法拉第电磁感应定律<\/b> 出题\(你没写关键词\) ｜ 板块:电磁感应/);
+  // ⑥ 既没输入也没选点 → 空
   ctx.renderTarget(null);
   assert.equal(els.targetInfo.innerHTML, '');
 });
