@@ -374,6 +374,7 @@
       if (close) c.closePath();
     }
     return {
+      c: c,                       /* 2D 上下文（qgTube 的内腔裁剪要用它；探针的假 ctx 重放同样支持） */
       line: function (x1, y1, x2, y2) { c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); },
       rect: function (x, y, w, h, fill, stroke, lw) {
         path([[x, y], [x + w, y], [x + w, y + h], [x, y + h]], true);
@@ -413,17 +414,48 @@
     d.txt(title, 26, 24, F(15, true, false), INK, 'left');
     if (tag) d.txt(tag, g.w - 26, 24, F(12, false, true), '#7A4A2B', 'right');
   }
-  /* 试管：从 (x,y) 顶部往下长 h（含圆底），半径 r；液面比例 frac ∈ [0,1] */
+  /* 圆底试管的**内腔路径**：y = 管口，r = 内腔半径，h = 含圆底的总高（圆底圆心在 y+h-r）。
+     轮廓与裁剪共用这一条路径 —— 以前轮廓用 d.poly + d.circle（整圆），
+     于是圆的上半圈会在管里留下一道"球"的痕迹；液体与沉淀又各自画矩形，
+     矩形在圆底处伸到管外、还把轮廓盖掉。现在只有"两条竖壁 + 下半圆"。 */
+  function qgTubePath(c, cx, y, r, h) {
+    if (!c) return;
+    var yb = y + h - r;
+    c.beginPath();
+    c.moveTo(cx - r, y);
+    c.lineTo(cx - r, yb);
+    c.arc(cx, yb, r, Math.PI, 0, true);
+    c.lineTo(cx + r, y);
+    c.closePath();
+  }
+  /* 内腔描述（给沉淀/液体裁剪用）；内缩 1.2px ⇒ 永远不盖住 1.4px 宽的轮廓线 */
+  function qgTubeCav(tx, ty, tw, th) {
+    return { cx: tx, y: ty + 1.2, r: Math.max(1, tw / 2 - 1.2), h: th - 2.4 };
+  }
+  /* 试管：从 (x,y) 顶部往下长 h（含圆底），半径 r；液面比例 frac ∈ [0,1]
+     ★ 液体**必须**裁剪在内腔里（且内缩 1.2px）：否则平底矩形会盖住圆底轮廓、并溢出管外 */
   function qgTube(d, F, x, y, w, h, frac, fill, label, labelColor) {
-    var r = w / 2;
-    d.poly([[x - r, y], [x - r, y + h - r], [x + r, y + h - r], [x + r, y]],
-           'rgba(255,255,255,0.72)', INK, 1.4, false);
-    d.circle(x, y + h - r, r, 'rgba(255,255,255,0.72)', INK, 1.4);
+    var r = w / 2, c = d && d.c ? d.c : null;
+    if (!c) return;
+    c.save();
+    qgTubePath(c, x, y, r, h);
+    c.fillStyle = 'rgba(255,255,255,0.72)';
+    if (c.fill) c.fill();
+    c.lineJoin = 'round';
+    c.strokeStyle = INK; c.lineWidth = 1.4;
+    if (c.stroke) c.stroke();
     if (frac > 0) {
       var lv = y + h - (h - 2) * qgClamp(frac, 0.02, 1);
-      d.rect(x - r + 1, lv, w - 2, (y + h) - lv - 1, fill || 'rgba(160,200,230,0.55)', null, 0);
+      c.save();
+      var cav = qgTubeCav(x, y, w, h);
+      qgTubePath(c, cav.cx, cav.y, cav.r, cav.h);
+      if (typeof c.clip === 'function') c.clip();
+      c.fillStyle = fill || 'rgba(160,200,230,0.55)';
+      c.fillRect(x - r, lv, w, (y + h) - lv);
+      c.restore();
       d.line(x - r + 1, lv, x + r - 1, lv);
     }
+    c.restore();
     if (label) d.txt(label, x, y + h + 13, F(9.5, false, false), labelColor || '#6B645C', 'center');
   }
   /* 烧杯：从 (x,y) 顶部往下 h，宽 w；液面比例 frac */
@@ -438,11 +470,17 @@
     if (label) d.txt(label, x + w / 2, y + h + 13, F(9.5, false, false), '#6B645C', 'center');
   }
   /* 沉淀层：不平整的堆积（用确定性抖动画出"絮状/颗粒"感）。
-     amt ∈ [0,1] 决定厚度，col 是沉淀颜色，fuzz 决定边缘毛糙程度。 */
-  function qgPrecip(d, seed, x, y, w, hMax, amt, col, fuzz) {
+     amt ∈ [0,1] 决定厚度，col 是沉淀颜色，fuzz 决定边缘毛糙程度。
+     ★ 第 10 个参数 cav = 容器内腔（qgTubeCav 的返回值）：给了就**必须**被裁剪 ——
+       沉淀的下表面因此贴合圆底弧，而不是一条水平线、更不会溢出管外。
+       调用方要把基线 y 传到**管底以下**（y + h + 2），让它被弧裁掉。
+     原理：**上界面**仍按强度抖动（保留"絮状"观感），**下界面**由内腔的弧决定。 */
+  function qgPrecip(d, seed, x, y, w, hMax, amt, col, fuzz, cav) {
     var a = qgClamp(amt, 0, 1);
     if (!(a > 0.004)) return;
     var hh = hMax * a, rnd = qgRng(seed), i, n = 22;
+    var c = d && d.c ? d.c : null;
+    if (c && cav) { c.save(); qgTubePath(c, cav.cx, cav.y, cav.r, cav.h); if (typeof c.clip === 'function') c.clip(); }
     var top = [];
     for (i = 0; i <= n; i++) top.push([x + w * i / n, y - hh + (rnd() - 0.5) * (fuzz || 6) * a]);
     var poly = top.slice(0);
@@ -452,6 +490,7 @@
       var px = x + rnd() * w, py = y - hh * rnd();
       d.circle(px, py, 1 + rnd() * 1.6, col, null, 0);
     }
+    if (c && cav) c.restore();
   }
   /* 气泡：从底部往上冒（n 个，确定性位置） */
   function qgBubbles(d, seed, x, y, w, h, n, col) {
@@ -748,8 +787,8 @@
         /* 沉淀：白色；加硝酸后碳酸银溶解 → 只剩清水样 */
         var pc = m.isCl ? 'rgba(252,252,250,0.98)' : 'rgba(250,250,247,0.98)';
         var amt = qgClamp(m.mCol / 26, 0, 1);
-        qgPrecip(d, 1001 + Math.round(m.nPre * 100), tx - tw / 2 + 3, ty + th - 8,
-                 tw - 6, 26, amt, pc, 7);
+        qgPrecip(d, 1001 + Math.round(m.nPre * 100), tx - tw / 2, ty + th + 2,
+                 tw, 26, amt, pc, 7, qgTubeCav(tx, ty, tw, th));
         if (amt > 0.02) d.txt('白色沉淀', tx, ty + th - 34, F(10, true, false), '#5A5348', 'center');
         /* 气泡（碳酸银被酸溶解时） */
         if (m.gas > 0) {
@@ -958,8 +997,8 @@
         var liquid = 'rgba(248,248,244,' + qgRound(al, 2) + ')';
         qgTube(d, F, tx, ty, tw, th, 0.86, liquid, '反应液', '#6B645C');
         var amt = qgClamp(m.mPre / 60, 0, 1);
-        qgPrecip(d, 3101 + Math.round(m.mPre), tx - tw / 2 + 3, ty + th - 8, tw - 6, 28,
-                 amt, 'rgba(252,252,250,0.99)', 8);
+        qgPrecip(d, 3101 + Math.round(m.mPre), tx - tw / 2, ty + th + 2, tw, 28,
+                 amt, 'rgba(252,252,250,0.99)', 8, qgTubeCav(tx, ty, tw, th));
         if (amt > 0.02) d.txt('白色 BaSO₄', tx, ty + th - 36, F(10, true, false), '#5A5348', 'center');
         if (m.acid !== 'none' && amt > 0.02) {
           d.txt('酸洗后仍不溶解', tx + tw / 2 + 10, ty + 16, F(10.5, true, false), '#2E6B4F', 'left');
@@ -1177,8 +1216,8 @@
                           Math.round(g0 + (g1 - g0) * m.dec) + ',' +
                           Math.round(b0 + (b1 - b0) * m.dec) + ',0.97)';
         var amt = qgClamp(m.nPre / 0.9, 0, 1);
-        qgPrecip(d, 4101 + Math.round(m.nPre * 911), tx - tw / 2 + 3, ty + th - 8, tw - 6, 30,
-                 amt, pc, 9);
+        qgPrecip(d, 4101 + Math.round(m.nPre * 911), tx - tw / 2, ty + th + 2, tw, 30,
+                 amt, pc, 9, qgTubeCav(tx, ty, tw, th));
         if (amt > 0.02) {
           d.txt(m.dec > 0.85 ? '黑色 CuO' : (m.dec > 0.02 ? '蓝→黑' : '蓝色 Cu(OH)₂'),
                 tx, ty + th - 40, F(10, true, false), '#4A4438', 'center');
@@ -1398,8 +1437,8 @@
           lab = m.heat ? '红棕色 Fe₂O₃' : '红褐色 Fe(OH)₃';
         }
         var amt = qgClamp(m.nPre / 0.6, 0, 1);
-        qgPrecip(d, 5101 + Math.round(m.nPre * 877), tx - tw / 2 + 3, ty + th - 8, tw - 6, 30,
-                 amt, pc, 11);
+        qgPrecip(d, 5101 + Math.round(m.nPre * 877), tx - tw / 2, ty + th + 2, tw, 30,
+                 amt, pc, 11, qgTubeCav(tx, ty, tw, th));
         if (amt > 0.02) d.txt(lab, tx, ty + th - 42, F(10, true, false), '#4A3A30', 'center');
         if (m.heat) {
           qgFlameShape(d, tx, ty + th + 34, 30, 'rgba(232,152,44,0.8)');
@@ -1617,8 +1656,8 @@
                '澄清石灰水', '#6B645C');
         if (m.nCO2 > 0) {
           d.txt('变浑浊', dx, dy + dh - 30, F(10, true, false), '#7A4A2B', 'center');
-          qgPrecip(d, 7101 + Math.round(m.nCO2 * 313), dx - dw / 2 + 3, dy + dh - 6, dw - 6, 22,
-                   turb, 'rgba(252,252,250,0.98)', 7);
+          qgPrecip(d, 7101 + Math.round(m.nCO2 * 313), dx - dw / 2, dy + dh + 2, dw, 22,
+                   turb, 'rgba(252,252,250,0.98)', 7, qgTubeCav(dx, dy, dw, dh));
         } else {
           d.txt('仍澄清', dx, dy + dh - 30, F(10, false, true), '#8A8378', 'center');
         }
@@ -2423,8 +2462,8 @@
                           Math.round(c0[1] + (c1[1] - c0[1]) * t) + ',' +
                           Math.round(c0[2] + (c1[2] - c0[2]) * t) + ',0.98)';
         var amt = qgClamp(m.nAgCl / 0.06, 0, 1);
-        qgPrecip(d, 8101 + Math.round(m.nAgCl * 613), tx - tw / 2 + 3, ty + th - 8, tw - 6, 30,
-                 amt, col, 8);
+        qgPrecip(d, 8101 + Math.round(m.nAgCl * 613), tx - tw / 2, ty + th + 2, tw, 30,
+                 amt, col, 8, qgTubeCav(tx, ty, tw, th));
         d.txt(m.anion === 'ki' ? (t > 0.9 ? '黄色 AgI' : '白 → 黄')
               : (m.anion === 'kbr' ? (t > 0.9 ? '淡黄色 AgBr' : '白 → 淡黄')
                                    : (t > 0.9 ? '黑色 Ag₂S' : '白 → 黑')),
@@ -2724,8 +2763,8 @@
         }
         qgTube(d, F, tx, ty, tw, th, 0.86, liquid, '反应液', '#6B645C');
         if (pcol) {
-          qgPrecip(d, 9101 + Math.round(m.nCuOH2 * 811), tx - tw / 2 + 3, ty + th - 8, tw - 6, 26,
-                   qgClamp(m.nCuOH2 / 0.05, 0, 1), pcol, 9);
+          qgPrecip(d, 9101 + Math.round(m.nCuOH2 * 811), tx - tw / 2, ty + th + 2, tw, 26,
+                   qgClamp(m.nCuOH2 / 0.05, 0, 1), pcol, 9, qgTubeCav(tx, ty, tw, th));
         }
         d.txt(lab, tx, ty + th + 30, F(10.5, true, false), '#4A3A50', 'center');
         /* 颜色深浅标尺 */

@@ -229,6 +229,36 @@
     qgLine(g, x, y + h, x, y, color, lw, [4, 3]);
   }
 
+  /* 圆底试管的**内腔路径**：cx = 中轴，y = 腔口，r = 内腔半径，h = 含圆底的总高（圆心 y+h-r）。
+     轮廓与"液体/沉淀"的裁剪共用这一条路径。 */
+  function qgTubePath(c, cx, y, r, h) {
+    if (!c) return;
+    var yb = y + h - r;
+    c.beginPath();
+    c.moveTo(cx - r, y);
+    c.lineTo(cx - r, yb);
+    c.arc(cx, yb, r, Math.PI, 0, true);
+    c.lineTo(cx + r, y);
+    c.closePath();
+  }
+  /* 最近一次 qgTube 画出的内腔（供 qgTubeBegin/End 裁剪用） */
+  var qgLastTube = null;
+  /* 进入/离开"试管内腔"裁剪：液体与沉淀**必须**在两者之间画。
+     内缩 1.2px ⇒ 永远不盖住 1.4px 宽的轮廓线（原来 qgRect 一路铺到腔底，
+     把圆底轮廓整段盖掉、还在两侧溢出管外）。 */
+  function qgTubeBegin(g) {
+    var c = g && g.c, t = qgLastTube;
+    if (!c || !t || typeof c.save !== 'function') return false;
+    c.save();
+    qgTubePath(c, t.cx, t.y, t.r, t.h);
+    if (typeof c.clip === 'function') c.clip();
+    return true;
+  }
+  function qgTubeEnd(g) {
+    var c = g && g.c;
+    if (c && typeof c.restore === 'function') c.restore();
+  }
+
   /* 试管：竖放，(x,y) 为管口左上角；返回管内空腔 {x,y,w,h} */
   function qgTube(g, x, y, w, h, lw) {
     qgLine(g, x, y, x, y + h - w / 2, null, lw || 1.4);
@@ -243,6 +273,7 @@
       c.stroke();
       c.restore();
     }
+    qgLastTube = { cx: x + w / 2, y: y + 1.2, r: Math.max(1, w / 2 - 1.2), h: h - 2.4 };
     return { x: x + 1, y: y + 1, w: w - 2, h: h - 2 };
   }
   /* 圆底烧瓶：cx,cy = 球心；返回瓶内空腔（含瓶颈） */
@@ -510,6 +541,7 @@
 
       var tx = 420, ty = 120, tw = 62, th = 216;
       var inner = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 气体/液体/液滴全部裁剪在试管内腔里 */
       var gasH = inner.h * (1 - 0.72 * extent);
       /* 黄绿色气体 */
       qgRect(g, inner.x + 1, inner.y + 1, inner.w - 2, gasH, null,
@@ -529,6 +561,7 @@
       var watY = inner.y + inner.h - inner.h * 0.72 * extent;
       qgRect(g, inner.x + 1, watY, inner.w - 2, inner.y + inner.h - watY, null, 'rgba(140,185,215,.45)', 0);
       qgLine(g, inner.x + 1, watY, inner.x + inner.w - 1, watY, 'rgba(60,110,150,.8)', 1.4);
+      qgTubeEnd(g);
       qgTag(g, 'CH4 + Cl2（黄绿色）', tx + tw / 2, ty - 10, 11.5);
       qgTag(g, '液面上升 ' + Math.round(extent * 72) + '%', tx + tw / 2, ty + th + 4, 11);
       /* 管内气体与油状液滴的扰动（动画相位：优先用 state.t / state.anim，保证 run(1) 后画面会变） */
@@ -665,6 +698,7 @@
       /* 试管 */
       var tx = 330, ty = 90, tw = 96, th = 250;
       var inner = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 液体/油层裁剪在试管内腔里 */
       var isWater = (rg === 'br2water');
       /* 液体：溴的颜色随褪色程度变浅 */
       var alpha = qgClamp(0.85 * (1 - dec * 0.95), 0.04, 0.9);
@@ -682,6 +716,7 @@
         qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null,
           (isWater ? 'rgba(232,140,40,' : 'rgba(220,90,40,') + alpha + ')', 0);
       }
+      qgTubeEnd(g);
       /* 导管 + 气泡 */
       qgPipe(g, [[tx + tw / 2, 40], [tx + tw / 2, ty + 26]], 2);
       qgBubbles(g, inner.x + 6, liqTop + 12, inner.w - 12, inner.y + inner.h - liqTop - 18, ph, 7,
@@ -993,9 +1028,11 @@
       /* 试管 + 乙醇 */
       var tx = 300, ty = 120, tw = 104, th = 220;
       var inner = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 液体裁剪在试管内腔里 */
       var liqTop = inner.y + inner.h * 0.34;
       qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null, 'rgba(180,210,225,.45)', 0);
       qgLine(g, inner.x + 1, liqTop, inner.x + inner.w - 1, liqTop, 'rgba(70,120,150,.8)', 1.2);
+      qgTubeEnd(g);
       qgTag(g, '无水乙醇', tx + tw / 2, ty + th + 16, 11.5);
 
       /* 铜丝（螺旋） */
@@ -1194,8 +1231,10 @@
       qgPipe(g, [[bx + 28, by - 6], [bx + 28, 296], [530, 296], [530, 336]], 2);
       var tx2 = 500, ty2 = 336;
       var in2 = qgTube(g, tx2, ty2, 56, 92);
+      qgTubeBegin(g);                       /* 液体裁剪在试管内腔里 */
       var dec = ene ? qgClamp(0.9 * (1 - 0.15 * Math.min(1, charr)), 0, 1) : 0;
       qgRect(g, in2.x + 1, in2.y + 18, in2.w - 2, 70, null, 'rgba(220,90,40,' + (0.8 * (1 - dec)) + ')', 0);
+      qgTubeEnd(g);
       qgTag(g, '溴的四氯化碳溶液', tx2 + 28, ty2 + 108, 11);
       if (ene) {
         qgBubbles(g, in2.x + 6, in2.y + 22, in2.w - 12, 62, ph, 6, 'rgba(255,255,255,.8)');
@@ -1348,8 +1387,10 @@
       /* 反应试管 */
       var tx = 170, ty = 90, tw = 86, th = 200;
       var in1 = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 液体裁剪在试管内腔里 */
       var liqTop = in1.y + in1.h * 0.42;
       qgRect(g, in1.x + 1, liqTop, in1.w - 2, in1.y + in1.h - liqTop, null, 'rgba(210,200,150,.55)', 0);
+      qgTubeEnd(g);
       qgTag(g, '乙醇 + 乙酸 + ' + (cat === 'conc' ? '浓硫酸' : (cat === 'dilute' ? '稀硫酸' : '不加酸')),
         tx + tw / 2, ty + th + 16, 11.5);
       if (bath) {
@@ -1364,6 +1405,7 @@
       qgPipe(g, [[tx + tw / 2, 60], [tx + tw / 2, 44], [560, 44], [560, 120]], 2);
       var ty2 = 120, tx2 = 512, tw2 = 96, th2 = 190;
       var in2 = qgTube(g, tx2, ty2, tw2, th2);
+      qgTubeBegin(g);                       /* 液体/酯层裁剪在试管内腔里 */
       var naTop = in2.y + 30;
       qgRect(g, in2.x + 1, naTop, in2.w - 2, in2.y + in2.h - naTop, null, 'rgba(170,205,225,.45)', 0);
       qgLine(g, in2.x + 1, naTop, in2.x + in2.w - 1, naTop, 'rgba(70,120,150,.8)', 1.2);
@@ -1371,6 +1413,7 @@
       var esterH = 4 + 40 * qgClamp(extent, 0, 1);
       qgRect(g, in2.x + 1, naTop - esterH, in2.w - 2, esterH, null, 'rgba(245,240,200,.92)', 0);
       qgLine(g, in2.x + 1, naTop - esterH, in2.x + in2.w - 1, naTop - esterH, 'rgba(120,110,60,.7)', 1.1);
+      qgTubeEnd(g);
       qgTag(g, '饱和 Na2CO3 溶液', tx2 + tw2 / 2, ty2 + th2 + 16, 11.5);
       qgTxt(g, '乙酸乙酯（果香、密度比水小）', tx2 + tw2 / 2, ty2 - 34, 11.5, 'center',
         'rgba(120,100,40,.95)', true, false);
@@ -1528,12 +1571,14 @@
       for (i = 0; i < 3; i++) {
         var tx = tx0 + i * 100, ty = 150, tw = 60, th = 150;
         var inner = qgTube(g, tx, ty, tw, th);
+        qgTubeBegin(g);                     /* 液体/酯层裁剪在试管内腔里（本组三支试管各一次） */
         var liqTop = inner.y + inner.h * 0.30;
         qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null, 'rgba(180,210,225,.45)', 0);
         var thisShown = (keys[i] === med) ? shown
           : (keys[i] === 'base' ? 0.08 : (keys[i] === 'acid' ? 0.05 : 0.02));
         var esterH = (2 + 42 * (1 - qgClamp(thisShown, 0, 1))) * (0.6 + 0.4 * qgClamp(est, 0, 1));
         qgRect(g, inner.x + 1, liqTop, inner.w - 2, Math.min(esterH, 58), null, 'rgba(245,240,200,.92)', 0);
+        qgTubeEnd(g);
         if (keys[i] === med) {
           qgDashRect(g, tx - 6, ty - 6, tw + 12, th + 12, 'rgba(38,34,28,.55)', 1.2);
         }
@@ -1713,6 +1758,7 @@
       /* 试管 */
       var tx = 330, ty = 150, tw = 84, th = 170;
       var inner = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 液体/银镜/砖红色 Cu₂O 沉淀裁剪在试管内腔里 */
       var liqTop = inner.y + inner.h * 0.34;
       qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null,
         rg === 'silver' ? 'rgba(215,225,235,.5)' : 'rgba(120,170,225,.55)', 0);
@@ -1757,6 +1803,7 @@
         qgTxt(g, '新制 Cu(OH)2（NaOH 中滴少量 CuSO4，碱过量）', tx + tw / 2, ty + th + 16, 11.5, 'center',
           'rgba(38,34,28,.8)', true, false);
       }
+      qgTubeEnd(g);
       qgBubbles(g, inner.x + 8, liqTop + 12, inner.w - 16, inner.y + inner.h - liqTop - 18, ph, 4,
         'rgba(255,255,255,.6)');
       /* 文字 */
@@ -1928,25 +1975,30 @@
         : '水浴（约 ' + Math.round(temp) + ' ℃）', bx + bw / 2, by + bh + 20, 11.5);
       var tx = 240, ty = 160, tw = 76, th = 150;
       var inner = qgTube(g, tx, ty, tw, th);
+      qgTubeBegin(g);                       /* 液体裁剪在试管内腔里 */
       var liqTop = inner.y + inner.h * 0.30;
       qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null, 'rgba(235,232,215,.75)', 0);
       if (stage === 0) {
         qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null, 'rgba(60,80,140,.35)', 0);
       }
+      qgTubeEnd(g);
       qgTag(g, '淀粉溶液 + ' + (cat === 'h2so4' ? '稀硫酸' : (cat === 'enzyme' ? '唾液淀粉酶' : '蒸馏水')),
         tx + tw / 2, ty - 12, 11.5);
 
       /* 检验试管①：碘水 */
       var ax = 470, ay = 160, aw = 64, ah = 130;
       var inA = qgTube(g, ax, ay, aw, ah);
+      qgTubeBegin(g);
       var topA = inA.y + inA.h * 0.30;
       var iodine = ['rgba(30,50,140,.85)', 'rgba(90,60,150,.7)', 'rgba(180,150,120,.35)', 'rgba(230,228,215,.25)'][stage];
       qgRect(g, inA.x + 1, topA, inA.w - 2, inA.y + inA.h - topA, null, iodine, 0);
+      qgTubeEnd(g);
       qgTag(g, '加碘水：' + ['变深蓝色', '蓝紫→棕红', '不变蓝', '不变蓝'][stage], ax + aw / 2, ay + ah + 16, 11);
 
       /* 检验试管②：新制 Cu(OH)2 */
       var cx2 = 580, cy2 = 160, cw = 64, ch = 130;
       var inC = qgTube(g, cx2, cy2, cw, ch);
+      qgTubeBegin(g);                       /* 液体 + 砖红色 Cu₂O 圆点都裁剪在内腔里 */
       var topC = inC.y + inC.h * 0.30;
       qgRect(g, inC.x + 1, topC, inC.w - 2, inC.y + inC.h - topC, null,
         stage >= 2 ? 'rgba(160,80,40,.7)' : 'rgba(120,170,225,.6)', 0);
@@ -1955,6 +2007,7 @@
         qgCircle(g, inC.x + 8 + (k * 21 % (inC.w - 14)), inC.y + inC.h - 10 - (k * 9 % 22), 3.6, null,
           'rgba(180,70,30,.85)', 0);
       }
+      qgTubeEnd(g);
       qgTag(g, '先加 NaOH 中和，再加新制 Cu(OH)2 加热：' +
         (stage >= 2 ? '砖红色沉淀' : '无明显砖红色'), cx2 + cw / 2, cy2 + ch + 16, 11);
 
@@ -2340,6 +2393,7 @@
       var tx = 300, ty = 120, tw = 104, th = 250;
       var inner = qgTube(g, tx, ty, tw, th);
       var liqTop = inner.y + inner.h * 0.34;
+      qgTubeBegin(g);                       /* 浊液 + 白色/黄色三溴苯酚沉淀圆点裁剪在内腔里 */
       var base = st === 'none' ? 'rgba(235,225,195,.55)' : (st === 'white' ? 'rgba(240,238,230,.85)' : 'rgba(238,228,150,.85)');
       qgRect(g, inner.x + 1, liqTop, inner.w - 2, inner.y + inner.h - liqTop, null, base, 0);
       var i, n = st === 'none' ? 0 : (st === 'white' ? 16 : 16);
@@ -2349,6 +2403,7 @@
         qgCircle(g, px, py, 3.2, null,
           st === 'white' ? 'rgba(252,252,250,.95)' : 'rgba(226,206,70,.95)', 0);
       }
+      qgTubeEnd(g);
       /* 滴管 */
       qgRect(g, tx + tw / 2 - 7, 40, 14, 62, 'rgba(38,34,28,.7)', 'rgba(225,230,235,.6)', 1.2);
       qgPath(g, [[tx + tw / 2 - 3, 102], [tx + tw / 2, 122], [tx + tw / 2 + 3, 102]],
