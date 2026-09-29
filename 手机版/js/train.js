@@ -110,16 +110,19 @@
   /* ---------- 检索式构造(纯函数) ----------
    * 年份档只认搜索框原话,绝不拼当前知识点 —— 用户搜「2026」要的是 2026 年的
    * 整卷真题,不是"2026 年的函数与单调性题";把知识点拼进去就把年份需求带偏了。
+   * 无年份档:**输入优先(硬)** —— 搜索框有实词时检索式就是原话,知识点只做"偏向",
+   * 不进检索式(旧实现是知识点优先:"函数" + 点会被拼成"点 关键词 函数")。
    *   askKwText : 搜索框原话
-   *   pointText : 知识点对应的检索词(名称+关键词+板块);无知识点时传 ''
+   *   pointText : 知识点对应的检索词(名称+关键词+板块);输入为空时它才是检索式
    * 返回 {mode, query, topic, year, word}。 */
   function buildQuery(askKwText, pointText) {
     var am = yearAskMode(askKwText);
     if (am.mode !== 'none') {
       return { mode: am.mode, query: am.query, topic: am.topic, year: am.year, word: am.word };
     }
+    var kw = String(askKwText == null ? '' : askKwText).replace(/^\s+|\s+$/g, '');
     var pt = String(pointText == null ? '' : pointText).replace(/^\s+|\s+$/g, '');
-    var q = pt || String(askKwText == null ? '' : askKwText).replace(/^\s+|\s+$/g, '');
+    var q = kw || pt;
     return { mode: 'none', query: q, topic: q, year: null, word: '' };
   }
 
@@ -515,8 +518,39 @@
     // 4) 主系统当前选中点(心跳);心跳为空时用主界面跳转带来的 ?point= 兜底
     var sel = live.selName || urlPoint || '';
     var p = findPointByName(curDB, sel);
-    if (p) return { p: p, via: 'sel' };
+    if (p) return { p: p, via: 'sel', kw: kw };
     return null;
+  }
+
+  /* "显式选择了知识点"的唯一判据(与桌面版同一条规则、同一个名字):
+   *   picked —— 板块结果里点选;sel —— 主系统当前选中点;board —— 板块定位后自动取首个。
+   * via === 'ask'(搜索框的话命中了某个点)**不算选择** —— 那是"由输入反推出来的点"。
+   * 为什么:用户口径是「出题由输入的内容决定,只有显式选择了知识点才让知识点做偏向」;
+   * 反推出来的点若参与出题,用户随便打一句话就会被悄悄改成"按某个知识点出题"。 */
+  function isPickedTarget(t) {
+    if (!t || !t.p || !t.p.name) return false;
+    return t.via === 'picked' || t.via === 'sel' || t.via === 'board';
+  }
+
+  // 点的板块名(展示用;找不到就退回板块 id)
+  function boardNameOf(p, boards) {
+    var n = (p && p.board) || '';
+    (boards || []).forEach(function (b) { if (b && b.id === (p && p.board)) n = b.name; });
+    return n;
+  }
+
+  // 这批到底按什么出题(状态栏/目标行共用,与桌面版 targetLabel 同一口径):
+  //   ① 有输入 + 没(显式)选知识点 → 按你说的「X」出题(未选知识点)
+  //   ② 有输入 + 显式选了知识点   → 按你说的「X」出题,偏向知识点:Y
+  //   ③ 输入为空 + 显式选了知识点 → 按知识点 Y 出题(你没写关键词)
+  //   ④ 都没有                    → 未指定知识点
+  function targetLabel(t, askKwText) {
+    var kw = String(askKwText || (t && t.kw) || '').replace(/^\s+|\s+$/g, '');
+    var nm = (t && t.p && t.p.name) || '';
+    var picked = isPickedTarget(t);
+    if (kw) return '按你说的「' + kw + '」出题' + (picked ? ',偏向知识点:' + nm : '(未选知识点)');
+    if (nm) return '按知识点 ' + nm + ' 出题(你没写关键词)';
+    return '未指定知识点';
   }
 
   /* 搜索框原话:解析不到知识点时,它就是唯一的选题依据(也决定年份档位) */
@@ -562,19 +596,32 @@
       return;
     }
     if (!t) { el.innerHTML = ''; return; }
-    if (!t.p) {
-      // 未指定知识点、只给了检索词:检索式就是这批题的选题依据
-      el.innerHTML = '检索式:<b>' + esc(t.kw) + '</b> ｜ 未指定知识点,按素材出题'
-        + srcLineHtml(t.kw);
+    var tkw = askKw();
+    var tp = t.p;
+    var tpicked = isPickedTarget(t);
+    // 输入优先:搜索框有实词时范围与主题由这句话决定;知识点只有**显式选择**过才作为
+    // "偏向"出现(via==='ask' 是反推出来的,不算选择 —— 它不该被说成"这批按它出题")。
+    if (tkw) {
+      if (!tp || !tpicked) {
+        el.innerHTML = '按你说的「<b>' + esc(tkw) + '</b>」出题(未选知识点) ｜ 本批范围由这句输入决定'
+          + (tp ? '(检索命中的「' + esc(tp.name) + '」不作为命题范围)' : '')
+          + srcLineHtml(tkw);
+        return;
+      }
+      el.innerHTML = '按你说的「<b>' + esc(tkw) + '</b>」出题,偏向知识点:<b>' + esc(tp.name) + '</b>'
+        + '<div>该点只用于偏向出题角度与常见考法,<b>不是命题范围</b>;与输入冲突时以你的输入为准</div>'
+        + '<div>偏向的点:板块' + esc(boardNameOf(tp, curDB && curDB.boards)) + ' ｜ 重要度 ★' + tp.importance + '/5</div>'
+        + srcLineHtml(tkw);
       return;
     }
-    var p = t.p;
+    if (!tp || !tpicked) { el.innerHTML = ''; return; }
+    // 没写关键词、只(显式)选了知识点:这时它是唯一依据
+    var p = tp;
     var b = null;
     (curDB && curDB.boards || []).forEach(function (x) { if (x.id === p.board) b = x; });
-    var html = '目标:<b>' + esc(p.name) + '</b>' +
+    var html = '按知识点 <b>' + esc(p.name) + '</b> 出题(你没写关键词)' +
       ' ｜ 板块:' + esc(b ? b.name : p.board) +
       ' ｜ 重要度 ★' + p.importance + '/5 · 相关度 ●' + p.core + '/5';
-    if (t.via === 'ask') html += ' ｜ 命中 ' + t.matched + ' 个知识点,取最优';
     if (t.via === 'board') html += ' ｜ 板块定位命中 ' + t.matched + ' 个知识点,取板块内最优';
     if (t.via === 'picked') html += ' ｜ 已从板块定位点选';
     var kws = p.keywords || [];
@@ -924,6 +971,19 @@
     var p = t.p;
     var noPoint = !p;                     // 未指定知识点:本批以检索到的素材为准
     var yearOnly = !!(yi && yi.hit && yi.mode === 'yearOnly');
+    /* 出题口径(与桌面版同一条规则,用户原话:「它的出题不由知识点决定,由输入的内容决定,
+     * 如果选择知识点的话才会偏向这个知识点出题」):
+     *   pointDriven:显式选了知识点 **且输入为空** → 知识点是唯一依据(原行为);
+     *   biasPoint  :显式选了知识点 **且输入非空** → 输入定范围,知识点降级为"偏向";
+     *   其余(含 via==='ask' 反推出来的点)→ 只按输入出题,提示词里不出现"知识点"。 */
+    var picked = isPickedTarget(t);
+    var askKwText = String((t && t.kw) || '').replace(/^\s+|\s+$/g, '');
+    var yearTier = !!(yi && yi.hit);       // 年份档(两档,含 yearScope)按各自的既定口径处理
+    var legacyPoint = !!(p && yearTier);   // 年份档下的知识点:一个字节都不动(见下面的分支)
+    var inputDriven = !!askKwText;
+    var pointDriven = !!(p && !inputDriven);
+    var biasPoint = !!(p && picked && inputDriven && !yearTier);
+    var keepPoint = pointDriven || legacyPoint;   // 走"知识点为主"的那一支
     typeCfg = typeCfg || { label: '单选题', jsonType: '单选' };
     var kwLine = (!noPoint && (p.keywords || []).length ? '关键词:' + p.keywords.join('、') + '。' : '');
     var hasGk = !!(gkHits && gkHits.length);
@@ -935,7 +995,12 @@
     else typeRule = '解答大题:可含(1)(2)分问,需写清思路与关键步骤;';
     var sys = [
       '你是一位资深中国高考出题专家,同时深谙人教版等主流教材与历年真题(含新课标)。',
-      '任务:围绕给定知识点命制一组高质量训练题,严格符合中国高考风格。',
+      // 出题依据由"输入的内容"决定:只有"显式选点 + 输入为空"才说"围绕给定知识点",
+      // 其余情形(只给输入 / 年份档)一律说"按用户输入" —— 原来这里写死"围绕给定知识点",
+      // 于是用户只搜一句话时,提示词仍然把知识点当主因。
+      keepPoint
+        ? '任务:围绕给定知识点命制一组高质量训练题,严格符合中国高考风格。'
+        : '任务:按用户输入的范围与主题命制一组高质量训练题,严格符合中国高考风格。',
       '要求:',
       '1) 题干、选项、答案均用中文;涉及数学/物理/化学公式用 LaTeX($...$ 或 $$...$$)。'
         + ' 公式只用基础 LaTeX(\\frac \\sqrt 上下标 \\vec \\mathbf \\overrightarrow \\begin{cases} \\left(\\right) \\pm \\times \\div \\cdot \\leq \\geq \\neq 等);禁止使用 \\boldsymbol、\\bm、\\cancel、\\unicode、\\bbox、\\textcolor、\\enclose、\\require 这类需要额外宏包的写法 —— 内嵌排版引擎不加载它们,会导致整题公式显示成源码。',
@@ -973,6 +1038,22 @@
         + '④ 选项之间无重复、无"看似都对/都错"的歧义;⑤ 题目逻辑自洽(条件充分、问与答对应、无循环论证)。'
         + '任一题复核不过,立即修正或替换为同难度更稳妥的题;最终输出不允许携带任何错误。'
     ].join('\n');
+    /* 命题范围(硬约束):只有"显式选点 + 输入为空"时知识点才是范围;
+     * 其余情形一律"用户输入决定范围";显式选的点只做"偏向",不是命题范围。 */
+    if (!keepPoint) {
+      sys += '\n5b) 命题范围(硬约束,优先级高于下面的任何"知识点"字样):'
+        + '本批的范围与主题由用户在搜索框里写的内容「' + askKwText.slice(0, 80) + '」决定。';
+      if (inputDriven) {
+        sys += '不得用任何未在该输入里出现的内容去替换或收窄这个范围;'
+          + '用户输入与其它信息冲突时,以用户输入为准。';
+      }
+      if (biasPoint) {
+        sys += '下方【可选偏向,不是命题范围】里的知识点**不是命题范围**:'
+          + '它只用于偏向其考查角度、相关考点与常见考法,'
+          + '不得把它当成命题范围,不得用它替换或收窄用户输入的主题;'
+          + '两者冲突时以用户输入为准。';
+      }
+    }
 
     var subjName = live.subjectName || (curDB ? curDB.subjectName : '') || '';
     var ctxLines;
@@ -988,14 +1069,9 @@
           + '本次检索只按年份取卷、未按知识点过滤'
           + (yi.ignoredPoint ? ',当前选中的知识点不参与本次出题' : '') + '。'
       ];
-    } else if (noPoint) {
-      // 无知识点:检索式就是选题依据。素材为空时只出 AI 原创,如实标注。
-      ctxLines = [
-        '科目:' + subjName,
-        '检索式' + (yi && yi.hit ? '(年份限定 ' + yi.year + ' 年)' : '') + ':' + (t.kw || ''),
-        '用户没有指定具体知识点,本批以检索到的素材为准;素材为空时如实说明,只出 AI 原创并标注 AI 生成。'
-      ];
-    } else {
+    } else if (keepPoint) {
+      // 显式选了知识点 **且输入为空**(或年份档下原有的知识点分支):知识点是唯一依据,
+      // 这一支保持原样(要点 1600 字上限也不动)。
       ctxLines = [
         '科目:' + subjName,
         '知识点:' + p.name,
@@ -1012,8 +1088,43 @@
         /待人工校对/.test(p.content || '') ? '本条正文待人工校对,不作为命题依据。请根据知识点名称核对标准教材后命题。'
           : String(p.content || '').replace(/\$\$/g, '$').slice(0, 1600)
       ];
+    } else if (biasPoint) {
+      /* 显式选了知识点 **且输入非空** —— 降级为"偏向":用户输入决定范围与主题;
+       * 知识点只用来偏向角度/相关考点/常见考法。要点摘录保留但紧跟降级说明,
+       * 上限从 1600 字收到 600 字 —— 1600 字的正文会从体量上压过用户那一句输入。 */
+      ctxLines = [
+        '科目:' + subjName,
+        '本批范围与主题(以此为准):' + askKwText.slice(0, 200),
+        // 不要写成 "知识点:名字":那种字段式写法本身就是"以知识点为范围"的信号。
+        '【可选偏向,不是命题范围】' + p.name
+          + '(板块:' + boardNameOf(p, curDB && curDB.boards) + ' · 重要度 ★' + p.importance + '/5)'
+          + ' —— 它只是出题角度的偏向,不是本批的范围。',
+        '降级说明:用户输入决定本批的范围与主题;已选知识点只用于偏向其角度、相关考点与常见考法,'
+          + '不得把它当成命题范围,不得用它替换或收窄用户输入的主题;两者冲突时以用户输入为准。',
+        (!noPoint && (p.keywords || []).length ? '该点关键词(仅作偏向参考,不是命题范围):' + p.keywords.join('、') + '。' : ''),
+        '该点要点(仅作参考的要点摘录,不是命题范围;不得据此替换或收窄上面的用户输入主题):',
+        /待人工校对/.test(p.content || '') ? '本条正文待人工校对,不作为命题依据。请根据知识点名称核对标准教材后命题。'
+          : String(p.content || '').replace(/\$\$/g, '$').slice(0, 600),
+        '本批要求:范围与主题以用户输入「' + askKwText.slice(0, 80) + '」与检索到的素材为准;'
+          + '素材为空时如实说明,只出 AI 原创并标注 AI 生成;'
+          + '不得因为附着一个知识点就凭空编造年份真题、试卷名或题号。'
+      ];
+    } else {
+      // 无知识点(或只有"由输入反推出来的点",那不算选择):检索式就是选题依据。
+      // 有反推出来的点时,这一支里不出现"知识点"这个词 —— 免得模型把它当成命题范围。
+      ctxLines = p ? [
+        '科目:' + subjName,
+        '本批范围与主题:完全由用户输入「' + askKwText.slice(0, 80) + '」决定(用户没有选定任何知识条目)',
+        '本批要求:以检索到的素材为准;素材为空时如实说明"本机档案里没有可用于该检索式的素材",'
+          + '只出 AI 原创并标注 AI 生成;不得把输入以外的范围当成命题范围,也不得凭空编造年份真题、试卷名或题号。'
+      ] : [
+        '科目:' + subjName,
+        '检索式' + (yi && yi.hit ? '(年份限定 ' + yi.year + ' 年)' : '') + ':' + (t.kw || ''),
+        '用户没有指定具体知识点,本批以检索到的素材为准;素材为空时如实说明,只出 AI 原创并标注 AI 生成。'
+      ];
     }
-    var ctx = ctxLines.join('\n');
+    // 空元素只可能来自"没有关键词"那一行(偏向档),过滤掉免得提示词里多一个空行
+    var ctx = ctxLines.filter(function (v) { return v !== ''; }).join('\n');
 
     if (hasGk) {
       ctx += '\n\n【本地高考真题档案片段】(真实原题来源,优先于此片段选用;可清理版式噪声,'
@@ -1286,18 +1397,22 @@
     // 来源会如实落在"来源待核实"上,绝不冒充真题。
     var gkLib = true;                          // 六科语料都在本机库里,一律先查本地
 
-    // 检索式三档(搜索框原话决定,见 buildQuery):
-    //   yearOnly / yearScope → 只用原话(年份[+实词]),**绝不拼当前知识点**
-    //   none                 → 既有口径:有知识点按知识点拼,没有就用原话
+    // 出题口径:输入优先(硬)。搜索框有实词时,检索式就是原话 —— 不再把知识点名/关键词
+    // 拼在用户输入前面;只有"输入为空 + 显式选了知识点"才回到按知识点拼检索式
+    // (见 buildQuery 与 buildPrompt 的四档)。
     var pointText = t.p ? (t.p.name + ' ' + ((t.p.keywords || []).join(' ')) + ' ' + t.p.board) : '';
     var bq = buildQuery(askKw(), pointText);
     var query = bq.query;
+    var pickedPointTarget = isPickedTarget(t);
+    // 状态栏必须说清"这批按什么出题":只给输入 / 按输入且偏向某点 / 按知识点。
+    // 年份档沿用原样(直接显示搜索框原话),不套 targetLabel 的四种说法。
+    var label = bq.mode !== 'none' ? askKw() : targetLabel(t, askKw());
     var webQuery = bq.mode !== 'none'
       ? ((curDB ? curDB.subjectName : live.subjectName || '') + ' ' + bq.topic)
-      : (t.p ? ((curDB ? curDB.subjectName : live.subjectName || '') + ' 高考真题 ' + t.p.name
+      : (t.p && !askKw() ? ((curDB ? curDB.subjectName : live.subjectName || '') + ' 高考真题 ' + t.p.name
                + ' ' + ((t.p.keywords || []).join(' ')))
              : ((curDB ? curDB.subjectName : live.subjectName || '') + ' ' + bq.query));
-    var terms = (t.p && bq.mode === 'none' ? (t.p.name + ' ' + (t.p.keywords || []).join(' ')) : bq.query)
+    var terms = (t.p && bq.mode === 'none' && !askKw() ? (t.p.name + ' ' + (t.p.keywords || []).join(' ')) : bq.query)
       .split(/[\s,，、;；]+/).filter(function (s) { return s.length >= 2; });
 
     /* ---------- 年份意图:识别结果必须一路带到三处 ----------
@@ -1333,9 +1448,9 @@
       }, function () { return null; });
     }
 
-    setStatus(t.p
-      ? ('正在为「' + (live.subjectName || curDB.subjectName) + ' · ' + t.p.name + '」出题,上一批题目暂时保留。')
-      : ('正在按检索式「' + (t.kw || askKw()) + '」出题(未指定知识点,以检索到的素材为准),上一批题目暂时保留。'), '');
+    setStatus('正在出题:' + (live.subjectName || curDB.subjectName) + ' · ' + label + ',上一批题目暂时保留。'
+      + (pickedPointTarget && askKw() && bq.mode === 'none'
+        ? '本批范围由你的输入决定,知识点「' + t.p.name + '」只作偏向。' : ''), '');
 
     var bestGk = [], bestWeb = [], bestSubj = [], attempts = 0, feedback = '';
 
@@ -1390,7 +1505,10 @@
       setSteps('<span class="spinner"></span>① 本机资料库检索中…');
       // 年份主导:用户要的是那一年的整卷真题,不按知识点过滤 —— 连"本机知识点档案"
       // (subj,按知识点名检索)也不参与,否则等于又把知识点塞回了检索里。
-      return (yearI && yearI.mode === 'yearOnly') ? [] : subjMats(t.p ? t.p.name : (t.kw || askKw()));
+      // 另外,只有**显式选择**了知识点才按该点名取讲解素材(与桌面版同一口径):
+      // via==='ask' 是输入反推出来的点,取它的素材等于按知识点出题。
+      return (yearI && yearI.mode === 'yearOnly') ? []
+        : (isPickedTarget(t) && t.p ? subjMats(t.p.name) : []);
     }).then(function (hits) {
       bestSubj = hits || [];
       // 本次检索的科目:当前科目库的 subjectName(如「高中物理」)→ 中文科目名;
@@ -1598,6 +1716,9 @@
     // 当前科目 → 中文科目名(五科档案的子目录名;数学得到 '' = 排除五科档案)
     subjFilter: function (subjectName) { return subjFilterOf(subjectName); },
     gateRun: function (hasDB, target, kw) { return gateRun(!!hasDB, target, kw); },
+    // 出题口径(与桌面版同一条规则):显式选择判定 + "这批按什么出题"的说法
+    isPickedTarget: function (t) { return isPickedTarget(t); },
+    targetLabel: function (t, kw) { return targetLabel(t, kw); },
     srcNames: function (hits, max) { return srcNames(hits, max); },
     askTarget: askTarget,
     uiTarget: uiTarget,
