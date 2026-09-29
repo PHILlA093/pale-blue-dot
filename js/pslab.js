@@ -64,6 +64,14 @@
  *   c) 某次测量在物理上没有意义时（例：入射光频率低于截止频率 ν_c，不发生光电
  *      效应），该列请**返回 null**，不要返回 0 —— 核心在图线上会跳过这种行
  *      （数据表里显示「—」），不会把它当成真实的 0 画进图里。
+ *   d) **不要在 draw/step/measure 里写空 catch**。核心现在会把"它能看到的"异常
+ *      计数并在控制台喊一声（`QG_PSLAB.drawErrorCount(id)` / `state().drawErrors`），
+ *      但**你自己 catch 掉的异常核心看不见** —— 真实事故：某个 draw 里
+ *      `var L = p.L;` 遮蔽了组内的画线原语 `L`，于是每帧抛
+ *      `TypeError: L is not a function`，被空 catch 吃掉，画面只画了一半、
+ *      控制台干净、所有探针全绿。核心为此加了一条**静态扫描**
+ *      （`QG_PSLAB.shadowAudit()`：列出"局部 var 被当函数调用"与"空 catch"），
+ *      注册时也会 console.warn。看到警告就改名字，别改名核心。
  * ========================================================================== */
 (function () {
   'use strict';
@@ -353,7 +361,15 @@
    * ------------------------------------------------------------------ */
   var REG = {};    // id -> spec
   var ORDER = [];  // 注册顺序（list() 的分组内排序）
-  var META = {};   // id -> { steps:{key:step}, warnings:[...] }（register 时的参数体检结果）
+  var META = {};   // id -> { steps, warnings, suspects }（register 时的体检结果）
+  /* 被吞掉的异常：组模块里若自带**空 catch**，异常既到不了控制台、也到不了 lastError，
+     学生画面上只画了一半，而所有探针全绿 —— 真实事故：mech.js 的 hooke-law /
+     simple-pendulum 的 draw 每帧抛 `TypeError: L is not a function`（局部变量遮蔽了
+     同名的画线原语），被组方自己的空 catch 吃掉。
+     这里把核心**能看到**的那部分异常变成可见信号：计数 + 控制台（同一条只喊一次，
+     因为 draw 每帧都跑）。看不见的那部分由下面的 shadowSuspects() 静态扫描兜。 */
+  var ERRC = {};     // id -> { draw:n, step:n, pointer:n }（自挂载以来）
+  var WARNED = {};   // 'id|kind|msg' -> 1，控制台去重，draw 每帧抛错时不许刷屏
 
   function groupOf(spec) {
     var g = spec && spec.group ? String(spec.group) : '';
@@ -386,6 +402,127 @@
     return out;
   }
 
+  /* ------------------------------------------------------------------ *
+   * 被吞掉的异常 → 可见信号                                              *
+   * ------------------------------------------------------------------ */
+  /* 记一次组模块抛出的异常：计数 + 控制台（同一实验同一消息只喊一次，draw 每帧都跑）。 */
+  function noteError(id, kind, e) {
+    var msg = (e && e.message) ? String(e.message) : String(e);
+    var rec = ERRC[id] || (ERRC[id] = { draw: 0, step: 0, pointer: 0 });
+    rec[kind] = (rec[kind] || 0) + 1;
+    var key = id + '|' + kind + '|' + msg;
+    if (!WARNED[key]) {
+      WARNED[key] = 1;
+      warn(kind + ' failed: ' + id + ' — ' + msg + '（同一错误只报一次，之后只累加计数）');
+    }
+    return msg;
+  }
+  function drawErrCountOf(id) {
+    return (id && ERRC[id] && ERRC[id].draw) ? ERRC[id].draw : 0;
+  }
+  function drawErrTotal() {
+    var t = 0, k;
+    for (k in ERRC) { if (has(ERRC, k)) t += (ERRC[k].draw || 0); }
+    return t;
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 静态遮蔽扫描（核心在 register 时能拿到 spec 各函数的源码）           *
+   * 为什么必须静态查：组模块若自带空 catch，"局部变量被当函数调用"这类   *
+   * 错误**运行时根本到不了核心** —— 计数是 0、控制台是空的、画面只画了  *
+   * 一半。复验方是用 Debugger.setPauseOnExceptions('all') + 像素裁剪     *
+   * 对比才抓到的，普通探针天然抓不到。                                  *
+   * 只报"可疑项"不报错：`var L = p.L; L(...)` 绝大多数是缺陷（L 本意是   *
+   * 组内的画线原语），但 `var line = d.line; line(...)` 是合法转存，      *
+   * 形状上分不开，故一律列出、由人一眼判定。                             *
+   * ------------------------------------------------------------------ */
+  var FN_KEYS = ['draw', 'measure', 'step', 'conclude', 'onPointer'];
+  var SCAN_KW = { 'if': 1, 'for': 1, 'while': 1, 'switch': 1, 'catch': 1, 'return': 1, 'typeof': 1, 'function': 1, 'new': 1, 'do': 1, 'else': 1, 'case': 1, 'throw': 1, 'void': 1, 'in': 1, 'of': 1, 'delete': 1, 'instanceof': 1 };
+  function fnSource(f) {
+    try { return Function.prototype.toString.call(f); } catch (e) { return ''; }
+  }
+  function lineOf(src, idx) {
+    return src.slice(0, idx).split('\n').length;
+  }
+  /* 扫描前先「消毒」：把字符串内容与注释内容抹成空格（**保留换行**，行号才不会漂）。
+     ⚠ 顺序必须是「先剥字符串、再剥注释」—— 反过来时，字符串里出现的块注释起始符
+     （例如注释正文里写到的路径 js/pslab 加星号 js）会被当成块注释开头，
+     把后面几十行一起吞掉。真实教训：本人第一版扫描器就是这么漏报了 onPick 那一行的。
+     为什么需要消毒：空 catch 最常见的写法，是 catch (e) 后面跟一对只含中文注释的
+     花括号 —— 只按空白匹配是找不到的，必须先把注释抹掉再匹配。
+     （写这段注释本身也踩了一次：正文里直接写出块注释的结束符，会把这条注释提前关掉，
+     后面的字就变成了代码，node --check 立刻报 SyntaxError。） */
+  function sanitizeForScan(src) {
+    return String(src)
+      .replace(/'[^'\n]*'/g, function (m) { return "'" + m.slice(1, -1).replace(/[^\n]/g, ' ') + "'"; })
+      .replace(/"[^"\n]*"/g, function (m) { return '"' + m.slice(1, -1).replace(/[^\n]/g, ' ') + '"'; })
+      .replace(/\/\*[\s\S]*?\*\//g, function (m) { return m.replace(/[^\n]/g, ' '); })
+      .replace(/\/\/[^\n]*/g, function (m) { return m.replace(/[^\n]/g, ' '); });
+  }
+  function shadowSuspects(spec, key) {
+    var fn = spec ? spec[key] : null;
+    if (!isFn(fn)) return [];
+    var rawSrc = fnSource(fn);
+    if (!rawSrc || rawSrc.indexOf('[native code]') >= 0) return [];
+    var src = sanitizeForScan(rawSrc);      // 与 rawSrc 逐字符等长，行号可直接用
+    var out = [], lines = src.split('\n'), i, m, parts, pm, name, rhs, body;
+    var declared = {}, called = {}, fdecl = {};
+    var reF = /\bfunction\s+([A-Za-z_$][\w$]*)/g;
+    while ((m = reF.exec(src))) fdecl[m[1]] = 1;
+    var reV = /\bvar\s+([^;]*)/g;
+    while ((m = reV.exec(src))) {
+      body = m[1];
+      parts = body.split(',');
+      for (i = 0; i < parts.length; i++) {
+        pm = /^\s*([A-Za-z_$][\w$]*)\s*(?:=\s*([\s\S]*))?$/.exec(parts[i]);
+        if (!pm) continue;
+        name = pm[1]; rhs = pm[2] || '';
+        /* 赋的是函数表达式就不算遮蔽 —— 调用它天经地义。
+           注意：这里**不能写箭头函数的字面量**（组模块按契约是纯 ES5，不会出现），
+           否则 ES5 扫描器会把字符串里的那两个字符当成 ES6 语法误报。 */
+        if (/\bfunction\b/.test(rhs)) continue;
+        /* RHS 是**调用**（`var F = mkFontFn(gr)`）也放过：工厂返回函数是很常见的写法，
+           实测 mod.js 就是这么写的（假阳性）。真正要抓的形状是 `var L = p.L;` ——
+           成员/标识符取值当函数调，那一类几乎必是笔误。 */
+        if (/^[\w$.]+\s*\(/.test(rhs.replace(/^\s+/, ''))) continue;
+        declared[name] = {
+          line: lineOf(src, m.index),
+          text: ('var ' + name + (rhs ? ' = ' + rhs : '')).replace(/\s+/g, ' ').slice(0, 90)
+        };
+      }
+    }
+    for (i = 0; i < lines.length; i++) {
+      var ln = lines[i].replace(/\/\/.*$/, '');
+      /* 裸调用：前面既不是标识符字符，也不是 `.`（成员调用）。
+         ⚠ 这个正则里**不许出现引号字符** —— 它会让"先剥字符串"的静态扫描器
+         误以为进了字符串，把后面一大段代码吞掉（本人踩过：核心自己的扫描器
+         因此报出一串假的"未解析调用"）。引号在这里用下面的 pre 判断补上。 */
+      var reC = /(^|[^\w$.])([A-Za-z_$][\w$]*)\s*\(/g;
+      while ((m = reC.exec(ln))) {
+        name = m[2];
+        if (m[1] === "'" || m[1] === '"') continue;      // 字符串里的 abc( 不算调用
+        if (SCAN_KW[name] || fdecl[name] || called[name]) continue;
+        called[name] = i + 1;
+      }
+    }
+    for (name in declared) {
+      if (has(declared, name) && called[name]) {
+        out.push({
+          fn: key, kind: 'var-called', name: name, line: called[name],
+          decl: declared[name].text, declLine: declared[name].line
+        });
+      }
+    }
+    var reEC = /catch\s*\([^)]*\)\s*\{\s*\}/g;
+    while ((m = reEC.exec(src))) out.push({ fn: key, kind: 'empty-catch', line: lineOf(src, m.index) });
+    return out.length > 20 ? out.slice(0, 20) : out;
+  }
+  function specSuspects(spec) {
+    var out = [], i;
+    for (i = 0; i < FN_KEYS.length; i++) out = out.concat(shadowSuspects(spec, FN_KEYS[i]));
+    return out;
+  }
+
   /* 登记一个实验。必需：id / name / measure(fn) / columns(非空数组)。
      不合格**不登记**并 console.warn —— 宁可列表里少一个，也不要一个点了就炸的条目。 */
   function register(id, spec) {
@@ -409,6 +546,20 @@
        不合格**不静默吞掉** —— 走 warn() 通道，同时留在 state().warnings 里可查。 */
     META[id] = paramAudit(id, spec);
     if (META[id].warnings.length) warn('register(' + id + ') 参数体检：' + META[id].warnings.join('；'));
+    /* 静态遮蔽扫描：局部变量被当函数调用（组内空 catch 一吞，运行时永远看不到）。
+       只有 var-called 会在注册时喊一声；empty-catch 只列进 audit()，不吵。 */
+    META[id].suspects = specSuspects(spec);
+    var sus = [];
+    for (i = 0; i < META[id].suspects.length; i++) {
+      if (META[id].suspects[i].kind === 'var-called') {
+        sus.push(META[id].suspects[i].fn + ' 第 ' + META[id].suspects[i].line + ' 行把局部变量 ' +
+          META[id].suspects[i].name + ' 当函数调用（声明：' + META[id].suspects[i].decl + '）');
+      }
+    }
+    if (sus.length) warn('register(' + id + ') 疑似变量遮蔽：' + sus.join('；'));
+    /* 已挂载时补一次重绘：组脚本都在 mount 之前跑，所以正常路径下这是空转；
+       但探针/宿主在挂载后补注册一个实验时，左栏要立刻能看到它。 */
+    if (V) { try { V.sync(); } catch (e) { /* 重绘失败不影响登记 */ } }
     return true;
   }
 
@@ -477,7 +628,7 @@
     var t0 = st.t, ph0 = st.phase;
     if (isFn(spec.step)) {
       try { spec.step(paramSnap(), st, dt); }
-      catch (e) { S.lastError = 'step: ' + (e && e.message ? e.message : e); }
+      catch (e) { S.lastError = 'step: ' + noteError(S.id, 'step', e); }
     }
     if (st.t === t0) st.t = t0 + dt;                       // spec 没自管时钟 → 核心推
     if (st.phase === ph0) {
@@ -620,7 +771,11 @@
       t: S ? S.st.t : 0,
       rows: S ? S.rows.length : 0,
       canvas: V ? { w: V.W, h: V.H } : { w: 0, h: 0 },
-      warnings: S ? S.warnings.slice(0) : []
+      warnings: S ? S.warnings.slice(0) : [],
+      /* 自挂载以来 draw() 抛错的累计次数（当前实验 / 全部实验）。
+         探针应断言全为 0；组内空 catch 吞掉的那部分靠 audit().suspects 静态兜。 */
+      drawErrors: S ? drawErrCountOf(S.id) : 0,
+      drawErrorsTotal: drawErrTotal()
     };
   }
 
@@ -898,7 +1053,7 @@
       }
       try { S.spec.draw(g, paramSnap(), S.st); }
       catch (e) {
-        var m = (e && e.message) ? e.message : String(e);
+        var m = noteError(S.id, 'draw', e);
         S.lastError = 'draw: ' + m;
         drawErr(m);
       }
@@ -1298,7 +1453,7 @@
         if (!S || !isFn(S.spec.onPointer)) return;
         var r = cv.getBoundingClientRect();
         try { S.spec.onPointer({ type: type, x: ev.clientX - r.left, y: ev.clientY - r.top }, paramSnap(), S.st); }
-        catch (e) { S.lastError = 'onPointer: ' + (e && e.message ? e.message : e); }
+        catch (e) { S.lastError = 'onPointer: ' + noteError(S.id, 'pointer', e); }
         if (type === 'move' || type === 'down') draw();
       };
     }
@@ -1370,6 +1525,7 @@
       if (!containerEl || !containerEl.appendChild) return false;
       if (V) API.unmount();
       injectCSS();
+      ERRC = {}; WARNED = {};     // "自挂载以来"的计数口径从这次 mount 起算
       V = createView(containerEl, opts || {});
       return true;
     },
@@ -1463,6 +1619,23 @@
     resize: function () { if (V) V.resize(); return V ? { w: V.W, h: V.H } : null; },
 
     state: stateCore,
+    /* 自挂载以来 draw() 抛错的次数。
+       drawErrorCount(id)   → 该实验的次数（未知 id 返回 0）
+       drawErrorCount()     → { total, byId, allZero }（allZero 供探针一行断言）   */
+    drawErrorCount: function (id) {
+      if (id === undefined || id === null || id === '') {
+        var byId = {}, k, t = 0;
+        for (k in ERRC) { if (has(ERRC, k)) { byId[k] = ERRC[k].draw || 0; t += byId[k]; } }
+        return { total: t, byId: byId, allZero: t === 0 };
+      }
+      return drawErrCountOf(String(id));
+    },
+    /* 全量异常计数（draw / step / pointer 分开）—— 排障用 */
+    errorCount: function () {
+      var out = {}, k;
+      for (k in ERRC) { if (has(ERRC, k)) out[k] = { draw: ERRC[k].draw || 0, step: ERRC[k].step || 0, pointer: ERRC[k].pointer || 0 }; }
+      return out;
+    },
     /* 会话内部快照（排障用，不参与逻辑） */
     debug: function () {
       return {
@@ -1472,16 +1645,37 @@
           id: S.id, params: clone(S.params), rows: S.rows.length, t: S.st.t, phase: S.st.phase,
           lastError: S.lastError, steps: clone(S.steps), warnings: S.warnings.slice(0)
         } : null,
-        audit: S ? (META[S.id] ? { warnings: META[S.id].warnings.slice(0) } : null) : null,
+        audit: S ? (META[S.id] ? { warnings: META[S.id].warnings.slice(0), suspects: (META[S.id].suspects || []).slice(0) } : null) : null,
+        errors: API.errorCount(),
         mounted: !!V
       };
     },
-    /* 排障用：每个已登记实验的参数体检结论（哪一组有参数不规范，一次看全） */
+    /* 排障用：每个已登记试验的体检结论（参数 / 静态遮蔽 / draw 抛错），一次看全 */
     audit: function () {
       var out = [], i, id;
       for (i = 0; i < ORDER.length; i++) {
         id = ORDER[i];
-        out.push({ id: id, warnings: (META[id] ? META[id].warnings.slice(0) : []), steps: (META[id] ? clone(META[id].steps) : {}) });
+        out.push({
+          id: id,
+          warnings: (META[id] ? META[id].warnings.slice(0) : []),
+          steps: (META[id] ? clone(META[id].steps) : {}),
+          suspects: (META[id] && META[id].suspects) ? META[id].suspects.slice(0) : [],
+          drawErrors: drawErrCountOf(id)
+        });
+      }
+      return out;
+    },
+    /* 只列静态遮蔽可疑项（含空 catch），供"全为 0"的闸门用。
+       可传 kind 过滤：shadowAudit('var-called') 只列"局部变量被当函数调用"这一类，
+       它才是硬缺陷（空 catch 有可能是**有意的**兜底，别一刀切）。 */
+    shadowAudit: function (kind) {
+      var out = [], i, j, a = API.audit(), list;
+      for (i = 0; i < a.length; i++) {
+        list = [];
+        for (j = 0; j < a[i].suspects.length; j++) {
+          if (!kind || a[i].suspects[j].kind === kind) list.push(a[i].suspects[j]);
+        }
+        if (list.length) out.push({ id: a[i].id, suspects: list });
       }
       return out;
     }
