@@ -722,6 +722,255 @@
       });
   }
 
+  /* ============ 三个实验台的侧边栏入口 ============
+   * 物理沙盒(js/psandbox.js)/ 物理实验台(js/pslab.js)/ 化学实验台(js/clab.js)
+   * 三个模块是**原样**从桌面版复制进手机版源码树的(逐字节相同),它们只做一件事:
+   * 建自己的 DOM/CSS 并注册到 window.QG_PSANDBOX / QG_PSLAB / QG_CLAB。
+   * 桌面版的入口与互斥写在桌面 js/demo.js 里(观澜**独立窗口**的标题栏按钮);
+   * 手机版观澜是**整屏面板**而不是独立窗口(见 AGENTS §1.2,两端结构刻意不同,
+   * 不要照搬桌面),所以入口按需求放在 ☰ 侧边栏里,流程是:
+   *   点侧栏条目 → 收起侧栏 → 打开观澜整屏面板 → 把实验台挂到 #glStage →
+   *   面板标题栏出现「↩ 返回演示」回到观澜原来的画布/对话状态。
+   * 全程只有**一个**观澜面板,不新开窗口、不新建第二个面板。
+   *
+   * 硬约束(与桌面版一字不差,一处都不能松):
+   *   · 物理科目才创建前两项、化学科目才创建第三项;科目判定沿用既有写法
+   *     (window.CUR_SUBJECT,app.js 里由 ?subject= → localStorage('qg_subject')
+   *     → math 得出;独立页没有它就退回 localStorage / 主窗心跳)。
+   *   · 非对应科目下**一个节点都不建、一份 CSS 都不注入** —— 入口、#glLabBack、
+   *     #qgLabMCSS 全部关在科目判定里。
+   *   · 模块本身的惰性不许破坏:加载 js/psandbox.js|pslab.js|clab.js 时不建 DOM、
+   *     不起循环;只有这里点到入口才 mount()。
+   * 窄屏(≤768px)布局全部由 js/qlabm.js 负责(三栏折成"上=画布 / 下=标签页"),
+   * 本文件不碰样式。
+   * ========================================================================== */
+  var LAB_BACK_ID = 'glLabBack';
+
+  function subjKey() {
+    try {
+      var s = window.CUR_SUBJECT;
+      if (s) return String(s).toLowerCase();
+      try { s = localStorage.getItem('qg_subject'); } catch (e1) { s = null; }
+      if (s) return String(s).toLowerCase();
+      var raw = load('qg_live_state');
+      if (raw) { var o = JSON.parse(raw); return String((o && o.subject) || '').toLowerCase(); }
+    } catch (e) { /* 忽略 */ }
+    return '';
+  }
+  function isPhysicsSubject() { return subjKey() === 'physics'; }
+  // 手机版学科键是 key 形式(app.js 的 KEY_OF):chem;菜单值 chemistry 也一并认
+  function isChemSubject() { var s = subjKey(); return s === 'chem' || s === 'chemistry'; }
+
+  function labStage() { return $('glStage'); }
+  function sandboxAvailable() { return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.mount && labStage() && isPhysicsSubject()); }
+  function labAvailable() { return !!(window.QG_PSLAB && window.QG_PSLAB.mount && labStage() && isPhysicsSubject()); }
+  function clabAvailable() { return !!(window.QG_CLAB && window.QG_CLAB.mount && labStage() && isChemSubject()); }
+  function ssMounted() { return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted && window.QG_PSANDBOX.isMounted()); }
+  function labMounted() { return !!(window.QG_PSLAB && window.QG_PSLAB.isMounted && window.QG_PSLAB.isMounted()); }
+  function clabMounted() { return !!(window.QG_CLAB && window.QG_CLAB.isMounted && window.QG_CLAB.isMounted()); }
+  function labsMounted() { return ssMounted() || labMounted() || clabMounted(); }
+
+  /* 观澜面板上打/撤 qg-lab-on:实验台占满整屏时把对话区让出去;
+     观澜自己的画布/工具条/表达式栏由 #qgLabMCSS 里的同族规则隐藏
+     (DOM 全部留着,退出后原样回来 —— 与桌面的 ps-on/pl-on/cl-on 同一思路)。 */
+  function panelLab(on) {
+    if (window.QG_LABMOBILE) { try { window.QG_LABMOBILE.setPanelLab(!!on); } catch (e) { /* 忽略 */ } }
+  }
+  function killLabLayout() {
+    if (window.QG_LABMOBILE) { try { window.QG_LABMOBILE.detach(); } catch (e) { /* 忽略 */ } }
+  }
+  function labBackBtn(on) {
+    var b = $(LAB_BACK_ID);
+    if (on) {
+      if (b) return b;
+      var head = $('glHead');
+      var btns = head ? head.querySelector('.gl-btns') : null;
+      if (!btns) return null;
+      b = cel('button', '');
+      b.type = 'button';
+      b.id = LAB_BACK_ID;
+      b.textContent = '↩ 返回演示';
+      b.title = '回到观澜的表达式 / 模板画布';
+      b.addEventListener('click', function () { labCloseAll(); });
+      var closeBtn = $('glClose');
+      if (closeBtn && closeBtn.parentNode === btns) btns.insertBefore(b, closeBtn);
+      else btns.appendChild(b);
+      return b;
+    }
+    if (b && b.parentNode) b.parentNode.removeChild(b);
+    return null;
+  }
+  /* 实验台退出后的统一收尾:挂在模块的 onUnmount 上,而不是只写在按钮回调里 ——
+     无论是点「↩ 返回演示」、点面板 ✕、切科目,还是外部直接调 unmount(),UI 都会还原。 */
+  function labTearDownUI() {
+    panelLab(false);
+    labBackBtn(false);
+    killLabLayout();
+    // 观澜画布重新拿到尺寸(引擎的 resize 处理与打开面板时同一条路)
+    try { window.dispatchEvent(new Event('resize')); } catch (e) { /* 忽略 */ }
+  }
+
+  function sandboxOpen() {
+    if (!sandboxAvailable()) return false;
+    labClose(); clabClose();                      // 三者互斥
+    var stg = labStage();
+    if (!ssMounted()) {
+      window.QG_PSANDBOX.mount(stg, { preset: '', onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try { if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('psandbox', stg.querySelector('.ps-overlay')); } catch (e) { /* 忽略 */ }
+    /* 沙盒只在 window.resize 时重算画布尺寸(它没有 ResizeObserver),而刚才
+       panelLab(true) 把 #glStage 从 46% 撑满整屏 —— 不补这一下,画布会停留在
+       挂载那一刻的旧尺寸(手机上表现为"上下留一大片空白/被拉伸")。 */
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('PSANDBOX:on subject=physics (mobile)');
+    return true;
+  }
+  function sandboxClose() {
+    if (!ssMounted()) return false;
+    window.QG_PSANDBOX.unmount();                 // 收尾走 onUnmount → labTearDownUI
+    note('PSANDBOX:off (mobile)');
+    return true;
+  }
+
+  function labOpen() {
+    if (!labAvailable()) return false;
+    sandboxClose(); clabClose();
+    var stg = labStage();
+    if (!labMounted()) {
+      window.QG_PSLAB.mount(stg, { onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try {
+      // 有正在进行的实验会话 → 直接停在「参数 · 数据」;全新进入 → 先给「实验列表」
+      var hasSpec = !!(window.QG_PSLAB.current && window.QG_PSLAB.current());
+      if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('plab', $('plRoot'), { tab: hasSpec ? 'data' : 'list' });
+    } catch (e) { /* 忽略 */ }
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('PSLAB:on subject=physics (mobile)');
+    return true;
+  }
+  function labClose() {
+    if (!labMounted()) return false;
+    window.QG_PSLAB.close();                      // unmount + 关会话,收尾走 onUnmount
+    note('PSLAB:off (mobile)');
+    return true;
+  }
+
+  function clabOpen() {
+    if (!clabAvailable()) return false;
+    sandboxClose(); labClose();
+    var stg = labStage();
+    if (!clabMounted()) {
+      window.QG_CLAB.mount(stg, { onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try {
+      var hasSpec2 = !!(window.QG_CLAB.current && window.QG_CLAB.current());
+      if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('clab', $('clRoot'), { tab: hasSpec2 ? 'data' : 'list' });
+    } catch (e) { /* 忽略 */ }
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('CLAB:on subject=chem (mobile)');
+    return true;
+  }
+  function clabClose() {
+    if (!clabMounted()) return false;
+    window.QG_CLAB.close();
+    note('CLAB:off (mobile)');
+    return true;
+  }
+
+  /* 从侧栏点进来的统一入口:收起抽屉 → 打开观澜整屏面板 → 挂对应的实验台 */
+  function labEnter(kind) {
+    try { if (window.__qgDrawer && window.__qgDrawer.close) window.__qgDrawer.close(); } catch (e) { /* 忽略 */ }
+    openPanel();
+    // openPanel 会把焦点给 #glAsk(手机上会弹软键盘)—— 实验台里对话区是隐藏的,收回焦点
+    try { if (els.glAsk) els.glAsk.blur(); } catch (e2) { /* 忽略 */ }
+    var ok = false;
+    if (kind === 'psandbox') ok = sandboxOpen();
+    else if (kind === 'plab') ok = labOpen();
+    else if (kind === 'clab') ok = clabOpen();
+    if (!ok) {
+      // 模块没到位时如实说出来,不留一个空面板
+      if (els.glStageTip) els.glStageTip.textContent = '该实验台在本机没有加载成功(缺少对应的 js 文件)。';
+    }
+    return ok;
+  }
+
+  /* 只关实验台、留着观澜面板 */
+  function labCloseAll() {
+    var had = labsMounted();
+    sandboxClose(); labClose(); clabClose();
+    if (had) labTearDownUI();
+    return had;
+  }
+  /* 面板 ✕ / 关闭:先拆实验台,再走原来的关闭路径 */
+  function panelClose() {
+    labCloseAll();
+    return closePanel();
+  }
+
+  /* 侧栏分区:文案与桌面版一致(🧪 物理沙盒 / 🧪 物理实验台 / 🧪 化学实验台) */
+  function buildLabSection(list) {
+    var host = $('leftPanel');
+    if (!host || !list || !list.length) return null;
+    var sec = cel('section', 'side-sec collapsed');
+    sec.id = 'qlabSec';
+    var head = cel('div', 'sec-head');
+    head.title = '展开 / 收起';
+    head.appendChild(cel('span', 'sec-title', '🧪 实验台'));
+    var tg = cel('button', 'sec-toggle', '▾');
+    tg.type = 'button';
+    tg.setAttribute('aria-label', '展开/收起');
+    head.appendChild(tg);
+    // app.js 的 uiControls() 在页面装载时就绑完了既有分区的折叠,这里是运行期新建的,
+    // 用同一套约定自己绑一次(点标题整条切换 collapsed)。
+    head.addEventListener('click', function () { sec.classList.toggle('collapsed'); });
+    var body = cel('div', 'sec-body');
+    for (var i = 0; i < list.length; i++) {
+      (function (it) {
+        var b = cel('button', '', it.label);
+        b.type = 'button';
+        b.id = it.id;
+        b.title = it.title;
+        b.addEventListener('click', function () { labEnter(it.kind); });
+        body.appendChild(b);
+      })(list[i]);
+    }
+    body.appendChild(cel('p', 'db-note',
+      '物理沙盒是"玩符号"(把 m、g、a、v、r… 拖到一起),物理/化学实验台是"做实验"' +
+      '(调参数 → 看现象 → 记录数据 → 得结论)。手机上只保留在观澜面板里,点「↩ 返回演示」回到对话。'));
+    sec.appendChild(head);
+    sec.appendChild(body);
+    host.appendChild(sec);
+    return sec;
+  }
+
+  (function initLabEntries() {
+    // 观澜独立页(guanlan.html)没有侧栏 —— 不建任何东西
+    if (!$('leftPanel')) return;
+    var list = [];
+    if (isPhysicsSubject()) {
+      if (window.QG_PSANDBOX && window.QG_PSANDBOX.mount) {
+        list.push({ kind: 'psandbox', id: 'glPsBtn', label: '🧪 物理沙盒',
+          title: '打开物理符号沙盒:把 m、g、a、v、r… 拖到一起' });
+      }
+      if (window.QG_PSLAB && window.QG_PSLAB.mount) {
+        list.push({ kind: 'plab', id: 'glPlBtn', label: '🧪 物理实验台',
+          title: '打开物理实验台:调参数 → 看现象 → 记录数据 → 作图 → 得结论' });
+      }
+    } else if (isChemSubject()) {
+      if (window.QG_CLAB && window.QG_CLAB.mount) {
+        list.push({ kind: 'clab', id: 'glClBtn', label: '🧪 化学实验台',
+          title: '打开化学实验台:选试剂 → 调条件 → 看现象 → 写方程式(自动校验配平) → 得结论' });
+      }
+    }
+    buildLabSection(list);   // 非对应科目:list 为空 → 一个节点都不建
+  })();
+
   /* ---------- 绑定事件 ---------- */
   function on(id, fn) { var el = $(id); if (el) el.addEventListener('click', fn); }
   // 侧栏「观澜」入口:桌面版开无边框独立窗口(宿主拦截;网页版开新标签页)。
@@ -733,7 +982,8 @@
     } catch (e) { /* 忽略 */ }
     try { if (!window.open('guanlan.html', 'qg_guanlan')) openPanel(); } catch (e) { openPanel(); }
   });
-  on('glClose', closePanel);
+  // 面板 ✕:先拆掉可能开着的实验台,再走原来的关闭路径(只有一个观澜面板)
+  on('glClose', panelClose);
   on('glClearText', clearConv);
   on('glSend', doSend);
   on('glMin', minWindow);   // 观澜独立页的"最小化"按钮(宿主窗口)
@@ -1992,7 +2242,7 @@
   /* ---------- 调试口 ---------- */
   window.__guanlanTest = {
     open: openPanel,
-    close: closePanel,
+    close: panelClose,
     send: function (text) {          // 触发异步流程后立即返回
       if (els.glAsk) els.glAsk.value = String(text == null ? '' : text);
       doSend();
@@ -2097,6 +2347,29 @@
       }
       return content;
     });
+  };
+
+  /* 三个实验台的调试/验收口(与桌面版 __guanlanTest 同一约定:只转发,不改行为) */
+  window.__qgLabTest = {
+    subjects: function () { return { physics: isPhysicsSubject(), chem: isChemSubject(), key: subjKey() }; },
+    entries: function () {
+      var out = [], ids = ['glPsBtn', 'glPlBtn', 'glClBtn'], i;
+      for (i = 0; i < ids.length; i++) {
+        var b = $(ids[i]);
+        if (b) out.push({ id: ids[i], label: b.textContent, inSidebar: !!b.closest('#leftPanel') });
+      }
+      return out;
+    },
+    section: function () { return !!$('qlabSec'); },
+    backBtn: function () { return !!$(LAB_BACK_ID); },
+    enter: labEnter,                 // 等同点击侧栏条目
+    close: labCloseAll,
+    panelClose: panelClose,
+    mounted: function () { return { sandbox: ssMounted(), plab: labMounted(), clab: clabMounted() }; },
+    available: function () { return { sandbox: sandboxAvailable(), plab: labAvailable(), clab: clabAvailable() }; },
+    panelLabOn: function () { var p = $('guanlan'); return !!(p && p.classList && p.classList.contains('qg-lab-on')); },
+    layout: function () { return window.QG_LABMOBILE && window.QG_LABMOBILE.metrics ? window.QG_LABMOBILE.metrics() : null; },
+    setTab: function (n) { return !!(window.QG_LABMOBILE && window.QG_LABMOBILE.setTab(n)); }
   };
 
   // 独立窗口(观澜 standalone)启动

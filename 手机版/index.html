@@ -321,6 +321,28 @@
 <script src="js/mainbridge.js"></script>
 <script src="js/glcanvas.js"></script>
 <script src="js/gltemplates.js"></script>
+<!-- 观澜的三个实验台(与桌面版**逐字节相同**的自包含 ES5 模块;加载时不建 DOM、不起循环):
+     js/psandbox.js 物理沙盒 · js/pslab.js + js/pslab/*.js 物理实验台(20 实验) ·
+     js/clab.js + js/clab/*.js 化学实验台(50 反应)。
+     顺序:三个核心注册表都在 demo.js 之前就位,demo.js 只在科目匹配时把侧栏入口建出来。 -->
+<script src="js/psandbox.js"></script>
+<script src="js/pslab.js"></script>
+<script src="js/pslab/mech.js"></script>
+<script src="js/pslab/elec.js"></script>
+<script src="js/pslab/mag.js"></script>
+<script src="js/pslab/opt.js"></script>
+<script src="js/pslab/therm.js"></script>
+<script src="js/pslab/mod.js"></script>
+<script src="js/clab.js"></script>
+<script src="js/clab/ions.js"></script>
+<script src="js/clab/metals.js"></script>
+<script src="js/clab/organic.js"></script>
+<script src="js/clab/electro.js"></script>
+<script src="js/clab/kinetics.js"></script>
+<script src="js/clab/analysis.js"></script>
+<!-- 手机版自己的窄屏(≤768px)布局层:把三个实验台的三栏折成"上=画布 / 下=标签页",
+     并处理观澜面板的让位与触控热区。宽屏下它不注入任何样式、不改任何 DOM。 -->
+<script src="js/qlabm.js"></script>
 <script src="js/demo.js"></script>
 <!-- 窄屏交互增强:抽屉遮罩/右滑关闭、详情底部抽屉的拖拽。宽屏下自动空转。 -->
 <script src="js/mobile.js"></script>

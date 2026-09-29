@@ -952,6 +952,35 @@ html.intro-live, html.intro-live body { background: #000; }
 }
 #guanlanSec .sec-body > button#guanlanOpen:active { transform: scale(0.98); }
 
+/* ---------- 侧栏「实验台」条目(物理沙盒 / 物理实验台 / 化学实验台) ----------
+   这三个按钮与它们所在的 #qlabSec 分区由 js/demo.js 在**科目匹配时**才创建:
+   物理科目下才有前两个、化学科目下才有第三个,非对应科目下整段 section 都不存在
+   (手册红线:那种科目下不得出现任何 ps-/pl-/cl- 前缀 DOM,也不得注入模块 CSS)。
+   本节样式只认 #qlabSec 这个侧栏分区本身,与三个模块内部的 .ps-/.pl-/.cl- 类名
+   无关 —— 模块的样式一律由模块自己在 mount() 时注入,手机版不碰。 */
+#qlabSec .sec-body { display: flex; flex-direction: column; gap: 8px; }
+#qlabSec .sec-body > button {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(120, 160, 220, 0.28);
+  border-radius: 9px;
+  background: rgba(120, 160, 220, 0.08);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: .5px;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .12s;
+}
+#qlabSec .sec-body > button:hover {
+  background: rgba(79, 195, 247, 0.16);
+  border-color: rgba(79, 195, 247, 0.5);
+  color: #fff;
+}
+#qlabSec .sec-body > button:active { transform: scale(0.98); }
+#qlabSec .sec-body > .db-note { margin-top: 2px; }
+
 /* ---------- 浮动面板(居中弹层;hidden 时隐藏) ---------- */
 #guanlan {
   position: fixed;
@@ -1513,6 +1542,8 @@ body { -webkit-tap-highlight-color: transparent; }
   .db-row { min-height: 40px; font-size: 13px; }
   #dbState, .db-note { font-size: 12.5px; }
   #guanlanSec .sec-body > button#guanlanOpen { min-height: 48px; font-size: 15px; }
+  /* 侧栏实验台条目:整屏抽屉里同样是 48px 触控热区 */
+  #qlabSec .sec-body > button { min-height: 48px; font-size: 15px; }
   .board-bulk button { min-height: 40px; font-size: 13px; }
 
   /* 输入控件字号 ≥16px:iOS 在字号 <16px 时聚焦会自动放大页面 */
