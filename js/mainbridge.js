@@ -1,5 +1,5 @@
 /* ============================================================
- * mainbridge.js — 主系统 ⇄ 破卷 桥(穷观 V2.4.2)
+ * mainbridge.js — 主系统 ⇄ 破卷 桥(穷观 V2.5.2)
  * 职责(全部通过 DOM / localStorage / 公开全局完成,不侵入 app.js 闭包):
  *  1) 心跳发布主系统状态:{科目, 当前选中知识点名, 搜索词}
  *  2) 执行训练窗的「定位」指令:模拟一次搜索并点选首个结果
@@ -57,7 +57,13 @@
     if (!raw) return;
     var c = null;
     try { c = JSON.parse(raw); } catch (e) { return; }
-    if (!c || !c.seq || c.seq <= doneSeq) return;
+    if (!c || !c.seq || c.seq <= doneSeq) {
+      // 陈旧指令:标记并清掉。原先这里只 return 不删除,这条指令会一直躺在 LS_CMD 里占位,
+      // 配合"重开破卷窗后序号可能回退"(见 train.js 的 LS_SEQ)就会造成静默失效:
+      // 界面说已选中、主窗毫无反应。清 key 让下一条指令总能被正常处理。
+      try { localStorage.removeItem(LS_CMD); } catch (e) { /* 忽略 */ }
+      return;
+    }
     if (!c.t || c.t < bootAt - 500) { doneSeq = c.seq; return; }   // 陈旧指令:只标记不执行
     doneSeq = c.seq;
     // 执行后立刻清除,避免陈旧指令重放(原先只靠 2 秒时间戳窗口挡)
@@ -88,14 +94,35 @@
     return true;
   }
 
-  // 「🎯 破卷」按钮:打开破卷(桌面版由宿主拦截为第二原生窗口)
+  // 打开破卷。手机版(浏览器 / Capacitor APK)里必须走「同一个 WebView 内跳转」:
+  // Capacitor 的原生壳里没有"第二个窗口",window.open 通常会失效或把页面甩到系统浏览器,
+  // 破卷页里点「← 返回知识云」就回不来了。破卷页自带返回按钮,故这里直接改地址。
+  // 顺手把「当前选中的知识点」用 URL 参数带过去(见 trainUrl):破卷页据此预填/显示
+  // 出题目标。取不到名字时退化成不带参数的普通跳转,不影响功能。
+  function trainUrl() {
+    var url = 'train.html';
+    var q = [];
+    try {
+      var dName = document.getElementById('dName');
+      var name = dName ? String(dName.textContent || '').replace(/\s+/g, ' ').trim() : '';
+      if (name) q.push('point=' + encodeURIComponent(name));
+      if (window.CUR_SUBJECT) q.push('subject=' + encodeURIComponent(window.CUR_SUBJECT));
+    } catch (e) { /* 忽略:退化成普通跳转 */ }
+    return q.length ? (url + '?' + q.join('&')) : url;
+  }
+
+  function openTrain(url) {
+    try { location.href = url; }
+    catch (e) { qgNotice('无法打开破卷:' + e); }
+  }
+
+  // 「🎯 破卷」按钮(#dTrain):知识点详情抽屉里的破卷入口,同 WebView 内跳转到破卷页。
+  // 原右下角浮动按钮 #trainBtn 已按需求删除,破卷入口只此一处。
   function bindTrainBtn() {
-    var btn = document.getElementById('trainBtn');
+    var btn = document.getElementById('dTrain');
     if (!btn || btn.__qgBound) return;
     btn.__qgBound = true;
-    btn.addEventListener('click', function () {
-      try { if (!window.open('train.html', 'qg_train')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开破卷窗口:' + e); }
-    });
+    btn.addEventListener('click', function () { openTrain(trainUrl()); });
   }
 
   // 顶栏「⟳」:重新加载当前科目(保留科目、跳过开场,直接回到知识云)
@@ -145,14 +172,30 @@
       try { if (topbar.setPointerCapture) topbar.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
       try { if (e.preventDefault) e.preventDefault(); } catch (err) { /* 忽略 */ }
     });
+    // 每个 pointermove 都发一条 postMessage 会有 60+ 条/秒,宿主每条都要移一次窗口。
+    // 这里把增量累加、每帧最多发一条 —— 拖动一样跟手(合成器帧率就是"跟手"的上限),
+    // 但不会刷爆消息通道。松手时 flush 一次,保证最后一段位移不丢。
+    var pendX = 0, pendY = 0, rafOn = false;
+    function flushDrag() {
+      rafOn = false;
+      if (!pendX && !pendY) return;
+      var dx = pendX, dy = pendY;
+      pendX = 0; pendY = 0;
+      wnd('move', dx, dy);
+    }
     topbar.addEventListener('pointermove', function (e) {
       if (!drag) return;
-      var dx = e.screenX - drag.sx;
-      var dy = e.screenY - drag.sy;
+      // 仍用屏幕坐标算增量:窗口随手指移动时 clientX 会自变导致抖动
+      pendX += e.screenX - drag.sx;
+      pendY += e.screenY - drag.sy;
       drag.sx = e.screenX; drag.sy = e.screenY;
-      wnd('move', dx, dy);
+      if (!rafOn) {
+        rafOn = true;
+        var raf = window.requestAnimationFrame || function (f) { setTimeout(f, 16); };
+        raf(flushDrag);
+      }
     });
-    function endDrag() { drag = null; }
+    function endDrag() { drag = null; flushDrag(); }
     topbar.addEventListener('pointerup', endDrag);
     topbar.addEventListener('pointercancel', endDrag);
     topbar.addEventListener('dblclick', function (e) {
@@ -233,7 +276,19 @@
     }
     // 发号统一走 window 上的共享计数器:主窗里 mainbridge 与 demo.js(观澜面板)
     // 共用同一个 WebView 通道,各自独立计数会撞号,把响应派给错误的回调。
-    var pend = {};
+    // pend 用无原型对象:回调表以宿主回执里的 _seq 为键,普通 {} 会把
+    // "constructor"/"__proto__" 这类键名当成已存在,导致回执被派给不存在的回调。
+    var pend = Object.create(null);
+    // 统一的消息监听器:用 hasOwnProperty 认领属于自己的回执,清理超时定时器后 resolve。
+    // 事件数据一律不改写(不 delete d._seq)—— 同一窗口里还有 demo.js 的监听器要读它。
+    if (hostOk) window.chrome.webview.addEventListener('message', function (ev) {
+      var d = ev.data;
+      if (!d || !Object.prototype.hasOwnProperty.call(pend, d._seq)) return;
+      var entry = pend[d._seq];
+      delete pend[d._seq];
+      clearTimeout(entry.timer);
+      entry.resolve(d);
+    });
     function nextSeq() {
       window.__qgSeq = (window.__qgSeq || 0) + 1;
       return window.__qgSeq;
@@ -242,10 +297,23 @@
       return new Promise(function (res) {
         if (!hostOk) { res({ _nohost: true }); return; }
         var s = nextSeq();
-        obj._seq = s;
-        pend[s] = res;
-        window.chrome.webview.postMessage(obj);
-        setTimeout(function () { if (pend[s]) { delete pend[s]; res({ _timeout: true }); } }, 60000);
+        // 复制一份再挂 _seq:直接改调用方对象,同一 payload 被复用时序号会互相覆盖
+        var msg = {};
+        Object.keys(obj).forEach(function (k) { msg[k] = obj[k]; });
+        msg._seq = s;
+        var entry = { resolve: res, timer: null };
+        pend[s] = entry;
+        entry.timer = setTimeout(function () {
+          if (pend[s]) { delete pend[s]; res({ _timeout: true }); }
+        }, 60000);
+        try { window.chrome.webview.postMessage(msg); }
+        catch (e) {
+          // postMessage 抛错 = 宿主通道已断(应用正在退出 / WebView 未就绪)。
+          // 必须清掉定时器并立刻把可读原因交回调用方,否则界面会停在"正在上传…"直到 60 秒超时。
+          clearTimeout(entry.timer);
+          delete pend[s];
+          res({ ok: false, err: '无法连接本机资料库,请重启应用后重试。' });
+        }
       });
     }
     // 指纹必须覆盖"实际会上传的全部字段":原先只取 id/name/board/importance/关键词**个数**,
@@ -266,6 +334,13 @@
       stateEl.className = 'db-' + cls;
       stateEl.textContent = msg;
     }
+    /* 无宿主(手机浏览器 / Capacitor APK)时「本机资料库」这条路走不通:
+     * 它的数据是电脑上 数据库\qg_subjects.txt 里的科目块,只能由桌面宿主读写。
+     * 原来只说"网页浏览模式",用户会反复点;这里明确说明不可用及原因。
+     * 注意:AI 请求不在这里 —— 破卷/观澜的 AI 调用统一走 js/ainet.js
+     * (无宿主时自动改走 /api/ds 本地代理 或 Capacitor 原生直连)。 */
+    var NOHOST_MSG = '手机版不支持「本机资料库」:它依赖桌面宿主的电脑本地数据库,' +
+      '请在电脑上的桌面版里维护。手机版的知识云 / 搜索 / 破卷 / 观澜均不受影响。';
     function renderStat(r) {
       if (!el()) return;
       var html = '<div class="db-row"><span class="k">📚 内置四份资料</span>' +
@@ -285,7 +360,7 @@
       if (uploading) return;
       var db = curDb();
       if (!db || !el()) return;
-      if (!hostOk) { setState('网页浏览模式:本机资料库仅在桌面版维护。', 'bad'); return; }
+      if (!hostOk) { setState(NOHOST_MSG, 'bad'); return; }
       var key = db.subject || 'db';
       var d = digest(db);
       var prev = '';
@@ -318,7 +393,7 @@
     }
     function stat() {
       if (!el()) return;
-      if (!hostOk) { setState('网页浏览模式:本机资料库仅在桌面版维护。', 'bad'); return; }
+      if (!hostOk) { setState(NOHOST_MSG, 'bad'); return; }
       ask({ kind: 'dbStat' }).then(function (r) {
         if (r && !r._timeout && r.ok) {
           renderStat(r);
@@ -373,7 +448,7 @@
         var u = 'train.html?auto=1';
         if (m.wipe === '1') u = 'train.html?wipe=1';
         else if (m.ask) u += '&ask=' + encodeURIComponent(m.ask);
-        try { if (!window.open(u, 'qg_train')) qgNotice('浏览器拦截了新窗口,请允许本站弹出窗口后重试'); } catch (e) { qgNotice('无法打开破卷窗口:' + e); }
+        openTrain(u);   // 与「🎯 破卷」按钮同一条路:同 WebView 内跳转
       }, 1800);
     }
   })();
@@ -382,7 +457,8 @@
   window.__qgBridge = {
     snap: snap,
     publish: publish,
-    executeLocate: executeLocate
+    executeLocate: executeLocate,
+    origin: 'QG-20260920-5e5d5a-D'
   };
 })();
 

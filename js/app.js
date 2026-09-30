@@ -69,7 +69,7 @@ var CAM_DROP = 6;
 
   /* ---------------- 用户自定义知识点 ----------------
    * 「定义新知识点」表单创建的知识点持久化于 localStorage
-   * (qg_custom_points_v1),data.js 不被改动;
+   * (兼容旧整表 qg_custom_points_v1;新增按 qg_custom_point_v2: 逐条保存),data.js 不被改动;
    * 底层分类永远是既有十大板块:自定义节点必须归属其中某一板块,
    * 参与对应板块的筛选/扇区/颜色逻辑;光点颜色默认取板块固有颜色,
    * 也允许用户用 RGB 自定义覆盖。
@@ -78,37 +78,49 @@ var CAM_DROP = 6;
     for (var i = 0; i < DB.boards.length; i++) if (DB.boards[i].id === id) return true;
     return false;
   }
-  // 读回存储中的自定义知识点全量(所有科目共用 qg_custom_points_v1 一格)
+  // 兼容旧版整表;新增记录逐点存放,不同窗口新增时不覆盖彼此的快照。
+  // 旧实现把全部科目塞进一格整体覆盖写:两个窗口(或两个科目)先后新增,
+  // 后写的那次会拿自己内存里的旧快照把对方的记录抹掉。
+  var CUSTOM_PREFIX = 'qg_custom_point_v2:';
   function readCustomStore() {
     var arr = null;
     try {
       var raw = localStorage.getItem('qg_custom_points_v1');
       if (raw) arr = JSON.parse(raw);
     } catch (e) { /* 忽略 */ }
-    return Array.isArray(arr) ? arr : [];
-  }
-  function saveCustomPoints() {
-    var cur = DB.subject;
-    var list = DB.points.filter(function (p) { return p.user; })
-      .map(function (p) {
-        return {
-          id: p.id, name: p.name, board: p.board, subject: cur,
-          importance: p.importance, core: p.core,
-          keywords: p.keywords, content: p.content,
-          links: p.links, customColor: p.customColor || null
-        };
-      });
-    // 存储是所有科目共用的一格:直接整体覆盖只会留下当前科目 ——
-    // 数学加 1 个自定义点、切到化学再加 1 个,数学的那些就会全部消失且不可恢复。
-    // 因此写入前先读回全量,按 subject 合并后再写,其它科目的条目原样保留。
-    var keep = readCustomStore().filter(function (r) {
-      if (!r || typeof r.id !== 'string' || !r.id) return false;
-      if (r.subject) return r.subject !== cur;   // 其它科目:原样保留
-      // 旧格式条目没有 subject 字段:视为当前科目,由上面的 list 取代(不会重复);
-      // 但它若连板块都不属于当前科目,说明其实是别的科目的旧数据,同样必须保留
-      return !isRealBoard(r.board);
+    arr = Array.isArray(arr) ? arr : [];
+    // 无原型对象做去重表:'constructor' / '__proto__' 这类 id 才不会误判成"已存在"
+    var records = Object.create(null);
+    arr.forEach(function (p) {
+      if (p && typeof p.id === 'string') records[(p.subject || '') + ':' + p.id] = p;
     });
-    try { localStorage.setItem('qg_custom_points_v1', JSON.stringify(keep.concat(list))); } catch (e) { /* 忽略 */ }
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var key = localStorage.key(i);
+        if (!key || key.indexOf(CUSTOM_PREFIX) !== 0) continue;
+        try {
+          var p = JSON.parse(localStorage.getItem(key));
+          if (p && typeof p.id === 'string' && typeof p.subject === 'string') {
+            records[p.subject + ':' + p.id] = p;
+          }
+        } catch (e2) { /* 一条损坏记录不影响其它笔记,也不删除原数据 */ }
+      }
+    } catch (e3) { /* 存储不可读时仍保留已经读取的旧数据 */ }
+    return Object.keys(records).map(function (key) { return records[key]; });
+  }
+  // 逐条写入:只碰当前这一条记录,不再整体覆盖整张表。
+  // 返回布尔 —— 调用方必须据此判断是否真的保存成功(配额满 / 隐私模式下 setItem 会抛)。
+  function saveCustomPoints(p) {
+    var record = {
+      id: p.id, name: p.name, board: p.board, subject: DB.subject,
+      importance: p.importance, core: p.core,
+      keywords: p.keywords, content: p.content,
+      links: p.links, customColor: p.customColor || null
+    };
+    try {
+      localStorage.setItem(CUSTOM_PREFIX + DB.subject + ':' + p.id, JSON.stringify(record));
+      return true;
+    } catch (e) { return false; }
   }
   function loadCustomPoints() {
     var arr = readCustomStore();
@@ -132,7 +144,7 @@ var CAM_DROP = 6;
       });
     });
     if (!mine.length) return;
-    var ids = {};
+    var ids = Object.create(null);
     DB.points.forEach(function (p) { ids[p.id] = 1; });
     mine.forEach(function (p) { ids[p.id] = 1; });
     mine.forEach(function (p) {
@@ -141,8 +153,17 @@ var CAM_DROP = 6;
     });
   }
   // 调试/自救钩子:?qg_clear=1 清空全部自定义知识点并刷新
+  // 旧整表键与所有逐条前缀键都要清 —— 只清旧键会留下 v2 记录,
+  // 用户以为"已经清空",自定义点却仍然出现。
   if (/[?&]qg_clear=1/.test(window.location.search)) {
-    try { localStorage.removeItem('qg_custom_points_v1'); } catch (e) { /* 忽略 */ }
+    try {
+      localStorage.removeItem('qg_custom_points_v1');
+      // 倒序遍历:removeItem 会让 localStorage 变短,正序会漏掉元素
+      for (var ci = localStorage.length - 1; ci >= 0; ci--) {
+        var ck = localStorage.key(ci);
+        if (ck && ck.indexOf(CUSTOM_PREFIX) === 0) localStorage.removeItem(ck);
+      }
+    } catch (e) { /* 忽略 */ }
   }
   loadCustomPoints();
 
@@ -358,12 +379,59 @@ var CAM_DROP = 6;
    */
   var HEAVY_LIMIT = 900;
   var HEAVY_CLOUD = DB.points.length > HEAVY_LIMIT;
-  var LAYER_BOARD_ID = null;    // 词点层板块(英语:words);无则返回 null
-  if (HEAVY_CLOUD) {
-    for (var li = 0; li < DB.boards.length; li++) {
-      if (DB.boards[li].id === 'words') { LAYER_BOARD_ID = 'words'; break; }
+  /* 词点层 / 词根板块:必须按数据探测,不能写死板块 id。
+   * 原先写死 'words' 与 'roots' 两个 id,而英语库真实的板块 id 是
+   * eng-bx1/2/3、eng-xx1~4、eng-roots、eng-sentence、eng-grammar ——
+   * 两个常量永远不命中,于是"词点层默认收起 / 词点按词根分组 / 词根卫星式排布 /
+   * 词点层标签豁免"这一整套逻辑从未生效(等于白写)。
+   * 探测规则:
+   *   ① 板块自带显式标记 b.layer === true 优先 —— 数据侧一旦标注,这里立刻跟随;
+   *   ② 否则按规模判定:点数最多、且占全库 > 40% 的板块视为词点层。词点层的特征是
+   *      "数量碾压其余板块的挂靠层",40% 这条线正是用来把"教材分册"这类
+   *      多点但同质的板块排除在外(没有板块过半就说明这个库根本没有词点层);
+   *   ③ 词根板块按 id / name 命中 root|词根|词缀 探测。
+   * 并且只在 HEAVY_CLOUD 时启用 LAYER_BOARD_ID:轻负载科目(<900 点)的板块语义
+   * 与排布必须一字不改,它们本来也不存在这种量级差异。 */
+  var LAYER_BOARD_ID = null;    // 词点层板块(重负载库);无则返回 null
+  var ROOT_BOARD_ID = null;     // 词根/词缀板块;无则返回 null(只被重负载排布使用)
+  (function detectSpecialBoards() {
+    var i, b, key;
+    for (i = 0; i < DB.boards.length; i++) {
+      b = DB.boards[i];
+      key = String(b.id || '') + ' ' + String(b.name || '');
+      if (ROOT_BOARD_ID === null && /root|词根|词缀/i.test(key)) ROOT_BOARD_ID = b.id;
     }
-  }
+    if (!HEAVY_CLOUD) return;
+    for (i = 0; i < DB.boards.length; i++) {
+      if (DB.boards[i].layer === true) { LAYER_BOARD_ID = DB.boards[i].id; break; }
+    }
+    if (LAYER_BOARD_ID !== null) return;
+    // 先完整计数、再按板块顺序取最大:结果与板块遍历顺序无关,也不受数据里
+    // "哪个板块的点排在前面"影响(比边遍历边比较更不容易写错)
+    var cnt = {}, best = null, bestN = 0;
+    DB.points.forEach(function (p) { cnt[p.board] = (cnt[p.board] || 0) + 1; });
+    DB.boards.forEach(function (bb) {
+      var n = cnt[bb.id] || 0;
+      if (n > bestN) { bestN = n; best = bb.id; }
+    });
+    if (best !== null && bestN > DB.points.length * 0.4) LAYER_BOARD_ID = best;
+  })();
+
+  /* ---------------- 窄屏(手机)标签降载 ----------------
+   * 手机 GPU / 显存都紧张,而"每个知识点一张名称 CanvasTexture"是首屏最大的一笔开销
+   * (轻负载库 132 点 = 132 张纹理 + 132 个额外 Sprite,每帧多 132 次绘制)。
+   * 这里**复用重负载库已有的"按需生成标签"思路**(见 HEAVY_CLOUD / ensureNodeLabel),
+   * 不另造一套机制:
+   *   · 窄屏且非重负载库 → 只为重要度 ≥ NARROW_LABEL_MIN_IMP 的知识点预生成名称,
+   *     其余节点在悬停 / 选中 / 搜索命中时照旧由 ensureNodeLabel() 临时点亮;
+   *   · 宽屏(桌面)→ NARROW_LABEL_MIN_IMP = 0,labelEager() 恒真,行为与改造前一字不差。
+   * 功能不缺:能筛选、能搜索、能点选、能看详情,只是不再满屏文字。 */
+  var NARROW_SCREEN = (function () {
+    try { return !!(window.matchMedia && window.matchMedia('(max-width: 768px)').matches); }
+    catch (e) { return false; }
+  })();
+  var NARROW_LABEL_MIN_IMP = (NARROW_SCREEN && !HEAVY_CLOUD) ? 4 : 0;
+  function labelEager(p) { return (p.importance || 0) >= NARROW_LABEL_MIN_IMP; }
 
   /* —— 重负载库:确定性静态布局(O(n),单次完成) ——
    * · 概念节点(词根/主题/句型/语法/词组):由内向外逐圈入座——
@@ -408,7 +476,9 @@ var CAM_DROP = 6;
           var rr = row.r + jit;
           var aa = seatAng + jit / rr;
           p._pos = new THREE.Vector3(rr * Math.cos(aa), 0, rr * Math.sin(aa));
-          if (p.board === 'roots') rootPolar[p.id] = { r: rr, a: aa };
+          // 词根锚点:板块 id 由数据探测得到(见 detectSpecialBoards),
+          // 原先写死 'roots' 与英语库真实的 'eng-roots' 不符,词点卫星排布从未生效
+          if (ROOT_BOARD_ID !== null && p.board === ROOT_BOARD_ID) rootPolar[p.id] = { r: rr, a: aa };
           break;
         }
       });
@@ -766,12 +836,24 @@ var CAM_DROP = 6;
     var vis = rec.heavyVis !== false && rec.boardOn !== false;
     layerOuter.alpha[i] = vis ? rec.oAlpha : 0;
     layerInner.alpha[i] = vis ? rec.iAlpha : 0;
+    /* 隐藏时把实例尺寸一并归零:aAlpha = 0 只让它"全透明",顶点照样会展开成一个
+     * 铺满光斑的四边形并送进片元管线 —— 手机上这是实打实的填充率开销与发热,
+     * 被取消勾选的板块(英语词点层上千点)本可一个片元都不产生。
+     * aScale = 0 → 四边形退化成一点,光栅化阶段直接丢弃;
+     * 恢复可见时写回基准尺寸 outerBase / innerBase,与 shim 的 scale setter
+     * (refreshAllNodesDefault 会调 setScalar)共用同一份真值,不会各说各话。 */
+    layerOuter.scale[i] = vis ? rec.outerBase : 0;
+    layerInner.scale[i] = vis ? rec.innerBase : 0;
     layerOuter.color[i * 3] = rec.oR; layerOuter.color[i * 3 + 1] = rec.oG; layerOuter.color[i * 3 + 2] = rec.oB;
-    nodeMarkDirty(layerOuter, ['aAlpha', 'aColor']);
-    nodeMarkDirty(layerInner, ['aAlpha']);
+    // aScale 必须一起标脏:漏掉它,尺寸改动要等下一帧别处再标脏才会上传,
+    // 表现为"取消勾选后仍亮着一帧 / 重新勾选后不恢复"
+    nodeMarkDirty(layerOuter, ['aAlpha', 'aColor', 'aScale']);
+    nodeMarkDirty(layerInner, ['aAlpha', 'aScale']);
   }
   // 最小替身:让 applyVisualState / resetNodeStyle / applyBoardFilter 原样写
-  // rec.outerMat.color.setHex() / .opacity / rec.outer.visible 即可,无需改动那些调用点
+  // rec.outerMat.color.setHex() / .opacity / rec.outer.visible / rec.outer.scale 即可,
+  // 无需改动那些调用点。
+  // 注意:替身必须覆盖调用点**实际用到**的全部接口 —— 少一个就是一个未捕获 TypeError。
   function heavyShim(rec, which) {
     var sh = {};
     Object.defineProperty(sh, 'opacity', {
@@ -782,11 +864,41 @@ var CAM_DROP = 6;
       get: function () { return rec.heavyVis !== false; },
       set: function (v) { rec.heavyVis = !!v; heavyWriteStyle(rec); }
     });
+    /* scale:refreshAllNodesDefault() 无条件调 rec.outer.scale.setScalar(rec.outerBase||1),
+     * 原替身没有 scale → undefined.setScalar 抛未捕获 TypeError。
+     * 触发路径是"退出聚焦"(deselectNode → 1.4s 后的归位保险 → refreshAllNodesDefault),
+     * 也就是每次点空白关闭详情都必崩一次,而且崩在动画收尾那一刻,看起来像"画面卡住"。
+     * 这里把 setScalar / set 都映射到实例尺寸的基准值上(实例层只有一个标量尺寸,取 x),
+     * 写入后立刻重写样式,保持与 heavyWriteStyle 的 aScale 同步。
+     * 实例层的脉动 / 强调由着色器按 aEmph / aPulse 走,不需要在这里逐帧赋值。 */
+    sh.scale = {
+      setScalar: function (v) {
+        if (which === 'o') rec.outerBase = v; else rec.innerBase = v;
+        heavyWriteStyle(rec);
+        return sh.scale;
+      },
+      set: function (x) { return sh.scale.setScalar(x); }
+    };
+    /* needsUpdate:调用点会写 rec.outerMat.needsUpdate = true,意图是"让材质重建"。
+     * 实例层用的是两层共享的 ShaderMaterial,没有逐点材质状态,任何重建都没有意义;
+     * 这里给一个可写的 no-op,免得赋值落到一个谁都不认的普通字段上、误导后来人。 */
+    Object.defineProperty(sh, 'needsUpdate', {
+      get: function () { return false; },
+      set: function () { /* 实例层无需重建材质:改动都走 a* 实例属性 + nodeMarkDirty */ }
+    });
     if (which === 'o') {
       sh.color = {
         setHex: function (h) {
           rec.oR = ((h >> 16) & 255) / 255; rec.oG = ((h >> 8) & 255) / 255; rec.oB = (h & 255) / 255;
           heavyWriteStyle(rec);
+        },
+        /* 颜色是"反算"出来的:诊断口 window.__qg3D.recOf() 要读
+         * outerMat.color.getHexString(),原替身只有 setHex → 一调用就 TypeError。
+         * 由 rec.oR/oG/oB 反算回 #rrggbb(与 THREE.Color.getHexString 同为小写无 #)。 */
+        getHexString: function () {
+          var r = Math.round(rec.oR * 255), g = Math.round(rec.oG * 255), b = Math.round(rec.oB * 255);
+          var h = (r << 16) | (g << 8) | b;
+          return ('000000' + h.toString(16)).slice(-6);
         }
       };
     }
@@ -922,7 +1034,8 @@ var CAM_DROP = 6;
      * 不可见,纯属浪费;轻负载库照常预生成(显示行为完全不变)。 */
     var labelOff = 1.6 + outerBase * 0.55;
     var label = null;
-    if (!HEAVY_CLOUD) {
+    var eager = labelEager(p);
+    if (!HEAVY_CLOUD && eager) {
       label = makeLabel(p.name);
       label.position.copy(pos);
       label.position.y += labelOff;
@@ -942,6 +1055,7 @@ var CAM_DROP = 6;
         point: p, label: null, labelOn: false, labelOff: labelOff,
         outerBase: outerBase, innerBase: innerBase, i: ni,
         hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis,
+        labelEager: false,
         oR: ((colorHex >> 16) & 255) / 255, oG: ((colorHex >> 8) & 255) / 255, oB: (colorHex & 255) / 255,
         oAlpha: 0.75, iAlpha: 0.95, heavyVis: boardVis
       };
@@ -955,14 +1069,16 @@ var CAM_DROP = 6;
         point: p, label: label, labelOn: false, labelOff: labelOff,   // labelOn 由下面的 boardOn 派生,不设无条件 true
         outer: outerSp, outerMat: outerMat, outerBase: outerBase,
         inner: innerSp, innerMat: innerMat, innerBase: innerBase,
-        hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis
+        hit: hit, ph: ph, colorHex: colorHex, boardOn: boardVis,
+        // 该节点是否属于"常显名称"的集合(窄屏降载 / 重负载库下为 false,名称改为按需生成)
+        labelEager: eager && !HEAVY_CLOUD
       };
       // 建节点时即按板块勾选状态定下显隐(与 applyBoardFilter 同一套语义),
       // 保证新点不会在"已取消勾选"的板块里冒出来;
-      // labelOn 一律由 boardOn 派生(重负载库常态不常显名称)
+      // labelOn 一律由 boardOn 派生(重负载库/窄屏降载下常态不常显名称)
       outerSp.visible = boardVis;
       innerSp.visible = boardVis;
-      rec.labelOn = boardVis && !HEAVY_CLOUD;
+      rec.labelOn = boardVis && !HEAVY_CLOUD && eager;
       if (label) label.visible = rec.labelOn;
     }
     nodeById[p.id] = rec;
@@ -1156,9 +1272,10 @@ var CAM_DROP = 6;
     });
     var hop = {};
     var q = [centerId];
-    hop[centerId] = 0;
-    while (q.length) {
-      var c = q.shift();
+    var qh = 0;                 // 读游标而非 shift():shift() 每弹一个都要整体搬移数组,
+    hop[centerId] = 0;          // 与 relayoutTargets 的 BFS 同一处理,避免大库上退化成 O(n²)
+    while (qh < q.length) {
+      var c = q[qh++];
       var nh = hop[c] + 1;
       if (nh > maxH) continue;
       var nbArr = adj[c];
@@ -1184,10 +1301,14 @@ var CAM_DROP = 6;
         if (rec.label) rec.label.visible = false;
       } else {
         // 板块被取消勾选时,名称必须保持隐藏(reset 不得把 label 无条件点亮):
-        // labelOn 是"该不该显示名称"的唯一真值源,一律受 boardOn 约束
-        rec.labelOn = rec.boardOn !== false;
-        rec.label.visible = rec.labelOn;
-        rec.label.material.opacity = 1;
+        // labelOn 是"该不该显示名称"的唯一真值源,一律受 boardOn 约束。
+        // 窄屏降载下 labelEager 为 false 的节点本来就没有名称对象,必须再收一道,
+        // 否则会把"不存在标签"的节点标成 labelOn=true(宽屏恒真,行为不变)。
+        rec.labelOn = rec.boardOn !== false && rec.labelEager !== false;
+        if (rec.label) {
+          rec.label.visible = rec.labelOn;
+          rec.label.material.opacity = 1;
+        }
       }
     });
   }
@@ -1500,8 +1621,9 @@ var CAM_DROP = 6;
         rec.labelOn = false;
         if (rec.label) rec.label.visible = false;
       } else {
-        rec.labelOn = vis;
-        rec.label.visible = vis;
+        // 同上:窄屏降载的节点没有名称对象,labelOn 必须一并收住
+        rec.labelOn = vis && rec.labelEager !== false;
+        if (rec.label) rec.label.visible = rec.labelOn;
       }
       rec.hit.userData.boardVisible = vis;
     });
@@ -1540,6 +1662,10 @@ var CAM_DROP = 6;
 
   var hoverTimer = null;
   canvas.addEventListener('pointermove', function (e) {
+    // 触屏:不做悬停拾取。单指拖动时浏览器每帧都派 pointermove,
+    // 每次都拿 raycaster 去撞 3053 个命中体(英语科),手机上会明显掉帧;
+    // 何况触屏本来就没有"悬停"这个状态 —— 名称会在轻触选中后显示。
+    if (e.pointerType === 'touch') return;
     clearTimeout(hoverTimer);
     hoverTimer = setTimeout(function () {
       var id = pickAt(e.clientX, e.clientY);
@@ -1559,20 +1685,44 @@ var CAM_DROP = 6;
     }
   });
 
+  /* ---- 轻触 / 拖拽 / 双击 的区分 ----
+   * 触屏要点(改造前只有鼠标语义,手机上会"一转就误选中"):
+   *   · 手指抖动比鼠标大,触屏的点击容差放宽到 12px(鼠标仍是 6px);
+   *   · 移动超过容差 → 判定为 OrbitControls 的旋转拖拽,不选中任何节点;
+   *   · 触屏浏览器不会为双击派发 dblclick,所以"双击聚焦"必须自己识别:
+   *     两次轻触间隔 <320ms 且落点相距 <32px 即视为双击。
+   *   桌面鼠标行为不变:容差 6px、dblclick 照旧(重复触发用时间戳去重)。 */
   var downPos = null;
+  var TAP_SLOP_MOUSE = 6, TAP_SLOP_TOUCH = 12;
+  var DBL_TAP_MS = 320, DBL_TAP_DIST = 32;
+  var lastTap = { t: 0, x: 0, y: 0 };
+  var lastFocusAt = 0;
   canvas.addEventListener('pointerdown', function (e) {
-    downPos = { x: e.clientX, y: e.clientY };
+    downPos = { x: e.clientX, y: e.clientY, touch: e.pointerType === 'touch' };
   });
   canvas.addEventListener('pointerup', function (e) {
     if (!downPos) return;
     var dx = e.clientX - downPos.x, dy = e.clientY - downPos.y;
+    var isTouch = downPos.touch || e.pointerType === 'touch';
+    var slop = isTouch ? TAP_SLOP_TOUCH : TAP_SLOP_MOUSE;
     downPos = null;
-    if (Math.hypot(dx, dy) > 6) return;   // 拖拽旋转,不算点击
+    if (Math.hypot(dx, dy) > slop) { lastTap.t = 0; return; }   // 拖拽旋转,不算点击
     var id = pickAt(e.clientX, e.clientY);
-    if (id) selectNode(id);
-    else deselectNode();
+    var now = Date.now();
+    var isDouble = (now - lastTap.t < DBL_TAP_MS) &&
+      Math.abs(e.clientX - lastTap.x) < DBL_TAP_DIST &&
+      Math.abs(e.clientY - lastTap.y) < DBL_TAP_DIST;
+    lastTap = { t: now, x: e.clientX, y: e.clientY };
+    if (id) {
+      selectNode(id);
+      if (isDouble) { focusNode(id); lastFocusAt = now; }
+    } else {
+      deselectNode();
+    }
   });
   canvas.addEventListener('dblclick', function (e) {
+    // 鼠标双击:上面的轻触逻辑可能已经处理过(pointerup × 2),这里去重
+    if (Date.now() - lastFocusAt < 500) return;
     var id = pickAt(e.clientX, e.clientY);
     if (id) { selectNode(id); focusNode(id); }
   });
@@ -1664,6 +1814,10 @@ var CAM_DROP = 6;
         // 重负载复位后保持"默认不常显名称"策略(悬停/选中/搜索仍会点亮)
         rec.labelOn = false;
         if (rec.label) rec.label.visible = false;
+      } else if (rec.labelEager === false) {
+        // 窄屏降载:非"常显"节点复位后同样不显示名称(宽屏此分支永不进入)
+        rec.labelOn = false;
+        if (rec.label) rec.label.visible = false;
       } else if (rec.label && rec.label.material) {
         rec.label.visible = vis;
         rec.label.material.opacity = 1;
@@ -1708,7 +1862,32 @@ var CAM_DROP = 6;
     },
     select: function (id) { selectNode(id); },
     deselect: function () { deselectNode(); },
-    filter: function () { applyBoardFilter(); }
+    filter: function () { applyBoardFilter(); },
+    // 知识点在屏幕上的像素位置(供触屏自动化在真实坐标上打点,验证"轻触选中");
+    // 只读,不改变任何渲染状态。
+    screenOf: function (id) {
+      var r = nodeById[id];
+      if (!r) return null;
+      var v = new THREE.Vector3().copy(r.point._pos).project(camera);
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: rect.left + (v.x + 1) / 2 * rect.width,
+        y: rect.top + (1 - v.y) / 2 * rect.height,
+        visible: r.outer.visible
+      };
+    },
+    // 找一个当前可见、且投影落在画布内的知识点(自动化打点用)
+    anyVisibleId: function () {
+      for (var i = 0; i < DB.points.length; i++) {
+        var p = DB.points[i];
+        var s = window.__qg3D.screenOf(p.id);
+        if (!s || !s.visible) continue;
+        var rect = canvas.getBoundingClientRect();
+        if (s.x > rect.left + 20 && s.x < rect.right - 20 &&
+            s.y > rect.top + 20 && s.y < rect.bottom - 20) return p.id;
+      }
+      return null;
+    }
   };
 
   function renderDetail(p) {
@@ -1723,7 +1902,10 @@ var CAM_DROP = 6;
       '<span class="tag kind">' + (b && b.kind === 'major' ? '大板块' : '小板块') + '</span>' +
       '<span class="tag imp">★ 重要度 ' + p.importance + '/5</span>' +
       '<span class="tag core">● 相关度 ' + p.core + '/5</span>' +
-      (bookTag ? '<span class="tag ch" title="人教版教材归属:' + escapeHtml(bookTag) + '">📖 ' + escapeHtml(bookTag) + '</span>' : '');
+      (bookTag ? '<span class="tag ch" title="人教版教材归属:' + escapeHtml(bookTag) + '">📖 ' + escapeHtml(bookTag) + '</span>' : '') +
+      // 正文里带「待人工校对」标记的条目:内容尚未与教材/词典核实过。
+      // 这里显式说出来,不能让用户把未校对内容当成权威结论。
+      (/待人工校对/.test(p.content || '') ? '<span class="tag imp">内容待校对 · 请对照教材或词典核实</span>' : '');
 
     document.getElementById('dContent').innerHTML = renderContentText(p.content);
 
@@ -1776,9 +1958,9 @@ var CAM_DROP = 6;
     });
   }
 
-  document.getElementById('dFocus').addEventListener('click', function () {
-    if (selectedId) focusNode(selectedId);
-  });
+  /* 原「🎯 在网中聚焦」(#dFocus)按钮已删除:该位置换成「🎯 破卷」(#dTrain),
+     由 mainbridge.js 绑定跳转(它才是"打开破卷"的单一出口)。
+     focusNode 本身仍在:画布双击、搜索结果、相关知识跳转都还走它。 */
 
   /* 重置视角:转晕了 / 拖到极端角度后的一键复位(与初始机位一致) */
   (function resetView() {
@@ -1791,17 +1973,43 @@ var CAM_DROP = 6;
     });
   })();
 
+  /* 窄屏:画布底部那行操作提示是鼠标说法(拖拽/滚轮),手机上改写成触屏说法 */
+  (function tipText() {
+    var tip = document.getElementById('tip');
+    if (!tip) return;
+    if (!NARROW_SCREEN) return;
+    tip.innerHTML = '👆 单指拖动旋转 · 双指捏合缩放 · <b>轻触光点</b>弹出详情 · 双击聚焦';
+  })();
+
   /* ---------------- 界面控件 ----------------
    * 左上按钮 ↔ 抽屉侧栏;分栏头/箭头 ↔ 分栏折叠;✕ ↔ 关闭详情
    */
   (function uiControls() {
     var leftPanelEl = document.getElementById('leftPanel');
     var sideToggle = document.getElementById('sideToggle');
+    // 窄屏(≤768px)下左侧栏是全屏抽屉,需要额外在 <html> 上打 drawer-open:
+    // CSS 靠它显示"点遮罩关闭"的顶部遮罩条,并隐藏右下角「破卷」按钮。
+    // 宽屏不打这个类,桌面布局与行为不变。
+    function syncDrawerClass() {
+      try {
+        document.documentElement.classList.toggle('drawer-open',
+          !!(leftPanelEl && leftPanelEl.classList.contains('open')));
+      } catch (e) { /* 忽略 */ }
+    }
     if (sideToggle && leftPanelEl) {
       sideToggle.addEventListener('click', function () {
         leftPanelEl.classList.toggle('open');
+        syncDrawerClass();
       });
     }
+    // 供手机增强脚本(js/mobile.js)使用:遮罩点击 / 右滑关闭都走这里,单一出口
+    window.__qgDrawer = {
+      el: leftPanelEl,
+      isOpen: function () { return !!(leftPanelEl && leftPanelEl.classList.contains('open')); },
+      open: function () { if (leftPanelEl) { leftPanelEl.classList.add('open'); syncDrawerClass(); } },
+      close: function () { if (leftPanelEl) { leftPanelEl.classList.remove('open'); syncDrawerClass(); } },
+      sync: syncDrawerClass
+    };
     var closeBtn = document.getElementById('detailClose');
     if (closeBtn) {
       closeBtn.addEventListener('click', function () {
@@ -1876,7 +2084,7 @@ var CAM_DROP = 6;
     Array.prototype.forEach.call(menu.querySelectorAll('button[data-sub]'), function (x) {
       x.classList.toggle('active', x.getAttribute('data-sub') === cur);
     });
-    document.title = '穷观 V2.4.2 · ' + SUB_LONG[cur] + '知识网络';
+    document.title = '穷观 V2.5.2 · ' + SUB_LONG[cur] + '知识网络';
     var subEl = document.querySelector('.brand .sub');
     if (subEl) subEl.textContent = SUB_LONG[cur] + ' · 3D 知识网络';
     var si = document.getElementById('searchInput');
@@ -1945,26 +2153,47 @@ var CAM_DROP = 6;
     });
     var hop = {};
     var q = [centerId];
-    hop[centerId] = 0;
-    while (q.length) {
-      var c = q.shift();
+    var qh = 0;                 // 队列读游标:q.shift() 每弹一个都要整体搬移数组,
+    hop[centerId] = 0;          // 大库上等价于 O(n²) 的隐式拷贝,换成游标即可
+    while (qh < q.length) {
+      var c = q[qh++];
       var nh = hop[c] + 1;
       if (nh > 4) continue;
       adj[c].forEach(function (nb) {
         if (hop[nb] === undefined) { hop[nb] = nh; q.push(nb); }
       });
     }
-    // 分层半径:直接相关最近,无关最远
-    var layerR = { 0: 0, 1: 12, 2: 24, 3: 36, 4: 46 };
+    /* 分层半径:直接相关最近,向外依次远离(1/2/3 跳)。
+     * 关键修正:不可达点与 4 跳以上的点**不是**"相关度第 4 层",而是"与聚焦点无关"。
+     * 原实现把它们整桶塞进第 4 层、均匀铺在同一个 r=46 的圆环上:英语库(3053 点)
+     * 平均每次点选有 2979 点落进这个桶(词点之间几乎没有连线,4 跳内互不可达),
+     * 环上相邻间距只剩 0.095,而最小间距是 2.4(密度超标 25 倍)→ 随后的"互相推开"
+     * 每轮 moved 都是百万级、break 永不触发、4 轮跑满 ≈1770 万次配对,手机上单次
+     * 点选同步卡 1.1~2.7 秒。
+     * 现在这些"无关点"保持默认云原位(沿用 _defX/_defZ):它们本来就与聚焦点无关,
+     * 既不该被拉进任何一个环,也不该为它们编造"第 4 层"坐标;聚焦前后零位移。
+     * 参与重新分层的只剩 1~3 跳的相关点(英语库通常几十个),半径仍严格等于跳数。
+     * tween 照旧:from 与 to 相同 → 视觉上完全静止。 */
+    var layerR = { 0: 0, 1: 12, 2: 24, 3: 36 };
     var layerList = {};
+    var sepIds = [];            // 参与"互相推开"的点(只含 1~3 跳相关点,通常几十个)
     pts.forEach(function (p) {
-      var h = p.id === centerId ? 0 : (hop[p.id] === undefined ? 4 : Math.min(hop[p.id], 4));
-      (layerList[h] = layerList[h] || []).push(p.id);
+      if (p.id === centerId) return;
+      var hp = hop[p.id];
+      if (hp === undefined || hp >= 4) {
+        targets[p.id] = { x: p._defX, z: p._defZ };   // 无关点:回默认云原位
+        return;
+      }
+      if (layerR[hp] === undefined) {                 // 理论上不会命中,兜底不丢点
+        targets[p.id] = { x: p._defX, z: p._defZ };
+        return;
+      }
+      (layerList[hp] = layerList[hp] || []).push(p.id);
+      sepIds.push(p.id);
     });
     var base = Math.random() * Math.PI * 2;
     Object.keys(layerList).forEach(function (h) {
       var list = layerList[h];
-      if (h === '0') { targets[centerId] = { x: 0, z: 0 }; return; }
       list.sort(function (a, b) {
         var ba = idToPoint[a].board, bb = idToPoint[b].board;
         return ba < bb ? -1 : (ba > bb ? 1 : 0);
@@ -1977,27 +2206,59 @@ var CAM_DROP = 6;
       });
     });
     targets[centerId] = { x: 0, z: 0 };
-    // 保底:高度不同但水平投影接近的节点互相推开,避免重合
-    var idl = pts.map(function (p) { return p.id; });
-    var sepMax = HEAVY_CLOUD ? 4 : 140;   // 重负载:仅少量推开迭代,避免 O(n²) 卡顿
-    for (var it = 0; it < sepMax; it++) {
-      var moved = 0;
-      for (var i = 0; i < idl.length; i++) {
-        for (var j = i + 1; j < idl.length; j++) {
-          var A = targets[idl[i]], B = targets[idl[j]];
-          var dx = A.x - B.x, dz = A.z - B.z;
-          var d2 = dx * dx + dz * dz;
-          var ms = Math.max(2.4, (visualR[idl[i]] + visualR[idl[j]]) * 0.62);
-          if (d2 < ms * ms && d2 > 1e-8) {
-            var d = Math.sqrt(d2);
-            var pu = (ms - d) / d * 0.5;
-            A.x += dx * pu * 0.5; A.z += dz * pu * 0.5;
-            B.x -= dx * pu * 0.5; B.z -= dz * pu * 0.5;
-            moved++;
+    /* 保底:同层水平投影接近的节点互相推开,避免重合。
+     * 原实现是 i<j 全配对双重循环 —— 重负载库一轮 466 万次配对、4 轮 ≈1770 万次,
+     * 这正是点选卡顿的主因。这里改用均匀网格哈希做**有界**推开:
+     *   · 格边长 = 本轮可能出现的最大"最小间距" ms,因此任意一对距离 < ms 的点
+     *     必定落在 3×3 邻格内 → 不会漏配对(结果是精确的,不是近似);
+     *   · 每次迭代 O(k)(k = 可达点数)而不是 O(k²),k 大时也不会退化;
+     *   · 上一节已把不可达点排除在 sepIds 之外:它们不参与推开,也不会被推走;
+     *   · 迭代上限与 break 条件照旧保留。 */
+    if (sepIds.length > 1) {
+      var vMax = 0;
+      for (var qi = 0; qi < sepIds.length; qi++) {
+        if (visualR[sepIds[qi]] > vMax) vMax = visualR[sepIds[qi]];
+      }
+      var cell = Math.max(2.4, vMax * 1.24);   // 2 × 0.62:单点能贡献的最大 ms
+      var sepMax = HEAVY_CLOUD ? 4 : 140;
+      var grid = {};
+      for (var it = 0; it < sepMax; it++) {
+        grid = {};
+        var gi, gj, tg, gkey;
+        for (gi = 0; gi < sepIds.length; gi++) {
+          tg = targets[sepIds[gi]];
+          gkey = Math.floor(tg.x / cell) + '|' + Math.floor(tg.z / cell);
+          if (!grid[gkey]) grid[gkey] = [];
+          grid[gkey].push(gi);
+        }
+        var moved = 0;
+        for (gi = 0; gi < sepIds.length; gi++) {
+          var idA = sepIds[gi], A = targets[idA];
+          var cx = Math.floor(A.x / cell), cz = Math.floor(A.z / cell);
+          for (var ox = -1; ox <= 1; ox++) {
+            for (var oz = -1; oz <= 1; oz++) {
+              var bucket = grid[(cx + ox) + '|' + (cz + oz)];
+              if (!bucket) continue;
+              for (var bj = 0; bj < bucket.length; bj++) {
+                gj = bucket[bj];
+                if (gj <= gi) continue;   // 同一对只处理一次(A、B 两次访问都同意此顺序)
+                var idB = sepIds[gj], B = targets[idB];
+                var dx = A.x - B.x, dz = A.z - B.z;
+                var d2 = dx * dx + dz * dz;
+                var ms = Math.max(2.4, (visualR[idA] + visualR[idB]) * 0.62);
+                if (d2 < ms * ms && d2 > 1e-8) {
+                  var d = Math.sqrt(d2);
+                  var pu = (ms - d) / d * 0.5;
+                  A.x += dx * pu * 0.5; A.z += dz * pu * 0.5;
+                  B.x -= dx * pu * 0.5; B.z -= dz * pu * 0.5;
+                  moved++;
+                }
+              }
+            }
           }
         }
+        if (!moved) break;
       }
-      if (!moved) break;
     }
     return targets;
   }
@@ -2124,8 +2385,7 @@ var CAM_DROP = 6;
     var camPos = camera.position;
     if (HEAVY_CLOUD) {
       // 重负载库:两层光点的脉动 / 漂浮 / 强调全部在顶点着色器里按 uTime 走
-      // (每帧 JS 零循环、2 次 draw call)。这里只做名称标签的 LOD ——
-      // 标签是 CanvasTexture,只对"悬停/选中/搜索命中且足够近"的点按需生成。
+      // (每帧 JS 零循环、2 次 draw call)。这里只做名称标签的跟随与显隐。
       layerOuter.mat.uniforms.uTime.value = now;
       layerInner.mat.uniforms.uTime.value = now;
       var labelFar2 = 170 * 170;
@@ -2273,7 +2533,6 @@ var CAM_DROP = 6;
    * 高度仍由用户自选的重要度决定。
    * ============================================================ */
   (function customNodeUI() {
-    var CUSTOM_KEY = 'qg_custom_points_v1';
     function $(id) { return document.getElementById(id); }
     var sec = $('newNodeSec');
     if (!sec) return;
@@ -2414,6 +2673,10 @@ var CAM_DROP = 6;
     // 有关联 → 以关联点默认云位置重心为锚 + 随机偏移;无关联 → 云外缘随机;
     // 之后迭代推开保证不与既有节点重叠;高度由重要度决定。
     function commitCustomPointCore(p) {
+      // 先保存再挂入场景;配额不足时不显示虚假成功,也不清空表单。
+      // 原实现先 push 进 DB.points、最后才保存,保存失败时节点已经"长"在云上,
+      // 刷新即消失 —— 用户以为存住了。
+      if (!saveCustomPoints(p)) return null;
       // 视觉半径先就位(定位排斥计算需要),避免 NaN
       visualR[p.id] = 1.05 + p.importance * 0.22;
       var ax = 0, az = 0, cnt = 0, x, z;
@@ -2468,7 +2731,7 @@ var CAM_DROP = 6;
         edges.push(e);
         addEdgeRender(e);
       });
-      saveCustomPoints();
+      // (落盘已在函数开头完成:先保存成功,才允许挂进场景)
       // 若正处于聚焦态,回到默认云(新点本身就在默认坐标,视觉一致)
       if (selectedId !== null || layoutCenterId !== null) deselectNode();
       else applyVisualState();
@@ -2489,7 +2752,9 @@ var CAM_DROP = 6;
       if (!name) { msgEl.textContent = '请填写知识点名称'; return; }
       var board = boardSelect ? boardSelect.value : '';
       if (!isRealBoard(board)) { msgEl.textContent = '请先选择所属板块'; return; }
-      var id = 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+      // id 必须真正唯一:逐条存储以 subject:id 为键,同一毫秒内两个窗口新增
+      // 若 id 相同,后写的那条会静默覆盖前一条(原实现只用 4 位随机后缀,碰撞概率不低)。
+      var id = 'u' + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
       while (idToPoint[id]) { id = 'u' + Math.random().toString(36).slice(2, 10); }
       var imp = Math.min(5, Math.max(1, Math.round(Number(impEl.value) || 3)));
       var color = /^#[0-9a-fA-F]{6}$/.test(colorEl.value) ? colorEl.value : null;
@@ -2508,7 +2773,9 @@ var CAM_DROP = 6;
         ? ((!boardChecks[board] || boardChecks[board].checked)
           ? '✓ 已加入知识云(点 ✕ 退出聚焦回到全网)'
           : '✓ 已加入,但「' + boardName(board) + '」当前未勾选,勾选该板块后即可看到')
-        : '加入失败';
+        : '保存失败:本机存储不可用或空间不足。输入内容已保留,请先复制备份再重试。';
+      // 保存失败时保留用户输入(不清空表单),否则刚写好的内容会当场丢光
+      if (!p) return;
       nameEl.value = ''; keysEl.value = ''; contentEl.value = '';
       linkInput.value = ''; linkHint.innerHTML = '';
       pickedLinks = [];
@@ -2545,11 +2812,8 @@ var CAM_DROP = 6;
   var docEl = document.documentElement;
   docEl.classList.add('intro-live');   // 开场期间页面背景纯黑
 
-  // 右下角「训练」按钮:待主界面完全显示后才出现
-  function showTrainBtn() {
-    var b = document.getElementById('trainBtn');
-    if (b) b.classList.add('show');
-  }
+  // 原右下角「训练/破卷」浮动按钮(#trainBtn)已删除 —— 破卷入口移入知识点详情抽屉
+  // 的「🎯 破卷」(#dTrain),开场结束不再需要点亮任何浮动按钮。
 
   var mask = document.getElementById('xmask');
   var xin = false;
@@ -2561,7 +2825,6 @@ var CAM_DROP = 6;
     app.classList.add('reveal');
     docEl.classList.remove('intro-live');
     intro.style.display = 'none';
-    showTrainBtn();
     return;
   }
 
@@ -2585,8 +2848,6 @@ var CAM_DROP = 6;
         mask.style.opacity = '0';
       }, 600);
     }
-    // 遮罩完全淡出(约 0.6+1.2s)后,新学科画面彻底呈现,再亮出训练按钮
-    setTimeout(showTrainBtn, 2100);
     return;
   }
 
@@ -2607,8 +2868,6 @@ var CAM_DROP = 6;
       // 第 3 步:主界面从黑屏中浮现(1.8s 淡入)
       setTimeout(function () {
         app.classList.add('reveal');
-        // 第 4 步:主界面完全淡入完成后再显示训练按钮
-        setTimeout(showTrainBtn, 1900);
       }, 400);
     }, 1450);
   }

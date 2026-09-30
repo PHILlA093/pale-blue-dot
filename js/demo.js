@@ -1,5 +1,5 @@
 /* ============================================================
- * demo.js — 观澜 · AI 演示问答(浮动面板 + 独立窗)(穷观 V2.4.2)
+ * demo.js — 观澜 · AI 演示问答(浮动面板 + 独立窗)(穷观 V2.5.2)
  * 位置:主窗 index.html,在 app.js / mainbridge.js 之后加载。
  * 依赖:
  *   1) 对话状态仅内存(var conv,不写 localStorage;关闭应用即清空);
@@ -15,6 +15,7 @@
   var LS_MODEL = 'qg_ds_model';
   var MAX_HIST = 12;          // 送入模型的最近对话条数上限
   var HOST_TIMEOUT = 180000;  // 宿主请求超时(毫秒)
+  var ORIGIN_TAG = 'QG-20260920-5e5d5a-A';  // 原创工程标识(仅留存,不参与任何逻辑)
 
   var $ = function (id) { return document.getElementById(id); };
   var els = {};
@@ -22,7 +23,10 @@
    'glKeyRow', 'glKeyInput', 'glKeySave', 'glAsk', 'glSend', 'glStageTip']
     .forEach(function (id) { els[id] = $(id); });
 
-  function store(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* 忽略 */ } }
+  // 返回是否写入成功:拆独立窗要靠它判断"握手数据到底写进去没有"。
+  // 原实现把 QuotaExceededError 一吞了之 —— 超配额时新窗口读不到数据,
+  // 用户点「⤢ 独立窗口」后对话凭空消失,却没有任何提示。
+  function store(k, v) { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } }
   function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 
   /* ---------- 对话状态(仅内存) ---------- */
@@ -117,12 +121,17 @@
       var d = ev.data;
       if (!d || !d._seq) return;
       var seq = d._seq;
-      delete d._seq;
+      // 不再 delete d._seq:主窗里 mainbridge.js 也挂着同一个 WebView 通道的监听器,
+      // 谁先跑谁删掉 _seq,后面的监听器就认不出这条回执(资料库上传/统计会一直等到超时)。
+      // 事件数据只读不改,各方只在自己那张 pending 表里查号。
       var cb = hostPending[seq];
       if (cb) { delete hostPending[seq]; cb(d); }
     });
   }
   attachHost();
+  // 宿主通道交给统一 AI 层(ainet.js):桌面宿主在时走老通道(行为不变),
+  // 手机浏览器 / Capacitor APK 里自动改走 /api/ds 或原生直连。
+  if (window.QGAi && window.QGAi.setHostSender) window.QGAi.setHostSender(hostReq);
 
   // 诊断信息落宿主日志(kind=note):演示的成败原先只在界面气泡里显示,
   // 排查时日志什么也看不到。只发文本、不等回执,失败也不影响主流程。
@@ -133,52 +142,43 @@
     } catch (e) { /* 忽略 */ }
   }
 
-  /* ---------- DeepSeek 调用(宿主优先,fetch 兜底) ---------- */
+  /* ---------- DeepSeek 调用(三模式由 ainet.js 统一选择) ---------- */
   // 成功 resolve 为文本;失败 reject Error(错误信息 message 透出)。opts 可覆盖模型参数。
+  //   · 桌面宿主存在 → 宿主代发(与改造前完全一致)
+  //   · Capacitor APK  → 原生直连 https://api.deepseek.com(无 CORS 限制)
+  //   · 手机浏览器     → POST /api/ds 由本地 server.js 反向代理
+  // 旧模型名已退役:deepseek-chat / deepseek-reasoner / deepseek-v4-flash 与空值统一迁移到
+  // deepseek-flash(用户本机存着的老名字在服务端会 400),reasoner 保留思考开关。
+  function modelConfig(value) {
+    var name = String(value || '').trim();
+    return {
+      model: !name || name === 'deepseek-chat' || name === 'deepseek-reasoner' || name === 'deepseek-v4-flash'
+        ? 'deepseek-flash' : name,
+      thinking: { type: name === 'deepseek-reasoner' ? 'enabled' : 'disabled' }
+    };
+  }
+
   function dsAsk(messages, key, opts) {
     opts = opts || {};
-    var payload = {
-      kind: 'ds', key: key,
+    if (!window.QGAi || !window.QGAi.request) {
+      return Promise.reject(new Error('AI 调用层未加载(js/ainet.js 缺失)'));
+    }
+    // 模型名和思考开关都先过 modelConfig:opts.model(页面指定的视觉/协议模型)优先,
+    // 其次才是本机保存的 qg_ds_model。
+    var config = modelConfig(opts.model || load(LS_MODEL));
+    // json:true 时,response_format={type:'json_object'} 由 ainet.js 的 buildBody()/
+    // requestHost() 统一附加(宿主、原生直连、本地代理三条路都会带),此处不再重复拼请求体。
+    return window.QGAi.request({
+      key: key,
       json: !!opts.json,      // 仅协议类请求开启 json_object(其提示词含 JSON 字样)
-      model: opts.model || load(LS_MODEL) || 'deepseek-chat',
+      model: config.model,
+      thinking: config.thinking,
       messages: messages,
       max_tokens: opts.max_tokens || 2400,
       temperature: opts.temperature != null ? opts.temperature : 0.3
-    };
-    if (hasHost) {
-      return hostReq(payload).then(function (r) {
-        if (r && r._timeout) throw new Error('AI 请求超时(请稍后重试或检查网络)');
-        if (!r || !r.ok) throw new Error((r && r.err) ? r.err : 'AI 请求失败');
-        return r.content;
-      });
-    }
-    // 网页版兜底直连(CORS 是否放行取决于 DeepSeek 服务端)。
-    // 必须带超时:原先裸 fetch 在连接挂起时会永久 pending → 发送按钮永久禁用。
-    var ctl = null, tid = null;
-    try { ctl = new AbortController(); } catch (e) { ctl = null; }
-    if (ctl) tid = setTimeout(function () { try { ctl.abort(); } catch (e) { } }, 60000);
-    return fetch('https://api.deepseek.com/chat/completions', {
-      method: 'POST',
-      signal: ctl ? ctl.signal : undefined,
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key },
-      body: JSON.stringify({
-        model: payload.model, messages: payload.messages,
-        max_tokens: payload.max_tokens, temperature: payload.temperature
-      })
-    }).then(function (res) {
-      if (tid) { clearTimeout(tid); tid = null; }
-      // 不判 res.ok 时,5xx 的 HTML 会以 "Unexpected token <" 的面目出现
-      if (!res.ok) throw new Error('网络直连失败(HTTP ' + res.status + '),建议在桌面版中使用');
-      return res.json();
-    }).then(function (j) {
-      if (j && j.choices && j.choices[0] && j.choices[0].message) {
-        return j.choices[0].message.content;
-      }
-      var err = j && j.error && j.error.message ? j.error.message : '网络直连失败(建议在桌面版中使用)';
-      throw new Error(err);
-    }).then(null, function (e) {
-      if (tid) { clearTimeout(tid); tid = null; }
-      throw e;
+    }).then(function (r) {
+      if (!r || !r.ok) throw new Error((r && r.err) ? r.err : 'AI 请求失败');
+      return r.content;
     });
   }
 
@@ -232,6 +232,22 @@
     var tb = $('glToolbar');
     if (!tb) return;
     if (engine) tb.hidden = false;
+    /* 把工具条实测高度写进 #glStage 的 CSS 变量 --gl-tb-h,供窄屏下的
+       表达式栏/参数栏落点使用(见 injectExprCSS 的 @media (max-width:768px))。
+       必须在 hidden=false 之后量:手机宽度下工具条折成 4 行约 155px 高,
+       而面板原本固定 top:88px,正好压在工具条第三行 —— 实测「清空画布」
+       整颗按钮被 .gl-expr-head 盖住,elementFromPoint 命中的是表达式栏,
+       手指点上去毫无反应。宽屏不读这个变量,行为不变。 */
+    try {
+      var stg = $('glStage');
+      if (stg && !tb.hidden && tb.getBoundingClientRect) {
+        var tr = tb.getBoundingClientRect();
+        // 面板还没显示时高度为 0,不能用它去覆盖变量
+        if (tr.height > 0 && tr.width > 0) {
+          stg.style.setProperty('--gl-tb-h', (Math.round(tr.height) + 14) + 'px');
+        }
+      }
+    } catch (e) { /* 忽略 */ }
     // 未出图时禁用播放类按钮,🎬 动态演示始终可用;
     // 「清空画布」还要看用户表达式:只有表达式、没有 AI 图元时也该能清
     var has = canvasCount() > 0;
@@ -256,11 +272,29 @@
     if (els.guanlan) els.guanlan.hidden = false;
     refreshCtx();
     ensureToolbar();
+    /* 面板刚从 hidden 变成可见时,画布才第一次拿到真实尺寸(clientWidth/Height)。
+     * 引擎虽然挂了 ResizeObserver,回调却不在同帧送达 —— 实测手机视口下面板打开
+     * 1.2 秒后 canvas 的像素尺寸仍是 HTML 属性里的 900×600(于是第一帧被拉伸)。
+     * 这里主动派发一次 resize:引擎内部的 markResized() 会立刻 syncSize()
+     * (按 clientWidth × devicePixelRatio 重设画布像素尺寸)并重绘。
+     * 幂等操作,不改变任何绘制状态。 */
+    try { window.dispatchEvent(new Event('resize')); } catch (e) { /* 忽略 */ }
+    try { if (engine && engine.redraw) engine.redraw(); } catch (e) { /* 忽略 */ }
     try { if (els.glAsk) els.glAsk.focus(); } catch (e) { /* 忽略 */ }
     return 'ok';
   }
   function closePanel() {
     if (window.__guanlanStandalone) {
+      if (!hasHost) {
+        /* 手机浏览器 / APK 里没有宿主窗口可关,而 window.close() 对
+         * 用户自己打开的标签页无效 —— 原先按 ✕ 会毫无反应,用户卡在观澜页。
+         * 这里退回上一页;没有上一页(直接输网址打开)就回主界面。 */
+        try {
+          if (window.history && window.history.length > 1) { window.history.back(); return 'ok'; }
+        } catch (e) { /* 忽略 */ }
+        try { window.location.href = 'index.html'; } catch (e) { /* 忽略 */ }
+        return 'ok';
+      }
       sendWnd('close');                       // 无边框独立窗:请宿主关闭
       try { if (window.close) window.close(); } catch (e) { /* 忽略 */ }
       return 'ok';
@@ -335,13 +369,31 @@
   /* ---------- 拆为独立窗口(观澜 standalone,对话经 localStorage 握手迁移) ---------- */
   function detachWindow() {
     try {
+      // 只迁移**文字**:最多 30 条消息里可能夹着 base64 图片(单张 dataUrl 上限约 2.2M 字符),
+      // 1~2 张就顶到 localStorage 配额,写入失败 → 新窗口静默变成空会话。
+      // 而 bootStandalone 本来也只还原 role/content(从不读回 img),图片在白占配额,
+      // 剥掉它既不丢功能,也让超配额几乎不可能发生。
+      var src = conv.slice(-30), list = [], i, m, imgDropped = 0;
+      for (i = 0; i < src.length; i++) {
+        m = src[i];
+        if (!m) continue;
+        if (m.img) imgDropped++;
+        list.push({ role: m.role, content: m.content });
+      }
       var payload = {
-        conv: conv.slice(-30),
+        conv: list,
         ctx: (els.glCtx ? els.glCtx.textContent : '') || ''
       };
       // 不再把对话塞进 URL:宿主会把新窗口的完整 URI 原样写进运行日志(NWREQ:),
       // URL 也会进浏览历史 —— 与"对话仅保留在内存、关闭即清空"的承诺直接冲突。
-      store('qg_guanlan_conv', JSON.stringify(payload));
+      var ok = store('qg_guanlan_conv', JSON.stringify(payload));
+      // 写失败必须说出来(非阻塞提示):否则用户看到的是"点一下独立窗,对话没了",无从判断原因
+      if (!ok) {
+        addBubble('err', '⚠ 对话内容过大,独立窗口里只带过去文字部分(图片不迁移),' +
+          '但这次连文字也没能写进浏览器本地存储(配额已满或本地存储不可用)—— 新窗口会是空会话,请留在本窗继续。');
+      }
+      note('DETACH:conv=' + list.length + ' imgDropped=' + imgDropped +
+        ' store=' + (ok ? 'ok' : 'FAIL'));
       if (!window.open('guanlan.html', 'qg_guanlan')) { try { openPanel(); } catch (e) { } }
       // 兜底清除(独立窗正常读取后会立即自删)
       setTimeout(function () {
@@ -650,7 +702,10 @@
     }
     var t0 = Date.now();
     var sentWithImg = withImg;
-    dsAsk(msgs, key, withImg ? { model: VISION_MODEL } : null)
+    // purpose 是**显式**的"这是讲解请求"标志(供文件末尾的 dsAsk 包装器记录最近问答)。
+    // 不能用"有没有 opts"来推断:带图讲解为了换视觉模型必然要传 opts,null 判定会漏记,
+    // 于是"文字提问 → 图片提问 → 点🎬"会拿上一条文字提问去生成演示。
+    dsAsk(msgs, key, withImg ? { purpose: 'chat', model: VISION_MODEL } : { purpose: 'chat' })
       .then(function (content) {
         conv.push({ role: 'assistant', content: content });
         addBubble('ai', content);
@@ -667,13 +722,268 @@
       });
   }
 
+  /* ============ 三个实验台的侧边栏入口 ============
+   * 物理沙盒(js/psandbox.js)/ 物理实验台(js/pslab.js)/ 化学实验台(js/clab.js)
+   * 三个模块是**原样**从桌面版复制进手机版源码树的(逐字节相同),它们只做一件事:
+   * 建自己的 DOM/CSS 并注册到 window.QG_PSANDBOX / QG_PSLAB / QG_CLAB。
+   * 桌面版的入口与互斥写在桌面 js/demo.js 里(观澜**独立窗口**的标题栏按钮);
+   * 手机版观澜是**整屏面板**而不是独立窗口(见 AGENTS §1.2,两端结构刻意不同,
+   * 不要照搬桌面),所以入口按需求放在 ☰ 侧边栏里,流程是:
+   *   点侧栏条目 → 收起侧栏 → 打开观澜整屏面板 → 把实验台挂到 #glStage →
+   *   面板标题栏出现「↩ 返回演示」回到观澜原来的画布/对话状态。
+   * 全程只有**一个**观澜面板,不新开窗口、不新建第二个面板。
+   *
+   * 硬约束(与桌面版一字不差,一处都不能松):
+   *   · 物理科目才创建前两项、化学科目才创建第三项;科目判定沿用既有写法
+   *     (window.CUR_SUBJECT,app.js 里由 ?subject= → localStorage('qg_subject')
+   *     → math 得出;独立页没有它就退回 localStorage / 主窗心跳)。
+   *   · 非对应科目下**一个节点都不建、一份 CSS 都不注入** —— 入口、#glLabBack、
+   *     #qgLabMCSS 全部关在科目判定里。
+   *   · 模块本身的惰性不许破坏:加载 js/psandbox.js|pslab.js|clab.js 时不建 DOM、
+   *     不起循环;只有这里点到入口才 mount()。
+   * 窄屏(≤768px)布局全部由 js/qlabm.js 负责(三栏折成"上=画布 / 下=标签页"),
+   * 本文件不碰样式。
+   * ========================================================================== */
+  var LAB_BACK_ID = 'glLabBack';
+
+  function subjKey() {
+    try {
+      var s = window.CUR_SUBJECT;
+      if (s) return String(s).toLowerCase();
+      try { s = localStorage.getItem('qg_subject'); } catch (e1) { s = null; }
+      if (s) return String(s).toLowerCase();
+      var raw = load('qg_live_state');
+      if (raw) { var o = JSON.parse(raw); return String((o && o.subject) || '').toLowerCase(); }
+    } catch (e) { /* 忽略 */ }
+    return '';
+  }
+  function isPhysicsSubject() { return subjKey() === 'physics'; }
+  // 手机版学科键是 key 形式(app.js 的 KEY_OF):chem;菜单值 chemistry 也一并认
+  function isChemSubject() { var s = subjKey(); return s === 'chem' || s === 'chemistry'; }
+
+  function labStage() { return $('glStage'); }
+  function sandboxAvailable() { return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.mount && labStage() && isPhysicsSubject()); }
+  function labAvailable() { return !!(window.QG_PSLAB && window.QG_PSLAB.mount && labStage() && isPhysicsSubject()); }
+  function clabAvailable() { return !!(window.QG_CLAB && window.QG_CLAB.mount && labStage() && isChemSubject()); }
+  function ssMounted() { return !!(window.QG_PSANDBOX && window.QG_PSANDBOX.isMounted && window.QG_PSANDBOX.isMounted()); }
+  function labMounted() { return !!(window.QG_PSLAB && window.QG_PSLAB.isMounted && window.QG_PSLAB.isMounted()); }
+  function clabMounted() { return !!(window.QG_CLAB && window.QG_CLAB.isMounted && window.QG_CLAB.isMounted()); }
+  function labsMounted() { return ssMounted() || labMounted() || clabMounted(); }
+
+  /* 观澜面板上打/撤 qg-lab-on:实验台占满整屏时把对话区让出去;
+     观澜自己的画布/工具条/表达式栏由 #qgLabMCSS 里的同族规则隐藏
+     (DOM 全部留着,退出后原样回来 —— 与桌面的 ps-on/pl-on/cl-on 同一思路)。 */
+  function panelLab(on) {
+    if (window.QG_LABMOBILE) { try { window.QG_LABMOBILE.setPanelLab(!!on); } catch (e) { /* 忽略 */ } }
+  }
+  function killLabLayout() {
+    if (window.QG_LABMOBILE) { try { window.QG_LABMOBILE.detach(); } catch (e) { /* 忽略 */ } }
+  }
+  function labBackBtn(on) {
+    var b = $(LAB_BACK_ID);
+    if (on) {
+      if (b) return b;
+      var head = $('glHead');
+      var btns = head ? head.querySelector('.gl-btns') : null;
+      if (!btns) return null;
+      b = cel('button', '');
+      b.type = 'button';
+      b.id = LAB_BACK_ID;
+      b.textContent = '↩ 返回演示';
+      b.title = '回到观澜的表达式 / 模板画布';
+      b.addEventListener('click', function () { labCloseAll(); });
+      var closeBtn = $('glClose');
+      if (closeBtn && closeBtn.parentNode === btns) btns.insertBefore(b, closeBtn);
+      else btns.appendChild(b);
+      return b;
+    }
+    if (b && b.parentNode) b.parentNode.removeChild(b);
+    return null;
+  }
+  /* 实验台退出后的统一收尾:挂在模块的 onUnmount 上,而不是只写在按钮回调里 ——
+     无论是点「↩ 返回演示」、点面板 ✕、切科目,还是外部直接调 unmount(),UI 都会还原。 */
+  function labTearDownUI() {
+    panelLab(false);
+    labBackBtn(false);
+    killLabLayout();
+    // 观澜画布重新拿到尺寸(引擎的 resize 处理与打开面板时同一条路)
+    try { window.dispatchEvent(new Event('resize')); } catch (e) { /* 忽略 */ }
+  }
+
+  function sandboxOpen() {
+    if (!sandboxAvailable()) return false;
+    labClose(); clabClose();                      // 三者互斥
+    var stg = labStage();
+    if (!ssMounted()) {
+      window.QG_PSANDBOX.mount(stg, { preset: '', onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try { if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('psandbox', stg.querySelector('.ps-overlay')); } catch (e) { /* 忽略 */ }
+    /* 沙盒只在 window.resize 时重算画布尺寸(它没有 ResizeObserver),而刚才
+       panelLab(true) 把 #glStage 从 46% 撑满整屏 —— 不补这一下,画布会停留在
+       挂载那一刻的旧尺寸(手机上表现为"上下留一大片空白/被拉伸")。 */
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('PSANDBOX:on subject=physics (mobile)');
+    return true;
+  }
+  function sandboxClose() {
+    if (!ssMounted()) return false;
+    window.QG_PSANDBOX.unmount();                 // 收尾走 onUnmount → labTearDownUI
+    note('PSANDBOX:off (mobile)');
+    return true;
+  }
+
+  function labOpen() {
+    if (!labAvailable()) return false;
+    sandboxClose(); clabClose();
+    var stg = labStage();
+    if (!labMounted()) {
+      window.QG_PSLAB.mount(stg, { onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try {
+      // 有正在进行的实验会话 → 直接停在「参数 · 数据」;全新进入 → 先给「实验列表」
+      var hasSpec = !!(window.QG_PSLAB.current && window.QG_PSLAB.current());
+      if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('plab', $('plRoot'), { tab: hasSpec ? 'data' : 'list' });
+    } catch (e) { /* 忽略 */ }
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('PSLAB:on subject=physics (mobile)');
+    return true;
+  }
+  function labClose() {
+    if (!labMounted()) return false;
+    window.QG_PSLAB.close();                      // unmount + 关会话,收尾走 onUnmount
+    note('PSLAB:off (mobile)');
+    return true;
+  }
+
+  function clabOpen() {
+    if (!clabAvailable()) return false;
+    sandboxClose(); labClose();
+    var stg = labStage();
+    if (!clabMounted()) {
+      window.QG_CLAB.mount(stg, { onUnmount: labTearDownUI });
+    }
+    panelLab(true);
+    labBackBtn(true);
+    try {
+      var hasSpec2 = !!(window.QG_CLAB.current && window.QG_CLAB.current());
+      if (window.QG_LABMOBILE) window.QG_LABMOBILE.attach('clab', $('clRoot'), { tab: hasSpec2 ? 'data' : 'list' });
+    } catch (e) { /* 忽略 */ }
+    try { window.dispatchEvent(new Event('resize')); } catch (e2) { /* 忽略 */ }
+    note('CLAB:on subject=chem (mobile)');
+    return true;
+  }
+  function clabClose() {
+    if (!clabMounted()) return false;
+    window.QG_CLAB.close();
+    note('CLAB:off (mobile)');
+    return true;
+  }
+
+  /* 从侧栏点进来的统一入口:收起抽屉 → 打开观澜整屏面板 → 挂对应的实验台 */
+  function labEnter(kind) {
+    try { if (window.__qgDrawer && window.__qgDrawer.close) window.__qgDrawer.close(); } catch (e) { /* 忽略 */ }
+    openPanel();
+    // openPanel 会把焦点给 #glAsk(手机上会弹软键盘)—— 实验台里对话区是隐藏的,收回焦点
+    try { if (els.glAsk) els.glAsk.blur(); } catch (e2) { /* 忽略 */ }
+    var ok = false;
+    if (kind === 'psandbox') ok = sandboxOpen();
+    else if (kind === 'plab') ok = labOpen();
+    else if (kind === 'clab') ok = clabOpen();
+    if (!ok) {
+      // 模块没到位时如实说出来,不留一个空面板
+      if (els.glStageTip) els.glStageTip.textContent = '该实验台在本机没有加载成功(缺少对应的 js 文件)。';
+    }
+    return ok;
+  }
+
+  /* 只关实验台、留着观澜面板 */
+  function labCloseAll() {
+    var had = labsMounted();
+    sandboxClose(); labClose(); clabClose();
+    if (had) labTearDownUI();
+    return had;
+  }
+  /* 面板 ✕ / 关闭:先拆实验台,再走原来的关闭路径 */
+  function panelClose() {
+    labCloseAll();
+    return closePanel();
+  }
+
+  /* 侧栏分区:文案与桌面版一致(🧪 物理沙盒 / 🧪 物理实验台 / 🧪 化学实验台) */
+  function buildLabSection(list) {
+    var host = $('leftPanel');
+    if (!host || !list || !list.length) return null;
+    var sec = cel('section', 'side-sec collapsed');
+    sec.id = 'qlabSec';
+    var head = cel('div', 'sec-head');
+    head.title = '展开 / 收起';
+    head.appendChild(cel('span', 'sec-title', '🧪 实验台'));
+    var tg = cel('button', 'sec-toggle', '▾');
+    tg.type = 'button';
+    tg.setAttribute('aria-label', '展开/收起');
+    head.appendChild(tg);
+    // app.js 的 uiControls() 在页面装载时就绑完了既有分区的折叠,这里是运行期新建的,
+    // 用同一套约定自己绑一次(点标题整条切换 collapsed)。
+    head.addEventListener('click', function () { sec.classList.toggle('collapsed'); });
+    var body = cel('div', 'sec-body');
+    for (var i = 0; i < list.length; i++) {
+      (function (it) {
+        var b = cel('button', '', it.label);
+        b.type = 'button';
+        b.id = it.id;
+        b.title = it.title;
+        b.addEventListener('click', function () { labEnter(it.kind); });
+        body.appendChild(b);
+      })(list[i]);
+    }
+    body.appendChild(cel('p', 'db-note',
+      '物理沙盒是"玩符号"(把 m、g、a、v、r… 拖到一起),物理/化学实验台是"做实验"' +
+      '(调参数 → 看现象 → 记录数据 → 得结论)。手机上只保留在观澜面板里,点「↩ 返回演示」回到对话。'));
+    sec.appendChild(head);
+    sec.appendChild(body);
+    host.appendChild(sec);
+    return sec;
+  }
+
+  (function initLabEntries() {
+    // 观澜独立页(guanlan.html)没有侧栏 —— 不建任何东西
+    if (!$('leftPanel')) return;
+    var list = [];
+    if (isPhysicsSubject()) {
+      if (window.QG_PSANDBOX && window.QG_PSANDBOX.mount) {
+        list.push({ kind: 'psandbox', id: 'glPsBtn', label: '🧪 物理沙盒',
+          title: '打开物理符号沙盒:把 m、g、a、v、r… 拖到一起' });
+      }
+      if (window.QG_PSLAB && window.QG_PSLAB.mount) {
+        list.push({ kind: 'plab', id: 'glPlBtn', label: '🧪 物理实验台',
+          title: '打开物理实验台:调参数 → 看现象 → 记录数据 → 作图 → 得结论' });
+      }
+    } else if (isChemSubject()) {
+      if (window.QG_CLAB && window.QG_CLAB.mount) {
+        list.push({ kind: 'clab', id: 'glClBtn', label: '🧪 化学实验台',
+          title: '打开化学实验台:选试剂 → 调条件 → 看现象 → 写方程式(自动校验配平) → 得结论' });
+      }
+    }
+    buildLabSection(list);   // 非对应科目:list 为空 → 一个节点都不建
+  })();
+
   /* ---------- 绑定事件 ---------- */
   function on(id, fn) { var el = $(id); if (el) el.addEventListener('click', fn); }
-  // 侧栏「观澜」入口:直接打开无边框独立窗口(桌面版由宿主拦截;网页版开新标签页)
+  // 侧栏「观澜」入口:桌面版开无边框独立窗口(宿主拦截;网页版开新标签页)。
+  // 手机(≤768px)例外:面板本身已经是整屏,直接在页内打开更顺手 ——
+  // 开新标签页在手机上要来回切换,还容易被弹窗拦截。
   on('guanlanOpen', function () {
+    try {
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) { openPanel(); return; }
+    } catch (e) { /* 忽略 */ }
     try { if (!window.open('guanlan.html', 'qg_guanlan')) openPanel(); } catch (e) { openPanel(); }
   });
-  on('glClose', closePanel);
+  // 面板 ✕:先拆掉可能开着的实验台,再走原来的关闭路径(只有一个观澜面板)
+  on('glClose', panelClose);
   on('glClearText', clearConv);
   on('glSend', doSend);
   on('glMin', minWindow);   // 观澜独立页的"最小化"按钮(宿主窗口)
@@ -806,7 +1116,33 @@
       '.gl-param-lim input{width:100%;min-width:0;height:18px;padding:0 3px;font-size:10px;',
       'border:1px solid rgba(120,160,220,.18);border-radius:4px;background:#0a101e;color:#8fa3c0}',
       '.gl-param-lim span{flex:none}',
-      '.gl-param-id{font-size:10.5px;color:#5c708f;margin-left:2px}'
+      '.gl-param-id{font-size:10.5px;color:#5c708f;margin-left:2px}',
+      /* ---------- 手机(≤768px)专用排布 ----------
+         画布区只有约 390×362,表达式栏与参数栏若沿用桌面坐标会把图挡死:
+         表达式栏下移到工具条下方并收窄,参数栏同样下移,避免与工具条叠在一起。
+         只在窄屏媒体查询内生效,桌面两个入口(#guanlan 浮动面板 / 独立窗)不受影响。 */
+      '@media (max-width:768px){',
+      /* 落点用 --gl-tb-h(工具条实测高度 + 间隙,由 ensureToolbar 写进 #glStage):
+         工具条在手机宽度下折成 4 行(约 155px),面板固定 top:88px 会正好压在
+         工具条第三行上 —— 实测「清空画布」整颗按钮被 .gl-expr-head 盖住,
+         elementFromPoint 命中表达式栏,点不动。变量没写时退回 88px。 */
+      '#glExprBox{top:var(--gl-tb-h,88px);width:66vw;max-width:66vw}',
+      '.gl-expr-sub{display:none}',
+      '.gl-expr-head{padding:8px 10px}',
+      '.gl-expr-title{font-size:12.5px}',
+      '.gl-expr-fold{width:34px;height:28px;font-size:15px}',
+      '.gl-expr-list{max-height:20dvh}',
+      '.gl-expr-in{height:34px;font-size:16px}',
+      '.gl-expr-add{height:36px;font-size:13px}',
+      '.gl-theta-in{height:32px;width:56px;font-size:14px}',
+      '#glParamBar{top:var(--gl-tb-h,88px);bottom:8px;width:150px}',
+      '#glParamBar.folded{width:28px}',
+      '.gl-pb-tog{width:26px;height:26px;font-size:15px}',
+      '.gl-pb-body{padding:6px 10px 10px}',
+      '.gl-param-val{height:30px;font-size:14px}',
+      '.gl-param-range{height:26px}',
+      '.gl-param-lim input{height:26px;font-size:12px}',
+      '}'
     ].join('');
     var st = document.createElement('style');
     st.id = 'glExprCSS';
@@ -905,6 +1241,19 @@
     eui.barEmpty = pbEmpty; eui.thetaA = tA; eui.thetaB = tB;
     eui.thetaWrap = foot2; eui.gridBox = gcb;
 
+    /* 手机(≤768px):表达式栏默认折叠。
+     * 390px 宽的观澜画布区里,展开的表达式栏(约 226px 宽 + 若干行)会盖住大半个
+     * canvas,几乎看不见图。折叠后只留一行标题,用户点 ▾ 随时可以展开。
+     * 判定用 matchMedia 而不是 stage.clientWidth,是为了**不影响桌面**:
+     * 桌面观澜独立窗(900×620)的画布区约 570px,同样小于 620,但不应改变默认态。 */
+    try {
+      if (window.matchMedia && window.matchMedia('(max-width: 768px)').matches) {
+        eui.folded = true;
+        box.className = 'folded';
+        fold.textContent = '▾';
+      }
+    } catch (e) { /* 忽略 */ }
+
     function onThetaInput() {
       if (eui.thetaTimer) clearTimeout(eui.thetaTimer);
       eui.thetaTimer = setTimeout(function () { eui.thetaTimer = null; applyTheta(); }, 400);
@@ -937,6 +1286,10 @@
     inp.spellcheck = false;
     inp.setAttribute('autocomplete', 'off');
     inp.placeholder = '例如 y = x^2 - 2x + 1';
+    // 长度兜底:与 glcanvas.js 的 UE_SRC_MAX(400 字符)一致。
+    // 超长表达式会被编译成巨大的闭包树并缓存,之后每帧几百个采样点求值 → 页面假死;
+    // 输入框先拦一道,引擎侧(ueParse)另有一道,覆盖测试钩子与本地恢复进来的表达式。
+    inp.maxLength = 400;
     inp.value = String(src == null ? '' : src);
     var del = cel('button', 'gl-expr-del', '✕');
     del.type = 'button';
@@ -1142,6 +1495,11 @@
           if (rr && rr.val && document.activeElement !== rr.val) rr.val.value = fmtParam(vv);
         }
       }
+      /* 引擎会把超区间的值夹回 [min,max](见 glcanvas.js ueClampParam):
+         回读一次,让数值框/滑块始终显示引擎真正在用的那个数 —— 否则在数值框里
+         敲一个区间外的值(如区间 0..1 时敲 99),数值框停在你敲的 99、
+         滑块被浏览器夹到 1、曲线按 1 画。 */
+      renderParams();
     };
     if (typeof requestAnimationFrame === 'function') eui.rafId = requestAnimationFrame(run);
     else eui.rafId = setTimeout(run, 16);
@@ -1649,21 +2007,30 @@
    * 讲解/标注里出现极坐标关键词(极坐标 / r=…cosθ / 玫瑰线 / 花瓣 / 螺线 / 心形线),
    * 但场景里没有任何 polar 图元 → 图形大概率是笛卡尔函数顶替的,与标注不符。
    * 只提示、不拦演示(用户仍能看到图),但状态栏与气泡里要说清楚。
+   * 扫描范围必须覆盖**所有会显示给用户的标注**:
+   *   · text 图元的 text / tex
+   *   · dot / line / ray 的 label(cleanObject 与 cpStyle 会保留它)
+   *   · 调度层的 caption(会原样进气泡,见 applyScene 的第二个参数)
+   * 原先只扫 type === 'text' 的 text/tex,于是"标注写在 caption 里、写在点的 label 上"
+   * 的场景整条漏检 —— 历史教训正是"标注写着三瓣玫瑰线、画出来却是余弦波",
+   * 漏检等于这道防线不存在。
    * 注意:这里刻意不写 console.warn —— 自动化探针把控制台输出当异常收集,
    * 不能因为一句提示把既有回归测试判红。 */
   var POLAR_KW = /极坐标|玫瑰线|花瓣线|花瓣|螺线|心形线|ρ|r\s*=\s*[^,。;、]{0,12}(cos|sin)/;
-  function polarMismatch(scene) {
+  // 会显示给用户的标注字段(text 图元两种写法 + dot/line/ray 的 label)。
+  // 按类型细分没有必要:多扫一个字段只多一次关键词匹配,不会误伤,漏扫才会。
+  var LBL_KEYS = ['text', 'tex', 'label'];
+  function kwHit(s) { return POLAR_KW.test(String(s == null ? '' : s)); }
+  function polarMismatch(scene, extraTxt) {
     if (!isPlainObj(scene)) return false;
     var objs = isArr2(scene.objects) ? scene.objects : [];
-    var i, o, txt, hasPolar = false, kw = false;
+    var i, j, o, hasPolar = false, kw = false;
+    if (kwHit(extraTxt)) kw = true;   // caption:不参与绘制,但会显示给用户
     for (i = 0; i < objs.length; i++) {
       o = objs[i];
       if (!isPlainObj(o)) continue;
       if (o.type === 'polar') { hasPolar = true; continue; }
-      if (o.type === 'text') {
-        txt = String(o.text == null ? '' : o.text) + ' ' + String(o.tex == null ? '' : o.tex);
-        if (POLAR_KW.test(txt)) kw = true;
-      }
+      for (j = 0; j < LBL_KEYS.length; j++) if (kwHit(o[LBL_KEYS[j]])) kw = true;
     }
     return kw && !hasPolar;
   }
@@ -1679,19 +2046,22 @@
     // 先归一化 id 与引用,再做原有逐字段校验(否则一个中文 id 就会让整段失败)
     var plan = buildIdPlan(raw.defs, raw.objects);
     if (plan.fixed > 0) raw = remapScene(raw, plan);
-    var i, ids = {}, d;
+    // 无原型字典:普通对象 {} 会让 id 为 'constructor' 的合法名字(符合 ID_RE)
+    // 沿原型链读回 Object.prototype.constructor(真值),误报"id 重复:constructor"
+    // 并让整段演示失败。glcanvas 侧同类判定早已改成无原型字典 + has(),这里对齐。
+    var i, ids = Object.create(null), d;
     var out = { defs: [], objects: [] };
     for (i = 0; i < raw.defs.length; i++) {
       d = cleanDef(raw.defs[i], i);
       if (typeof d === 'string') return { ok: false, err: d };
-      if (ids[d.id]) return { ok: false, err: 'defs id 重复:' + d.id };
+      if (hk(ids, d.id)) return { ok: false, err: 'defs id 重复:' + d.id };
       ids[d.id] = 1;
       out.defs.push(d);
     }
     for (i = 0; i < raw.objects.length; i++) {
       d = cleanObject(raw.objects[i], i);
       if (typeof d === 'string') return { ok: false, err: d };
-      if (ids[d.id]) return { ok: false, err: 'id 重复:' + d.id };
+      if (hk(ids, d.id)) return { ok: false, err: 'id 重复:' + d.id };
       ids[d.id] = 1;
       out.objects.push(d);
     }
@@ -1713,8 +2083,12 @@
   function followScene() { if (engine) engine.autoFitOnUpdate = true; }
 
   // 应用 AI 现场生成的场景:校验 → 绘制 → 检查有效图元比例(不合格则清空并报错)
-  function applyScene(scene) {
+  // caption 单独传入:它在 validateScene 的白名单之外会被丢掉,而它是**会显示给用户**
+  // 的一段标注,必须参与 polarMismatch 的关键词扫描(测试钩子把 caption 放在 scene
+  // 里传也能识别 —— 见下面的兜底取值)。
+  function applyScene(scene, caption) {
     if (!engine) return { ok: false, err: '画布引擎未就绪' };
+    if (caption == null || caption === '') caption = isPlainObj(scene) ? scene.caption : '';
     var v = validateScene(scene);
     if (!v.ok) return { ok: false, err: v.err };
     followScene();
@@ -1731,7 +2105,7 @@
     engine.play();
     return {
       ok: true, objects: total, okObjects: okN, idFixed: v.idFixed || 0,
-      mismatch: polarMismatch(v.scene)   // true = 标注提极坐标、图里却没有 polar 图元
+      mismatch: polarMismatch(v.scene, caption)   // true = 标注/caption 提极坐标、图里却没有 polar 图元
     };
   }
 
@@ -1766,7 +2140,7 @@
           // AI 现场生成的场景:先白名单校验,再绘制;失败则抛错走统一兜底
           var rawSc = obj.scene || {};
           var rawN = ((rawSc.objects && rawSc.objects.length) || 0) + ((rawSc.defs && rawSc.defs.length) || 0);
-          var rs = applyScene(obj.scene);
+          var rs = applyScene(obj.scene, obj.caption);
           if (!rs.ok) {
             // 失败原因必须进日志,否则用户只能看到气泡、事后无从排查
             note('DEMO:scene FAIL raw=' + rawN + ' err=' + String(rs.err || '校验未通过'));
@@ -1868,7 +2242,7 @@
   /* ---------- 调试口 ---------- */
   window.__guanlanTest = {
     open: openPanel,
-    close: closePanel,
+    close: panelClose,
     send: function (text) {          // 触发异步流程后立即返回
       if (els.glAsk) els.glAsk.value = String(text == null ? '' : text);
       doSend();
@@ -1897,7 +2271,7 @@
       return { ok: true, objects: engine.getState ? engine.getState().objects : -1 };
     },
     engine: function () { return engine; },
-    applyScene: function (scene) { return applyScene(scene); },   // 测试钩子:AI 现场生成路径
+    applyScene: function (scene) { return applyScene(scene, scene && scene.caption); },   // 测试钩子:AI 现场生成路径
     validateScene: validateScene,                                 // 测试钩子:仅校验不绘制
     templates: function () { return (window.QG_TEMPLATES && window.QG_TEMPLATES.manifest) || []; },
     // 用户表达式 / 参数滑块 测试钩子(与真实 UI 共用同一套引擎入口)
@@ -1945,17 +2319,57 @@
   };
 
   // 记录最近问答(供 🎬 使用)
+  // 判定依据是**显式标志** opts.purpose === 'chat'(由 doSend 打上),不再靠"opts 是否存在":
+  // 带图讲解要传 { model: VISION_MODEL } 也有 opts,旧写法直接漏记那一轮,
+  // 而 runDemoRequest 只在 lastUserText 为空时才回退扫对话 —— 于是"文字提问 → 图片提问
+  // → 点🎬"用上一条文字提问生成演示,文不对题。
+  // 带图消息的 content 是内容块数组([{type:'text'},{type:'image_url'}]),String() 会得到
+  // "[object Object]",所以取其中的文字块 —— 🎬 才有题面可用。
+  function lastMsgText(content) {
+    var i, b;
+    if (isArr2(content)) {
+      for (i = 0; i < content.length; i++) {
+        b = content[i];
+        if (isPlainObj(b) && b.type === 'text' && b.text != null) return String(b.text);
+      }
+      return '';
+    }
+    return String(content == null ? '' : content);
+  }
   var dsOrig = dsAsk;
   dsAsk = function (messages, key, opts) {
-    // 拦截“讲解发送”,记录最近一问一答(不动协议调用)
+    // 拦截“讲解发送”,记录最近一问一答(不动协议调用:演示调度用的是 json:true,无 purpose)
     return dsOrig(messages, key, opts).then(function (content) {
       var lastRole = messages[messages.length - 1];
-      if (lastRole && lastRole.role === 'user' && !opts) {
-        lastUserText = String(lastRole.content || '');
+      if (lastRole && lastRole.role === 'user' && opts && opts.purpose === 'chat') {
+        lastUserText = lastMsgText(lastRole.content);
         lastAiText = String(content || '');
       }
       return content;
     });
+  };
+
+  /* 三个实验台的调试/验收口(与桌面版 __guanlanTest 同一约定:只转发,不改行为) */
+  window.__qgLabTest = {
+    subjects: function () { return { physics: isPhysicsSubject(), chem: isChemSubject(), key: subjKey() }; },
+    entries: function () {
+      var out = [], ids = ['glPsBtn', 'glPlBtn', 'glClBtn'], i;
+      for (i = 0; i < ids.length; i++) {
+        var b = $(ids[i]);
+        if (b) out.push({ id: ids[i], label: b.textContent, inSidebar: !!b.closest('#leftPanel') });
+      }
+      return out;
+    },
+    section: function () { return !!$('qlabSec'); },
+    backBtn: function () { return !!$(LAB_BACK_ID); },
+    enter: labEnter,                 // 等同点击侧栏条目
+    close: labCloseAll,
+    panelClose: panelClose,
+    mounted: function () { return { sandbox: ssMounted(), plab: labMounted(), clab: clabMounted() }; },
+    available: function () { return { sandbox: sandboxAvailable(), plab: labAvailable(), clab: clabAvailable() }; },
+    panelLabOn: function () { var p = $('guanlan'); return !!(p && p.classList && p.classList.contains('qg-lab-on')); },
+    layout: function () { return window.QG_LABMOBILE && window.QG_LABMOBILE.metrics ? window.QG_LABMOBILE.metrics() : null; },
+    setTab: function (n) { return !!(window.QG_LABMOBILE && window.QG_LABMOBILE.setTab(n)); }
   };
 
   // 独立窗口(观澜 standalone)启动
