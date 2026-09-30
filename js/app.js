@@ -1962,7 +1962,7 @@ var CAM_DROP = 6;
     Array.prototype.forEach.call(menu.querySelectorAll('button[data-sub]'), function (x) {
       x.classList.toggle('active', x.getAttribute('data-sub') === cur);
     });
-    document.title = '穷观 V2.4.2 · ' + SUB_LONG[cur] + '知识网络';
+    document.title = '穷观 V2.5.2 · ' + SUB_LONG[cur] + '知识网络';
     var subEl = document.querySelector('.brand .sub');
     if (subEl) subEl.textContent = SUB_LONG[cur] + ' · 3D 知识网络';
     var si = document.getElementById('searchInput');

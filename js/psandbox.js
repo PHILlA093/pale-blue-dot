@@ -989,6 +989,8 @@
     /* 结构字形（括号 / 加号 / ² / 分数线）按公式形态实时增删 */
     function ensureSt(B) {
       var p1 = (B.family === 1 && B.mem.length >= 2 && B.cCount < 2 && !(B.hasGrav || B.hasR));
+      /* ★ 手写分数（÷）不套自动括号：括号版式是"整行一项一项并排"，与四格分数会打架 */
+      if (B.div && B.div.on) p1 = false;
       var keeps = [];
       function live(k, ch, sc) {
         if (!B.st[k] || B.st[k].dead) { if (B.st[k]) killG(B.st[k]); B.st[k] = stGD(ch, sc); }
@@ -1025,7 +1027,9 @@
         } else { live('sq', SQ, 0.6); }
       } else { dead('sq'); }
       // 引力体一旦到手分母字母（r 或 c）就立刻变分数，字母就不可能压在分子上
-      var pFrac = (gMode === 'schwarz') || (B.family === 2 && (B.hasR || B.hasHalf) && B.vCount >= 2) || (B.hasGrav && B.hasR);
+      // 手写分数（÷）也要横线：空分子/空分母时它就是那个"可瞄的目标"
+      var pFrac = (gMode === 'schwarz') || (B.family === 2 && (B.hasR || B.hasHalf) && B.vCount >= 2) ||
+                  (B.hasGrav && B.hasR) || !!(B.div && B.div.on);
       if (pFrac) { live('bar', BAR); } else { dead('bar'); }
       // h2 槽位：½（半个）与 2GM/c² 的前导 2 共用这个"分母上的那个 2"。
       // 关键：如果这个体身上真的有一个 ½ 字形（玩家从面板拖来的），就把槽位
@@ -1319,10 +1323,215 @@
         for (var gi2 = 0; gi2 < items.length; gi2++) B._plainGlyphs.push(items[gi2].g);
       }
     }
+    /* ---------------- 手写分数（÷ 落在体上 = 一条分数横线）· 2026-10-01 ----------------
+       用户原话：「把那个除号改成分母分子的形式，然后后面的字母如果放到上面就是在上面，
+       放到下面就是在下面，如果放到横线后方和前方就是这两个位置另加」。
+       落点相对**横线矩形**归位：
+         · x 在横线两端之内、落点在横线上方 -> **分子**（横线上方、水平居中）
+         · x 在横线两端之内、落点在横线下方 -> **分母**（横线下方、水平居中）
+         · x 在横线左端之外 -> **前方项**（接在横线左侧、与横线同一基线）
+         · x 在横线右端之外 -> **后方项**（接在横线右侧、同一基线）
+       三条纪律：
+       ① **归位在松手那一刻落定**（写进字形的 g.dz），之后谁动都不重算 —— 这就是"迟滞"，
+          否则体一变形就会把已经放好的字母重新分类（同一位置反复横跳）。
+          换格 = 双击把字形拆出来（既有手势）再拖回想要的那一格。
+       ② 判公式用的**字形集合（toksOfBody）不认 ÷**（它是 isOp），所以 Q+U+C+÷
+          仍然认出 C = Q/U，卡片课本写法、药丸、事件、成就全部照旧。
+       ③ **落在横线正中**（|dy| ≤ DIV_HYS）按"离上/下哪边近"取 —— 正好为 0 取**上方**；
+          拖动预览在这个窄带里沿用上一次的高亮（真迟滞，不闪）。
+       ⚠ 多个 ÷：**最先落下的那个永远是横线**（B.div.bar，黏住不换），其余 ÷ 当**行内字形**
+       排在它自己那一格里（默认"后方项"）。这样排版永远只有一条横线，不会打架。 */
+    var DIV_MBAR = 34;     // 空分子/空分母时的最小横线长度（没它玩家就没得瞄）
+    var DIV_PAD = 7;       // 横线相对"最宽那一行"左右各留的余量
+    var DIV_GAPY = 6;      // 横线与分子/分母之间的净空
+    var DIV_HYS = 2;       // 拖动预览在横线附近的迟滞半带（px）
+    var DIV_MAXL = 12;     // 一个手写分数组最多收几个字母（防病态堆叠）
+    var divHiB = null;     // 当前高亮的"手写分数"体（拖动预览用）
+
+    /* 体的成员字形（massG + mem，按对象身份去重；skip 跳过横线那个 ÷） */
+    function divMembers(B, skip) {
+      var out = [], seen = [];
+      function push(g) {
+        if (!g || g.dead || g === skip) return;
+        for (var i = 0; i < seen.length; i++) if (seen[i] === g) return;
+        seen.push(g); out.push(g);
+      }
+      push(B.massG);
+      for (var i = 0; i < B.mem.length; i++) push(B.mem[i]);
+      return out;
+    }
+    /* 结构状态对齐：有 ÷ 就是手写分数；÷ 被拆走 -> 结构关掉，回到普通排版。
+       兜底归位：没有格子的字形（右键复制出来的新体、拆分后重挂）一律进**分子**；
+       多出来的 ÷ 排到"后方项"。 */
+    function divSync(B) {
+      var dg = null;
+      if (B.div && B.div.bar && !B.div.bar.dead && B.mem.indexOf(B.div.bar) >= 0) dg = B.div.bar;
+      if (!dg) {
+        for (var i = 0; i < B.mem.length; i++) {
+          var g = B.mem[i];
+          if (g && !g.dead && g.type === DIV) { dg = g; break; }
+        }
+      }
+      if (!dg) { B.div = null; B.divGlyphs = null; return null; }
+      if (!B.div) B.div = { on: true, bar: dg, hi: null };
+      B.div.on = true; B.div.bar = dg;
+      var list = divMembers(B, dg);
+      for (var j = 0; j < list.length; j++) {
+        var m = list[j];
+        if (m.type === DIV) { if (!m.dz || m.dz === 'bar') m.dz = 'right'; continue; }
+        if (!m.dz) m.dz = 'num';
+      }
+      dg.dz = 'bar';
+      return dg;
+    }
+    /* 横线在世界坐标里的矩形（落点判定与拖动预览都读它） */
+    function divBarRect(B) {
+      if (!B.div || !B.div.on || !B.st.bar || B.st.bar.dead) return null;
+      var b = B.st.bar;
+      var s = slot(B, b);
+      var hw = (b.w / 2) * (B.sc || 1);
+      return { cx: s.x, cy: s.y, left: s.x - hw, right: s.x + hw, y: s.y, w: b.w * (B.sc || 1) };
+    }
+    /* 落点 -> 格（世界坐标）。横线矩形之外按左右分"前方项/后方项"。 */
+    function divZoneOf(B, wx, wy) {
+      var r = divBarRect(B);
+      if (!r) return null;
+      if (wx < r.left) return 'left';
+      if (wx > r.right) return 'right';
+      return (wy <= r.y) ? 'num' : 'den';
+    }
+    /* 把一个字形按落点归格（松手那一刻调用一次；之后黏住） */
+    function divAssign(B, g, wx, wy) {
+      if (!B.div || !B.div.on || !g || g === B.div.bar) return;
+      var z = divZoneOf(B, wx, wy);
+      if (z) g.dz = z;
+    }
+    /* 第一个 ÷ 落到体上：这个体从此是"手写分数"。
+       已经在体上的字母按**它们相对这个 ÷ 的落点**归位（线以上/压线 -> 分子，线以下 -> 分母）：
+       这是"放到上面就是在上面"这条规则对老字母的自然延伸，也是唯一可预测的默认。 */
+    function divTurnOn(B, d) {
+      if (B.div && B.div.on) {
+        if (!B.div.bar || B.div.bar.dead) B.div.bar = d;
+        else { d.dz = (B.div.bar === d) ? 'bar' : 'right'; return; }   // 多出来的 ÷：行内，默认后方
+      } else {
+        B.div = { on: true, bar: d, hi: null };
+      }
+      d.dz = 'bar';
+      var lineY = (d.wy == null) ? null : d.wy;
+      var list = divMembers(B, d);
+      for (var i = 0; i < list.length; i++) {
+        var g = list[i];
+        if (g.type === DIV) { g.dz = 'right'; continue; }
+        if (lineY == null) { g.dz = 'num'; continue; }
+        var s = slot(B, g);
+        g.dz = (s.y <= lineY) ? 'num' : 'den';
+      }
+    }
+    /* 手写分数的排版：分子/分母各自水平居中，横线 = max(分子宽, 分母宽) + 左右余量，
+       前方项/后方项与横线同一基线接在两端。**不自动缩放**（sc=1）——缩放会让落点判定跟着变。 */
+    function layoutDiv(B) {
+      var bar = B.div.bar;
+      var rows = { num: [], den: [], left: [], right: [] };
+      var list = divMembers(B, bar);
+      for (var i = 0; i < list.length; i++) {
+        var g = list[i];
+        var z = (g.type === DIV) ? 'right' : (g.dz || 'num');
+        if (z !== 'num' && z !== 'den' && z !== 'left' && z !== 'right') z = 'num';
+        rows[z].push(g);
+      }
+      /* 自动结构 ²（mv² 的那个）跟着分子走：它属于分子里那个 v */
+      if (B.st.sq && !B.st.sq.dead) rows.num.push(B.st.sq);
+      function items(arr) {
+        var o = [];
+        for (var k = 0; k < arr.length; k++) o.push({ g: arr[k], s: 1, dy: 0 });
+        return o;
+      }
+      function ink(r) {
+        var t = 1e9, b = -1e9;
+        for (var k = 0; k < r.parts.length; k++) {
+          t = Math.min(t, r.parts[k].dy + r.parts[k].g.m.top * r.parts[k].s);
+          b = Math.max(b, r.parts[k].dy + r.parts[k].g.m.bot * r.parts[k].s);
+        }
+        return { top: t, bot: b };
+      }
+      var numR = hRun(items(rows.num)), denR = hRun(items(rows.den));
+      var leftR = hRun(items(rows.left)), rightR = hRun(items(rows.right));
+      var nI = ink(numR), dI = ink(denR), lI = ink(leftR), rI = ink(rightR);
+      var barW = Math.max(numR.w, denR.w, DIV_MBAR) + DIV_PAD * 2;
+      var leftW = leftR.w ? (leftR.w + 5) : 0;
+      var rightW = rightR.w ? (rightR.w + 5) : 0;
+      var totalW = leftW + barW + rightW;
+      var barCx = -totalW / 2 + leftW + barW / 2;
+      var half = barW / 2;
+      /* 分子：墨迹下沿落在横线上方 DIV_GAPY；分母：墨迹上沿落在横线下方 DIV_GAPY */
+      var numSh = numR.parts.length ? (-DIV_GAPY - nI.bot) : 0;
+      var denSh = denR.parts.length ? (DIV_GAPY - dI.top) : 0;
+      numR.parts.forEach(function (q) { q.g.sx = barCx + (q.cx - numR.w / 2); q.g.sy = numSh + q.dy; });
+      denR.parts.forEach(function (q) { q.g.sx = barCx + (q.cx - denR.w / 2); q.g.sy = denSh + q.dy; });
+      var lMid = (lI.top + lI.bot) / 2, rMid = (rI.top + rI.bot) / 2;
+      var lx0 = barCx - half - 5 - leftR.w;
+      leftR.parts.forEach(function (q) { q.g.sx = lx0 + q.cx; q.g.sy = q.dy - lMid; });
+      var rx0 = barCx + half + 5;
+      rightR.parts.forEach(function (q) { q.g.sx = rx0 + q.cx; q.g.sy = q.dy - rMid; });
+      /* 整体竖直居中（横线先摆在本地 y=0，再统一平移；空分数也要占住横线的高度） */
+      var top = -1, bot = 1;
+      if (numR.parts.length) { top = Math.min(top, nI.top + numSh); bot = Math.max(bot, nI.bot + numSh); }
+      if (denR.parts.length) { top = Math.min(top, dI.top + denSh); bot = Math.max(bot, dI.bot + denSh); }
+      if (leftR.parts.length) { top = Math.min(top, lI.top - lMid); bot = Math.max(bot, lI.bot - lMid); }
+      if (rightR.parts.length) { top = Math.min(top, rI.top - rMid); bot = Math.max(bot, rI.bot - rMid); }
+      var shiftY = -(top + bot) / 2;
+      var vis = [];
+      function put(r) {
+        for (var k = 0; k < r.parts.length; k++) { var q = r.parts[k]; q.g.sy += shiftY; vis.push(q.g); }
+      }
+      put(numR); put(denR); put(leftR); put(rightR);
+      bar.sx = barCx; bar.sy = shiftY;                 // 隐藏的 ÷：也要有槽位（massG 可能指向它）
+      B.st.bar.w = barW; B.st.bar.h = 2; B.st.bar.sx = barCx; B.st.bar.sy = shiftY;
+      if (B.st.bar && !B.st.bar.dead) vis.push(B.st.bar);
+      B.hw = totalW / 2 + 5;
+      B.hh = (bot - top) / 2 + 2;
+      B.sc = 1;
+      B.frac = true; B.subBar = null;
+      B.divGlyphs = vis;
+      B.div.dbg = { barW: barW, totalW: totalW, top: top, bot: bot, shiftY: shiftY,
+                    n: rows.num.length, d: rows.den.length, l: rows.left.length, r: rows.right.length,
+                    rowW: { num: numR.w, den: denR.w, left: leftR.w, right: rightR.w } };
+    }
+
+    /* ---- 拖动预览（2026-10-01）：拖着字形靠近某个手写分数时，高亮它要落进去的那一格 ---- */
+    function divPreviewFor(L) {
+      var best = null, bd = 1e9;
+      for (var i = 0; i < bodies.length; i++) {
+        var B = bodies[i];
+        if (!B.div || !B.div.on) continue;
+        var r = divBarRect(B);
+        if (!r) continue;
+        var d = Math.hypot(L.wx - r.cx, L.wy - r.y);
+        if (d < 150 && d < bd) { bd = d; best = B; }
+      }
+      if (divHiB && divHiB !== best) divHiB.div.hi = null;
+      divHiB = best;
+      if (!best) return;
+      var rr = divBarRect(best);
+      if (!rr) return;
+      var z = divZoneOf(best, L.wx, L.wy);
+      /* 迟滞：落在横线 ±DIV_HYS 的窄带里就沿用上一次的高亮，别在线上反复横跳 */
+      if (z && Math.abs(L.wy - rr.y) <= DIV_HYS && best.div.hi) z = best.div.hi;
+      best.div.hi = z;
+    }
+    function divPreviewClear() {
+      if (divHiB && divHiB.div) divHiB.div.hi = null;
+      divHiB = null;
+    }
+
     function layoutBody(B) {
       repairBase(B);
       B.mem.sort(function (x, y) { return wLet(x.type) - wLet(y.type); });
+      divSync(B);                                   // ★ ÷ 手写分数：先把结构状态对齐
       ensureSt(B);
+      /* ★ 手写分数（÷）优先于通用排版：÷ 一旦落在体上，这个体就按"四格"排。
+         引力体（GMm/r²、2GM/c²）除外 —— 它自己就是一套分数版式，两套会打架。 */
+      if (B.div && B.div.on && !B.hasGrav) { layoutDiv(B); return; }
       if (B.hasGrav) { layoutGrav(B); return; }
       var isFrac = B.family === 2 && (B.hasR || B.hasHalf) && B.vCount >= 2;
       var vG = null, rG = null;
@@ -1423,7 +1632,11 @@
       layoutBody(B);
 
       if (B.frac) {
-        if (B.hasGrav) {
+        if (B.div && B.div.on && B.divGlyphs) {
+          /* ★ 手写分数（÷）：可见字形由 layoutDiv 直接算好（四格 + 额外的 ÷ + 横线）——
+             绝不能走下面那两条自动分数分支，它们只认 massG/v/r/½，会把分子分母全藏掉。 */
+          B.glyphs = B.divGlyphs;
+        } else if (B.hasGrav) {
           B.glyphs = [];
           var gp = gravParts(B), Gg = gp.Gg, bigM = gp.bigM, smallM = gp.smallM, rGg = null, cGg = null;
           for (var q = 0; q < B.mem.length; q++) {
@@ -1621,6 +1834,7 @@
     /* ---------------- 拖动 / 合成 / 拆分 ---------------- */
     function freeLetter(d, x, y, vx, vy, cat) {
       d.body = null; d.inBody = false; d.state = 'free';
+      d.dz = null;              // 离开体 = 不再属于任何一格（手写分数的归位要重新判定）
       d.wx = x; d.wy = y; d.vx = vx || 0; d.vy = vy || 0; d.cat = cat;
       if (freeL.indexOf(d) < 0) freeL.push(d);
       d.el.classList.remove('ps-dockin');
@@ -1639,6 +1853,10 @@
       // 玩家路径上质量本来就是"先摆成 base 再拖别的字"，这里只是把同一条规则
       // 补到"空体直接接质量字母"这条路径上（addBody 的第一笔就走这里）。
       if (!B.massG && isMass(d)) B.massG = d;
+      /* ★ ÷ 手写分数（2026-10-01）：÷ 落上来 = 这个体从此有一条分数横线；
+         其余字形按**这一次的落点**归格（分子/分母/前方项/后方项），松手即定、之后黏住。 */
+      if (d.type === DIV) divTurnOn(B, d);
+      else if (B.div && B.div.on) divAssign(B, d, d.wx, d.wy);
 
       B.pop = 1;
       refresh(B);
@@ -1697,6 +1915,13 @@
       if (!B || B.kind) return false;   // 场体（B/q/I/E）不是字母合并目标
       if (B.bh) return false;           // 黑洞吞字母，绝不与字母合并
       var t = d.type;
+      /* ★ 手写分数（÷）的"装得下任意字母"例外（2026-10-01）：
+         体已经是一条手写分数时，四格必须能收**任意**字母 —— 否则玩家把字母拖到横线
+         上方/下方会"什么也没发生"（实测：Q U C ÷ 的体拒绝 a：a 与任何含 QUC 的公式都
+         不相容；r 也被"要两个 v"的旧规矩挡在外面）。判公式用的字形集合**不受影响**
+         （toksOfBody 照旧跳过运算符，eqAccepts 只是"能不能并进来"的闸门）。
+         运算符（同字符不重复）、质量、c/G、t 的三条经典组合、箭头全都照旧。 */
+      var divFree = !!(B.div && B.div.on);
       /* ★ 场符号（B/q/I/E）的合并闸门（2026-09-30 符号扩展）：dropLetter 现在会先给
          它们一次合并机会，这里就必须**只放行"这次字母集合仍被某条课本公式容纳"的
          情况** —— 否则一个 I 会被随便哪个体吸走，"单独落一个 I 生成电流体"这条
@@ -1719,7 +1944,12 @@
          箭头 → 不在这里放行（箭头永不并入任何体，它是台上独立可旋转的字形）。 */
       if (isOp(t) && t !== ARROW) {
         if (t === EQ && B.eq) return false;
-        for (var oi = 0; oi < B.mem.length; oi++) if (B.mem[oi].type === t) return false;
+        /* ★ ÷ 允许多个（2026-10-01 手写分数）：**最先落下的那个是横线**（黏住不换），
+           其余 ÷ 当行内字形排在它自己那一格 —— 所以"多个 ÷"不会出现两条横线打架。
+           其余运算符仍然同字符不重复。 */
+        if (t !== DIV) {
+          for (var oi = 0; oi < B.mem.length; oi++) if (B.mem[oi].type === t) return false;
+        }
         return true;
       }
       /* t：三条**经典组合路径优先** —— 体上带 g（g+t→v）或带 v 且没有 g（v+t→板）
@@ -1783,8 +2013,15 @@
          于是 Ep=mgh 永远拼不齐（画面上还会出现 "m(g+)" 这种残缺括号）。
          改法：**先问公式表** —— 只要这次的字母集合仍被某条课本公式容纳，
          就放行；不涉及任何公式的字母（原有 15 个符号）走的还是老规则。 */
-      if (B.family && B.family !== fam && !B.hasGrav && !eqAccepts(B, t)) return false;
+      if (!divFree && B.family && B.family !== fam && !B.hasGrav && !eqAccepts(B, t)) return false;
       if (t === 'r' || t === HALF) {
+        /* ★ 手写分数：r / ½ 就是普通一格（四格里没有"分数套分数"要防），只保留同字符不重复 */
+        if (divFree) {
+          for (var dr = 0; dr < B.mem.length; dr++) {
+            if (B.mem[dr] && B.mem[dr].type === t) return false;
+          }
+          return true;
+        }
         /* ★ ½ 的公式通道（2026-09-30 符号扩展）：Ek=½mv² 这条式子要求 ½ 能挂到
            已经拼好的 mv² 上。原来的顺序是"先查 vCount/rCount 再放行"，而 ½mv²
            的装配顺序常常是 m → v → v（这时已经是一个完整的 mv² 体）→ ½，
@@ -1813,8 +2050,9 @@
       if (t === 'v') {
         if (B.vCount >= 2) return false;     // 至多两个 v（v²）
         /* 装入上限 4（不是 3）：½mv² 的 mem 是 [½,v,m]，还要能再加一个 v 凑 v²
-           —— 上限 3 会让「先摆 ½ m v、再补第二个 v」这条路被拒。 */
-        if (B.mem.length >= 4) return false;
+           —— 上限 3 会让「先摆 ½ m v、再补第二个 v」这条路被拒。
+           手写分数的四格是玩家自己摆的，不设这条上限（下面另有总字母数兜底）。 */
+        if (!divFree && B.mem.length >= 4) return false;
         return true;
       }
       /* 符号扩展新增的字母（F f N s h p T ω k η θ Δ x y A S U R P W Q ε C L Φ ρ λ ν φ n）
@@ -1826,7 +2064,7 @@
               为什么必须这样：原来写死的 `mem.length >= 2` 是照"至多两个字母的乘积"
               定的；而 F=ma / Q=I²Rt / ε=U+Ir 这些式子**本身就有 3~5 个字母**，
               写死 2 会让它们永远拼不齐（第三个字母一到就被拒）。 */
-      if (eqAccepts(B, t) === false) return false;
+      if (!divFree && eqAccepts(B, t) === false) return false;
       /* 热平衡 Q吸=Q放 例外（2026-10-01 第三批）：允许**两个** Q（第三个才拒）。
          ⚠⚠ 必须**按对象身份去重**（2026-10-01 修复）：单个 Q 的体里，同一个字形
          既是 base（layoutBody→repairBase 把"第一个活字母"认成 massG）**又在 mem 里**
@@ -1862,6 +2100,7 @@
         for (var hc in have) if ((need[hc] || 0) < have[hc]) { okSub = false; break; }
         if (okSub && sk.length > limit) limit = sk.length;
       }
+      if (divFree) return after.length <= DIV_MAXL;   // 手写分数：只防病态堆叠（总字母数上限）
       if (after.length > limit) return false;
       return true;
     }
@@ -2124,6 +2363,7 @@
         var L = grab.obj;
         L.wx = pointer.x - grab.gx; L.wy = pointer.y - grab.gy;
         placeLetter(L);
+        divPreviewFor(L);      // ★ 手写分数：高亮它要落进去的那一格（别让玩家猜）
         var dtt = (performance.now() - grab.t) / 1000 || 0.016;
         if (dtt > 0) { grab.svx = (pointer.x - grab.lx) / dtt; grab.svy = (pointer.y - grab.ly) / dtt; }
         grab.lx = pointer.x; grab.ly = pointer.y; grab.t = performance.now();
@@ -2153,6 +2393,7 @@
       var p = xy(e);
       pointer.x = p.x; pointer.y = p.y;
       if (pillDrag) { pillUp(e.clientX); return; }
+      divPreviewClear();       // ★ 手写分数：松手就撤掉高亮（归位已经在 attach 里定死）
       if (trashDrag.active) {
         trash.style.left = ''; trash.style.top = '';
         trash.style.right = '14px'; trash.style.bottom = '14px';
@@ -2268,6 +2509,7 @@
     });
 
     onEv(DD, 'pointercancel', function () {
+      divPreviewClear();       // ★ 手写分数：手势被打断也要撤掉高亮
       if (grab.kind === 'letter' && grab.obj) {
         var L = grab.obj;
         L.state = 'free';
@@ -2521,6 +2763,9 @@
       for (var i = 0; i < src.mem.length; i++) {
         var c2 = src.mem[i].type;
         var g2 = GD(c2); g2.pop = 0;
+        /* ★ 手写分数（÷）：把**格子**一起抄过去（四格 = 分子/分母/前方项/后方项）。
+           不抄的话副本会"所有字母挤在分子上"（dz 是字形对象上的字段，新字形默认没有）。 */
+        g2.dz = src.mem[i].dz || null;
         B.mem.push(g2);
         mm.push(g2);
       }
@@ -3631,7 +3876,9 @@
           var s = slot(B, b);
           var hw = (b.w / 2) * sc;
           cvx.strokeStyle = 'rgba(38,34,28,0.85)';
-          cvx.lineWidth = 1.6; cvx.lineCap = 'round';
+          /* ★ 手写分数：拖动预览命中某一个格时把横线加粗（第二条可见反馈） */
+          cvx.lineWidth = (B.div && B.div.hi) ? 2.6 : 1.6;
+          cvx.lineCap = 'round';
           cvx.beginPath();
           cvx.moveTo(s.x + oxB - Math.cos(th) * hw, s.y + oyB - Math.sin(th) * hw);
           cvx.lineTo(s.x + oxB + Math.cos(th) * hw, s.y + oyB + Math.sin(th) * hw);
@@ -3645,6 +3892,27 @@
             cvx.stroke();
           }
         }
+      }
+      /* ★ 手写分数（÷）的拖动预览：把"要落进去的那一格"用淡墨方块标出来
+         （分子/分母 = 横线上下的横条，前方项/后方项 = 两端的竖块） */
+      for (var dvq = 0; dvq < bodies.length; dvq++) {
+        var DV = bodies[dvq];
+        if (!DV.div || !DV.div.on || !DV.div.hi) continue;
+        var dr = divBarRect(DV);
+        if (!dr) continue;
+        var bw = Math.max(18, dr.right - dr.left);
+        var bx0, by0, bwid, bhei = 26;
+        if (DV.div.hi === 'num') { bx0 = dr.cx - bw / 2; by0 = dr.y - 40; bwid = bw; }
+        else if (DV.div.hi === 'den') { bx0 = dr.cx - bw / 2; by0 = dr.y + 14; bwid = bw; }
+        else if (DV.div.hi === 'left') { bwid = 34; bhei = 26; bx0 = dr.left - 10 - bwid; by0 = dr.y - bhei / 2; }
+        else { bwid = 34; bhei = 26; bx0 = dr.right + 10; by0 = dr.y - bhei / 2; }
+        cvx.fillStyle = 'rgba(38,34,28,0.10)';
+        cvx.strokeStyle = 'rgba(38,34,28,0.40)';
+        cvx.lineWidth = 1.2;
+        cvx.beginPath();
+        cvx.rect(bx0, by0, bwid, bhei);
+        cvx.fill();
+        cvx.stroke();
       }
       for (var q = 0; q < bodies.length; q++) {
         var B2 = bodies[q];
@@ -5435,6 +5703,7 @@
       var nb = BODY(d.wx, d.wy);
       d.pop = 0; d.body = nb; d.inBody = true;
       nb.massG = d; nb.glyphs = [d]; nb.mem = [d];
+      if (d.type === DIV) divTurnOn(nb, d);   // ★ 升格出来的体带 ÷：当场就是手写分数
       refresh(nb);
       return nb;
     }
@@ -5559,7 +5828,10 @@
         demoteFree(FM, nb);
       }
 
-      if (isMass(L) || L.type === 'G') {
+      /* ★ ÷ 也走这条：**单独把一个 ÷ 丢到空处 = 当场出现一条空分数横线**
+         （不然它就是一颗飘着的算符，玩家没有可瞄的目标 —— 用户要的是"÷ = 分数结构"）。
+         空分子/空分母照样画横线，长度取 DIV_MBAR。 */
+      if (isMass(L) || L.type === 'G' || L.type === DIV) {
         var nb2 = BODY(L.wx, L.wy);
         L.pop = 0; L.body = nb2; L.inBody = true;
         if (isMass(L)) { nb2.massG = L; nb2.glyphs = [L]; refresh(nb2); }
@@ -5744,6 +6016,42 @@
       },
       /* palette()：托盘的完整符号清单（只读）。每项 { ch, key, group, note, docked } */
       palette: paletteList,
+      /* divInfo(id)：手写分数（÷）的结构读数（只读）。横线是 canvas 画的、没有 DOM 盒子，
+         所以探针要断言"这个字形到底落在哪一格、横线在哪"只能从这里读。
+         返回：{ on, bar:{cx,cy,left,right,w}, zones:{num,den,left,right}:[{ch,cx,cy,w,h}],
+                box:{left,top,right,bottom} } —— 坐标全是**世界坐标**（与 B.x/B.y 同一套）。 */
+      divInfo: function (id) {
+        var B = bodies[id];
+        if (!B) return null;
+        var r = divBarRect(B);
+        var out = { on: !!(B.div && B.div.on), bar: r ? { cx: r.cx, cy: r.cy, left: r.left, right: r.right, w: r.w } : null,
+                    zones: { num: [], den: [], left: [], right: [] },
+                    rowW: null, box: null, sc: B.sc || 1 };
+        if (!B.div || !B.div.on) return out;
+        if (B.div.dbg) out.rowW = B.div.dbg.rowW;
+        var list = divMembers(B, B.div.bar);
+        for (var i = 0; i < list.length; i++) {
+          var g = list[i];
+          var z = (g.type === DIV) ? 'right' : (g.dz || 'num');
+          if (!out.zones[z]) z = 'num';
+          var s = slot(B, g);
+          var sc = B.sc || 1;
+          out.zones[z].push({ ch: g.ch, cx: s.x, cy: s.y,
+                              w: (g.w || 0) * sc, h: (g.h || 0) * sc,
+                              left: s.x - (g.w || 0) * sc / 2, right: s.x + (g.w || 0) * sc / 2,
+                              top: s.y - (g.h || 0) * sc / 2, bottom: s.y + (g.h || 0) * sc / 2 });
+        }
+        var l = 1e9, t = 1e9, rr = -1e9, bb = -1e9;
+        for (var zk in out.zones) {
+          for (var j = 0; j < out.zones[zk].length; j++) {
+            var q = out.zones[zk][j];
+            l = Math.min(l, q.left); t = Math.min(t, q.top); rr = Math.max(rr, q.right); bb = Math.max(bb, q.bottom);
+          }
+        }
+        if (r) { l = Math.min(l, r.left); t = Math.min(t, r.cy - 1); rr = Math.max(rr, r.right); bb = Math.max(bb, r.cy + 1); }
+        if (l < 1e8) out.box = { left: l, top: t, right: rr, bottom: bb };
+        return out;
+      },
       /* eqTable()：公式表自检（只读）。用于探针与人工排查"这条式子为什么没被认出来" */
       eqTable: eqTableDump,
       /* ---- 公式体动力学（双轨新路径）的测试接口 ---- */
@@ -5890,7 +6198,9 @@
     rawBodies: function () { return current ? current.rawBodies() : []; },
     distance: function (a, b) { return current ? current.distance(a, b) : null; },
     /* 供页面自行判断是否要显示入口用不到，但留着方便排障 */
-    host: function () { return hostEl; }
+    host: function () { return hostEl; },
+    /* divInfo(id)：手写分数（÷）的结构读数直通（未挂载时 null） */
+    divInfo: function (id) { return current ? current.divInfo(id) : null; }
   };
 
   window.QG_PSANDBOX = API;

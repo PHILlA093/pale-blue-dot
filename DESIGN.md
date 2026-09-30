@@ -1,13 +1,13 @@
 # 穷观 · 架构设计说明
 
-> 面向维护者。版本 V2.4.2。本文只描述**当前实际实现**,不含设想。
+> 面向维护者。版本 V2.5.2。本文只描述**当前实际实现**,不含设想。
 
 ## 1. 总体形态
 
 单进程桌面程序:.NET Framework 4.8 WinForms + WebView2,**没有后端、没有 HTTP 服务器、没有构建工具链**。
 
 ```
-穷观 V2.4.2(单进程)
+穷观 V2.5.2(单进程)
 ├─ MainForm           无边框 1440×900  → https://app.local/index.html
 ├─ trainWindow  (static) TrainForm  无边框 980×780  → train.html   「破卷」
 └─ guanlanWindow(static) TrainForm  无边框 1180×820 → guanlan.html 「观澜」

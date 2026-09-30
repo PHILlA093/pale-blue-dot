@@ -241,7 +241,7 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
   `_rebuild.ps1` **必须保持纯 ASCII**（非 ASCII 字节会被按 ANSI 解码并吞掉后面的行，历史上真丢过 `/win32icon:`）。
 - **语料更新不需要重编 exe**（它运行时从磁盘读），**但必须重打安装程序与 zip**（语料是安装程序的第 6 个载荷
   `qg.payload.5.gz`），并同步到 `穷观手机版\数据库\qg_corpus.txt` 之后重打 APK。
-- **版本号**：APK 的 `versionCode` 必须递增（安卓只在 versionCode 变大时才覆盖安装）；`versionName` 跟着写。桌面版当前对外版本号是 **V2.4.2**（改它要同步 exe 标题、`使用说明.txt`、安装程序与 zip 命名 —— 改动面较大，先问用户）。
+- **版本号（2026-10-01 起两端同一个号）**：对外版本号是 **V2.5.2** —— 桌面版（exe 窗口标题、`使用说明.txt`、安装程序 `Installer.cs` 的 `Shared.Version`/`Tagline`、`下载\` 的 zip 命名）与手机版 `versionName "2.5.2"` **一致**；改一处就要同步另一处。APK 的 `versionCode` 必须递增（安卓只在 versionCode 变大时才覆盖安装，当前 **13**）。一次改全的清单：`index.html`（`<title>` + `.ver`）、`js/app.js`（`document.title`）、5 个 js 头部注释（`demo/glcanvas/gltemplates/mainbridge/train`）——**桌面树与手机版树各一套，共 20 处**；`桌面版\build\Program.cs`（第 2 行注释 / 窗口 `Text` / `req.UserAgent`）、`桌面版\build\Installer.cs`（`Version` + `Tagline`）、`使用说明.txt`、`下载\先读我_怎么安装.txt`（首行 + zip 名）、`README.md`、`DESIGN.md`、`build.gradle`（`versionCode` + `versionName`）。**指纹文件与归档目录里的版本串不在此列，永不同步改。**
 - **签名**：手机版用**默认 debug 签名**（`C:\Users\Administrator\.android\debug.keystore`，2618 B）。**这个文件丢了就无法覆盖安装**，绝对不要删/动。
 - **桌面版签名（2026-09-29 起）**：exe 与安装程序用**本机自签名证书**签（`CN=穷观学习 PHILlA093`，指纹 `FDA869EC0B69FB20DAD49B3B71754D43F6806986`，
   有效期至 2031-09-29；`.cer` 存在 `E:\workspace\穷观资料库\证书\`）。**顺序必须是：先签 exe → 再打安装程序（这样载荷才是已签名的那份）→ 再签安装程序 → 最后压 zip**。
@@ -281,6 +281,14 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 ---
 
 ## 10. 当前状态与已知未解（截至 2026-09-29 上午）
+
+**⚠ 版本号（2026-10-01 更新；与本节下面所有陈旧数字冲突时以本条为准）**：对外版本号已两端统一为 **V2.5.2** ——
+桌面对外版本号 **V2.4.2 → V2.5.2**（exe 窗口标题 / `使用说明.txt` / 安装程序 `Installer.cs` 的 `Shared.Version`
+（进"程序和功能"的 DisplayVersion 与安装目录的 `安装信息.txt`）/ `下载\` 的 zip 命名），
+手机版 `versionName "1.11" → "2.5.2"`、`versionCode 12 → 13`（`穷观手机版_apk\android\app\build.gradle`）。
+**下面出现的 `V2.4.2`、`versionCode 6 / versionName 1.5`、`versionCode 9 / versionName 1.8` 都是各次发布当时的历史记录，保留不改。**
+指纹文件（`桌面版\build\_指纹.txt`、`穷观手机版\指纹.txt`、`_gaokao_work\_make_fingerprint_txt.js`）里的同名版本串属**原创指纹，一个字都不许动**；
+`_backup_*` / `_shots*` / `_qa*` / `_gaokao_work` / `_promo` 归档目录同理。
 
 **已发布（GitHub）**：
 - **最新（2026-09-29 晚）`main` = `0e25613`**：新增**物理实验台**（§13，20 个实验）+ 修掉 4 处"裸函数名"致命缺陷
