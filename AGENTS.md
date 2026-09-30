@@ -352,186 +352,36 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 
 ## 12. 物理观澜沙盒（`js/psandbox.js` + `demo.js` 的物理模式）
 
-**它是什么**：从 `E:\workspace\physics-sandbox\index.html`（用户自己的单文件玩具，116 KB，**只读，不要改**）移植进来的
-"物理符号沙盒"：15 个可拖拽字形 `m M g a v r ½ μ c G t B E q I`，拖到一起**按物理规律组合成有行为的实体** ——
-`g+t→v`（v=gt）、`v+t→木板`（s=vt）、`q+t→I`、`m v²/r` 两个成**双星**（m₁r₁=m₂r₂、ω∝√(m总/间距)）、
-`GMm/r²` **引力井**、`2GM/c²` **黑洞**（含终局演出）、`mc²` **爆炸碎裂**；另有磁场 `B`、电场 `E`（F=qE，方向可转）、
-电荷/电流、高速撞击碎裂、垃圾桶、右键复制、双击拆分、旋转手柄。
+> **本节已切到 [`docs/手册_12_物理沙盒.md`](docs/手册_12_物理沙盒.md)（内容逐字节相同）**：AGENTS.md 曾超过工作区指令预算（64 KiB），
+> 注入给 agent 时会被截断。这一节仍然必须读 —— 尤其下面三条结论：
 
-**只在物理科目出现（硬约束，别破坏）**：入口按钮的创建整段关在 `demo.js` 的 `initPhysicsSandbox()` 开头
-`if (!isPhysicsSubject()) return;` 里；连 `#psCSS` 都要等真正用到才注入。非物理科目下**不得出现任何 `ps-` 前缀 DOM**。
-科目读取用既有写法（不发明新键）：`window.CUR_SUBJECT` → `localStorage('qg_subject')` → 主窗心跳
-`localStorage('qg_live_state').subject`；读不到 = 非物理。
-
-**接口**（`window.QG_PSANDBOX`）：`mount(containerEl, opts)` / `unmount()` / `isMounted()` / `applyPreset(key)` /
-`addBody(chars)` / `bodies()` / `clear()` / `stepOnce(dt)` / `state()` / `collect()` / `pause()` / `resume()` /
-`letters()` / `distance()`。**加载它本身不建 DOM、不起循环**（原作是页面加载即启动，模块化时必须保持"惰性"）。
-五个预设：`newton2` / `energy` / `circular` / `gravity` / `freefall`；未知键静默返回 `null` 且**不动场上已有实体**。
-
-**移植时改掉的 5 个真问题（都在代码注释里，别改回去）**：
-① `gravModeOf` 只认 base → "先摆 G 再拖 M m r"永远凑不出引力井；② `canMerge` 的 G 分支只看 `mem` → 装配顺序敏感；
-③ `r` 装入上限 3 → 把 `½mv²/r` 挡在门外（放宽到 4）；④ `tokenSeq` 会把同一个字母数两遍（`mv` 排成 `mmv`）→ 按对象身份去重；
-⑤ **原作给 `½` 另造隐藏结构字形**，导致真 `½` 被判"不在字形表里"而 `display:none`，画面上只剩一个孤零零的 `2`
-（`½mv²` 把 ½ 画丢了）→ 槽位直接指向玩家那个 ½ 字形。另：屏幕震动只抖实验台（原作抖 `document.body`，在观澜里会把聊天区一起抖）。
-
-**验证**：沙盒探针 **28/28** —— 组合规则 6 条、物理真在跑（自由落体 y 100→122.36；引力井距 240.05→182.11 / 40 帧）、
-排版就绪（`hw=76.76/hh=31.25` + DOM 里有对应字形）、五个预设、工具条与 `unmount()` 清理、**数学科目零污染**
-（无按钮、无 CSS、既有 8 个控件全在、既有「🎬 动态演示」流程 `objects:10`、0 异常）。纯 ES5（扫描确认：0 箭头函数 /
-0 `let`/`const` / 0 模板串 / 0 `eval`），零外部依赖，样式全在 `#psCSS` 且选择器带 `ps-` 前缀（**没碰 `css/style.css`**）。
-
-**已知未做**：≤768px 移动端布局只做了代码走查（未实测）；**手机版尚未移植**（手机版观澜是整屏面板、结构不同，
-`tests/guanlan-window.cjs` 的断言也不适用，别照搬桌面版）；黑洞终局演出整套搬了但没跑完整终局探针。
+0. **⚠ 出处与商用权利未确认（2026-09-30）**：被移植的 `E:\workspace\physics-sandbox\index.html` 里**没有作者/许可/仓库/URL**
+   （只有 21 处**飞书文档导出**的 `data-page-node-id`）→ 按"无许可证 = 保留所有权利"，**不能推定可商用**，而本沙盒是**直接移植**。
+   三条出路：确认作者是用户本人 / 取得书面许可 / **净室重写**。**未确认前不得把沙盒当作可商用的自有代码**；细则见 `docs/手册_12_物理沙盒.md` 顶部 ⚠。
+1. **只在物理科目出现**：入口与 `#psCSS` 都关在 `if (!isPhysicsSubject()) return;` 里；读科目只用既有键（`CUR_SUBJECT` → `qg_subject` → `qg_live_state.subject`）。
+2. **⚠⚠「API 全绿 ≠ 能玩」（第三次同类的坑）**：凡「能拼出来 / 能点开 / 能触发」的断言，**必须用真指针事件或真点击驱动**
+   （`Input.dispatchMouseEvent` / `.click()`），**不许只写 `addBody([...])` 或只走 API**。
+   实测事故：26 条公式规则只挂在 `addBody()` 上 → 用户真拖 `U`/`I`/`R` **一个公式都拼不出来**（`eq` 恒为 null）。
+   另记两个坑：沙盒会把**手速转成初速度**（合并要在**松手那一刻**判定）；`.ps-table` **把右侧托盘包在里面**（取位置要排除 `.ps-panel`）。
+3. **界面上够不到的状态也算缺陷**：短路要 `R→0`、碰撞要恢复系数 `e`、斜面要 `μ` —— 沙盒里没有任何 `input`/`slider`，只有字形本身当开关。
 
 ---
 
-## 13. 物理实验台（`js/pslab.js` + `js/pslab/*.js`，物理观澜的第二块）
+## 13. 物理实验台（`js/pslab.js` + `js/pslab/*.js`）
 
-**它是什么**：高中物理**全部学生实验**的可交互实验台 —— 调参数 → 看现象 → 记录数据 → 作图 → 得结论。
-与沙盒（§12）并列：沙盒是"玩符号"，实验台是"做实验"。**接口契约与实验清单在 `docs/物理实验台设计.md`（写新实验前先读它，尤其 §4 与 §9）。**
+> **本节已切到 [`docs/手册_13_物理实验台.md`](docs/手册_13_物理实验台.md)（内容逐字节相同）**。三条必须记住的结论：
 
-**文件**：核心 `js/pslab.js`（注册表 + 三栏 UI + 数据表 + 图像 + 结论卡 + 测试接口）+ 六个组文件
-`js/pslab/{mech,elec,mag,opt,therm,mod}.js`（每组只做一件事：`window.QG_PSLAB.register(id, spec)`，**不自建 DOM、不起循环** —— 惰性）。
-**20 个实验**：力学 8（`linear-motion` `newton-second` `force-composition` `hooke-law` `projectile` `mech-energy` `momentum` `simple-pendulum`）、
-电学 4（`resistivity` `multimeter` `emf-internal` `va-characteristic`）、磁场与电磁感应 3（`lenz-law` `ampere-force` `transformer`）、
-光学 2（`refraction` `double-slit`）、热学 2（`oil-film` `isothermal`）、近代 1（`photoelectric`）。
-
-**只在物理科目出现**（与沙盒同一套判据）：入口 `#glPlBtn` 的创建整段关在 `demo.js` 的 `if (!isPhysicsSubject()) return;` 里；
-`#plCSS` 在 unmount/close 时**会被移除**（沙盒保留 `#psCSS`，两者不同，别"统一"）；两个模式互斥（开一个自动关另一个）。
-
-**四条实现约定（核心落地后追认，细节见设计文档 §9）**：
-① `null` = "这次测量在该图上没有有效值"，**不是 0**（核心跳过该行、不进 fit；真实的 0 照常进图）；
-② `g.font` 宽容签名（`(size)` / `(size,bool)` / `(size,'italic bold')` / `(size,italic,bold)` 都行，内部用哨兵回读校验合法性）；
-③ 滑块 `step` 会归一化并在 `register` 时做参数体检，warning 进 `state().warnings`，`QG_PSLAB.audit()` 可一次看全；
-④ 没有 min/max 的参数必须写成 `type:'select'`（`mod.js` 的波长/阴极材料）。
-**两条探针判据事实**：**r² 必须在"扫自变量"时才有意义**（固定参数下核心返回 `fit:null` 或退化成相关系数平方）；
-**`measure()` 有两种合理语义**（独立测量 / 推进数据系列），比较"改参数前后"时**每个状态各采 24 次**（6 与 8 的公倍数）再比均值。
-
-**⚠ 这个模块踩过的最贵的坑（写任何 UI 回调前先看这条）**：核心左栏的点击处理曾写成
-`function onPick(id){ return function(){ open(id); … }; }` —— 作用域里**没有**局部 `open`，于是解析到**全局 `window.open`**，
-点一个实验变成去开新窗口（桌面 WebView2 会拦原生窗口）→ **学生点了毫无反应**，而所有 API 探针都是绿的（因为 API 路径调的是 `API.open`）。
-**教训**：① UI 回调里的裸函数名要当心 `open`/`close`/`focus`/`print`/`stop` 这类**浏览器 window 上真实存在**的名字，一律写 `API.xxx(...)`；
-② **验收必须用真点击/真交互，不能只走 API** —— 这个 bug 只有 `.click()` 能发现（顺带用 `window.open` 间谍断言零调用）。
-**同类一共 4 处**（`open` ×1 + 工具条 `📏测量一次/↺重置/清空数据` 里的裸 `sync()` ×3 —— 后者的死法是抛 `ReferenceError`，症状一样是"点了没反应"）。
-现在有一条**常驻闸门**：`%TEMP%\qg_plab\barecall_audit.js`（tokenizer 扫描全文件"前面不是 `.`"的调用，逐个查该名字有没有声明；
-当前 425 处裸调用 / 81 个名字 / **0 未解析 / 0 window 陷阱**）。**写类似扫描器时注意**：作者第一版**先剥 `/*…*/` 再剥字符串**，
-而源码注释里有一句 `各组的 js/pslab/*.js 会把实验注册进来` —— 那个 `/*` 让扫描器把后面 60 行全吞了，**它因此漏报了 `onPick` 那一行**。
-**粗糙的正则剥离会给出假绿**：必须先剥字符串、再用带状态的词法扫描处理注释。
-
-**⚠ 第二类盲区：被"空 catch"吞掉的绘制异常（比上面那个更隐蔽，务必读完这一节）**
-`mech.js` 的 `hooke-law` / `simple-pendulum` 曾因**局部变量遮蔽画线原语**而 `draw()` 每帧抛 `TypeError`，
-却被组方 `safeDraw` 的**空 catch** 吃在 body 内部 —— 结果：console 干净、`state.lastError` 空、**所有探针全绿**，
-但画面上只画了一半（单摆的摆线/摆球/悬点/摆角弧全没画）。**这类问题只能靠下面这套判据抓。**
-
-**抓不到的（都实测过，别再指望它们）**：
-① `Runtime.exceptionThrown` / `window.onerror` / console error 计数 —— 异常在 `catch` 里被吞，浏览器根本不报；
-② 核心的 `lastError` —— 它只接住"逃出 body"的异常；
-③ **"画布像素签名会变"** —— 破坏方式是中途夭折，而画面每帧都在变（读数/动画），坏版本下照样变；
-④ "非空白像素 > 0" —— 画到一半也有几万像素；
-⑤ 静态**裸调用**扫描器 —— 抓不到**变量遮蔽**（`L(...)` 里 `L` 是解析得到的局部变量）；
-⑥ 只跑 API 的探针 —— 抓不到只发生在 UI/绘制路径的问题。
-**能抓住的**：
-① `Debugger.setPauseOnExceptions({state:'all'})` + 逐帧读 `Debugger.paused` 的栈 —— 唯一能在"被吞"情况下拿到确切 file:line 的手段
-（⚠ `callFrames[i].url` 可能为空，判据要用 `params.data.description` 的栈文本或 scriptId→url 映射，否则**假绿** —— 第一版就全判成了 clean）；
-② **"画到最后一笔"指令级对照**：拦 `CanvasRenderingContext2D.prototype` 上所有函数型属性记指令序列（按 `this.canvas.id` 过滤），
-再用记录型假 ctx（Proxy 兜底未知方法，**含 `createRadialGradient`**）按同一 `params`/`state` 独立重放 `spec.draw`，
-比较**指令条数**与**末 3 条签名**：正常帧只差核心自己的 3 条前导，夭折帧断崖下降（实测 **68 vs 1825**）。**必须带负对照**（注入一次中途抛错，判据不变红就是盲的）；
-③ 失败通道 + 每帧哨兵（`safeDraw(id, body)` 写 `state.lastError`、每帧末尾画 1×1 哨兵）；
-注意**哨兵只证明包装器跑完、不证明 body 跑完**，且 1×1 在缩放/抗锯齿下不能精确比色，要判"颜色方向一致（cos>0.985）+ 明显偏离纸色"；
-④ 关键实验的**几何级特征**（按源码公式算坐标再数像素：单摆 14/14 采样点非纸色、胡克定律 3/3 标记点为纯墨色）；
-⑤ 真点击 / 真派发事件 + `window.open` 间谍。
-
-**核心为此新增的两条闸门（口径别记错）**：
-```js
-QG_PSLAB.drawErrorCount(id) === 0          // 运行时：异常"穿过 spec.draw 这一层"的次数（自挂载以来；state() 里是 drawErrors/drawErrorsTotal）
-QG_PSLAB.shadowAudit('var-called') === []   // 静态：局部 var 被当函数调用（mech 那一类）——真正能对它报红的是这条
-```
-- ⚠ **`drawErrorCount` 覆盖不到"组内自己 catch"的异常** —— 那是原理性上限（已用对照实验证明：把 `hooke-law` 的 draw 装回修前形状，
-  计数仍为 **0**，而 `shadowAudit` 报红）。所以**两条都要断言**，缺一不可。
-- ⚠ **`shadowAudit` 的警告只进 console，不进 `state().warnings`**（§13 上面那条"warning 进 `state().warnings`"指的是**参数体检**那类；
-  遮蔽扫描与 `empty-catch` 走 console）。探针要查 `QG_PSLAB.shadowAudit()` / `audit()[].suspects` 或 console，**别只查 `state().warnings`**。
-- `shadowAudit` 是**文本启发式**（基于 `spec.draw.toString()`），只扫 draw/measure/step/conclude/onPointer **这 5 个回调本身的函数体**、
-  不跟进组内 helper；已知**合法误报**形状：`var line = d.line; line(...)`（转存函数）；已排除"RHS 是调用表达式（工厂返回函数）"（`mod.js` 的 `var F = mkFontFn(gr); F(...)` 不再误报）。
-  当前对 20 个真实实验 **0 误报**；`empty-catch`（只含注释的 catch）**只列不判**（存在有理由的兜底写法，但要提醒组方：有它在，draw 里任何新异常都会再次静默缺画面）。
-- 修复的可见证据（独立复验实测）：`hooke-law` 非纸色像素 **2397 → 6085**、`simple-pendulum` **2050 → 5516**；
-  20/20 实验每帧被吞异常数 **0**、指令级对照差恒为 3、主探针 217/217。
-
-**验收基线（2026-09-29，20/20 通过 §7 的 1/2/3/4/5/6 条）**：方向性 20/20 ✓（如单摆 L↑→T↑、双缝 d↑→Δy↓、气体 V↑→p↓、
-**光电效应光强×10 → I_sat↑ 而 U_c 不变**）；19 个线性实验 r² ∈ **0.9936~0.99999**，`va-characteristic` 契约 `fit:'none'`；
-结论量级全对（g=9.824、n=1.50、λ=6.575e-7 m、d=6.165e-10 m、**h=6.616e-34 J·s**、ρ=1.087e-6、E=1.494 V/r=0.487 Ω）；
-`20/20 lastError 为空`、0 register 警告、0 console 异常；**数学科目零污染**（无按钮、无 `pl-` DOM、无 `#plCSS`、既有 8 控件与 🎬 流程照旧）。
-
-**已知未做/打折**：手机版未移植；≤768px 只做代码走查；`onPointer` 多数实验未实现（契约里是可选项）；
-各组自测的"像素被画"有些是假 canvas 调用签名（真像素由验收探针补）；部分实验的原理/器材是**搜索摘录级来源**（PDF 读不了，见 §9.13）；
-`emf-internal` 的参数语义是"电流表读数 I"（变阻器电阻由模型反解）；`oil-film` 的"浓度↑→d↑"走"未充分展开→S 偏小"这条人为误差通道。
-
-**发布**：7 个新网页资源必须在 `_rebuild.ps1` 里各加一条 `/resource:` → 内嵌资源总数 **21 → 28**。
+1. **⚠ UI 回调里不许写裸函数名**（`open`/`close`/`sync` 之类会解析到 `window.open`）——一律 `API.xxx(...)`；**验收必须真点击**，只走 API 会全绿而用户点了没反应。
+2. **⚠ 被「空 catch」吞掉的绘制异常**：`drawErrorCount` 覆盖不到组内自吞的异常（原理性上限），必须**同时**断言 `shadowAudit('var-called') === []`。
+3. `null` = 该点无有效值、**不是 0**；r² 只在「扫自变量」时有意义；比较前后每个状态各采 24 次。
 
 ---
 
-## 14. 化学实验台（反应台，`js/clab.js` + `js/clab/*.js`，化学观澜的一块）
+## 14. 化学实验台（`js/clab.js` + `js/clab/*.js`）
 
-**它是什么**：与物理实验台（§13）**同架构、同观感、同工程约束**，差别只在"测量"换成"现象" ——
-选试剂 → 调条件 → **看现象** → 写方程式（核心**自动校验配平**）→ 得结论。
-**契约在 `docs/化学实验台设计.md`（写新反应前先读它）。**
+> **本节已切到 [`docs/手册_14_化学实验台.md`](docs/手册_14_化学实验台.md)（内容逐字节相同）**。四条必须记住的结论：
 
-**文件**：核心 `js/clab.js`（注册表 + 三栏 UI + 现象表 + 结论卡 + `balance()` + 测试接口）+ 六组
-`js/clab/{ions,metals,organic,electro,kinetics,analysis}.js`。**共 50 个反应**：
-离子与溶液平衡 9（`agcl-precip` `baso4-precip` `cuoh2-precip` `feoh3-precip` `carbonate-acid` `ammonium-alkali` `hydrolysis` `precipitate-convert` `complex-ion`）、
-金属与非金属 10（`na-water` `na-oxygen` `fe-cuso4` `al-naoh` `al-thermite` `cl2-metal` `cl2-water` `s-metal` `mg-co2` `cu-hno3`）、
-有机 11（`methane-substitute` `ethylene-addition` `ethylene-polymer` `ethanol-oxidation` `ethanol-elimination` `esterification` `ester-hydrolysis` `glucose-silver` `starch-hydrolysis` `benzene-bromo` `phenol-bromine`）、
-电化学 6（`galvanic-cuzn` `electrolysis-cucl2` `electrolysis-brine` `electroplating` `iron-corrosion` `fuel-cell`）、
-速率与平衡 6（`rate-concentration` `rate-temperature` `rate-catalyst` `equilibrium-fescn` `equilibrium-no2` `weak-electrolyte`）、
-检验·分离·定量 8（`flame-test` `iron-ion-test` `anion-test` `iodine-starch` `acid-base-titration` `kmno4-titration` `gas-collection` `so2-properties`）。
-
-**只在化学科目出现**：入口 `#glClBtn` 的创建整段关在 `demo.js` 的 `if (!isChemSubject()) return;` 里；
-`#clCSS` 在 unmount/close 时会被移除；**沙盒 / 物理实验台 / 化学实验台三者互斥**（开任一个自动收另外两个），
-各自用独立类名（`ps-on` / `pl-on` / `cl-on`）与独立样式 id（`#psCSS` / `#glPlCSS` / `#glClCSS`）——
-**别"统一"它们**，独立命名才能保证一方收尾不抹掉另一方。
-
-**`balance()` 的四档状态（探针口径，别记错）**：
-```js
-{ status: 'ok'          }  // 配平（含离子电荷守恒、括号嵌套、结晶水、聚合物按 n=1 记账）
-{ status: 'no-equation' }  // 本来就没有化学方程式 —— 焰色(物理变化)/碘的萃取(物理变化)/SO₂ 品红加合物(无固定组成)
-                           //   ★ 这是**合法**写法，界面中性灰字、不记 warning、**不许判红**（否则等于惩罚"不编造化学"）
-{ status: 'unbalanced'  }  // 真不配平 —— 只有这一档是缺陷，界面标红并**指出哪个元素/电荷不守恒**
-{ status: 'unparsed'    }  // 解析失败（黄字）
-```
-**已知近似**：聚合物按 1 记账（`nC2H4 = (C2H4)n` 这类写法 ok；`nA = B` 这种不配对写法会被低估成守恒——不在中学范围）；
-`balance` 判守恒不判最简（非最简给 `minimal=false` + note）。
-
-**另外三条实现约定（组里都在用）**：① `react()` 返回"长度 n 的数组 + 末行字段挂在数组上"（`react(6)[0]` 与 `react().phenomena` 都可用）；
-② 现象表就 **4 列**（第几次/现象/方程式/条件），定量列的数字折进"条件"格里显示（7 列会把右栏挤成一字一行）；③ `ionic` 里给全电极反应式时，
-用「净离子方程式 + 中文括注」写法（核心的 `normEqText()` 会先剥含汉字的小括号括注再解析配平；**括注里不能再嵌英文括号**，否则剥不掉会判未配平）。
-
-**⚠ 这轮踩到的三个坑（写新反应前先看）**：
-① **`g.font(size)` 只返回字体串、不写 `ctx.font`** —— 不赋值就整块文字观感丢失，而**像素签名照样在变**，极难发现；自己 `c.font = font`。
-② **`balance()` 不认化学式里的裸小写 `n`**（`nC2H4`/`(C6H10O5)n` 直接解析失败）→ 组 3 把 n 写实为 1000（并另加 500 保持最简比），通式写在 principle/文字里。
-③ **局部函数/变量遮蔽**（`draw()` 体内声明 `bar()` 又被调用）会被核心的 `shadowAudit('var-called')` 抓到 —— 组 1 的 `precipitate-convert` 就中过，
-改法是**把画图原语提到文件级**（`qgKspBar(...)`），别搬回 `draw` 体内。
-④ **`isFinite(null) === true`** —— 判"是不是数字"千万别只写 `!isFinite(x)`：一个表示"无有效值"的 `null` 会穿过守卫，
-走到 `x.toExponential()` 抛 TypeError（组 1 就因此在"等物质的量"边界必炸：`0.2×0.1` 与 `0.1×0.2` 是同一个 IEEE754 值，而滑块上界正好 0.20）。
-正确写法：`x === null || x === undefined || typeof x !== 'number' || !isFinite(x)`。**滑块量程端点要当作必然会被点到的边界来设计。**
-
-**核心的判据口径（断言"化学没坏"就用这几条）**：
-```js
-QG_CLAB.react(n)                      // ★ 绝不把 spec.react 的异常冒给调用方：捕获 → 计数 → lastError → 一次 console.warn → 那一次不出行（行号仍连续）→ 返回数组
-QG_CLAB.reactErrorCount(id) === 0     // 运行时：spec.react 抛的次数（自本次挂载以来；state() 里是 reactErrors/reactErrorsTotal，另有 errorCounts:{draw,react,step,pointer,conclude}）
-QG_CLAB.drawErrorCount(id) === 0      // 口径不变；★ 这两条都覆盖不到"组内自己 catch"的异常 —— 那是原理性上限（同 §13）
-QG_CLAB.balance(eq).status            // ok | unbalanced | unparsed | no-equation（'no-equation' 合法、不标红、不记 warning）
-QG_CLAB.balance(eq).segments[]        // 多步方程式（`;` `；` `｜` `|` 分隔）**逐段**校验；reason 里写「第 k 段：元素 X 不守恒」
-QG_CLAB.graph().degenerate / fitNote  // y 恒定或 x 无分布 → fit:null + degenerate:true（r² 只在"y 非常数且 x 有分布"时可用）
-```
-`balance()` 现在认得：不带数字的 `·`（`NH3·H2O`，N1/H5/O1）、多段式、**减电子写法**（`Cu - 2e- = Cu2+`）；
-修掉的两个真 bug：箭头正则过度贪婪会把 `CH3 - CH2 - OH --催化剂--> C2H4 + H2O` 从更早的空格连字符处劈开（元素数错），
-以及减号只许当"减电子"用（带空格的单键若当分隔符会把元素减掉）。
-
-**⚠ 参数组合扫描是化学的必备闸门**：`open()` 会重置 `lastError`/计数 —— "每个反应只读一次"会漏掉**只在某个参数组合下才炸**的缺陷。
-实际做法：每个反应 ≥60 组（每个 numeric 的 min/mid/max × 每个 select 的全部选项 ＋ 同类单位参数"取相等值"的边界），**每组都读**状态。
-组 1 用它拿到 `precipitate-convert` 的**修前 6 红 → 修后 0 红**；核心用 2745 组全库扫描 + 定点穷举该反应 **1,498,224** 组确认零抛错。
-
-**验收与证据（2026-09-29）**：核心 `node --check` exit 0、离线自证 **133/133** + 真浏览器 **59/59**（真点击、真 rAF、真 `getImageData`）、
-`balance()` 正反例 **45/45**；组内自测：离子 **364**、金属 **506 + 46（真挂载）**、有机 **327 + 110 + 58 + 14 张真像素**、
-电化学/速率 **294 + 28 条配平**、检验定量 **314 + 139**；**全库 register 警告 0、`shadowAudit` 两类均 0、`drawErrorCount` 全 0**
-（我用独立脚本复核过：50 个反应、0 重复 id、0 警告、每个 `draw()` 都能真跑出指令）。
-接线后**四套探针保持基线**（`qa.js` 46/46、`tpl_probe` 45/45、`eng_probe` 20/20、`desk_fp_probe` 3/3、`node --test` 39/39）。
-**发布**：7 个新网页资源各加一条 `/resource:` → 内嵌资源总数 **28 → 35**。
+1. `balance()` 四档：`ok` / **`no-equation`（合法，不许判红）** / `unbalanced`（唯一真缺陷）/ `unparsed`。
+2. **`isFinite(null) === true`** —— 判「是不是数字」必须写 `x === null || x === undefined || typeof x !== 'number' || !isFinite(x)`。
+3. **⚠ 参数组合扫描是必备闸门**（每个反应 ≥60 组，滑块端点必被点到）；`react()` 绝不把组内异常冒给调用方。
+4. 画布：`g.font(size)` 只**返回**字体串、不写 `ctx.font`；`draw()` 体内别声明同名局部函数（`shadowAudit` 会抓）。
