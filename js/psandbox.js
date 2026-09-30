@@ -4330,10 +4330,17 @@
       return null;
     }
     /* 空气击穿场强（高中物理教材级常量，2026-10-01）：约 3×10⁶ V/m。
-       玩具比例尺：1 屏幕像素 = 1 μm（非真实尺寸，注释明示）—— 这样 U=60V、
-       间隙 20px 时 E = 60/(20×10⁻⁶) = 3×10⁶ V/m 正好击穿，游戏窗口可玩；
-       U = Ed 的关系与阈值数值按课本写死，不自造。 */
+       **玩具比例尺（2026-10-01 第二版：放宽 10 倍）= 1 屏幕像素 = 0.1 μm**。
+       为什么放宽：原来 1px = 1μm 时，"U=60V 才能击穿"对应间隙上限只有 20px ——
+       靶子必须怼到箭头上（宣传片 07 镜里画面挤成一团），玩家几乎摆不出来。
+       改 1px = 0.1μm 后同一套课本常数给出一张好用的表（UP = 击穿间隙上限 = U/0.3 px）：
+         U=3  → d ≤ 10px       U=6（默认）→ d ≤ 20px
+         U=30 → d ≤ 100px      U=60（量程上限）→ d ≤ 200px
+       即"U 越大 / 间隙越小 → 越容易击穿"，而且**默认 6V 在 20px 间隙仍然击穿**
+       （6/(20×10⁻⁷) = 3×10⁶ ✓）。U/Ed 的关系与 3×10⁶ 这个阈值一个字没动，
+       动的只有"1 像素等于多少米"这把尺子。 */
     var E_BREAK_AIR = 3e6;
+    var BREAK_M = 1e-7;        // 玩具比例尺：1 屏幕像素 = 0.1 μm（= 1e-7 m）
     /* 两电极之间的**支持半径**（AABB 在单位方向 u 上的支撑函数）：
        盒子在 u 方向的"半径" = |ux|·hw + |uy|·hh —— 轴对齐盒子下这是精确值。 */
     function supportR(B, ux, uy) {
@@ -4348,7 +4355,12 @@
             到目标的距离里还含着源体自己的半个宽度（实测源体 hw≈57.6px，占了
             "20px 间隙"的 3 倍），而且射线会先打中源体自己（d=1 → 击穿恒成立，
             负对照 130px 也照样触发）。
-       现在按物理定义取**电极间距**（源体 ↔ 目标体），1px = 1μm 的比例尺才成立。 */
+       现在按物理定义取**电极间距**（源体 ↔ 目标体），比例尺 BREAK_M 才成立。
+       ★ 2026-10-01 之二（卡面自相矛盾）：击穿判据的 d 与卡片上那条 `E = U/d` 读数
+       从此**共用同一个数** —— 每帧把实测间隙写回源体的 `d`（单位 px，见 BREAK_M），
+       `uniform-field` 分支再用 `E = U/(d·BREAK_M)` 算卡面 E。于是卡面药丸、事件、
+       射线三处的 U/d/E 完全一致（原来卡面按"d=2 米"算出 E=30 V/m，同屏事件却是
+       3.47×10⁶ V/m，差 5 个数量级）。 */
     function arrowBreakdown(A, hit, uv, em) {
       var tx = hit.body ? hit.body.x : (hit.letter ? hit.letter.wx : A.wx);
       var ty = hit.body ? hit.body.y : (hit.letter ? hit.letter.wy : A.wy);
@@ -4357,7 +4369,10 @@
       var dCen = Math.hypot(cdx, cdy);
       var ux = (dCen > 1e-6) ? cdx / dCen : 1, uy = (dCen > 1e-6) ? cdy / dCen : 0;
       var dGap = Math.max(1, dCen - supportR(em, ux, uy) - supportR(hit.body, ux, uy));
-      var dM = dGap * 1e-6;                        // 玩具比例尺：1px = 1μm
+      /* ★ 实测间隙写回源体的 d（px）：卡面 d 药丸从此真的是"空气间隙"，
+         卡面 E = U/(d·BREAK_M) 与这里的 E 逐位一致（同一个 d、同一把尺子）。 */
+      if (em && em.eqState && em.eq === 'uniform-field') em.eqState.d = +dGap.toFixed(2);
+      var dM = dGap * BREAK_M;                     // 玩具比例尺：1px = 0.1μm
       var EField = uv / dM;                        // U = Ed → E = U/d
       var state = (hit.body ? hit.body : hit.letter);
       if (!state) return;
@@ -4951,7 +4966,7 @@
       if (B.eq === 'melt') { S.Q = 4; S.lam = 334000; S.m = 1; S.phase = 'solid'; }
       if (B.eq === 'thermal-balance') { S.Q = 4; if (B.temp == null) B.temp = 20; }
       if (B.eq === 'ideal-gas' || B.eq === 'isothermal' || B.eq === 'isochoric') { S.p = 100000; S.V = 2; S.T = 2; }
-      if (B.eq === 'uniform-field') { S.U = 6; S.d = 2; }
+      if (B.eq === 'uniform-field') { S.U = 6; S.d = 100; }   // d 的单位是 px（空气间隙），100px 时卡面 E=6e5（未击穿）
       if (B.eq === 'impetus') { S.F = 10; S.t = 1; S.m = 1; }
       if (B.eq === 'buoyancy') { S.rho = 1000; S.g = 9.8; S.V = 2; S.m = 1; }
       if (B.eq === 'pressure') { S.F = 10; S.S = 2; }
@@ -5216,12 +5231,18 @@
           if (!B._gasFired) { B._gasFired = true; eqEmit('gas', B, { p: +S.p.toFixed(3), V: Vv, T: Tv, K: +S.K.toFixed(3) }); }
         }
         /* U=Ed（匀强电场）：读数 E=U/d；与箭头击穿联动（击穿判定在 stepArrows）。
-           U 与 ohm 同一套约定：药丸/eqSet 写的 U 走 Uset 镜像。 */
+           U 与 ohm 同一套约定：药丸/eqSet 写的 U 走 Uset 镜像。
+           ★ 2026-10-01 之二：`d` 的单位是**屏幕像素**（= 空气间隙，与 d 药丸的 note 一致），
+           换算用玩具比例尺 BREAK_M（1px = 0.1μm）。于是卡面这条 E 与击穿事件里的 E
+           **逐位相同**（stepArrows 每帧把实测间隙写回 S.d）—— 修掉"同一屏两个 E"。
+           E 的数值量级因此变成 10⁵~10⁷（V/m），正是"空气击穿 3×10⁶ V/m"那一档。 */
         if (B.eq === 'uniform-field') {
           S.U = (typeof S.Uset === 'number') ? S.Uset : S.U;
-          S.d = Math.max(1, (typeof S.d === 'number' && S.d > 0) ? S.d : numOfGlyph(B, 'd'));
-          S.E = S.U / S.d;
-          eqSet(B, 'U', S.U); eqSet(B, 'd', S.d); eqSet(B, 'E', +S.E.toFixed(3));
+          S.d = Math.max(0.5, (typeof S.d === 'number' && S.d > 0) ? S.d : numOfGlyph(B, 'd'));
+          S.E = S.U / (S.d * BREAK_M);
+          /* E 的取整与击穿事件**用同一种写法**（3 位有效数字）：这样"卡面药丸的 E"与
+             "事件里的 E"不只是同数量级，而是**逐位相同**（口径统一，别再各写一份）。 */
+          eqSet(B, 'U', S.U); eqSet(B, 'd', S.d); eqSet(B, 'E', +S.E.toExponential(2));
         }
         /* Δp=Ft（动量定理）：冲量推动体、速度改变（动起来看得见） */
         if (B.eq === 'impetus') {
@@ -5611,7 +5632,11 @@
       'a': { val: 2, lo: 0, hi: 40, step: 0.2, unit: 'm/s\u00B2' },
       /* 第三批新字形（2026-10-01，托盘 62） */
       'V': { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm\u00B3' },
-      'd': { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm' },
+      /* ★ d 的单位是**屏幕像素**（空气间隙的玩具长度单位），不是米：箭头每帧把实测间隙
+         写回这个数，`uniform-field` 的卡面 E 再用 `E = U/(d·BREAK_M)` 算 —— 于是
+         卡面 / 事件 / 射线三处的 d、E 完全一致。量程 0.5~300px 覆盖"1px 贴脸 ~ 300px 拉远"，
+         击穿窗口（U/0.3 px：默认 6V → 20px、拉满 60V → 200px）整段都在里面。 */
+      'd': { val: 100, lo: 0.5, hi: 300, step: 0.5, unit: 'px' },
       'c\u6bd4': { val: 4200, lo: 100, hi: 8400, step: 50, unit: 'J/(kg\u00B7\u00B0C)' },
       'p\u538b': { val: 100000, lo: 10000, hi: 1000000, step: 10000, unit: 'Pa' },
       '\u03bb\u7194': { val: 334000, lo: 10000, hi: 1000000, step: 10000, unit: 'J/kg' },
