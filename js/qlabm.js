@@ -142,20 +142,42 @@
    34px 档是这一档能给出的最大触控热区(取代旧的 46×46)。
    ⚠ 必须显式写 grid-template-rows:none —— 旧规则 repeat(4,46px) 会让
    前 4 行 46px,总高溢出(历史实测)。
-③ 位置:面板放**左下**、垃圾桶由模块钉在右下(见下)。
-④ 垃圾桶:移植版仍有 resetTrashPos(),内联 trash.style.right='14px' /
-   bottom='14px',压过任何选择器 —— 模块窄屏规则 .ps-trash{bottom:calc(42%+12px)}
-   是**死规则**。所以这里**绝不只写 left**(left+right 双向约束会把盒子拉成
-   364px 宽、图标糊到面板上,第一版实测踩过);不碰定位,只放大 svg 到 40px
-   (容器 shrink-to-fit 自动跟着变大)。实测:面板右沿 6+312=318,
-   垃圾桶左沿 390-14-40=336 → 不重叠(18px 净空)。 */
+③ 位置:面板已抽屉化(2026-10-01,见下方 .ps-panel 规则),收起时滑出舞台、
+   只留 32px 把手贴底;展开时 bottom:32px 在把手上方。
+④ 垃圾桶(2026-10-01 抽屉化,用户原话"右下角垃圾桶删掉"):移出屏幕
+   (-120,-120,!important 压过 resetTrashPos 的内联 right/bottom),判定区随之
+   在负坐标,client 永远够不着。⚠ 副作用:手机上不再有"删单个字形"的手势。 */
       '#glStage .ps-bar{gap:5px;padding:5px 6px}',
       '#glStage .ps-bar button{min-height:40px;padding:0 12px;font-size:13px}',
       '#glStage .ps-sep{height:22px}',
-      '#glStage .ps-panel{top:auto;bottom:6px;right:auto;left:6px;',
+      /* ★ 2026-10-01 抽屉化(用户原话:字母面板改成下方向上拉的抽屉):
+         面板不再是常驻占位 —— 收起时整体 translateY(100%+10px) 滑出舞台,
+         只留本文件注入的把手条 #qmDockHandle(32px)贴底;舞台保持满高,
+         公式在整块台面上运动。展开(#glStage.qm-dock-open)滑回 bottom:32px,
+         仍是 8 列 × 34px、面板内滚动。抽屉是 absolute overlay,任何状态下
+         **不参与布局**(不留 padding/高度),世界坐标零位移。 */
+      '#glStage .ps-panel{top:auto;bottom:32px;right:auto;left:6px;',
       'grid-template-columns:repeat(8,34px);grid-template-rows:none;grid-auto-rows:34px;gap:4px;padding:6px;',
       'max-height:42%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;',
-      '-webkit-overflow-scrolling:touch}',
+      '-webkit-overflow-scrolling:touch;',
+      'transition:transform .18s ease;transform:translateY(calc(100% + 42px))}',
+      '#glStage.qm-dock-open .ps-panel{transform:translateY(0)}',
+      '#qmDockHandle{position:absolute;left:0;right:0;bottom:0;height:32px;z-index:12;',
+      'display:flex;align-items:center;justify-content:center;gap:10px;',
+      'background:rgba(38,34,28,.92);color:#F4F1EA;font-family:Georgia,"Times New Roman",serif;',
+      'font-size:12.5px;font-style:italic;letter-spacing:.5px;touch-action:none;',
+      'user-select:none;-webkit-user-select:none;cursor:ns-resize;',
+      'border-top:1px solid rgba(244,241,234,.22)}',
+      '#qmDockHandle .qm-txt{opacity:.85}',
+      '#qmDockHandle .qm-collapse{background:transparent;border:1px solid rgba(244,241,234,.4);',
+      'color:#F4F1EA;border-radius:6px;height:22px;padding:0 10px;font-size:11px;cursor:pointer}',
+      /* ★ 垃圾桶(2026-10-01 抽屉化,用户原话:右下角垃圾桶删掉):移出屏幕
+         (-120,-120)而不是 display:none —— display:none 的 rect 是全 0,模块
+         dropLetter 的判定是"client ∈ rect±6px",会在视口左上角(0..6,0..6)留下
+         一个 6×6 的**看不见的命中区**,丢到那里字形会被删。移到负坐标后
+         client 坐标永远 ≥0,判定永不命中。!important 压过 resetTrashPos() 的
+         内联 right/bottom。 */
+      '#glStage .ps-trash{left:-120px!important;top:-120px!important;right:auto!important;bottom:auto!important}',
       /* ⚠ 2026-09-30 移植版(329FA8EB…):GD() 只给字形写内联 **font-size**
          (停靠 34px / 台上 F=48px),**没有**内联 width/height/负 margin ——
          托盘字形盒由 `.ps-panel .ps-char{width:100%;height:100%}` 自动撑满格子。
@@ -255,6 +277,80 @@
   }
 
   /* ------------------------------------------------------------------ *
+   * 2.5) 沙盒符号面板 = 底部上拉抽屉(2026-10-01 抽屉化,用户原话)      *
+   *      把手 DOM + 手势全部在本文件;绝不碰 psandbox.js(桌面共用)。   *
+   * ------------------------------------------------------------------ */
+  var dockOpen = false;
+  var dockStageFn = null;
+  function dockHandle() { return document.getElementById('qmDockHandle'); }
+  function setDockOpen(open) {
+    dockOpen = !!open;
+    var st = $('glStage');
+    if (st) st.classList.toggle('qm-dock-open', dockOpen);
+    var h = dockHandle();
+    if (h) {
+      var bt = h.querySelector('.qm-collapse');
+      if (bt) bt.style.display = dockOpen ? '' : 'none';
+      var tx = h.querySelector('.qm-txt');
+      if (tx) tx.textContent = dockOpen ? '\u7b26\u53f7\u6258\u76d8' : '\u2191 \u7b26\u53f7\u6258\u76d8 \u00b7 \u4e0a\u62c9\u5c55\u5f00';
+    }
+  }
+  function dockEnsureHandle(rootEl) {
+    if (dockHandle()) return;
+    var st = rootEl && rootEl.parentNode ? rootEl.parentNode : $('glStage');
+    if (!st) return;
+    var h = cel('div', '');
+    h.id = 'qmDockHandle';
+    h.innerHTML = '<span class="qm-txt">\u2191 \u7b26\u53f7\u6258\u76d8 \u00b7 \u4e0a\u62c9\u5c55\u5f00</span>' +
+      '<button type="button" class="qm-collapse">\u25be \u6536\u8d77</button>';
+    st.appendChild(h);
+    var bt = h.querySelector('.qm-collapse');
+    bt.addEventListener('click', function () { setDockOpen(false); });
+    /* 把手手势:上拉 >34px 展开 / 下拉 >34px 收回 / 没动过就松手 = 点一下切换 */
+    h.addEventListener('pointerdown', function (e) {
+      h._dy = e.clientY; h._moved = false;
+      if (h.setPointerCapture) { try { h.setPointerCapture(e.pointerId); } catch (e1) { } }
+    });
+    h.addEventListener('pointermove', function (e) {
+      if (h._dy == null) return;
+      var d = e.clientY - h._dy;
+      if (d < -34) { h._moved = true; setDockOpen(true); }
+      else if (d > 34) { h._moved = true; setDockOpen(false); }
+    });
+    h.addEventListener('pointerup', function (e) {
+      var was = h._moved;
+      h._dy = null; h._moved = false;
+      if (!was) setDockOpen(!dockOpen);
+    });
+    h.addEventListener('pointercancel', function () { h._dy = null; h._moved = false; });
+    /* 点抽屉外 → 收回(捕获阶段;面板内部与把手自身不触发)。
+       ⚠ 监听器挂在 #glStage 上且**只挂一次**(dockStageFn 判空),teardown 时移除,
+       否则每次 attach 叠一个监听器。 */
+    if (!dockStageFn) {
+      dockStageFn = function (e) {
+        if (!dockOpen) return;
+        var p = document.querySelector('#glStage .ps-panel');
+        if (p && e.target && p.contains(e.target)) return;
+        var hh = dockHandle();
+        if (hh && e.target && hh.contains(e.target)) return;
+        setDockOpen(false);
+      };
+      st.addEventListener('pointerdown', dockStageFn, true);
+    }
+  }
+  function dockTearDown() {
+    dockOpen = false;
+    var h = dockHandle();
+    if (h && h.parentNode) h.parentNode.removeChild(h);
+    var st = $('glStage');
+    if (st) st.classList.remove('qm-dock-open');
+    if (dockStageFn) {
+      if (st) st.removeEventListener('pointerdown', dockStageFn, true);
+      dockStageFn = null;
+    }
+  }
+
+  /* ------------------------------------------------------------------ *
    * 3) 对外接口                                                        *
    * ------------------------------------------------------------------ */
   var API = {
@@ -291,6 +387,10 @@
           rootEl.addEventListener('click', onListClick, true);
           setTab(opts.tab === 'list' ? 'list' : 'data');
         }
+      } else {
+        // 沙盒:注入底部抽屉把手,初始恒为**收起**(退出再进也回到收起)
+        dockEnsureHandle(rootEl);
+        setDockOpen(false);
       }
       try {
         var mq = window.matchMedia(MQ);
@@ -310,6 +410,7 @@
       try { if (c.root && c.onPick) c.root.removeEventListener('click', c.onPick, true); } catch (e) { /* 忽略 */ }
       try { if (c.bar && c.bar.parentNode) c.bar.parentNode.removeChild(c.bar); } catch (e2) { /* 忽略 */ }
       try { if (c.mq) { if (c.mq.removeEventListener) c.mq.removeEventListener('change', syncBreakpoint); else if (c.mq.removeListener) c.mq.removeListener(syncBreakpoint); } } catch (e3) { /* 忽略 */ }
+      dockTearDown();   // 抽屉把手撤掉 + 状态复位成收起
       dropCSS();
       return true;
     },
