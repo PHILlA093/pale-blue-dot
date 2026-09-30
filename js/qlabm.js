@@ -165,6 +165,12 @@
       '#glStage .ps-panel .ps-char{width:34px!important;height:34px!important;margin:0!important;' +
       'font-size:34px!important}',
       '#glStage .ps-trash svg{width:40px;height:40px}',
+      /* 成就面板(2026-10-01 新功能,模块挂在 body 上、position:fixed):
+         模块 placeAchv() 手机分支钉在 st+46 —— 手机上工具条是两行(63~115),
+         st+46≈103 会压住工具条下缘。这里把它挪到工具条下方(y=120)。
+         ⚠ 必须 !important:placeAchv() 在 mount/resize 时写内联 style.top,
+         普通样式表压不过内联。它是 pointer-events:none,不挡任何点击。 */
+      'body .ps-achv{top:120px!important}',
       '#glStage .ps-menu{padding:12px 20px;font-size:16px}',
       '#glStage .ps-log{left:50%;bottom:auto;top:126px;transform:translateX(-50%);font-size:13px;padding:7px 16px}',
       '}'

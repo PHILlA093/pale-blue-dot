@@ -117,6 +117,21 @@
       '.ps-pill.on{background:#26221C;color:#F4F1EA;border-color:#26221C}',
       '.ps-pill b{font-weight:normal;font-size:11px}',
       '.ps-pill u{text-decoration:none;opacity:.55;font-size:8.5px;font-style:normal}',
+      /* 成就面板（2026-10-01 新功能）：放在观澜左侧 AI 对话区顶部。
+         ⚠ 挂在 document.body 上、position:fixed（2026-10-01 修复"DOM 对但屏幕
+         看不见"）：原来挂在 .ps-overlay 里、用负 left 往舞台左边伸出 —— 而
+         .gl-stage 是 overflow:hidden，任何伸出舞台的 DOM 都被它裁掉
+         （getBoundingClientRect 照常报盒子，像素却一个都不画）。fixed + body
+         直挂后不受任何祖先裁剪；z-index 200 压过观澜外壳（#guanlan z-150）。
+         纸色底、墨色细边、衬线斜体小徽章，克制不花哨；同类事件重复触发只计数。 */
+      '.ps-achv{position:fixed;left:6px;top:62px;z-index:200;padding:5px 8px;border:1px solid rgba(38,34,28,.16);',
+      'border-radius:9px;background:rgba(255,255,255,.78);font-family:Georgia,"Times New Roman",serif;',
+      'color:#26221C;pointer-events:none;user-select:none}',
+      '.ps-achv-title{font-size:10.5px;font-style:italic;color:#4a443a;letter-spacing:1px;margin-bottom:2px}',
+      '.ps-achv-row{display:flex;flex-wrap:wrap;gap:3px;max-width:330px}',
+      '.ps-achv-b{display:inline-block;padding:1px 6px;border:1px solid rgba(38,34,28,.28);border-radius:999px;',
+      'background:rgba(255,255,255,.85);font-size:10px;font-style:italic;white-space:nowrap}',
+      '.ps-achv-b b{font-weight:normal;opacity:.6;font-size:9px}',
       /* 窄窗（观澜在主窗里是浮动面板）：面板压到底部、提示收起、垃圾桶靠边。
          ⚠ 符号涨到 56 后这里列数固定 8（桌面 9），格子 30px —— 装不下就在面板
          内部纵向滚动（max-height:42%），不会把字形压成看不见的细条，也不会横向
@@ -376,6 +391,11 @@
         if (d.rot > Math.PI) d.rot -= 6.2832;
         if (d.rot < -Math.PI) d.rot += 6.2832;
         placeLetter(d);
+        /* 操作日志：箭头转向（同一连串滚动 400ms 内只记一条，2026-10-01） */
+        if (!d._logT || Date.now() - d._logT > 400) {
+          d._logT = Date.now();
+          opLog('arrow-turn', { deg: Math.round((d.rot || 0) * 180 / Math.PI) });
+        }
       }, { passive: false });
       return d;
     }
@@ -867,6 +887,11 @@
          ⚠ 这里**只做识别**：绝不因此改写 hasG/hasA/hasV/isWell/mass 等既有行为字段
          （公式体不额外施力、不被吸引），否则会改变原有手感与确定性断言。 */
       var eq = eqOfBody(B);
+      if (eq && !B.eq) {
+        /* 成式那一刻（null → 某条公式）：成就「成式」+ 操作日志 assemble（2026-10-01） */
+        eqEmit('formula', B, { eq: eq.id, text: eq.text });
+        opLog('assemble', { eq: eq.id, text: eq.text });
+      }
       B.eq = eq ? eq.id : null;
       B.eqText = eq ? eq.text : null;
       /* 结构一变，上次 = 变换的"换边/淡出"作废（式子已经不一样了） */
@@ -1062,6 +1087,22 @@
         var it = items[i];
         var w = it.g.m.w * it.s;
         var gap = (i < items.length - 1) ? kern(it.g.type, items[i + 1].g.type) : 0;
+        /* ★ 盒子不相交（2026-10-01 修复，用户报"公式字母重叠"的另一半）：
+           字形是 DOM 元素，getBoundingClientRect 的盒子宽 = offsetWidth（整数取整），
+           排版却按 measureText 的墨迹宽度推进 —— 窄字形后接宽字形时两个盒子会
+           咬在一起（'I'(19px) 接 'R'(34px)：旧中心距 23.7px < 需要的 26.5px，
+           重叠 ~2.8px；F(29) 接 m(42) 重叠 ~1.7px）。
+           这里把中心距补到 ≥ (盒A+盒B)/2，只补"缺口"：
+           · 补到刚好相接（x[i+1] = x[i]+w[i]，断言取 ≥）；
+           · 缺口 ≤0.5px 的不补（GMm 的 G→M 只有 0.2px 亚像素级相接，补了会
+             把永久断言 hw=76.76171875 顶掉 —— 那是逐位压死的，不许碰）。 */
+        if (i < items.length - 1) {
+          var bwA = (it.g.w || it.g.m.w) * it.s;
+          var nxt = items[i + 1];
+          var bwB = (nxt.g.w || nxt.g.m.w) * nxt.s;
+          var need = (bwA + bwB) / 2;
+          if (need - (w + gap) > 0.5) gap = need - w;
+        }
         parts.push({ g: it.g, s: it.s, dy: it.dy, cx: x + w / 2, w: w });
         x += w + gap;
       }
@@ -1257,11 +1298,27 @@
         layoutBracket(B); return;
       }
       if (isFrac) { layoutFrac(B, vG, rG); return; }
+      /* ★ 排版必须覆盖 tokenSeq 会显示的全部字形（2026-10-01 修复，用户报"公式
+         字母重叠"）：原来 num2 只放 massG + 质量字母 / 第一个 v，而 tokenSeq 会
+         把非质量字母（U I R、F m a、p m v 里的 p…）都排出来 —— 没拿到 sx/sy 的
+         字形全部留在局部 (0,0)，公式字母叠成一坨（UIR 实测三个字形 x=742/751/743）。
+         现在 num2 与 tokenSeq 的显示集**逐字一致**（同一条跳过规则、同一套对象去重）。 */
       var num2 = [{ g: B.massG, s: 1, dy: 0 }];
-      if (vG) num2.push({ g: vG, s: 1, dy: 0 });
-      if (B.vCount >= 2 && B.st.sq) num2.push({ g: B.st.sq, s: 1, dy: 0 });
       if (B.family === 0) {
-        for (var mq = 0; mq < B.mem.length; mq++) if (isMass(B.mem[mq])) num2.push({ g: B.mem[mq], s: 1, dy: 0 });
+        for (var mq = 0; mq < B.mem.length; mq++) {
+          if (B.mem[mq] === B.massG) continue;   // 按对象身份去重（与 tokenSeq 同一套）
+          num2.push({ g: B.mem[mq], s: 1, dy: 0 });
+        }
+      } else {
+        var vSeen2 = false;
+        for (var mq2 = 0; mq2 < B.mem.length; mq2++) {
+          var tg = B.mem[mq2].type;
+          if (tg === 'r' || isOp(tg)) continue;  // 与 tokenSeq family 2 的跳过规则一致
+          if (tg === 'v') { if (vSeen2) continue; vSeen2 = true; }
+          if (B.mem[mq2] === B.massG) continue;
+          num2.push({ g: B.mem[mq2], s: 1, dy: 0 });
+        }
+        if (B.vCount >= 2 && B.st.sq) num2.push({ g: B.st.sq, s: 1, dy: 0 });
       }
       layoutRun(B, num2);
     }
@@ -1901,6 +1958,7 @@
            而真实字形墨迹宽度不是 0.7F —— 松手后字形中心会系统性偏离投放点
            4~5px（落点断言 ≤2px 就是这么红的）。GD() 已经用 offsetWidth 量好
            真实宽高，直接沿用即可，慢拖落点 = 投放点。 */
+        opLog('drag-out', { ch: d.ch });   // 操作日志：从托盘拖出字形（2026-10-01）
         grab = { kind: 'letter', obj: t2, gx: pointer.x - cx, gy: pointer.y - cy,
                  lx: pointer.x, ly: pointer.y, t: performance.now(), start: pointer.x };
         table.appendChild(t2.el);
@@ -1971,9 +2029,13 @@
         B.x = pointer.x - grab.gx; B.y = pointer.y - grab.gy;
         var dt = (performance.now() - grab.t) / 1000 || 0.016;
         if (dt > 0) {
+          /* 只记手速供松手判定，**不再把速度写进 B.vx/B.vy**（2026-10-01 修复，
+             用户报"抓公式体松手飞走"的残余路径）：公式体的 eq 动力学在抓取期间
+             照常积分，写进去的手速会让体在两帧之间漂移（实测慢拖 300px 松手，
+             体漂出 121px）—— 轻轻放下就该停在松手处。甩出的初速度由松手那一刻
+             按同一套 THROW 语义单独算。 */
           var spx = (pointer.x - grab.lx) / dt, spy = (pointer.y - grab.ly) / dt;
           grab.svx = spx; grab.svy = spy;
-          B.vx = spx; B.vy = spy;
         }
         grab.lx = pointer.x; grab.ly = pointer.y; grab.t = performance.now();
         cv.style.cursor = findFreeLetterTarget(B) ? 'copy' : 'grabbing';
@@ -1998,6 +2060,11 @@
         Rl.rot = shortAng((Rl.rot || 0) + (al1 - al0));
         grab.lx = pointer.x; grab.ly = pointer.y;
         placeLetter(Rl);
+        /* 操作日志：箭头转向（拖手柄连转 400ms 内只记一条，2026-10-01） */
+        if (!Rl._logT || Date.now() - Rl._logT > 400) {
+          Rl._logT = Date.now();
+          opLog('arrow-turn', { deg: Math.round((Rl.rot || 0) * 180 / Math.PI) });
+        }
       }
     });
 
@@ -2040,9 +2107,16 @@
         }
         if (B.kind) {
           if (inPanel(pointer.x, pointer.y)) { killBody(B); grab.kind = null; grab.obj = null; return; }
+          /* 场体（q/I/B/E/T）抓取松手：与游离字形同一套手速语义（2026-10-01 修复，
+             用户报"抓公式体飞走"）——轻轻放下 → 停在松手处；故意快甩才飞。 */
           var sp2 = Math.hypot(grab.svx, grab.svy);
-          if (sp2 > 20) { var f2 = clamp(1 - sp2 / 6000, 0.5, 1); B.vx = grab.svx * f2; B.vy = grab.svy * f2; }
-          else { B.vx = 0; B.vy = 0; }
+          var still2 = (performance.now() - grab.t) > STILL_MS;
+          if (!still2 && sp2 >= THROW_MIN) {
+            var k2f = Math.min(1, (sp2 - THROW_MIN) / THROW_MIN);
+            var out2 = sp2 * k2f; if (out2 > THROW_MAX) out2 = THROW_MAX;
+            B.vx = (sp2 > 1e-6) ? (grab.svx / sp2) * out2 : 0;
+            B.vy = (sp2 > 1e-6) ? (grab.svy / sp2) * out2 : 0;
+          } else { B.vx = 0; B.vy = 0; }
           grab.kind = null; grab.obj = null;
           return;
         }
@@ -2064,9 +2138,18 @@
           }
         }
         if (didSplit) { grab.kind = null; grab.obj = null; return; }
-        if (Math.abs(grab.svx) > 20 || Math.abs(grab.svy) > 20) {
-          var f = clamp(1 - Math.hypot(grab.svx, grab.svy) / 6000, 0.5, 1);
-          B.vx = grab.svx * f; B.vy = grab.svy * f;
+        /* 公式体抓取松手：与游离字形同一套手速语义（2026-10-01 修复，用户报
+           "按住公式体慢移 300px 松手，体飞了 841px"——旧阈值 20px/s 把正常拖动
+           当甩动）。轻轻放下（<1500px/s 或松手前静置 ≥140ms）→ 初速度 0，
+           正好停在松手处；故意快甩（≥1500px/s）→ 超出部分按比例转初速度、
+           封顶 THROW_MAX，方向 = 手势方向。 */
+        var spd0b = Math.hypot(grab.svx, grab.svy);
+        var stillB = (performance.now() - grab.t) > STILL_MS;
+        if (!stillB && spd0b >= THROW_MIN) {
+          var k0b = Math.min(1, (spd0b - THROW_MIN) / THROW_MIN);
+          var out0b = spd0b * k0b; if (out0b > THROW_MAX) out0b = THROW_MAX;
+          B.vx = (spd0b > 1e-6) ? (grab.svx / spd0b) * out0b : 0;
+          B.vy = (spd0b > 1e-6) ? (grab.svy / spd0b) * out0b : 0;
         } else {
           B.vx = 0; B.vy = 0;
         }
@@ -2410,10 +2493,11 @@
       table.style.transform = '';
       invalidateTableOrigin();
     }
-    /* 清空：场上全清，面板恢复 15 个字形的完好状态 */
+    /* 清空：场上全清，面板恢复 56 个字形的完好状态 */
     function clearAll() {
       removeAllBodies();
       rebuildPanel();
+      opLog('clear');   // 操作日志（2026-10-01）
     }
     /* 全部收进面板：把场上所有实体**拆回字形**并归还面板 */
     function collectToPanel() {
@@ -3850,6 +3934,7 @@
         if (!L._rayT || tWorld - L._rayT > 0.3) {
           L._rayT = tWorld;
           eqEmit('heat', null, { ch: L.ch, temp: Math.round(L.temp * 10) / 10, by: 'ray' });
+          opLog('heat', { target: L.ch, temp: Math.round(L.temp * 10) / 10 });  // 操作日志（2026-10-01）
         }
         return;
       }
@@ -3860,6 +3945,7 @@
       if (!B._rayT || tWorld - B._rayT > 0.25) {
         B._rayT = tWorld;
         eqEmit('heat', B, { temp: Math.round(B.temp * 10) / 10, by: 'ray' });
+        opLog('heat', { target: B.kind ? B.kind : (B.eq || 'body'), temp: Math.round(B.temp * 10) / 10 });  // 操作日志（2026-10-01）
       }
       /* Q 在箭头左侧（体里有 Q 字形、或附近游离 Q）：Q = cmΔt 换算温度，数值必须一致 */
       var qv = null;
@@ -3965,6 +4051,7 @@
       groundY = Math.round(H * 0.8);
       /* 跨过 768px 断点时托盘列数会变（9 ↔ 8），钉位要按新列数重排 */
       sortPanel();
+      placeAchv();   // 成就面板位置跟着舞台左缘走（2026-10-01）
       // 全屏作用半径：黑洞的拉力在舞台对角线处恰好为 0，越靠里越强
       BH_REACH = Math.hypot(W, groundY) + 240;
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
@@ -4060,12 +4147,103 @@
     var eqStepNo = 0;             // 子步序号（碰撞冷却：同一子步内一对体只判一次）
     var EQ_EVENTS = [];           // 事件环形缓冲（探针可读；只保留最近 64 条）
     var eqEventSeq = 0;
+    /* ---- 成就面板（2026-10-01 新功能）：把触发过的事件挂成小徽章，同类计数。
+       挂在观澜左侧 AI 对话区顶部（.ps-overlay 负 left 伸出舞台左边）；只在沙盒
+       挂载时存在（unmount 连 overlay 一起拆干净）。 ---- */
+    var ACHV_NAMES = {
+      'formula': '\u6210\u5f0f', 'short-circuit': '\u77ed\u8def', 'open-circuit': '\u65ad\u8def',
+      'collide': '\u78b0\u649e\u00b7\u03a3p \u5b88\u6052', 'spring-turn': '\u7b80\u8c10',
+      'induced-emf': '\u611f\u5e94', 'binary': '\u53cc\u661f', 'cap-charged': '\u5145\u6ee1',
+      'transform': '\u53d8\u6362', 'heat': '\u5347\u6e29', 'heat-caloric': '\u5347\u6e29', 'combo': '\u62fc\u5408'
+    };
+    var ACHV = {};   // type -> count（heat 与 heat-caloric 合并计数）
+    var achvEl = null;
+    function achvKeyOf(type) { return (type === 'heat-caloric') ? 'heat' : type; }
+    function placeAchv() {
+      if (!achvEl) return;
+      /* fixed 定位（2026-10-01 修复）：按**舞台**的屏幕矩形摆位 ——
+         舞台左边 ≥140px 说明左侧有 AI 对话栏：面板钉在对话栏顶部（视口左上角）；
+         没有左栏（舞台顶满窗口）就退到舞台内、工具条下方，绝不伸出舞台。 */
+      var sl = 0, st = 0;
+      try { var o = tableOrigin(); sl = o.left; st = o.top; } catch (e) { sl = 0; st = 0; }
+      if (sl >= 140) {
+        achvEl.style.left = '6px';
+        achvEl.style.top = (st + 6) + 'px';
+        achvEl.style.maxWidth = (sl - 12) + 'px';
+      } else {
+        achvEl.style.left = (sl + 10) + 'px';
+        achvEl.style.top = (st + 46) + 'px';
+        achvEl.style.maxWidth = '';
+      }
+    }
+    function refreshAchv() {
+      if (!achvEl) return;
+      var row = achvEl._row;
+      if (!row || !row.parentNode) return;
+      while (row.firstChild) row.removeChild(row.firstChild);
+      var any = false;
+      for (var k in ACHV) {
+        if (!ACHV[k]) continue;
+        var name = ACHV_NAMES[k];
+        if (!name) continue;
+        any = true;
+        var b = DD.createElement('span');
+        b.className = 'ps-achv-b';
+        b.setAttribute('data-ev', k);
+        if (ACHV[k] > 1) b.innerHTML = name + ' <b>\u00d7' + ACHV[k] + '</b>';
+        else b.textContent = name;
+        row.appendChild(b);
+      }
+      achvEl.style.display = any ? '' : 'none';
+    }
+    function buildAchv() {
+      achvEl = DD.createElement('div');
+      achvEl.className = 'ps-achv';
+      var t = DD.createElement('div');
+      t.className = 'ps-achv-title';
+      t.textContent = '\u6210\u5c31';
+      var row = DD.createElement('div');
+      row.className = 'ps-achv-row';
+      achvEl.appendChild(t);
+      achvEl.appendChild(row);
+      achvEl._row = row;
+      achvEl.style.display = 'none';
+      (DD.body || DD.documentElement).appendChild(achvEl);   // ★ 直挂 body（fixed），不受 .gl-stage 裁剪
+      placeAchv();
+      refreshAchv();
+    }
+    /* ---- 操作日志（2026-10-01 新功能）：记"用户做了什么操作"，持久化到
+       localStorage['qg_ps_oplog']（JSON 数组，上限 500 条，超出丢最旧的）；
+       桌面与手机同一套 localStorage，下次打开还能翻账。不进 UI。 ---- */
+    var OPLOG_KEY = 'qg_ps_oplog';
+    var oplog = [];
+    function oplogLoad() {
+      try {
+        var s = window.localStorage.getItem(OPLOG_KEY);
+        if (s) { oplog = JSON.parse(s); if (!oplog || typeof oplog.length !== 'number') oplog = []; }
+      } catch (e) { oplog = []; }
+      if (oplog.length > 500) oplog = oplog.slice(oplog.length - 500);
+    }
+    function oplogSave() {
+      try { window.localStorage.setItem(OPLOG_KEY, JSON.stringify(oplog)); } catch (e) { /* 配额满就丢 */ }
+    }
+    function opLog(op, data) {
+      var entry = { t: Date.now(), op: op };
+      if (data) { for (var k in data) entry[k] = data[k]; }
+      oplog.push(entry);
+      if (oplog.length > 500) oplog = oplog.slice(oplog.length - 500);
+      oplogSave();
+    }
     function eqEmit(type, B, data) {
       eqEventSeq++;
       EQ_EVENTS.push({ seq: eqEventSeq, t: +eqTime.toFixed(6), type: type,
                        id: B ? bodies.indexOf(B) : -1, eq: B ? B.eq : null, data: data || null });
       if (EQ_EVENTS.length > 64) EQ_EVENTS.shift();
       if (B) { B.evType = type; B.evT = eqTime; }
+      /* 成就计数 + 操作日志（2026-10-01） */
+      var ak = achvKeyOf(type);
+      if (ACHV_NAMES[ak]) { ACHV[ak] = (ACHV[ak] || 0) + 1; refreshAchv(); }
+      opLog('event', { ev: type, d: data || null });
     }
     function eqResetAll() { EQ_EVENTS = []; eqEventSeq = 0; eqTime = 0; eqAcc = 0; }
     /* 物理读数：公式卡上实时显示的那几行（也进 bodyState().readout，供断言） */
@@ -4198,6 +4376,7 @@
       for (i = 0; i < bodies.length; i++) {
         var B = bodies[i];
         if (!B.eq || B.bh) continue;
+        if (grab.kind === 'body' && grab.obj === B) continue;   // ★ 被抓住的体不积分（2026-10-01）
         eqInitState(B);
         var S = B.eqState;
         /* newton2：F=ma 真的给出加速度 */
@@ -4708,6 +4887,7 @@
       var after = eqValueOf(B);
       B._cons = { before: before, after: after, d: Math.abs(before - after) };
       eqEmit('transform', B, { eq: B.eq, before: before, after: after, d: B._cons.d, side: B.paramSide });
+      opLog('transform', { before: before, after: after, d: B._cons.d });   // 操作日志（2026-10-01）
       addLog(B.eqText + ' \u4e24\u4fa7\u4e92\u6362\uff08\u6570\u503c\u5b88\u6052\uff0c\u5dee ' + B._cons.d + '\uff09');
       var lead = LEAD_OF[B.eq];
       for (var i = 0; i < B.mem.length; i++) {
@@ -4930,6 +5110,7 @@
       clearAll();
       resize();
       tWorld = 0;
+      opLog('preset', { key: key });        // 操作日志（2026-10-01）
       return { key: key, made: fn() };
     }
 
@@ -4951,21 +5132,27 @@
     });
     onEv(window, 'resize', resize);
 
-    /* 面板 15 个字形 + 起循环 */
+    /* 操作日志载入 + 面板 56 个字形 + 成就面板 + 起循环（2026-10-01） */
+    oplogLoad();
+    opLog('mount');
     rebuildPanel();
+    buildAchv();
     resize();
     requestAnimationFrame(frame);
     if (opts.preset) applyPreset(opts.preset);
 
     function unmount() {
       alive = false;
+      opLog('unmount');   // 操作日志（2026-10-01）
       if (rafId) { try { cancelAnimationFrame(rafId); } catch (e) { /* 忽略 */ } rafId = 0; }
       offAll();
       clearTimeout(addLog._t);
       if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      if (achvEl && achvEl.parentNode) achvEl.parentNode.removeChild(achvEl);   // 成就是 body 直挂的，单独拆
       // 断开所有引用，让这次 mount 的整套闭包可以整体回收
       ALL = []; freeL = []; bodies = []; formulas = []; particles = [];
       P = {};
+      achvEl = null;
       // 通知宿主收尾（观澜靠它把舞台类名/提示行/按钮文案还原）。
       // 无论 unmount() 是谁调的（按钮、切科目、探针直接调），宿主都必须收干净。
       if (typeof opts.onUnmount === 'function') {
@@ -5047,6 +5234,15 @@
       },
       /* eqClearEvents()：清空事件缓冲（每条交互的断言都从干净状态起算） */
       eqClearEvents: function () { EQ_EVENTS = []; eqEventSeq = 0; return true; },
+      /* operationLog(n)（2026-10-01 新功能）：最近 n 条操作日志（mount/unmount/
+         drag-out/assemble/event/preset/transform/arrow-turn/heat/clear）；
+         n 缺省取最多 500；n===0 = 清空。持久化在 localStorage['qg_ps_oplog']。 */
+      operationLog: function (n) {
+        if (n === 0) { oplog = []; oplogSave(); return []; }
+        n = (n == null) ? 500 : Math.max(1, Math.min(500, n | 0));
+        return oplog.slice(Math.max(0, oplog.length - n));
+      },
+      operationLogClear: function () { oplog = []; oplogSave(); return true; },
       /* eqSet(id, k, v)：改写某个公式体的物理参数（探针用它构造场景，
          例如把 m 设成 2、把 R 设成 0 造短路、把 e 设成 0 造非弹性碰撞） */
       eqSet: function (id, k, v) {
@@ -5156,6 +5352,9 @@
     eqClock: function () { return current ? current.eqClock() : { t: 0, acc: 0, dt: 0 }; },
     eqStep: function (n) { return current ? current.eqStep(n) : null; },
     eqClearEvents: function () { return current ? current.eqClearEvents() : false; },
+    /* 操作日志（2026-10-01 新功能，加法）：未挂载时返回 []/false，不抛错 */
+    operationLog: function (n) { return current ? current.operationLog(n) : []; },
+    operationLogClear: function () { return current ? current.operationLogClear() : false; },
     eqSet: function (id, k, v) { return current ? current.eqSet(id, k, v) : null; },
     eqVel: function (id, vx, vy) { return current ? current.eqVel(id, vx, vy) : null; },
     eqState: function (id) { return current ? current.eqState(id) : null; },
