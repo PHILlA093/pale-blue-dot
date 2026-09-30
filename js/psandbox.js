@@ -1941,7 +1941,11 @@
       /* ★ 运算符（+ − × ÷ ( ) ² √ · =）：**不参与**公式身份判定（toksOfBody 已跳过），
          只把"写法"并进表达式，同字符不重复。'=' 例外：**已成式**的体不收 '=' ——
          它走 dropLetter 里的 transform 路径（边→边变换），而不是并进 mem。
-         箭头 → 不在这里放行（箭头永不并入任何体，它是台上独立可旋转的字形）。 */
+         箭头 → 同样不在这里放行（箭头永不并入任何体，它是台上独立可旋转的字形）；
+         2026-10-01 显式挡一道：手写分数体的"收任意字母"闸门曾经漏到箭头身上
+         （`canMerge(手写分数体, →)` 会返回 true），拖体路过吸附着的箭头时
+         会把它吞成体里的一个字形、箭头就废了。 */
+      if (t === ARROW) return false;
       if (isOp(t) && t !== ARROW) {
         if (t === EQ && B.eq) return false;
         /* ★ ÷ 允许多个（2026-10-01 手写分数）：**最先落下的那个是横线**（黏住不换），
@@ -3663,6 +3667,10 @@
       if (cvx.font !== fs) cvx.font = fs;
       var tw = cvx.measureText(B.eqText).width;
       if (tw + pad * 2 > w) w = tw + pad * 2;
+      /* ★ 卡片的世界矩形（未旋转时的轴对齐盒）：吸附在右边的箭头靠它定位
+         （"卡片右边缘之外"+"竖直落在卡片范围内"），单一真源，别在别处再抄一份公式。 */
+      var ccy = B.y + B.hh + pad + size * 0.8;
+      B._card = { left: B.x - w / 2, right: B.x + w / 2, top: ccy - h / 2, bottom: ccy + h / 2, cy: ccy };
       cvx.save();
       cvx.translate(B.x, B.y + B.hh + pad + size * 0.8);
       if (th) cvx.rotate(th);
@@ -4049,6 +4057,7 @@
     }
     function syncGlyphs() {
       var i, j, k;
+      arrowHostSync();      // ★ 吸附在公式体右边的箭头：每帧摆回卡片右边缘（跟着体走）
       for (i = 0; i < bodies.length; i++) {
         var B = bodies[i];
         var bar = B.st.bar;
@@ -4371,7 +4380,82 @@
          U=IR → 电流；P=UI → 功率/发热；U=Ed → 电场 → E ≥ 3×10⁶ V/m 击穿空气（输出条件）；
          F=ma → 力（推动）；F=BIL / F=qvB → 安培力/洛伦兹力；Φ=BS / E=ΔΦ/Δt → 感应电流。
          未做：其余公式想不出物理上正确的"输出"（如 p=mv、η、Δx 等）——照实不输出。 */
+    /* ---------------- 箭头吸附到"式子的右边" · 2026-10-01 ----------------
+       用户原话：「那个箭头的位置应该是式子的右边」。
+       原来 → 是台上独立游走的字形，丢在卡片左边/右边/上面都能挂上（220px 内找最近的
+       公式体），视觉上读不出"公式 → 输出"这个方向。现在：
+         · 把 → 丢在**公式体（有 eqText 的卡片）上或附近**（吸附圈 = 卡片矩形外扩
+           ARROW_SNAP_R）→ 吸到**卡片右边缘之外**、竖直贴公式那一行、朝向默认朝右；
+         · 吸住后**每帧跟着体走**（体被拖/被推/自己动都跟），滚轮/手柄仍能改朝向；
+         · 拖到吸附圈之外 → 恢复游离字形（旧行为一字不改）；
+         · `emitterOf` 优先认"它吸附的那个体"，没有吸附对象时才回到"220px 内最近体"的兜底。
+       ⚠ 竖直位置特意取**体的中线**（只把"卡片上沿天生比体中线低 ~1px"这点补上，
+         不把箭头甩到卡片正中去）：射线仍然沿公式那一行射出，U=Ed 击穿/电流/升温
+         这些既有玩法判定不变（目标摆在公式同一高度就还是打得到）。 */
+    var ARROW_GAP = 2;       // 箭头左边缘与卡片右边缘之间的空隙（"贴着卡片右侧"）
+    var ARROW_SNAP_R = 70;   // 吸附圈：卡片矩形外扩这么多像素内都算"丢在体上/体附近"
+    function arrowSnapPos(B, A) {
+      var sc = B.sc || 1;
+      var card = B._card;                      // drawEquationCard 每帧写（世界坐标）
+      var right = card ? card.right : (B.x + (B.hw || 40) * sc);
+      var top = card ? card.top : (B.y - (B.hh || 18) * sc);
+      var bot = card ? card.bottom : (B.y + (B.hh || 18) * sc);
+      var aw = (A && A.w) ? A.w : 30, ah = (A && A.h) ? A.h : 30;
+      var y = B.y;
+      if (y < top + 2) y = top + 2;            // 卡片上沿天生比体中线低 ~1px：就低这一点点
+      if (y > bot - 2) y = bot - 2;
+      return { x: right + ARROW_GAP + aw / 2, y: y, right: right, ah: ah };
+    }
+    /* 落点附近有没有可吸附的公式体（有卡片的才算 —— 箭头就是"公式的输出端"） */
+    function arrowFindHost(x, y) {
+      var best = null, bd = 1e9;
+      for (var i = 0; i < bodies.length; i++) {
+        var B = bodies[i];
+        if (!B.eq || !B.eqText || B.kind || B.bh) continue;
+        var sc = B.sc || 1;
+        var card = B._card;
+        var left = card ? card.left : (B.x - (B.hw || 40) * sc);
+        var right = card ? card.right : (B.x + (B.hw || 40) * sc);
+        var top = card ? card.top : (B.y - (B.hh || 18) * sc);
+        var bot = card ? card.bottom : (B.y + (B.hh || 18) * sc);
+        var dx = Math.max(left - x, 0, x - right), dy = Math.max(top - y, 0, y - bot);
+        var d = Math.hypot(dx, dy);
+        if (d <= ARROW_SNAP_R && d < bd) { bd = d; best = B; }
+      }
+      return best;
+    }
+    function arrowAttach(A, B) {
+      A.host = B;
+      A.rot = 0;                               // 吸附即朝右：读起来就是"式子 → 输出"
+      var s = arrowSnapPos(B, A);
+      A.wx = s.x; A.wy = s.y;
+      A.vx = 0; A.vy = 0;
+      placeLetter(A);
+      ringGo(A.wx, A.wy);
+    }
+    function arrowDetach(A) {
+      if (!A.host) return;
+      A.host = null;
+    }
+    /* 每帧把吸附着的箭头摆回"那个体的卡片右边缘"（体死了/被收走了就自动松脱） */
+    function arrowHostSync() {
+      for (var i = 0; i < freeL.length; i++) {
+        var A = freeL[i];
+        if (!A || A.dead || !A.arrow || !A.host) continue;
+        if (grab.kind === 'letter' && grab.obj === A) continue;      // 正在被拖：别抢指针
+        if (A.host.dead || bodies.indexOf(A.host) < 0) { A.host = null; continue; }
+        var s = arrowSnapPos(A.host, A);
+        if (Math.abs(s.x - A.wx) > 0.4 || Math.abs(s.y - A.wy) > 0.4) {
+          A.wx = s.x; A.wy = s.y;
+          A.vx = 0; A.vy = 0;
+          placeLetter(A);
+        }
+      }
+    }
     function emitterOf(A) {
+      /* ★ 优先认"箭头吸附的那个体"（用户把它挂在式子右边 = 明确指定了这一条公式）；
+         没有吸附对象时才回到 220px 内最近体的兜底 —— 旧行为保留，一个字没删。 */
+      if (A && A.host && !A.host.dead && bodies.indexOf(A.host) >= 0 && A.host.eq && !A.host.bh) return A.host;
       var best = null, bd = 220;
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
@@ -5728,13 +5812,17 @@
         var eqt = findFormulaBodyNear(L);
         if (eqt) { transformBody(eqt); killLetter(L); return eqt; }
       }
-      /* ★ 箭头（P2-10）：永不并入任何体 —— 它是台上独立可旋转的字形，自己射射线 */
+      /* ★ 箭头（P2-10）：永不并入任何体 —— 它是台上独立可旋转的字形，自己射射线。
+         2026-10-01：丢在公式体（有卡片的）上或附近 → **吸附到卡片右边缘之外**（见
+         arrowSnapPos）；丢在别处 → 维持游离字形。两种情况下它都不进 mem。 */
       if (L.ch === ARROW) {
         L.state = 'free';
         L.vx = 0; L.vy = 0;
         L.arrow = true; L.rot = 0;
         if (freeL.indexOf(L) < 0) freeL.push(L);
-        placeLetter(L);
+        var host = arrowFindHost(L.wx, L.wy);
+        if (host) arrowAttach(L, host);
+        else { arrowDetach(L); placeLetter(L); }
         return null;
       }
       if (L.ch === 'B' || L.ch === 'q' || L.ch === 'I' || L.ch === 'E') {
@@ -6009,6 +6097,8 @@
         for (var i = 0; i < freeL.length; i++) {
           var d = freeL[i];
           out.push({ ch: d.ch, x: d.wx, y: d.wy, state: d.state,
+                     rot: d.rot || 0,
+                     host: (d.host && bodies.indexOf(d.host) >= 0) ? bodies.indexOf(d.host) : -1,
                      temp: (d.temp == null ? 20 : +d.temp.toFixed(3)) });
         }
         out.palette = paletteList();
@@ -6122,6 +6212,8 @@
             i: i, x: B.x, y: B.y, kind: B.kind, family: B.family, vCount: B.vCount, cCount: B.cCount,
             hw: B.hw, hh: B.hh, frac: !!B.frac, gravMode: B.gravMode, isWell: !!B.isWell,
             massG: B.massG ? B.massG.type : null,
+            card: B._card ? { left: B._card.left, right: B._card.right, top: B._card.top,
+                              bottom: B._card.bottom, cy: B._card.cy } : null,   // 公式卡的世界矩形（吸附定位用）
             mem: (function () { var a = []; for (var k = 0; k < B.mem.length; k++) a.push(B.mem[k].type); return a; })(),
             glyphs: (function () { var a = []; for (var k = 0; k < B.glyphs.length; k++) if (B.glyphs[k]) a.push(B.glyphs[k].type); return a; })(),
             st: { open: !!B.st.open, plus: !!B.st.plus, close: !!B.st.close, sq: !!B.st.sq, bar: !!B.st.bar }
