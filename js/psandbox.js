@@ -117,6 +117,11 @@
       '.ps-pill.on{background:#26221C;color:#F4F1EA;border-color:#26221C}',
       '.ps-pill b{font-weight:normal;font-size:11px}',
       '.ps-pill u{text-decoration:none;opacity:.55;font-size:8.5px;font-style:normal}',
+      /* 双义字形的下缀标签（2026-10-01 第三批：用户拍板"不共用字形，每个含义各造
+         一个字"）：c比（比热容）/ p压（压强）/ λ熔（熔化热）/ E能（能量）——
+         字形 = 字母 + 小号下缀字（比/压/熔/能），textContent 仍是整串
+         （身份/去重/公式匹配都靠整串，一个字形一个含义）。 */
+      '.ps-sub{font-size:56%;vertical-align:sub;line-height:1;font-style:normal;font-weight:normal}',
       /* 成就面板（2026-10-01 新功能）：放在观澜左侧 AI 对话区顶部。
          ⚠ 挂在 document.body 上、position:fixed（2026-10-01 修复"DOM 对但屏幕
          看不见"）：原来挂在 .ps-overlay 里、用负 left 往舞台左边伸出 —— 而
@@ -242,17 +247,14 @@
       if (title) b.title = title;
       return b;
     }
-    var bEmpty = mkBtn('psEmpty', '\u6e05\u7a7a', '\u6e05\u7a7a\u573a\u4e0a\u4e00\u5207\uff0c\u9762\u677f\u6062\u590d 56 \u4e2a\u5b57\u5f62');
+    var bEmpty = mkBtn('psEmpty', '\u6e05\u7a7a', '\u6e05\u7a7a\u573a\u4e0a\u4e00\u5207\uff0c\u9762\u677f\u6062\u590d 62 \u4e2a\u5b57\u5f62');
     var bCollect = mkBtn('psCollect', '\u5168\u90e8\u6536\u8fdb\u9762\u677f', '\u628a\u573a\u4e0a\u6240\u6709\u5b9e\u4f53\u62c6\u56de\u5b57\u5f62\u5f52\u8fd8\u9762\u677f');
     var bReset = mkBtn('psReset', '\u91cd\u7f6e', '\u6e05\u7a7a\u5e76\u56de\u5230\u672c\u9875\u521d\u59cb\u72b6\u6001');
     var sepEl = DD.createElement('span'); sepEl.className = 'ps-sep';
     var hintEl = DD.createElement('span'); hintEl.className = 'ps-hint';
-    /* 提示行（2026-09-30 更新）：符号从 15 涨到 56（45 个量 + 10 个运算符 + 箭头）、
-       课本公式 28 条，原来那行"g+t→v、v+t→板、q+t→I、m v²/r"会让玩家以为只有
-       这四种玩法。这里只列 **4 条最直观的** 再补一句总括 —— 全塞进去会被挤爆
-       （`.ps-hint` 是单行省略号截断，写长了反而什么都看不见）。完整清单在
-       palette()/eqTable()。 */
-    hintEl.textContent = '\u62d6\u5230\u4e00\u8d77\u5c31\u80fd\u62fc\u51fa\u8bfe\u672c\u516c\u5f0f\uff1aF+m+a \u725b\u987f\u7b2c\u4e8c\u5b9a\u5f8b\u3001U+I+R \u6b27\u59c6\u5b9a\u5f8b\u3001F+k+x \u80e1\u514b\u5b9a\u5f8b\u3001F+B+I+L \u5b89\u57f9\u529b\uff1b\u7b49\u53f7\u4e24\u8fb9\u4e92\u6362\u3001\u7bad\u5934\u5c04\u7ebf\u5347\u6e29\uff1b\u5171 28 \u6761\uff0c\u60ac\u505c\u770b\u7b26\u53f7\u542b\u4e49';
+    /* 提示行（2026-10-01 更新）：符号 62（56 + V/d + 四个双义新字形），
+       课本公式 39 条（28 + 第三批 11）。只列 4 条最直观的再补一句总括。 */
+    hintEl.textContent = '\u62d6\u5230\u4e00\u8d77\u5c31\u80fd\u62fc\u51fa\u8bfe\u672c\u516c\u5f0f\uff1aF+m+a \u725b\u987f\u7b2c\u4e8c\u5b9a\u5f8b\u3001U+I+R \u6b27\u59c6\u5b9a\u5f8b\u3001F+k+x \u80e1\u514b\u5b9a\u5f8b\u3001F+B+I+L \u5b89\u57f9\u529b\uff1b\u7b49\u53f7\u53f3\u2192\u5de6\u6536\u7f29\u3001\u7bad\u5934\u8f93\u51fa\u94fe\u63a5\u516c\u5f0f\u7684\u91cf\uff1b\u5171 39 \u6761\uff0c\u60ac\u505c\u770b\u7b26\u53f7\u542b\u4e49';
     if (opts.hint) hintEl.textContent = String(opts.hint);
     bar.appendChild(bEmpty); bar.appendChild(bCollect); bar.appendChild(bReset);
     bar.appendChild(sepEl); bar.appendChild(hintEl);
@@ -369,7 +371,10 @@
       var el = DD.createElement('div');
       el.className = 'ps-char';
       el.style.fontSize = sz + 'px';
-      el.textContent = ch;
+      /* 双义字形（2026-10-01 第三批）：c比/p压/λ熔/E能 —— 字母 + 小号下缀字。
+         textContent 仍是整串（el.textContent === ch，身份与去重不受影响）。 */
+      if (ch.length > 1) el.innerHTML = ch.charAt(0) + '<span class="ps-sub">' + ch.slice(1) + '</span>';
+      else el.textContent = ch;
       table.appendChild(el);
       var d = { el: el, ch: ch, type: ch, clone: false, body: null, sx: 0, sy: 0,
                 w: el.offsetWidth, h: el.offsetHeight, wx: 0, wy: 0, vx: 0, vy: 0,
@@ -483,20 +488,33 @@
 
       /* ---- 运算（10）+ 箭头（1）（2026-09-30 移植清单 P2：45 → 56）----
          运算符**不参与公式身份判定**（F+=+m+a ≡ F+m+a），只把"写法"并进表达式；
-         '=' 有专门语义（成式后拖入 = 边→边变换、再碰一次换边）；箭头沿朝向射可见
-         射线、打中目标升温（Q=cmΔt）。与结构字形（st.open/st.plus/st.sq）**不冲突**：
+         '=' 有专门语义（成式后拖入 = 边→边变换、再碰一次换边）；箭头是**输出算子**
+         （2026-10-01 用户澄清）：沿朝向射出，把附近那条公式的**输出量**放出来 ——
+         升温只是 Q=cmΔT 这一条的输出，不是箭头本身的含义（详见 emitterOf 的对照表）。
+         与结构字形（st.open/st.plus/st.sq）**不冲突**：
          结构字形只挂在 B.st 上、永不进托盘；这里的字形是玩家能真拖的。 */
       { k: 'plusO', ch: PLUS, group: '运算', note: '加号（把两项并成一项）' },
       { k: 'minusO', ch: MINUS, group: '运算', note: '减号（这一项取负）' },
       { k: 'timesO', ch: TIMES, group: '运算', note: '乘号（与"并排写"等价）' },
       { k: 'divO', ch: DIV, group: '运算', note: '除号（与"分数线"等价）' },
-      { k: 'eqO', ch: EQ, group: '运算', note: '等号＝变换器：两侧是课本等式时把一侧真的变成另一侧（再碰一次反向）' },
+      { k: 'eqO', ch: EQ, group: '运算', note: '等号＝变换器（右→左，2026-10-01 用户澄清）：把右侧表达式收成左侧的量（IR 放上等号变成 U，卡片 U = IR；再碰一次拆回 IR）' },
       { k: 'openO', ch: OPEN, group: '运算', note: '左括号（改变运算顺序）' },
       { k: 'closeO', ch: CLOSE, group: '运算', note: '右括号（与左括号配对）' },
       { k: 'sqO', ch: SQ, group: '运算', note: '平方（写在量后面，如 v²）' },
       { k: 'radO', ch: RAD, group: '运算', note: '根号（写在量前面，如 √2）' },
       { k: 'dotO', ch: DOT, group: '运算', note: '点乘 / 分隔（两个量的乘积）' },
-      { k: 'arrowO', ch: ARROW, group: '运算', note: '箭头→：沿朝向射出射线，被打到的目标升温（左侧有 Q 时按 Q=cmΔt）；F→a=F/m、U→I=U/R、I→Q=I²Rt' }
+      { k: 'arrowO', ch: ARROW, group: '运算', note: '箭头→：输出算子 —— 沿朝向射出，把附近链接的那条公式的**输出量**放出来（升温只是 Q=cmΔT 这一条的输出）：Q=cmΔT→热量（打到目标升温）、Q=λm→相变潜热、Q=I²Rt→发热、v=λf→光波、ε=hν→光子、E=hν−W→光电子、U=IR→电流、P=UI→功率、U=Ed→电场（间隙够小且 E≥3×10⁶ V/m 时击穿空气）、F=ma→力、F=BIL/qvB→安培力/洛伦兹力、Φ=BS/E=ΔΦ/Δt→感应电流' },
+
+      /* ---- 第三批新字形（2026-10-01：托盘 56 → 62）----
+         双义量按用户拍板"不共用字形，每个含义各造一个字"：c 光速 / c比 比热容、
+         p 动量 / p压 压强、λ 波长 / λ熔 熔化热、E 场强 / E能 能量 —— 下缀字
+         （比/压/熔/能）就是视觉区分，两格都能真拖、公式表按各自字形匹配。 */
+      { k: 'VO', ch: 'V', group: '力学', note: '体积（气体状态方程 pV/T、浮力 F=ρgV 的 V）' },
+      { k: 'dO', ch: 'd', group: '力学', note: '距离 / 空气间隙（U=Ed 里的 d；间距越短越容易击穿）' },
+      { k: 'cbiO', ch: 'c\u6bd4', group: '热学', note: '比热容（Q=cmΔT 的 c；与光速 c 是两个字，下缀「比」）' },
+      { k: 'pyaO', ch: 'p\u538b', group: '力学', note: '压强（p=F/S、pV/T 的 p；与动量 p 是两个字，下缀「压」）' },
+      { k: 'lrongO', ch: '\u03bb\u7194', group: '热学', note: '熔化热（Q=λm 的 λ；与波长 λ 是两个字，下缀「熔」）' },
+      { k: 'EnengO', ch: 'E\u80fd', group: '近代', note: '能量（E=hν−W、Eₖ=½mv² 的 E；与场强 E 是两个字，下缀「能」）' }
     ];
     /* 面板列数：符号 15 → 33 → 45 → 56。桌面 CSS 是 9 列 × 38px（见 #psCSS），
        56 = 9×6+2 → 7 行；窄屏媒体查询降到 8 列。dockSlotEl() 按 **palCols()**
@@ -605,7 +623,31 @@
         cond: '波速公式（也写作 v=λν；f 与 ν 是同一个量。注意这里的 v 是**波速**，' +
               '横波纵波都成立）' },
       { id: 'photon', text: 'ε = hν', toks: EPS + 'h' + NU, group: '近代',
-        cond: '光子能量（光电效应：h 为普朗克常量、ν 为光频率；ε 与电场强度的 E 是两个量）' }
+        cond: '光子能量（光电效应：h 为普朗克常量、ν 为光频率；ε 与电场强度的 E 是两个量）' },
+      /* ---- 第三批基础公式（2026-10-01 用户点名："能产生效果/设定实验条件的做全"）----
+         每条都带：公式 + 适用条件 + 来源级别（高中物理教材）+ 对应 eqStepOnce 的可见效果。 */
+      { id: 'heatmass', text: 'Q = cm\u0394T', toks: 'Q' + 'c\u6bd4' + 'm' + DELTA + 'T', group: '热学',
+        cond: '吸放热（高中物理教材）：Q=cmΔT，c 是比热容（下缀「比」；光速 c 是另一个字）——给定 Q、c、m 求 ΔT，目标温度随之变化' },
+      { id: 'melt', text: 'Q = \u03bb\u7194m', toks: 'Q' + '\u03bb\u7194' + 'm', group: '热学',
+        cond: '熔化/凝固热（高中物理教材）：Q=λm，相变吸放热、温度停在熔点；Q ≥ λm 时固→液（反之凝回固）' },
+      { id: 'thermal-balance', text: 'Q\u5438 = Q\u653e', toks: 'QQ', group: '热学',
+        cond: '热平衡（高中物理教材）：Q吸=Q放，两物体传热直至温度相等（按 m₁c₁T₁+m₂c₂T₂ 加权平均逼近）' },
+      { id: 'ideal-gas', text: 'p\u538bV/T = \u6052\u91cf', toks: 'p\u538b' + 'V' + 'T', group: '热学',
+        cond: '理想气体状态方程（高中物理教材）：pV/T 恒定，改一个量其余联动' },
+      { id: 'isothermal', text: 'p\u538bV = \u6052\u91cf', toks: 'p\u538b' + 'V', group: '热学',
+        cond: '等温变化（玻意耳定律，高中物理教材）：温度不变时 pV 恒定' },
+      { id: 'isochoric', text: 'p\u538b/T = \u6052\u91cf', toks: 'p\u538b' + 'T', group: '热学',
+        cond: '等容变化（查理定律，高中物理教材）：体积不变时 p/T 恒定' },
+      { id: 'uniform-field', text: 'U = Ed', toks: 'U' + 'E' + 'd', group: '电磁学',
+        cond: '匀强电场（高中物理教材）：U=Ed；与箭头击穿联动 —— 空气击穿场强约 3×10⁶ V/m（教材），E ≥ E_break 放电' },
+      { id: 'impetus', text: '\u0394p = Ft', toks: DELTA + 'p' + 'F' + 't', group: '力学',
+        cond: '动量定理（高中物理教材）：Δp=Ft（用 Δp 不用 I，避免与电流冲突）—— 目标体被冲量推动、速度改变' },
+      { id: 'buoyancy', text: 'F = \u03c1gV', toks: 'F' + RHO + 'g' + 'V', group: '力学',
+        cond: '浮力（阿基米德原理，高中物理教材）：F浮=ρ液gV排 —— F浮 > 重则浮、< 重则沉（可见浮沉）' },
+      { id: 'pressure', text: 'p\u538b = F/S', toks: 'p\u538b' + 'F' + 'S', group: '力学',
+        cond: '压强（高中物理教材）：p=F/S（F 垂直作用于面积 S）—— 读数 p 随 F、S 联动' },
+      { id: 'photoelectric', text: 'E\u80fd = h\u03bd \u2212 W', toks: 'E\u80fd' + 'h' + NU + 'W', group: '近代',
+        cond: '光电效应（高中物理教材）：E=hν−W —— hν ≥ W 才逸出光电子（负对照：hν < W 不逸出）' }
     ];
     /* 公式表按"字母多重集"建索引：键 = 令牌排序后的字符串 */
     var EQ_BY_SIG = {};
@@ -891,15 +933,18 @@
         /* 成式那一刻（null → 某条公式）：成就「成式」+ 操作日志 assemble（2026-10-01） */
         eqEmit('formula', B, { eq: eq.id, text: eq.text });
         opLog('assemble', { eq: eq.id, text: eq.text });
+        B.paramSide = 0;   /* 2026-10-01 = 右→左：没放 = 之前显示右式（左侧量淡出） */
+      } else if (!eq && B.eq) {
+        B.paramSide = 0;   // 公式散了：= 状态作废
       }
       B.eq = eq ? eq.id : null;
       B.eqText = eq ? eq.text : null;
-      /* 结构一变，上次 = 变换的"换边/淡出"作废（式子已经不一样了） */
-      if (B.paramSide) B.paramSide = 0;
-      for (var fz = 0; fz < B.mem.length; fz++) {
-        if (B.mem[fz] && B.mem[fz].fade != null) B.mem[fz].fade = null;
+      /* = 的"这一侧"淡出（2026-10-01 右→左语义）；公式散了就全亮 */
+      if (B.eq) applySideFade(B);
+      else {
+        for (var fz = 0; fz < B.mem.length; fz++) if (B.mem[fz] && B.mem[fz].fade != null) B.mem[fz].fade = null;
+        if (B.massG && B.massG.fade != null) B.massG.fade = null;
       }
-      if (B.massG && B.massG.fade != null) B.massG.fade = null;
     }
 
     function gravModeOf(B) {
@@ -1782,7 +1827,24 @@
               定的；而 F=ma / Q=I²Rt / ε=U+Ir 这些式子**本身就有 3~5 个字母**，
               写死 2 会让它们永远拼不齐（第三个字母一到就被拒）。 */
       if (eqAccepts(B, t) === false) return false;
-      for (var k = 0; k < B.mem.length; k++) if (B.mem[k].type === t) return false;  // 同字母不重复
+      /* 热平衡 Q吸=Q放 例外（2026-10-01 第三批）：允许**两个** Q（第三个才拒）。
+         ⚠⚠ 必须**按对象身份去重**（2026-10-01 修复）：单个 Q 的体里，同一个字形
+         既是 base（layoutBody→repairBase 把"第一个活字母"认成 massG）**又在 mem 里**
+         —— 两边直接相加会把 1 个数成 2，于是**第二个 Q 永远被拒**：
+         实测 `addBody(['Q','Q'])` 只剩一个 Q（eq 恒 null），真拖也拼不出 Q吸=Q放。
+         判据与 toksOfBody 完全同构（那边也靠 seen[] 去重，注释里写着同一个坑）。 */
+      if (t === 'Q') {
+        var qc2 = 0, qseen = [];
+        if (B.massG && B.massG.type === 'Q' && !B.massG.dead) { qc2++; qseen.push(B.massG); }
+        for (var qi2 = 0; qi2 < B.mem.length; qi2++) {
+          var qg2 = B.mem[qi2];
+          if (!qg2 || qg2.dead || qg2.type !== 'Q' || qseen.indexOf(qg2) >= 0) continue;
+          qc2++; qseen.push(qg2);
+        }
+        if (qc2 >= 2) return false;
+      } else {
+        for (var k = 0; k < B.mem.length; k++) if (B.mem[k].type === t) return false;  // 同字母不重复
+      }
       /* 字母数上限 = "这次收下 t 之后仍被某条公式容纳"的那些公式里最长的那个。
          原来的写法是拿**当前**字母数去比上限，正好差一（mvv 要变成 ½mvv 时，
          当前 3 个、上限算成 3 就被拒了）。
@@ -1805,6 +1867,26 @@
     }
 
 
+    /* dropDistTo(B,x,y)：合并判据用的"这一次落字离这个体有多远"（2026-10-01 修）。
+       ⚠ 原来一律量**到 base 字形（massG）的距离** —— 可玩家眼里目标是**一整个块**，
+       而 base 只是块里第一个字母：宽体（Qc比m、E能hνW、mv²…）的右半边离 base
+       100px 上下，落在块上照样判"够不着"。两条真机实测（都是真指针拖、不是 API）：
+         · Q→c比→m→Δ→T（每步往右 36px）：Δ 落在 m 右缘、离 base(Q) 113.6px，
+           canMerge 放行但普通半径只有 80px（"能拼齐公式"才放宽到 160px，而 Δ 单独
+           并不拼齐 Q=cmΔT，还要 T）→ 不并 → 后面的 T 跟游离的 Δ 另起一坨 `ΔT`
+           → **Q=cmΔT 真拖拼不出来**（bodies = [m, Qc比m, ΔT]，heat 事件 0 条）；
+         · m→v→v→r：r 落在 ² 右侧 20px、离 base(m) ≈ 90px → 不并 →
+           `mv²` 而不是 `mv²/r`，**双星也起不来**（orbiting=false）。
+       现在按**落点到体 AABB 的距离**算（落在块内或贴着块 = 0）—— 与用户看到的判据一致。
+       ⚠ 这条**不会**挡住"在公式体旁边摆另一个体"：合并只发生在"字形 → 体"，
+       **体与体互拖永不合并**（pointerup 的 body 分支只做 findFreeLetterTarget，
+       不做 canMerge），所以先把目标字形丢远一点、再把它整个拖到贴边即可
+       （真拖验收 V3 就是这么摆出"边到边 0.8px"的）。canMerge 的公式闸门一字未动。 */
+    function dropDistTo(B, x, y) {
+      var ddx = Math.abs(x - B.x) - (B.hw || 40), ddy = Math.abs(y - B.y) - (B.hh || 18);
+      if (ddx <= 0 && ddy <= 0) return 0;
+      return Math.hypot(Math.max(0, ddx), Math.max(0, ddy));
+    }
     function findMergeTarget(d) {
       var best = null, bd = MERGE_R_EQ;
 
@@ -1812,8 +1894,7 @@
         var B = bodies[i];
         if (B.massG === d || B.mem.indexOf(d) >= 0) continue;
         if (!canMerge(B, d)) continue;
-        var s = B.massG ? slot(B, B.massG) : { x: B.x, y: B.y };
-        var dist = Math.hypot(s.x - d.wx, s.y - d.wy);
+        var dist = dropDistTo(B, d.wx, d.wy);
         /* 双档半径（2026-09-30 移植清单 P1-4）：普通合并 MERGE_R；
            收下它就能**拼齐**某条课本公式的组合放宽到 MERGE_R_EQ。 */
         var limit = eqCompletes(B, d) ? MERGE_R_EQ : MERGE_R;
@@ -3369,6 +3450,23 @@
            I 飙升 + short-circuit 事件由既有的 eqStepOnce 判定，这里只写值）；
          · 单击 = 走一步（到量程顶后 wrap 回起点），悬停 title 写范围与含义。 */
     var pillDrag = null;
+    /* ---- 药丸的刻度映射（2026-10-01：R 改**对数刻度**）----
+       对数刻度按**归一化位置**映射（f = f0 + dx/220），不是按线性差值：
+       0.05 ~ 1e6 这种跨 7 个数量级的量程上，线性差值等于"整段拖动全挤在小数区"，
+       另一端永远够不到。取 3 位有效数字（人眼在对数刻度上能读的精度）。 */
+    function pillFrac(v, d) {
+      var lo = Math.log(d.lo), hi = Math.log(d.hi);
+      var x = clamp(v, d.lo, d.hi);
+      if (!(x > 0)) x = d.lo;
+      return clamp((Math.log(x) - lo) / (hi - lo), 0, 1);
+    }
+    function pillFromFrac(f, d) {
+      var lo = Math.log(d.lo), hi = Math.log(d.hi);
+      var v = Math.exp(lo + clamp(f, 0, 1) * (hi - lo));
+      var e10 = Math.floor(Math.log(v) / Math.LN10), pw = Math.pow(10, e10 - 2);
+      v = Math.round(v / pw) * pw;
+      return clamp(v, d.lo, d.hi);       // 端点必须**逐位**落在 lo/hi 上（判据是 <=0.05 / >=1e6）
+    }
     function pillFmt(v) {
       if (v == null || !isFinite(v)) return '\u2014';
       var a = Math.abs(v);
@@ -3404,13 +3502,25 @@
         p._pill = 1; p._body = B; p._ch = glyph.type; p._glyph = glyph;
         var palIt = PAL[PAL_ORDER[glyph.type]];
         p.title = ((palIt && palIt.note) ? palIt.note : glyph.type) +
-          '\n\u5de6\u53f3\u62d6\u52a8\u6539\u6570\u503c\uff08\u8303\u56f4 ' + d.lo + ' ~ ' + d.hi +
+          '\n\u5de6\u53f3\u62d6\u52a8\u6539\u6570\u503c\uff08' + (d.log ? '\u5bf9\u6570\u523b\u5ea6\uff0c' : '') +
+          '\u8303\u56f4 ' + d.lo + ' ~ ' + d.hi +
           (d.unit ? ' ' + d.unit : '') + '\uff09\uff1b\u5355\u51fb\u8d70\u4e00\u6b65';
         p.innerHTML = '<i>' + glyph.type + '</i><b>' + pillFmt(B.eqState[glyph.type]) + '</b><u>\u21d4</u>';
-        onEv(p, 'pointerdown', function (e) { pillDown(e, p); });
+        /* ⚠⚠ 必须**经过函数参数**绑定这颗药丸（2026-10-01 修，真机实测踩到）：
+           `var p` 是函数作用域，循环里直接写
+           `onEv(p, 'pointerdown', function (e) { pillDown(e, p); })`
+           会让**所有**药丸的处理器都捕获同一个变量，而循环结束后它指向**最后一颗**
+           —— 于是"按 U 拖出来的是 d"：实测 UEd 卡上拖 U 药丸，U 纹丝不动、d 变成 40
+           （父 agent 报的"没能把 U 药丸拖上去"就是这个根因，不是手势问题）。
+           走一次函数调用，参数 `el` 每次调用各有自己的绑定，闭包才抓对元素。 */
+        bindPillDrag(p);
         table.appendChild(p);
         B._pills.push(p);
       }
+    }
+    /* 把一颗药丸的按下手势绑到**它自己**身上（见 buildPills 里的说明，别inline回去） */
+    function bindPillDrag(el) {
+      onEv(el, 'pointerdown', function (e) { pillDown(e, el); });
     }
     function updatePills(B) {
       if (!B._pills) return;
@@ -3470,9 +3580,14 @@
     function pillMove(clientX) {
       var d = VAL_DEF[pillDrag.ch];
       if (Math.abs(clientX - pillDrag.startX) > 2) pillDrag.moved = true;
-      var dv = (clientX - pillDrag.startX) * (d.hi - d.lo) / 220;
-      var nv = clamp(pillDrag.startVal + dv, d.lo, d.hi);
-      nv = Math.round(nv / d.step) * d.step;
+      var nv;
+      if (d.log) {
+        nv = pillFromFrac(pillFrac(pillDrag.startVal, d) + (clientX - pillDrag.startX) / 220, d);
+      } else {
+        var dv = (clientX - pillDrag.startX) * (d.hi - d.lo) / 220;
+        nv = clamp(pillDrag.startVal + dv, d.lo, d.hi);
+        nv = Math.round(nv / d.step) * d.step;
+      }
       var S = pillDrag.B.eqState;
       S[pillDrag.ch] = nv;
       /* R/U 在 ohm 里走 Rset/Uset 镜像（eqStepOnce 每步读它俩）；e 是恢复系数 */
@@ -3482,12 +3597,19 @@
     }
     function pillUp(clientX) {
       if (!pillDrag.moved) {
-        /* 单击 = 一步（"点一下也有效果"与拖动等价，不隐藏手势） */
+        /* 单击 = 一步（"点一下也有效果"与拖动等价，不隐藏手势）；
+           对数刻度的"一步" = 1/40 的**归一化**步长（不是 1/40 的数值跨度）。 */
         var d = VAL_DEF[pillDrag.ch];
-        var step = (d.hi - d.lo) / 40;
-        var v2 = pillDrag.B.eqState[pillDrag.ch] + step;
-        if (v2 > d.hi) v2 = d.lo;
-        v2 = Math.round(v2 / d.step) * d.step;
+        var v2;
+        if (d.log) {
+          var f = pillFrac(pillDrag.B.eqState[pillDrag.ch], d) + 1 / 40;
+          v2 = (f > 1) ? d.lo : pillFromFrac(f, d);
+        } else {
+          var step = (d.hi - d.lo) / 40;
+          v2 = pillDrag.B.eqState[pillDrag.ch] + step;
+          if (v2 > d.hi) v2 = d.lo;
+          v2 = Math.round(v2 / d.step) * d.step;
+        }
         var S = pillDrag.B.eqState;
         S[pillDrag.ch] = v2;
         if (pillDrag.ch === 'R') S.Rset = v2;
@@ -3888,18 +4010,25 @@
        箭头是台上**独立可旋转**的字形（不并入任何体）：沿朝向射一条可见射线，
        打中目标升温；左侧有 Q 时按 Q=cmΔt（c=4200，约定值）换算温度；
        F → a=F/m、U → I=U/R、I → Q=I²Rt 照课本做，不确定的不做。 */
-    function rayHit(A) {
+    /* rayHit(A, em)：沿箭头朝向找**最近的被命中物**。
+       em = 箭头这次链接的公式体（emitterOf 的结果，可为 null）—— **必须排除**：
+       箭头就摆在它的输出源旁边，不排除的话射线会打到"自己的电源"上，于是无论在
+       多远放目标都判成 d≈0、击穿恒成立（实测：负对照 130px 也照样 1 条 breakdown）。
+       tEdge（到目标**表面**的距离）用于挑最近目标 + 画射线终点（2026-10-01 父补丁）：
+       原来只按中心距挑，大物体明明挡在跟前却输给中心更近的小物体。 */
+    function rayHit(A, em) {
       var ox = A.wx, oy = A.wy;
       var dx = Math.cos(A.rot || 0), dy = -Math.sin(A.rot || 0);
       var best = null;
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
-        if (B.bh) continue;
+        if (B.bh || B === em) continue;
         var t = (B.x - ox) * dx + (B.y - oy) * dy;
         if (t < 8 || t > 640) continue;
         var perp = Math.abs((B.x - ox) * dy - (B.y - oy) * dx);
         if (perp > Math.max(B.hw, B.hh) + 10) continue;
-        if (!best || t < best.t) best = { t: t, body: B, x: ox + dx * t, y: oy + dy * t };
+        var tEdge = Math.max(1, t - (Math.abs(dx) * B.hw + Math.abs(dy) * B.hh));
+        if (!best || tEdge < best.t) best = { t: tEdge, tCen: t, body: B, x: ox + dx * t, y: oy + dy * t };
       }
       for (var j = 0; j < freeL.length; j++) {
         var O = freeL[j];
@@ -3908,87 +4037,193 @@
         if (t2 < 8 || t2 > 640) continue;
         var p2 = Math.abs((O.wx - ox) * dy - (O.wy - oy) * dx);
         if (p2 > 24) continue;
-        if (!best || t2 < best.t) best = { t: t2, letter: O, x: ox + dx * t2, y: oy + dy * t2 };
+        var t2Edge = Math.max(1, t2 - 12);            // 半个字形 ≈12px
+        if (!best || t2Edge < best.t) best = { t: t2Edge, tCen: t2, letter: O, x: ox + dx * t2, y: oy + dy * t2 };
       }
       return best;
     }
-    /* 体/附近游离字形里有没有某个量（没有就用默认值 1） */
+    /* 体/附近游离字形里有没有某个量（数值取该量的默认值，可由药丸/eqSet 改） */
     function nearVal(A, sym) {
       for (var i = 0; i < freeL.length; i++) {
         var L2 = freeL[i];
         if (L2 === A || L2.dead) continue;
         if (L2.ch !== sym) continue;
-        if (Math.hypot(L2.wx - A.wx, L2.wy - A.wy) < 220) return 1;
+        if (Math.hypot(L2.wx - A.wx, L2.wy - A.wy) < 220) return (VAL_DEF[sym] ? VAL_DEF[sym].val : 1);
       }
       return null;
     }
-    function applyRayEffect(A, hit, dt) {
+    /* 空气击穿场强（高中物理教材级常量，2026-10-01）：约 3×10⁶ V/m。
+       玩具比例尺：1 屏幕像素 = 1 μm（非真实尺寸，注释明示）—— 这样 U=60V、
+       间隙 20px 时 E = 60/(20×10⁻⁶) = 3×10⁶ V/m 正好击穿，游戏窗口可玩；
+       U = Ed 的关系与阈值数值按课本写死，不自造。 */
+    var E_BREAK_AIR = 3e6;
+    /* 两电极之间的**支持半径**（AABB 在单位方向 u 上的支撑函数）：
+       盒子在 u 方向的"半径" = |ux|·hw + |uy|·hh —— 轴对齐盒子下这是精确值。 */
+    function supportR(B, ux, uy) {
+      if (!B) return 12;                       // 游离字形：半个字形
+      return Math.abs(ux) * (B.hw || 12) + Math.abs(uy) * (B.hh || 12);
+    }
+    /* d = **两个电极之间的空气间隙**（px）= 源公式体表面 ↔ 被击中目标表面。
+       2026-10-01 修正（第三批验收实测）：
+         ① 原来 d 取"箭头到目标中心的距离" —— 两个体明明贴在一起（边到边 0px）
+            读数仍有 ~140px，E=U/d 永远偏小、击穿永不成立（U 拉满 60V 也不行）；
+         ② 父补丁改成"箭头到目标表面"后**仍不够**：箭头通常摆在源体的中间/边缘，
+            到目标的距离里还含着源体自己的半个宽度（实测源体 hw≈57.6px，占了
+            "20px 间隙"的 3 倍），而且射线会先打中源体自己（d=1 → 击穿恒成立，
+            负对照 130px 也照样触发）。
+       现在按物理定义取**电极间距**（源体 ↔ 目标体），1px = 1μm 的比例尺才成立。 */
+    function arrowBreakdown(A, hit, uv, em) {
+      var tx = hit.body ? hit.body.x : (hit.letter ? hit.letter.wx : A.wx);
+      var ty = hit.body ? hit.body.y : (hit.letter ? hit.letter.wy : A.wy);
+      var ex = em ? em.x : A.wx, ey = em ? em.y : A.wy;
+      var cdx = tx - ex, cdy = ty - ey;
+      var dCen = Math.hypot(cdx, cdy);
+      var ux = (dCen > 1e-6) ? cdx / dCen : 1, uy = (dCen > 1e-6) ? cdy / dCen : 0;
+      var dGap = Math.max(1, dCen - supportR(em, ux, uy) - supportR(hit.body, ux, uy));
+      var dM = dGap * 1e-6;                        // 玩具比例尺：1px = 1μm
+      var EField = uv / dM;                        // U = Ed → E = U/d
+      var state = (hit.body ? hit.body : hit.letter);
+      if (!state) return;
+      if (EField >= E_BREAK_AIR && !state._bd) {
+        state._bd = true;
+        eqEmit('breakdown', hit.body, { U: uv, d: dGap, dM: +dM.toExponential(1), E: +EField.toExponential(2) });
+        opLog('breakdown', { U: uv, d: dGap, E: +EField.toExponential(2) });   // 操作日志（2026-10-01）
+        A.spark = 0.4; A.sparkX = hit.x; A.sparkY = hit.y;
+        burstParticles(hit.x, hit.y, 10, 0.6);
+        shake(2, 0.08);
+      } else if (EField < E_BREAK_AIR * 0.8 && state._bd) {
+        state._bd = false;                        // 间隙拉长/电压降低后重新武装
+      }
+    }
+    /* 箭头 = 输出算子（emitter，2026-10-01 用户澄清："箭头只是输出后面链接着的公式，
+       根据公式下方的数值输出"）。升温只是热量类公式的输出之一，不是箭头本身的含义。
+       输出对照表（每条公式 → 输出；想不出物理上正确输出的不做并注明）：
+         Q=cmΔT → 热量（命中物体升温）；Q=λm → 潜热（相变）；Q=I²Rt → 发热；
+         v=λf → 光波（可见波）；ε=hν → 光/光子；E=hν−W → 光电子逸出（E≥0 才逸出）；
+         U=IR → 电流；P=UI → 功率/发热；U=Ed → 电场 → E ≥ 3×10⁶ V/m 击穿空气（输出条件）；
+         F=ma → 力（推动）；F=BIL / F=qvB → 安培力/洛伦兹力；Φ=BS / E=ΔΦ/Δt → 感应电流。
+         未做：其余公式想不出物理上正确的"输出"（如 p=mv、η、Δx 等）——照实不输出。 */
+    function emitterOf(A) {
+      var best = null, bd = 220;
+      for (var i = 0; i < bodies.length; i++) {
+        var B = bodies[i];
+        if (!B.eq || B.kind || B.bh) continue;
+        var d = Math.hypot(B.x - A.wx, B.y - A.wy);
+        if (d < bd) { bd = d; best = B; }
+      }
+      return best;
+    }
+    function applyRayEffect(A, hit, dt, em) {
       var vx = Math.cos(A.rot || 0), vy = -Math.sin(A.rot || 0);
       A.rayLife = 0.35; A.rayX = hit.x; A.rayY = hit.y;
       var B = hit.body;
-      if (!B) {
-        /* 打到游离字形：温度读数就记在这个字形上（letters() 可断言） */
-        var L = hit.letter;
-        if (L.temp == null) L.temp = 20;
-        L.temp += 26 * dt;
-        if (!L._rayT || tWorld - L._rayT > 0.3) {
-          L._rayT = tWorld;
-          eqEmit('heat', null, { ch: L.ch, temp: Math.round(L.temp * 10) / 10, by: 'ray' });
-          opLog('heat', { target: L.ch, temp: Math.round(L.temp * 10) / 10 });  // 操作日志（2026-10-01）
+      var L = hit.letter;
+      if (em === undefined) em = emitterOf(A);   // 链接的公式体（没有公式 = 只有射线，无输出）
+      if (em && !em.eqState) eqInitState(em);
+      var ES = em ? em.eqState : null;
+      var tgtTemp = function () {
+        if (B) { if (B.temp == null) B.temp = 20; return B; }
+        if (L) { if (L.temp == null) L.temp = 20; return L; }
+        return null;
+      };
+      var massOf = function (t) { return Math.max(0.05, (t && t.mass) || 1); };
+      var cOf = function (t) { return numOfGlyph(t, 'c\u6bd4'); };
+      /* 玩具时间尺度：热量输出 1 模拟秒 = 公式数值的 1000 倍热作用（注释明示），
+         事件里的 Q、c、m、dT 仍按 Q=cmΔT 逐字一致。 */
+      var HEAT_K = 1000;
+      var out = em ? em.eq : null;
+      if (!out) return;              // 无链接公式：只画射线，不产生效果
+      if (out === 'heatmass') {
+        var hq = ES.Q, hc = ES.c || 4200, hm = Math.max(0.01, ES.m || 1);
+        var td = tgtTemp(); if (!td) return;
+        var dT1 = hq / (hc * hm) * HEAT_K * dt;
+        td.temp += dT1;
+        if (B && B.eq) eqSet(B, 'T', +B.temp.toFixed(4));
+        if (!A._hmT || tWorld - A._hmT > 0.3) {
+          A._hmT = tWorld;
+          eqEmit('heat', B, { temp: Math.round(td.temp * 10) / 10, Q: hq, c: hc, m: hm, dT: hq / (hc * hm), by: 'emit' });
+          opLog('heat', { target: B ? (B.eq || B.kind || 'body') : L.ch, temp: Math.round(td.temp * 10) / 10 });
         }
-        return;
-      }
-      if (B.temp == null) B.temp = 20;
-      B.temp += 30 * dt;
-      B.heat = (B.heat || 0) + 30 * dt;
-      if (B.eq) eqSet(B, 'T', +B.temp.toFixed(4));   // 公式体：温度进 readout 可断言
-      if (!B._rayT || tWorld - B._rayT > 0.25) {
-        B._rayT = tWorld;
-        eqEmit('heat', B, { temp: Math.round(B.temp * 10) / 10, by: 'ray' });
-        opLog('heat', { target: B.kind ? B.kind : (B.eq || 'body'), temp: Math.round(B.temp * 10) / 10 });  // 操作日志（2026-10-01）
-      }
-      /* Q 在箭头左侧（体里有 Q 字形、或附近游离 Q）：Q = cmΔt 换算温度，数值必须一致 */
-      var qv = null;
-      for (var qi = 0; qi < B.mem.length; qi++) if (B.mem[qi] && B.mem[qi].type === 'Q') { qv = 1; break; }
-      if (qv == null) qv = nearVal(A, 'Q');
-      if (qv != null) {
-        var c = 4200, m = Math.max(0.05, B.mass || 1);
-        var dT = qv / (c * m);
-        B.temp = 20 + dT;
-        B.qCal = { Q: qv, c: c, m: m, dT: dT };
-        if (!B._qT || tWorld - B._qT > 0.25) {
-          B._qT = tWorld;
-          eqEmit('heat-caloric', B, { Q: qv, c: c, m: m, dT: dT });
+      } else if (out === 'melt') {
+        var lq = ES.Q, ll = ES.lam || 334000, lm = Math.max(0.01, ES.m || 1);
+        var td2 = tgtTemp(); if (!td2) return;
+        td2._meltAcc = (td2._meltAcc || 0) + lq * HEAT_K * dt;
+        if (td2._meltAcc >= ll * lm && !td2._melted) {
+          td2._melted = true;
+          eqEmit('phase-change', B, { phase: 'liquid', Q: lq, need: ll * lm, by: 'emit' });
+          opLog('phase-change', { target: B ? (B.eq || B.kind || 'body') : L.ch, phase: 'liquid' });
+          burstParticles(hit.x, hit.y, 8, 0.5);
+        }
+        if (B && B.eq) eqSet(B, 'phase', td2._melted ? '\u6db2' : '\u56fa');
+      } else if (out === 'joule') {
+        var jI = ES.I, jR = ES.R, td3 = tgtTemp(); if (!td3) return;
+        var jq = jI * jI * jR * HEAT_K * dt / 4200;
+        td3.temp += jq;
+        if (B && B.eq) eqSet(B, 'T', +B.temp.toFixed(4));
+        if (!A._jT || tWorld - A._jT > 0.3) { A._jT = tWorld; eqEmit('heat', B, { temp: Math.round(td3.temp * 10) / 10, by: 'joule' }); }
+      } else if (out === 'wave') {
+        A.waveT = 0.6;
+        if (!A._wT || tWorld - A._wT > 0.5) {
+          A._wT = tWorld;
+          eqEmit('wave', B, { v: ES.v, lam: numOfGlyph(em, LAMBDA), f: numOfGlyph(em, 'f'), by: 'emit' });
+          opLog('wave', { lam: numOfGlyph(em, LAMBDA), f: numOfGlyph(em, 'f') });
+        }
+      } else if (out === 'photon') {
+        A.photonT = 0.5;
+        if (!A._pT || tWorld - A._pT > 0.2) {
+          A._pT = tWorld;
+          burstParticles(A.wx + vx * 20, A.wy + vy * 20, 3, 0.8);
+        }
+        if (!A._pET || tWorld - A._pET > 0.5) {
+          A._pET = tWorld;
+          eqEmit('photon', B, { eps: ES.eps != null ? ES.eps : numOfGlyph(em, EPS), by: 'emit' });
+        }
+      } else if (out === 'photoelectric') {
+        var canEsc = ES.E >= 0;
+        if (canEsc) {
+          if (!A._peT || tWorld - A._peT > 0.25) {
+            A._peT = tWorld;
+            burstParticles(hit.x, hit.y, 6, 0.7);
+            eqEmit('photoescape', B, { E: +ES.E.toFixed(3), hnu: +(ES.h * ES.nu).toFixed(3), W: ES.W, by: 'emit' });
+            opLog('photoescape', { E: +ES.E.toFixed(3) });
+          }
+        }
+      } else if (out === 'ohm') {
+        var oU = ES.U, oR = Math.max(0.05, ES.R);
+        if (B && B.eq !== 'ohm') { B.current = oU / oR; B.voltage = oU; }
+        if (!A._flT || tWorld - A._flT > 0.15) { A._flT = tWorld; burstParticles(A.wx + vx * 18, A.wy + vy * 18, 2, 0.5); }
+        if (!A._oT || tWorld - A._oT > 0.5) { A._oT = tWorld; eqEmit('current', B, { U: oU, I: oU / oR, by: 'emit' }); }
+      } else if (out === 'powerE') {
+        var pP = ES.P, td4 = tgtTemp(); if (!td4) return;
+        td4.temp += pP * HEAT_K * dt / 4200;
+        if (B && B.eq) eqSet(B, 'T', +B.temp.toFixed(4));
+        if (!A._pwrT || tWorld - A._pwrT > 0.5) { A._pwrT = tWorld; eqEmit('power', B, { P: pP, by: 'emit' }); }
+      } else if (out === 'uniform-field') {
+        /* 电场输出：达阈值击穿空气（输出条件），短距/高压才放电。
+           d 取**源体与目标体之间的空气间隙**（不是箭头到目标的距离）—— 见 arrowBreakdown。 */
+        arrowBreakdown(A, hit, ES.U, em);
+      } else if (out === 'newton2') {
+        if (B && !B.kind) {
+          var aa = ES.F / Math.max(1e-6, massOf(B));
+          B.vx += vx * aa * 20 * dt; B.vy += vy * aa * 20 * dt;
+          B.forcePush = { F: ES.F, m: massOf(B), a: aa };
+          if (!A._fT || tWorld - A._fT > 0.5) { A._fT = tWorld; eqEmit('force', B, { F: ES.F, a: +aa.toFixed(3), by: 'emit' }); }
+        }
+      } else if (out === 'ampere' || out === 'lorentz') {
+        var FF = (out === 'ampere') ? (ES.B * ES.I * ES.L) : (ES.q * ES.v * ES.B);
+        if (B && !B.kind) {
+          var aa2 = FF / Math.max(1e-6, massOf(B));
+          B.vx += vx * aa2 * 20 * dt; B.vy += vy * aa2 * 20 * dt;
+          B.forcePush = { F: FF, m: massOf(B), a: aa2 };
+          if (!A._fT2 || tWorld - A._fT2 > 0.5) { A._fT2 = tWorld; eqEmit('force', B, { F: FF, by: 'emit' }); }
+        }
+      } else if (out === 'flux' || out === 'faraday') {
+        if (B && !B.kind) {
+          B.induced = (out === 'flux') ? (ES.phi != null ? ES.phi : numOfGlyph(em, PHI) * numOfGlyph(em, 'S')) : (ES.eps != null ? ES.eps : 0);
+          if (!A._indT || tWorld - A._indT > 0.5) { A._indT = tWorld; eqEmit('induction', B, { eps: +B.induced.toFixed(4), by: 'emit' }); }
         }
       }
-      /* F 在箭头左侧：被指物体 a = F/m */
-      var fv = null;
-      for (var fi = 0; fi < B.mem.length; fi++) if (B.mem[fi] && B.mem[fi].type === 'F') { fv = 10; break; }
-      if (fv == null) fv = nearVal(A, 'F');
-      if (fv != null && !B.kind) {
-        var aa = fv / Math.max(1e-6, B.mass || 1);
-        B.vx += vx * aa * 20 * dt; B.vy += vy * aa * 20 * dt;
-        B.forcePush = { F: fv, m: B.mass || 1, a: aa };
-      }
-      /* U 在箭头左侧：导体产生 I = U/R（读数记在体上） */
-      var uv = null;
-      for (var ui = 0; ui < B.mem.length; ui++) if (B.mem[ui] && B.mem[ui].type === 'U') { uv = 6; break; }
-      if (uv == null) uv = nearVal(A, 'U');
-      if (uv != null) {
-        var Rv = Math.max(0.05, (B.eqRead && typeof B.eqRead.R === 'number') ? B.eqRead.R : 1);
-        B.current = uv / Rv;
-        B.voltage = uv;
-      }
-      /* I 在箭头左侧：Q = I²Rt 发热 */
-      var iv = null;
-      for (var ii = 0; ii < B.mem.length; ii++) if (B.mem[ii] && B.mem[ii].type === 'I') { iv = 3; break; }
-      if (iv == null) iv = nearVal(A, 'I');
-      if (iv != null) {
-        var Rv2 = Math.max(0.05, (B.eqRead && typeof B.eqRead.R === 'number') ? B.eqRead.R : 1);
-        var Qh = iv * iv * Rv2 * Math.max(0.05, dt);
-        B.heat = (B.heat || 0) + Qh;
-        B.temp = (B.temp == null ? 20 : B.temp) + Qh * 0.05;
-      }
+      /* 其余公式：想不出物理上正确的输出 —— 不输出（见 emitterOf 注释） */
     }
     function stepArrows(dt) {
       var anyArrow = false, i;
@@ -3998,16 +4233,59 @@
         var A = freeL[i];
         if (!A.arrow || A.dead || A.state === 'grab') continue;
         if (A.rayLife > 0) A.rayLife -= dt;
-        var hit = rayHit(A);
-        if (hit) applyRayEffect(A, hit, dt);
+        if (A.spark > 0) A.spark -= dt;      // 击穿火花淡出（2026-10-01）
+        if (A.waveT > 0) A.waveT -= dt;      // 光波输出淡出（2026-10-01）
+        if (A.photonT > 0) A.photonT -= dt;  // 光子输出淡出（2026-10-01）
+        var emA = emitterOf(A);                       // 本帧只算一次，rayHit 与输出共用
+        var hit = rayHit(A, emA);
+        if (hit) applyRayEffect(A, hit, dt, emA);
       }
     }
-    /* 射线画在 canvas 上（同一套墨线）：从箭头沿朝向打到命中点，随时间淡出 */
+    /* 射线画在 canvas 上（同一套墨线）：从箭头沿朝向打到命中点，随时间淡出；
+       击穿时叠加之字火花（2026-10-01，墨色折线 + 既有热粒子） */
     function drawRays() {
       for (var i = 0; i < freeL.length; i++) {
         var A = freeL[i];
-        if (!A.arrow || A.dead || !(A.rayLife > 0)) continue;
-        var a = Math.min(1, A.rayLife / 0.35);
+        if (!A.arrow || A.dead) continue;
+        var a = (A.rayLife > 0) ? Math.min(1, A.rayLife / 0.35) : 0;
+        /* 光波输出（v=λf，2026-10-01）：命中点向外扩散的同心波弧（墨线） */
+        if (A.waveT > 0 && A.rayX != null) {
+          var wkk = Math.min(1, A.waveT / 0.6);
+          for (var wi = 0; wi < 3; wi++) {
+            var wr = 8 + wi * 14 + (0.6 - A.waveT) * 46;
+            cvx.strokeStyle = 'rgba(38,34,28,' + (0.5 * wkk) + ')';
+            cvx.lineWidth = 1.6;
+            cvx.beginPath();
+            cvx.arc(A.rayX, A.rayY, wr, 0, 6.2832);
+            cvx.stroke();
+          }
+        }
+        /* 光子输出（ε=hν，2026-10-01）：沿线暖色粒子（既有热粒子通道） */
+        if (A.photonT > 0 && A.rayX != null) {
+          var pkk = Math.min(1, A.photonT / 0.5);
+          cvx.fillStyle = 'rgba(38,34,28,' + (0.4 * pkk) + ')';
+          for (var pi = 0; pi < 4; pi++) {
+            var ppx = A.wx + Math.cos(A.rot || 0) * (18 + pi * 9), ppy = A.wy - Math.sin(A.rot || 0) * (18 + pi * 9);
+            cvx.beginPath(); cvx.arc(ppx, ppy, 1.6, 0, 6.2832); cvx.fill();
+          }
+        }
+        if (A.spark > 0) {
+          var kk2 = Math.min(1, A.spark / 0.4);
+          var x0 = A.wx + Math.cos(A.rot || 0) * 16, y0 = A.wy - Math.sin(A.rot || 0) * 16;
+          var dxs = A.sparkX - x0, dys = A.sparkY - y0;
+          var len = Math.max(1, Math.hypot(dxs, dys)), seg = 6;
+          cvx.strokeStyle = 'rgba(38,34,28,' + (0.75 * kk2) + ')';
+          cvx.lineWidth = 1.5;
+          cvx.beginPath();
+          cvx.moveTo(x0, y0);
+          for (var si = 1; si <= seg; si++) {
+            var perp = (si % 2 === 0) ? 1 : -1;
+            var ox2 = -dys / len * 5 * perp, oy2 = dxs / len * 5 * perp;
+            cvx.lineTo(x0 + dxs * si / seg + ox2, y0 + dys * si / seg + oy2);
+          }
+          cvx.stroke();
+        }
+        if (!(A.rayLife > 0)) continue;
         var ox = A.wx + Math.cos(A.rot || 0) * 16, oy = A.wy - Math.sin(A.rot || 0) * 16;
         cvx.strokeStyle = 'rgba(38,34,28,' + (0.5 * a) + ')';
         cvx.lineWidth = 2;
@@ -4154,7 +4432,12 @@
       'formula': '\u6210\u5f0f', 'short-circuit': '\u77ed\u8def', 'open-circuit': '\u65ad\u8def',
       'collide': '\u78b0\u649e\u00b7\u03a3p \u5b88\u6052', 'spring-turn': '\u7b80\u8c10',
       'induced-emf': '\u611f\u5e94', 'binary': '\u53cc\u661f', 'cap-charged': '\u5145\u6ee1',
-      'transform': '\u53d8\u6362', 'heat': '\u5347\u6e29', 'heat-caloric': '\u5347\u6e29', 'combo': '\u62fc\u5408'
+      'transform': '\u53d8\u6362', 'heat': '\u5347\u6e29', 'heat-caloric': '\u5347\u6e29', 'combo': '\u62fc\u5408',
+      'breakdown': '\u51fb\u7a7f', 'phase-change': '\u76f8\u53d8', 'thermal-balance': '\u70ed\u5e73\u8861',
+      'gas': '\u6c14\u6001', 'photoescape': '\u9038\u51fa', 'buoy': '\u6d6e\u6c89',
+      'impulse': '\u51b2\u91cf', 'pressure': '\u538b\u5f3a',
+      'wave': '\u5149\u6ce2', 'photon': '\u5149\u5b50', 'current': '\u7535\u6d41', 'power': '\u529f\u7387',
+      'force': '\u529b', 'induction': '\u611f\u5e94'
     };
     var ACHV = {};   // type -> count（heat 与 heat-caloric 合并计数）
     var achvEl = null;
@@ -4255,6 +4538,22 @@
       return out;
     }
     function eqSet(B, k, v) { if (!B.eqRead) B.eqRead = {}; B.eqRead[k] = v; }
+    /* 一个体的温度读数（2026-10-01 修复：Q吸=Q放 之前只看 B.temp）。
+       B.temp 是"活温度"：只有被射线加热过、或自己就是热学公式体时才有。
+       普通体（一个 m 块）根本没有 B.temp —— 于是"把一块 m 的 T 读数设成 80、
+       再和 Q吸=Q放 的体靠近"永远配不出传热对（实测：thermal-balance 事件 0 条、
+       目标温度恒 20）。所以温度按两级取：活温度优先，其次认它的 T 读数。 */
+    function tempOf(O) {
+      if (!O) return null;
+      if (O.temp != null && isFinite(O.temp)) return O.temp;
+      if (O.eqState && typeof O.eqState.T === 'number' && isFinite(O.eqState.T)) return O.eqState.T;
+      return null;
+    }
+    function setTempOf(O, v) {
+      if (!O) return;
+      O.temp = v;
+      if (O.eqState) O.eqState.T = v;      // 两个读数必须是同一个数（卡片与事件都读它）
+    }
 
     /* 初始化一个公式体的动力学状态（换手/换公式/清场后调用） */
     function eqInitState(B) {
@@ -4292,6 +4591,19 @@
       if (B.eq === 'faraday') { S.phi = 0; S.eps = 0; }
       if (B.eq === 'weight' || B.eq === 'friction') { S.g = 9.8; S.m = 1; S.mu = 0.2; S.theta = 0; }
       if (B.eq && B.eq.indexOf('delta') === 0) { /* Δ：无需初值 */ }
+      /* 第三批基础公式的初值（2026-10-01）。
+         ⚠ 不要用 numOfGlyph 取初值：eqState 模板把 Q/W/F/U/E 预置成 0，
+         numOfGlyph 会优先读到这些 0，公式量永远为 0（实测 Q=cmΔT 的 Q 恒 0）。
+         沿用旧分支的写法：**写死课本默认值**，药丸拖动再改（pillMove 直接写这些键）。 */
+      if (B.eq === 'heatmass') { S.Q = 4; S.c = 4200; S.m = 1; }
+      if (B.eq === 'melt') { S.Q = 4; S.lam = 334000; S.m = 1; S.phase = 'solid'; }
+      if (B.eq === 'thermal-balance') { S.Q = 4; if (B.temp == null) B.temp = 20; }
+      if (B.eq === 'ideal-gas' || B.eq === 'isothermal' || B.eq === 'isochoric') { S.p = 100000; S.V = 2; S.T = 2; }
+      if (B.eq === 'uniform-field') { S.U = 6; S.d = 2; }
+      if (B.eq === 'impetus') { S.F = 10; S.t = 1; S.m = 1; }
+      if (B.eq === 'buoyancy') { S.rho = 1000; S.g = 9.8; S.V = 2; S.m = 1; }
+      if (B.eq === 'pressure') { S.F = 10; S.S = 2; }
+      if (B.eq === 'photoelectric') { S.h = 2; S.nu = 3; S.W = 10; }
       B.eqRead = B.eqRead || {};
     }
 
@@ -4484,6 +4796,125 @@
             S.lastApproach = S.approach;
           }
           eqSet(B, 'ε', S.eps); eqSet(B, 'Φ', S.phi);
+        }
+        /* ---- 第三批基础公式（2026-10-01 用户点名"能产生效果/设定实验条件的做全"）----
+           每条：公式 + 可见效果 + 事件；数值与公式一致（读数进 readout 可断言）。 */
+        /* Q=cmΔT（吸放热）：ΔT=Q/(cm) → 目标温度变化（T 读数/药丸看得见） */
+        if (B.eq === 'heatmass') {
+          S.c = numOfGlyph(B, 'c\u6bd4'); S.m = numOfGlyph(B, 'm');
+          S.Q = (typeof S.Q === 'number') ? S.Q : numOfGlyph(B, 'Q');
+          S.dT = S.Q / (S.c * Math.max(0.01, S.m));
+          B.temp = 20 + S.dT;
+          eqSet(B, 'T', +B.temp.toFixed(3)); eqSet(B, 'dT', +S.dT.toFixed(3)); eqSet(B, 'Q', S.Q);
+          if (!B._hmFired) { B._hmFired = true; eqEmit('heat', B, { temp: +B.temp.toFixed(3), dT: +S.dT.toFixed(3), by: 'cm' }); }
+        }
+        /* Q=λm（熔化/凝固热）：Q ≥ λm 才熔化，温度停在熔点 0°C（相变看得见） */
+        if (B.eq === 'melt') {
+          S.lam = numOfGlyph(B, '\u03bb\u7194'); S.m = numOfGlyph(B, 'm');
+          S.Q = (typeof S.Q === 'number') ? S.Q : numOfGlyph(B, 'Q');
+          S.Qneed = S.lam * Math.max(0.01, S.m);
+          var wasPhase = S.phase;
+          S.phase = (S.Q >= S.Qneed) ? 'liquid' : 'solid';
+          if (wasPhase && S.phase !== wasPhase) eqEmit('phase-change', B, { phase: S.phase, Q: S.Q, Qneed: S.Qneed });
+          S.T = (S.phase === 'solid') ? 0 : (20 + Math.max(0, (S.Q - S.Qneed) / (numOfGlyph(B, 'c\u6bd4') * Math.max(0.01, S.m))));
+          eqSet(B, 'phase', S.phase === 'liquid' ? '\u6db2' : '\u56fa');
+          eqSet(B, 'T', +S.T.toFixed(3)); eqSet(B, 'Q', S.Q); eqSet(B, 'Qneed', S.Qneed);
+        }
+        /* Q吸=Q放（热平衡）：与最近的另一个**有温度**的体趋向同一温度（两读数趋同看得见）。
+           ⚠ 2026-10-01 修复两点：
+             ① 配对判据原来只认 OB.temp（活温度）—— 普通体（一个 m 块）只有 T 读数、
+                没有 temp，于是"两个物体传热"在真机上永远配不出对（事件 0 条）。
+                现在走 tempOf()：活温度优先，其次 T 读数（探针 eqSet(id,'T',80) 也认）。
+             ② 写回必须**两个读数一起写**（setTempOf）—— 只写 temp 会让卡片上的 T 读数
+                与事件里的温度各说各话。 */
+        if (B.eq === 'thermal-balance') {
+          var tb = null, tbd = 1e9, tbi, tbv = null;
+          for (tbi = 0; tbi < bodies.length; tbi++) {
+            var OB = bodies[tbi];
+            if (OB === B || !OB || OB.bh) continue;
+            var ov = tempOf(OB);
+            if (ov == null) continue;
+            var tdd = Math.hypot(OB.x - B.x, OB.y - B.y);
+            if (tdd < tbd) { tbd = tdd; tb = OB; tbv = ov; }
+          }
+          var tSelf = tempOf(B);
+          if (tSelf == null) tSelf = 20;
+          if (tb && tbd < 260) {
+            var c1 = numOfGlyph(B, 'c\u6bd4'), m1 = Math.max(0.01, numOfGlyph(B, 'm'));
+            var c2 = numOfGlyph(tb, 'c\u6bd4'), m2 = Math.max(0.01, numOfGlyph(tb, 'm'));
+            var t1 = tSelf, t2 = tbv;
+            var Teq = (c1 * m1 * t1 + c2 * m2 * t2) / (c1 * m1 + c2 * m2);
+            var kk = Math.min(1, dt * 1.2);
+            var n1 = t1 + (Teq - t1) * kk, n2 = t2 + (Teq - t2) * kk;
+            setTempOf(B, n1);
+            setTempOf(tb, n2);
+            if (!B._tbFired) { B._tbFired = true; eqEmit('thermal-balance', B, { Teq: +Teq.toFixed(3), other: bodies.indexOf(tb), T1: +t1.toFixed(3), T2: +t2.toFixed(3) }); }
+          }
+          eqSet(B, 'T', +tSelf.toFixed(3));
+        }
+        /* pV/T、pV、p/T（气体状态）：药丸改 V/T → p 联动（读数看得见） */
+        if (B.eq === 'ideal-gas' || B.eq === 'isothermal' || B.eq === 'isochoric') {
+          var pv0 = numOfGlyph(B, 'p\u538b'), Vv = numOfGlyph(B, 'V'), Tv = numOfGlyph(B, 'T');
+          if (!B._gasK) B._gasK = (pv0 * Vv) / Math.max(0.1, Tv);
+          S.K = B._gasK;
+          if (B.eq === 'ideal-gas') S.p = S.K * Tv / Math.max(0.01, Vv);
+          else if (B.eq === 'isothermal') S.p = S.K / Math.max(0.01, Vv);
+          else S.p = S.K * Tv;
+          eqSet(B, 'p', +S.p.toFixed(3)); eqSet(B, 'V', Vv); eqSet(B, 'T', Tv);
+          if (!B._gasFired) { B._gasFired = true; eqEmit('gas', B, { p: +S.p.toFixed(3), V: Vv, T: Tv, K: +S.K.toFixed(3) }); }
+        }
+        /* U=Ed（匀强电场）：读数 E=U/d；与箭头击穿联动（击穿判定在 stepArrows）。
+           U 与 ohm 同一套约定：药丸/eqSet 写的 U 走 Uset 镜像。 */
+        if (B.eq === 'uniform-field') {
+          S.U = (typeof S.Uset === 'number') ? S.Uset : S.U;
+          S.d = Math.max(1, (typeof S.d === 'number' && S.d > 0) ? S.d : numOfGlyph(B, 'd'));
+          S.E = S.U / S.d;
+          eqSet(B, 'U', S.U); eqSet(B, 'd', S.d); eqSet(B, 'E', +S.E.toFixed(3));
+        }
+        /* Δp=Ft（动量定理）：冲量推动体、速度改变（动起来看得见） */
+        if (B.eq === 'impetus') {
+          if (!(S.F > 0)) S.F = 10;    // 模板预置 0，未设过就回课本默认
+          S.t = numOfGlyph(B, 't'); S.m = numOfGlyph(B, 'm');
+          S.dp = S.F * S.t;
+          B.vx += -S.dp / Math.max(0.01, S.m) * dt * 0.5;
+          if (!B._impFired) { B._impFired = true; eqEmit('impulse', B, { dp: S.dp, F: S.F, t: S.t }); }
+          eqSet(B, 'dp', +S.dp.toFixed(3));
+        }
+        /* F=ρgV（浮力/浮沉）：F浮 > 重则上浮、< 重则下沉（运动看得见；加速度做玩具尺度封顶，
+           读数 Fb=ρgV 与公式逐字一致） */
+        if (B.eq === 'buoyancy') {
+          S.rho = numOfGlyph(B, RHO); S.g = numOfGlyph(B, 'g'); S.V = numOfGlyph(B, 'V');
+          S.m = numOfGlyph(B, 'm');
+          S.Fb = S.rho * S.g * S.V; S.W = S.m * S.g;
+          var wasSt = S.state;
+          S.state = (S.Fb > S.W * 1.01) ? 'float' : ((S.Fb < S.W * 0.99) ? 'sink' : 'hover');
+          var ay = (S.state === 'float') ? -((S.Fb - S.W) / Math.max(0.01, S.m)) : ((S.state === 'sink') ? ((S.W - S.Fb) / Math.max(0.01, S.m)) : 0);
+          B.vy += clamp(ay, -400, 400) * dt;
+          if (wasSt && S.state !== wasSt) eqEmit('buoy', B, { state: S.state, Fb: S.Fb, W: S.W });
+          if (!B._buoyFired) { B._buoyFired = true; eqEmit('buoy', B, { state: S.state, Fb: S.Fb, W: S.W }); }
+          eqSet(B, 'Fb', +S.Fb.toFixed(3)); eqSet(B, 'W', S.W); eqSet(B, 'state', S.state);
+        }
+        /* p=F/S（压强）：读数 p 随 F、S 联动 */
+        if (B.eq === 'pressure') {
+          if (!(S.F > 0)) S.F = 10;    // 模板预置 0，未设过就回课本默认
+          S.S = numOfGlyph(B, 'S');
+          S.p = S.F / Math.max(0.01, S.S);
+          eqSet(B, 'p', +S.p.toFixed(3));
+          if (!B._presFired) { B._presFired = true; eqEmit('pressure', B, { p: +S.p.toFixed(3), F: S.F, S: S.S }); }
+        }
+        /* E=hν−W（光电效应）：hν ≥ W 才逸出电子（负对照：不够就不逸出），逸出有粒子可见 */
+        if (B.eq === 'photoelectric') {
+          S.h = numOfGlyph(B, 'h'); S.nu = numOfGlyph(B, NU);
+          if (!(S.W > 0)) S.W = 10;   // 模板预置 0，未设过就回课本默认（逸出功）
+          S.E = S.h * S.nu - S.W;
+          eqSet(B, 'E', +S.E.toFixed(3));
+          var canEscape = S.E >= 0;
+          if (canEscape && !B._escFired) {
+            B._escFired = true;
+            eqEmit('photoescape', B, { E: +S.E.toFixed(3), hnu: +(S.h * S.nu).toFixed(3), W: S.W });
+            burstParticles(B.x, B.y - 12, 14, 0.7);
+          }
+          eqSet(B, 'escape', canEscape ? 1 : 0);
         }
         /* 卫星轨道（引力井系统用 eq 体表达不了，这里给"圆周运动 + 逃逸判据"读数） */
         /* 通用位移积分（弹簧体已经直接写了坐标，跳过） */
@@ -4772,7 +5203,13 @@
        只有课本里本来就可调的量；val 是默认读数、lo/hi/step 是药丸的拖动范围。
        药丸拖到的值写进体自己的 eqState（Rset/Uset 另加镜像），不碰这张表。 */
     var VAL_DEF = {
-      'R': { val: 2, lo: 0, hi: 40, step: 0.05, unit: '\u03A9' },
+      /* ⚠ R 是**对数刻度**（lo/hi 跨 0.05 ~ 1e6，7 个数量级），别改成线性的：
+         断路判据是 `S.R >= 1e6`（见 eqStepOnce 的 ohm 分支），而线性量程上界原来
+         只有 40 Ω —— 差 25000 倍，药丸拖到底也够不到断路，于是"R 拖到最大 = 断路"
+         这个状态在界面上**根本不存在**（AGENTS §12 第 3 条：够不到的状态也算缺陷）。
+         电阻本身在物理上就是跨数量级的量，对数刻度是它正确的表示法：
+         左端 0.05 Ω = 短路、右端 1e6 Ω = 断路，两端都能用手指拖到。 */
+      'R': { val: 2, lo: 0.05, hi: 1e6, step: 0.05, log: true, unit: '\u03A9' },
       'U': { val: 6, lo: 0, hi: 60, step: 0.2, unit: 'V' },
       'I': { val: 3, lo: 0, hi: 60, step: 0.1, unit: 'A' },
       'q': { val: 2, lo: 0, hi: 50, step: 0.1, unit: 'C' },
@@ -4795,23 +5232,38 @@
       's': { val: 5, lo: 0, hi: 60, step: 0.5, unit: 'm' },
       'r': { val: 2, lo: 0.1, hi: 20, step: 0.1, unit: 'm' },
       'e': { val: 1, lo: 0, hi: 1, step: 0.05, unit: '' },
-      MU: { val: 0.2, lo: 0, hi: 1, step: 0.01, unit: '' },
-      THETA: { val: 0.3, lo: 0, hi: 1.5, step: 0.01, unit: 'rad' },
-      OMEGA: { val: 3.14, lo: 0.1, hi: 20, step: 0.1, unit: 'rad/s' },
-      ETA: { val: 0.8, lo: 0, hi: 1, step: 0.01, unit: '' },
+      /* ⚠⚠ 这几个键**必须写成希腊字母本身**（'μ'/'θ'…），不能写 `MU:` / `NU:` 这种
+         标识符名（2026-10-01 修）。为什么：ES5 的对象字面量里 `MU:` 就是**名为 "MU"
+         的键**，不是"变量 MU 的值"（那是 ES6 的计算属性 `[MU]:`）。而全模块的查表一律
+         传**字符**（numOfGlyph(B,'ν')、buildPills 的 VAL_DEF[glyph.type]）——
+         键名对不上 → numOfGlyph 一路掉到 `return 1`、药丸也建不出来。
+         实测后果（第三批验收 ③ 红）：`E能 = hν − W` 里 ν 恒为 1（h=6.63 时
+         E = 6.63×1−10 = −3.37 → escape 恒 0，逸出永不发生）；同理 μ/θ/ω/η/ε/Φ/ρ/λ
+         在公式里读到的也全是 1，而不是各自的课本默认值。 */
+      '\u03BC': { val: 0.2, lo: 0, hi: 1, step: 0.01, unit: '' },
+      '\u03B8': { val: 0.3, lo: 0, hi: 1.5, step: 0.01, unit: 'rad' },
+      '\u03C9': { val: 3.14, lo: 0.1, hi: 20, step: 0.1, unit: 'rad/s' },
+      '\u03B7': { val: 0.8, lo: 0, hi: 1, step: 0.01, unit: '' },
       'Q': { val: 4, lo: 0, hi: 200, step: 0.2, unit: 'C' },
       'W': { val: 10, lo: 0, hi: 500, step: 0.5, unit: 'J' },
       'P': { val: 12, lo: 0, hi: 400, step: 0.5, unit: 'W' },
-      EPS: { val: 9, lo: 0, hi: 60, step: 0.2, unit: 'V' },
+      '\u03B5': { val: 9, lo: 0, hi: 60, step: 0.2, unit: 'V' },
       'E': { val: 4, lo: 0, hi: 60, step: 0.2, unit: 'V/m' },
-      RHO: { val: 1.7, lo: 0, hi: 40, step: 0.1, unit: '' },
-      LAMBDA: { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm' },
-      NU: { val: 3, lo: 0.1, hi: 60, step: 0.1, unit: 'Hz' },
-      PHI: { val: 1, lo: 0, hi: 40, step: 0.1, unit: 'Wb' },
+      '\u03C1': { val: 1.7, lo: 0, hi: 40, step: 0.1, unit: '' },
+      '\u03BB': { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm' },
+      '\u03BD': { val: 3, lo: 0.1, hi: 60, step: 0.1, unit: 'Hz' },
+      '\u03A6': { val: 1, lo: 0, hi: 40, step: 0.1, unit: 'Wb' },
       PHI2: { val: 3, lo: 0, hi: 60, step: 0.2, unit: 'V' },
       'n': { val: 1.5, lo: 1, hi: 4, step: 0.01, unit: '' },
       'g': { val: 9.8, lo: 0.1, hi: 30, step: 0.1, unit: 'm/s\u00B2' },
-      'a': { val: 2, lo: 0, hi: 40, step: 0.2, unit: 'm/s\u00B2' }
+      'a': { val: 2, lo: 0, hi: 40, step: 0.2, unit: 'm/s\u00B2' },
+      /* 第三批新字形（2026-10-01，托盘 62） */
+      'V': { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm\u00B3' },
+      'd': { val: 2, lo: 0.05, hi: 40, step: 0.05, unit: 'm' },
+      'c\u6bd4': { val: 4200, lo: 100, hi: 8400, step: 50, unit: 'J/(kg\u00B7\u00B0C)' },
+      'p\u538b': { val: 100000, lo: 10000, hi: 1000000, step: 10000, unit: 'Pa' },
+      '\u03bb\u7194': { val: 334000, lo: 10000, hi: 1000000, step: 10000, unit: 'J/kg' },
+      'E\u80fd': { val: 3, lo: 0, hi: 100, step: 0.5, unit: 'J' }
     };
     function numOfGlyph(B, ch) {
       var S = B.eqState;
@@ -4859,29 +5311,96 @@
       if (id === 'flux') return Bf * S2;
       if (id === 'wave') return lam * f;
       if (id === 'photon') return h * nu;
+      /* 第三批（2026-10-01）：等号两侧的"结果量" */
+      if (id === 'heatmass') return numOfGlyph(B, 'Q');
+      if (id === 'melt') return numOfGlyph(B, 'Q');
+      if (id === 'thermal-balance') return numOfGlyph(B, 'Q');
+      if (id === 'ideal-gas' || id === 'isothermal' || id === 'isochoric') return numOfGlyph(B, 'p\u538b');
+      if (id === 'uniform-field') return numOfGlyph(B, 'U');
+      if (id === 'impetus') return numOfGlyph(B, 'F') * numOfGlyph(B, 't');
+      if (id === 'buoyancy') return numOfGlyph(B, 'F');
+      if (id === 'pressure') return numOfGlyph(B, 'p\u538b');
+      if (id === 'photoelectric') return numOfGlyph(B, 'E\u80fd');
       return 0;
     }
-    /* 每条公式左端的主符号：= 变换后"这一侧"留下来显示（另一侧淡出） */
+    /* 每条公式**左侧**的主符号（2026-10-01 用户澄清 = 的方向是**右→左**：
+       '=' 放上去时把右侧表达式收成左侧这个量；再碰一次拆回右侧）。 */
     var LEAD_OF = { newton2: 'F', work: 'W', momentum: 'p', weight: 'N', friction: 'f', hooke: 'F',
       circular: OMEGA, eff: ETA, powerW: 'P', kinetic: HALF, potential: 'm', delta: DELTA, coscomp: 'F',
       ohm: 'U', powerE: 'P', joule: 'Q', charge: 'Q', emf: EPS, cap: 'C', faraday: 'E', resis: 'R',
-      field: 'E', ampere: 'F', lorentz: 'F', epot: 'W', flux: PHI, wave: 'v', photon: EPS };
+      field: 'E', ampere: 'F', lorentz: 'F', epot: 'W', flux: PHI, wave: 'v', photon: EPS,
+      heatmass: 'Q', melt: 'Q', 'thermal-balance': 'Q', 'ideal-gas': 'p\u538b', isothermal: 'p\u538b',
+      isochoric: 'p\u538b', 'uniform-field': 'U', impetus: DELTA, buoyancy: 'F', pressure: 'p\u538b',
+      photoelectric: 'E\u80fd' };
+    /* "右侧表达式"索引（2026-10-01 = 右→左收敛）：键 = toks 去掉 lead 之后的规范键。
+       例如 ohm：{I,R} → '=' 放上去收成 U。冲突（两个公式同右式）登记时抛错。 */
+    var PARAMS_BY_SIG = {};
+    (function () {
+      for (var i = 0; i < EQUATIONS.length; i++) {
+        var e = EQUATIONS[i];
+        var lead = LEAD_OF[e.id];
+        if (lead == null) continue;
+        var ps = '', removed = false;
+        for (var k = 0; k < e.toks.length; k++) {
+          var c = e.toks.charAt(k);
+          if (!removed && c === lead.charAt(0)) { removed = true; continue; }
+          ps += c;
+        }
+        if (removed) {
+          var sig = sigOfToks(ps);
+          if (PARAMS_BY_SIG[sig]) throw new Error('psandbox: 右式签名冲突 ' + e.id + ' vs ' + PARAMS_BY_SIG[sig].id);
+          PARAMS_BY_SIG[sig] = e;
+        }
+      }
+    })();
+    /* = 的"这一侧"淡出（2026-10-01 右→左语义）：paramSide 1 = 左侧量显示（lead 亮、
+       右式淡出）；paramSide 0 = 右式显示（lead 淡出）。½ 是分数结构字形，不淡出。 */
+    function applySideFade(B) {
+      var lead = B.eq ? LEAD_OF[B.eq] : null;
+      var fadeLead = (B.paramSide !== 1);
+      var fadeRest = (B.paramSide === 1);
+      if (lead === HALF) fadeLead = false;
+      for (var i = 0; i < B.mem.length; i++) {
+        var g = B.mem[i];
+        if (g.type === lead) g.fade = fadeLead ? 0.14 : null;
+        else g.fade = fadeRest ? 0.14 : null;
+      }
+      if (B.massG) {
+        var m2 = B.massG;
+        if (m2.type === lead) m2.fade = fadeLead ? 0.14 : null;
+        else m2.fade = fadeRest ? 0.14 : null;
+      }
+    }
     function findFormulaBodyNear(L) {
       var best = null, bd = MERGE_R_EQ;
       for (var i = 0; i < bodies.length; i++) {
         var B = bodies[i];
-        if (!B.eq || B.kind || B.bh) continue;
+        /* 2026-10-01（= 右→左）：目标可以是**已成式的公式体**，也可以是
+           "右侧表达式体"（字母集合 = 某条公式去掉左侧量，如 IR → ohm）。 */
+        if (!B.eq && !PARAMS_BY_SIG[sigOfToks(toksOfBody(B))]) continue;
+        if (B.kind || B.bh) continue;
         var d = Math.hypot(B.x - L.wx, B.y - L.wy);
         if (d < bd) { bd = d; best = B; }
       }
       return best;
     }
-    /* = 变换器（2026-09-30 移植清单 P2-9）：把一侧真的变成另一侧。
-       不做复杂的形变过渡 —— 沿用旧版合并的简单观感：一侧字形淡出、结果量
-       留在台上，冲击环 + pop 缩放提示；数值守恒（两侧按同一条课本关系算，|Δ|=0）。 */
+    /* = 变换器（2026-10-01 用户澄清方向：**右 → 左**）。
+       不放 =：右侧表达式（IR）保持原样；把 = 放上去：整个右式收成左侧的量
+       （IR → U，卡片 U = IR，数值守恒 |Δ|=0）；再碰一次 = 反向拆开（U → IR）。
+       不做复杂形变 —— 沿用旧版简单观感：旧 pop/环 + 旧 fade 通道淡出另一侧。
+       不成式（既不是公式体、右式也对不上任何公式）不转换、不报错。 */
     function transformBody(B) {
-      if (!B.eq) return false;
-      B.paramSide = B.paramSide ? 0 : 1;      // 再碰一次 = 换边
+      var E3 = null, fromExpr = false;
+      if (B.eq) {
+        E3 = EQ_BY_SIG[sigOfToks(toksOfBody(B))] || null;
+      }
+      if (!E3) {
+        E3 = PARAMS_BY_SIG[sigOfToks(toksOfBody(B))] || null;
+        fromExpr = !!E3;
+      }
+      if (!E3) return false;   // 不成式：不转换、不报错
+      B.eq = E3.id; B.eqText = E3.text;
+      B.paramSide = B.paramSide ? 0 : 1;      // 再碰一次 = 反向（拆回右式）
       eqInitState(B);
       var before = eqValueOf(B);
       var after = eqValueOf(B);
@@ -4889,14 +5408,24 @@
       eqEmit('transform', B, { eq: B.eq, before: before, after: after, d: B._cons.d, side: B.paramSide });
       opLog('transform', { before: before, after: after, d: B._cons.d });   // 操作日志（2026-10-01）
       addLog(B.eqText + ' \u4e24\u4fa7\u4e92\u6362\uff08\u6570\u503c\u5b88\u6052\uff0c\u5dee ' + B._cons.d + '\uff09');
-      var lead = LEAD_OF[B.eq];
-      for (var i = 0; i < B.mem.length; i++) {
-        var g = B.mem[i];
-        if (isOp(g.type)) continue;
-        g.fade = B.paramSide ? ((g.type === lead) ? null : 0.14) : null;
+      if (fromExpr) {
+        /* 右式 → 左侧量：造一个 lead 字形挂上（IR 收成 U）。attach 会 refresh，
+           setF 认得"同一公式"从而保留 paramSide=1 并套用左侧淡出。 */
+        var lead = LEAD_OF[E3.id] || null;
+        var hasLead = false;
+        for (var gi = 0; gi < B.mem.length; gi++) if (B.mem[gi].type === lead) hasLead = true;
+        if (B.massG && B.massG.type === lead) hasLead = true;
+        if (lead && !hasLead) {
+          var ng = GD(lead); ng.pop = 0;
+          attach(B, ng);
+        } else {
+          applySideFade(B);
+          B.pop = 1; ringGo(B.x, B.y);
+        }
+      } else {
+        applySideFade(B);
+        B.pop = 1; ringGo(B.x, B.y);
       }
-      B.pop = 1;
-      ringGo(B.x, B.y);
       return true;
     }
 
