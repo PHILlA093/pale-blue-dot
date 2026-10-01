@@ -286,6 +286,19 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 桌面对外版本号 **V2.4.2 → V2.5.2**（exe 窗口标题 / `使用说明.txt` / 安装程序 `Installer.cs` 的 `Shared.Version`
 （进"程序和功能"的 DisplayVersion 与安装目录的 `安装信息.txt`）/ `下载\` 的 zip 命名），
 手机版 `versionName "1.11" → "2.5.2"`、`versionCode 12 → 13`（`穷观手机版_apk\android\app\build.gradle`）。
+
+**⚠ 2026-10-01/02 更新（本轮实测，与上面所有更早的数字冲突时以本条为准）**：
+- **语料已修复**：`qg_corpus.txt` 50,424,693 → **50,999,547 B / sha256 `FF40159BDB12CE8FC32CD58A24FF658C26EDDBE452E12831AE1747D8F9EB6A26`**。
+  根因：旧构建器去标签时把 Word 公式 OLE 的 `<o:LockedField>false</o:LockedField>` 文本留在公式位（全语料 45,342 处 / 1,287 块）。
+  处置：**4,301 处恢复为可检索 LaTeX**（作者 TeX 字段 + MTEF/WMF 互证，工具 `_cutwork\mtef2latex.py`）+ **41,040 处写成「（公式缺失）」**；
+  `###SRC:` 块数 **37,668 不变**、白名单外 **0 块**、真英文那 1 处逐字节未变。备份：`穷观资料库\_backup_语料_20261001_151802\`（逐字节可回滚）。
+  审计侧逐条来源与失败原因：`_cutwork\qg_formula_provenance.tsv`（45,341 行）；构建侧补丁草案：`_cutwork\build_corpus_integrated.patch` + `qg_formula.py`（**尚未应用到 `E:\qg\`**）。
+- **本轮桌面产物**：安装程序 **14,378,496 B**（`Get-AuthenticodeSignature` = **Valid**，`qg.payload.0.gz` 解压后与当前已签 exe **逐字节相同**）；
+  zip **`穷观学习_桌面版_v2.5.2_安装包_r2_语料修复版.zip`**（13,661,452 B）；Key 闸门 0 命中。**exe 未重编**（语料不在 exe 内，符合 §8）。
+- **手机**：`versionCode 17 → 18`、`versionName` 仍 `2.5.2`（本轮是数据修复，不是功能版本）。
+- **仓库**：`main` = `b004c56`（语料 + 新 zip，已用 `git rev-parse origin/main:<path>` vs `git hash-object` 核对一致）；`mobile-apk` 待本轮 APK 出包后推。
+- **真题档案侧本轮另有大修**（六科卷面修复、存疑卷会诊 36 卷、跨科目切题体检 135 份）：细节见
+  `穷观资料库\工作日志_2026-09-30.md` 第五、六节与 `_cutwork\`；**六份《穷观_2026高考_*.pdf》待 PDF 管线补丁（图片标记 + 溯源块信息框）合入后重排**。
 **下面出现的 `V2.4.2`、`versionCode 6 / versionName 1.5`、`versionCode 9 / versionName 1.8` 都是各次发布当时的历史记录，保留不改。**
 指纹文件（`桌面版\build\_指纹.txt`、`穷观手机版\指纹.txt`、`_gaokao_work\_make_fingerprint_txt.js`）里的同名版本串属**原创指纹，一个字都不许动**；
 `_backup_*` / `_shots*` / `_qa*` / `_gaokao_work` / `_promo` 归档目录同理。

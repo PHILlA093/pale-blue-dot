@@ -74,3 +74,53 @@ test('main page has only a Guanlan launcher; chat and drawing scripts belong to 
   assert.match(standalone, /id="glAsk"/);
   assert.match(standalone, /id="glCanvas"/);
 });
+
+function standaloneContext() {
+  const state = new Map([['qg_live_state', JSON.stringify({ subjectName: '高中数学', selName: '导数' })]]);
+  const listeners = {};
+  const label = { textContent: '', title: '' };
+  const conversation = [{ role: 'user', content: '保留这段对话' }];
+  const ctx = vm.createContext({
+    window: { __guanlanStandalone: true, addEventListener(type, callback) {
+      (listeners[type] ||= []).push(callback);
+    } },
+    localStorage: { getItem: key => state.get(key) ?? null, removeItem: key => state.delete(key) },
+    location: { search: '' },
+    els: { glCtx: label, guanlan: { hidden: false, style: {} } },
+    document: { documentElement: { classList: { toggle() {} } }, querySelector() { return {}; } },
+    screen: { availWidth: 1280, availHeight: 720 },
+    $: () => null, note() {}, ensureToolbar() {}, setInterval() {}, addBubble() {}, conv: conversation
+  });
+  const source = read('js/demo.js');
+  vm.runInContext(['liveState', 'readSubj', 'readPoint', 'refreshCtx', 'buildCtxLine', 'bootStandalone']
+    .map(name => fn(source, name)).join('\n') + '\nbootStandalone();', ctx);
+  return { label, state, conversation, ctx, emit(type, data = {}) {
+    for (const callback of listeners[type] || []) callback(data);
+  } };
+}
+
+test('Guanlan header follows subject and selection changes without clearing conversation', () => {
+  const r = standaloneContext();
+  assert.match(r.label.textContent, /高中数学.*导数/);
+  r.state.set('qg_live_state', JSON.stringify({ subjectName: '高中英语', selName: '定语从句' }));
+  r.emit('storage', { key: 'qg_live_state' });
+  assert.match(r.label.textContent, /高中英语.*定语从句/);
+  assert.equal(r.label.title, '定语从句');
+  assert.match(r.ctx.buildCtxLine(), /高中英语.*定语从句/);
+  r.state.set('qg_live_state', JSON.stringify({ subjectName: '高中英语', selName: '' }));
+  r.emit('storage', { key: 'qg_live_state' });
+  assert.match(r.label.textContent, /未选中/);
+  assert.equal(r.conversation.length, 1);
+  assert.equal(r.conversation[0].content, '保留这段对话');
+});
+
+test('refocusing Guanlan refreshes missed state and cleared storage removes stale context', () => {
+  const r = standaloneContext();
+  r.state.set('qg_live_state', JSON.stringify({ subjectName: '高中物理', selName: '牛顿第二定律' }));
+  r.emit('focus');
+  assert.match(r.label.textContent, /高中物理.*牛顿第二定律/);
+  r.state.clear();
+  r.emit('storage', { key: null });
+  assert.equal(r.label.textContent, '— · 当前知识点:未选中');
+  assert.equal(r.label.title, '');
+});
