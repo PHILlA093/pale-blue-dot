@@ -1,9 +1,10 @@
 // ============================================================
-// 穷观 V2.4.2 · 高中知识词云系统 — Windows 原生窗口宿主
+// 穷观 V2.5.2 · 高中知识词云系统 — Windows 原生窗口宿主
 // 技术:.NET Framework 4.8(Win11 出厂自带)+ WebView2 Runtime(Win11 出厂自带)
 // 全部网页资源(index.html/train.html/css/js/three.js/数据)嵌入本 exe,单文件应用体
 // 编译:csc.exe(Windows 自带编译器,遵守 C# 5 语法)
 //
+// V2.5.2 要点: 对外版本与手机端统一为 2.5.2（内容见 js/psandbox.js 的第三批与修复）
 // V2.4.2 要点:
 //  - 观澜接视觉模型:可附图(选图 / Ctrl+V 粘贴 / 拖入),带图请求切 deepseek-flash,
 //    纯文本仍走原模型;图片在本地先缩到 ≤1300px 再传(对齐官方 48 MiB 请求体限制);
@@ -73,7 +74,7 @@ namespace KnowledgeNetApp
 
         public MainForm()
         {
-            Text = "穷观 V2.4.2 · 高中知识词云系统";
+            Text = "穷观 V2.5.2 · 高中知识词云系统";
             ClientSize = new Size(1440, 900);
             MinimumSize = new Size(980, 640);
             StartPosition = FormStartPosition.CenterScreen;
@@ -874,7 +875,7 @@ namespace KnowledgeNetApp
                 req.Method = "POST";
                 req.ContentType = "application/json";
                 req.Accept = "application/json";
-                req.UserAgent = "qiongguan/2.4.2";
+                req.UserAgent = "qiongguan/2.5.2";
                 req.Timeout = 150000;
                 req.ReadWriteTimeout = 150000;
                 req.Headers["Authorization"] = "Bearer " + key;

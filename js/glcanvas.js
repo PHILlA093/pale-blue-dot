@@ -1,5 +1,5 @@
 /* ============================================================
- * glcanvas.js — 穷观 V2.4.2「观澜」演示画布的 2D 数学绘图引擎(Canvas2D 实现)
+ * glcanvas.js — 穷观 V2.5.2「观澜」演示画布的 2D 数学绘图引擎(Canvas2D 实现)
  * 位置:index.html 中在 demo.js 之前加载;window.GL 暴露为工厂函数:
  *   var gl = window.GL(canvasEl, labelsEl);   // labelsEl 可缺省(null 时引擎自建)
  * 画布语义:世界坐标 = 数学坐标(右手系,y 向上);相机为

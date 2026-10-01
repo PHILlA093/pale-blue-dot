@@ -1,5 +1,5 @@
 /* ============================================================
- * gltemplates.js — 观澜演示模板清单与场景构建(穷观 V2.4.2)
+ * gltemplates.js — 观澜演示模板清单与场景构建(穷观 V2.5.2)
  * 结构:
  *   window.QG_TEMPLATES = {
  *     manifest: [{id, name, desc, params:[{k,label,def}]}],   // 供 AI 与 UI 使用

@@ -76,9 +76,9 @@ namespace QiongGuan.Installer
         internal static readonly Color Track = Color.FromArgb(26, 36, 54);
 
         internal const string AppName = "穷观学习";
-        internal const string Version = "2.4.2";
+        internal const string Version = "2.5.2";
         internal const string Publisher = "PHILlA093";
-        internal const string Tagline = "高中知识词云 · 桌面版 v2.4.2";
+        internal const string Tagline = "高中知识词云 · 桌面版 v2.5.2";
         internal const string Description = "穷观学习 · 高中知识词云";
         internal const string License = "PolyForm Noncommercial 1.0.0 · 非商业许可";
         internal const string BuildId = "QG-20260920-5e5d5a";
