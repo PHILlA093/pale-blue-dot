@@ -709,3 +709,371 @@ test('the desktop host scopes the archive by subject so materials can never mix 
   // 实测口径(2026-09-27,语料 49,945,760 B / 37,249 块):五科真题 3,991 块 =
   // 语文 947 + 英语 1,994 + 物理 230 + 化学 393 + 生物 427;数学(subj 为空)命中其余 33,258 块。
 });
+
+/* ============================================================
+ * 物理沙盒 js/psandbox.js 的纯逻辑 —— 2026-10-01 本轮新增的几块都在这里补断言:
+ *   ① 手写分数(÷):落格判定 / ±DIV_HYS 迟滞 / 归位 / divInfo 结构读数 / DIV_MBAR 横线宽度
+ *   ② 箭头吸附到"式子的右边"(arrowSnapPos / arrowFindHost)
+ *   ③ 击穿空气的 BREAK_M 算术(E = U/(d_px·BREAK_M) ≥ 3e6 ⇔ d_px ≤ U/0.3)
+ *   ④ canMerge 里"箭头不许并进体"那道闸门 + 手写分数的 divFree 例外
+ * 做法与本文件既有风格一致:**函数/常量原样从源码里切出来**(不手抄改写过的副本),
+ * 配假依赖跑。两点差异:psandbox 的函数都在 IIFE 里(缩进 4 空格),上面的 fn() 切不动;
+ * divInfo 是对象字面量里的方法(单独切)。抽取器切完立刻 vm.Script 语法校验,切歪了当场炸。
+ * ============================================================ */
+const psandbox = read('js/psandbox.js');
+
+// 原样切一个 psandbox 函数(isMass 那种单行写法也认);切完语法校验,不许静默跑半截
+function fnPs(name) {
+  const start = psandbox.indexOf('    function ' + name + '(');
+  assert.ok(start >= 0, 'missing function ' + name);
+  const head = psandbox.slice(start, psandbox.indexOf('\n', start));
+  const text = head.trimEnd().endsWith('}') ? head
+    : psandbox.slice(start, psandbox.indexOf('\n    }', start) + 6);
+  assert.ok(text.trimEnd().endsWith('}'), 'unterminated function ' + name);
+  new vm.Script(text, { filename: 'psandbox:' + name });
+  return text;
+}
+// 从源码里读常量的**值**(数字或单引号字符串) —— 改了源码里的数,下面的断言就跟着动
+function psConst(name) {
+  const m = psandbox.match(new RegExp('(?:var|,)\\s+' + name + "\\s*=\\s*('(?:\\\\.|[^'])*'|[^,;]+)"));
+  assert.ok(m, 'missing constant ' + name);
+  return vm.runInNewContext('(' + m[1].trim() + ')');
+}
+// 符号常量(OPEN/CLOSE/…/DIV/HALF/MU 与九个希腊字母)在源码里是**连着一整段**声明的,
+// 整段原样切出来最省事、也最不会漏(公式表 EQUATIONS 里到处是它们)
+const PS_SYMBOLS = (() => {
+  const a = psandbox.indexOf("    var OPEN = '(', CLOSE = ')'");
+  const b = psandbox.indexOf('\n', psandbox.indexOf('    var EPS = ', a));
+  assert.ok(a > 0 && b > a, 'psandbox: 符号常量块切片');
+  const text = psandbox.slice(a, b);
+  new vm.Script(text, { filename: 'psandbox:symbols' });
+  return text;
+})();
+// 公式表(EQUATIONS + 按字母多重集建索引的那个 IIFE)也原样切出来 —— canMerge 的字母数上限要遍历它
+const PS_EQ_TABLE = (() => {
+  const a = psandbox.indexOf('    var EQUATIONS = [');
+  const b = psandbox.indexOf('\n    ];', a) + 6;
+  const c = psandbox.indexOf('    var EQ_BY_SIG = {};');
+  const d = psandbox.indexOf('\n    })();', c) + 10;
+  assert.ok(a > 0 && b > a && c > b && d > c, 'psandbox: 公式表切片');
+  const text = psandbox.slice(a, b) + '\n' + psandbox.slice(c, d);
+  new vm.Script(text, { filename: 'psandbox:EQUATIONS' });
+  return text;
+})();
+
+/* ---------- ① 手写分数(÷) ---------- */
+// 落格/迟滞/归位/读数要用到的原函数 + 真 slot(不是假件:体给 x/y/th/sc 就能算出世界坐标)
+function psDivCtx(over = {}) {
+  const g = { DIV: psConst('DIV'), DIV_HYS: psConst('DIV_HYS'), bodies: [], divHiB: null };
+  return context(['divMembers', 'slot', 'divBarRect', 'divZoneOf', 'divTurnOn', 'divPreviewFor'].map(fnPs),
+    { ...g, ...over });
+}
+// 一个"手写分数体":横线 40px 宽、世界中心 (200,100)
+function psDivBody(mem = [], over = {}) {
+  const bar = { type: psConst('DIV'), ch: psConst('DIV'), sx: 0, sy: 0, w: 40, dead: false };
+  return { x: 200, y: 100, th: 0, sc: 1, mem: mem.concat([bar]), massG: null,
+    div: { on: true, bar, hi: null }, st: { bar }, ...over };
+}
+
+test('÷ 落格判定:横线矩形内分上下(压线归分子),两端之外分前后项,横线没了就 null', () => {
+  const ctx = psDivCtx();
+  const B = psDivBody();
+  // 横线矩形(世界坐标):中心 (200,100)、宽 40 → x ∈ [180,220]
+  assert.deepEqual(clone(ctx.divBarRect(B)), { cx: 200, cy: 100, left: 180, right: 220, y: 100, w: 40 });
+  assert.equal(ctx.divZoneOf(B, 200, 99), 'num', '横线上方 → 分子');
+  assert.equal(ctx.divZoneOf(B, 200, 101), 'den', '横线下方 → 分母');
+  assert.equal(ctx.divZoneOf(B, 200, 100), 'num', '正好压在横线上 → 取上方(源码注释③)');
+  assert.equal(ctx.divZoneOf(B, 179, 100), 'left', '左端之外 → 前方项');
+  assert.equal(ctx.divZoneOf(B, 221, 100), 'right', '右端之外 → 后方项');
+  assert.equal(ctx.divZoneOf(B, 180, 100), 'num', '端点之内(含端点)');
+  assert.equal(ctx.divZoneOf(B, 220, 103), 'den', '端点之内(含端点),另一侧');
+  assert.equal(ctx.divZoneOf(B, 200, -1000), 'num', '只按在横线哪一侧分,竖向不封顶(远近由调用方管)');
+  assert.equal(ctx.divZoneOf(B, 200, 1000), 'den');
+  // 缩放:落格判定跟着 sc 走(体放大 2 倍 → 横线也宽一倍,160 就该算"之内"了)
+  assert.equal(ctx.divZoneOf(psDivBody([], { sc: 2 }), 160, 99), 'num');
+  assert.equal(ctx.divZoneOf(psDivBody([], { sc: 2 }), 159, 99), 'left');
+  // 没有横线(÷ 被拆走 / 死了 / 还没落上)→ null:调用方据此不归格,字形维持原状
+  assert.equal(ctx.divZoneOf({ div: null, st: { bar: null }, sc: 1 }, 200, 99), null);
+  assert.equal(ctx.divZoneOf({ div: { on: false, bar: {} }, st: { bar: {} }, sc: 1 }, 200, 99), null);
+  const dead = psDivBody(); dead.st.bar.dead = true;
+  assert.equal(ctx.divZoneOf(dead, 200, 99), null);
+  assert.equal(ctx.divBarRect({ div: { on: true }, st: {}, sc: 1 }), null, 'st.bar 缺失也不许抛');
+});
+
+test('÷ 拖动预览的迟滞:横线 ±DIV_HYS 窄带里沿用上一次高亮,出了带子才换格', () => {
+  const HYS = psConst('DIV_HYS');
+  assert.equal(HYS, 2, 'DIV_HYS 就是源码里那个迟滞半带(px)');
+  const ctx = psDivCtx();
+  const B = psDivBody();
+  ctx.bodies.push(B);
+  ctx.divPreviewFor({ wx: 200, wy: 100 + HYS });
+  assert.equal(B.div.hi, 'den', '第一次落在带里:还没有"上一次",按原始落格取分母');
+  ctx.divPreviewFor({ wx: 200, wy: 100 - HYS });
+  assert.equal(B.div.hi, 'den', '仍在带内(差 ' + HYS + 'px)→ 不许翻成分子,否则会在线上反复横跳');
+  ctx.divPreviewFor({ wx: 200, wy: 100 - HYS - 1 });
+  assert.equal(B.div.hi, 'num', '出了带子(差 ' + (HYS + 1) + 'px)才换格');
+  ctx.divPreviewFor({ wx: 200, wy: 100 + HYS });
+  assert.equal(B.div.hi, 'num', '从分子那一侧回到带内 → 仍是分子(带子双向:只有出带才换格)');
+  ctx.divPreviewFor({ wx: 200, wy: 100 + HYS + 1 });
+  assert.equal(B.div.hi, 'den', '出带且落在横线下方 → 换成分母');
+  ctx.divPreviewFor({ wx: 200 - 60, wy: 100 });
+  assert.equal(B.div.hi, 'den', '迟滞只看竖直距离 —— 贴在横线这一行上不切前后项');
+  ctx.divPreviewFor({ wx: 200 - 60, wy: 100 + HYS + 1 });
+  assert.equal(B.div.hi, 'left', '竖向出带 + 落在左端之外 → 前方项');
+  ctx.divPreviewFor({ wx: 200 + 151, wy: 100 });
+  assert.equal(B.div.hi, null, '离横线中心 151px > 150px 吸附圈 → 高亮清空');
+  // 负对照(真跑,不是注释):把迟滞半带改成 0,同样两步立刻翻格 ——
+  // 上面第二条断言就是靠这个 ±DIV_HYS 带子成立的,迟滞一去掉它必红。
+  const ctl = psDivCtx({ DIV_HYS: 0 });
+  const B2 = psDivBody();
+  ctl.bodies.push(B2);
+  ctl.divPreviewFor({ wx: 200, wy: 102 });
+  ctl.divPreviewFor({ wx: 200, wy: 98 });
+  assert.equal(B2.div.hi, 'num', '负对照:DIV_HYS=0 时同样的移动会翻成分子');
+});
+
+test('第一个 ÷ 落到体上:老字母按线以上/以下归分子分母,多出来的 ÷ 排到后方项', () => {
+  const DIV = psConst('DIV');
+  const ctx = psDivCtx();
+  const a = { type: 'A', sx: 0, sy: -20, dead: false };      // 世界 y=80(线以上)
+  const b = { type: 'B', sx: 0, sy: 20, dead: false };       // 世界 y=120(线以下)
+  const gone = { type: 'Z', sx: 0, sy: -30, dead: true };    // 已拆掉
+  const bar = { type: DIV, sx: 0, sy: 0, w: 40, dead: false, wy: 100 };
+  const B = { x: 200, y: 100, th: 0, sc: 1, mem: [a, b, gone], massG: null };
+  ctx.divTurnOn(B, bar);
+  assert.equal(B.div.on, true);
+  assert.equal(B.div.bar, bar);
+  assert.equal(bar.dz, 'bar');
+  assert.equal(a.dz, 'num', '线以上 → 分子');
+  assert.equal(b.dz, 'den', '线以下 → 分母');
+  assert.equal(gone.dz, undefined, 'dead 字形不归格');
+  // 归位在松手那一刻落定:再叫一次不重算(体一变形就把摆好的字母重新分类是既有纪律①)
+  a.dz = 'left';
+  ctx.divTurnOn(B, bar);
+  assert.equal(a.dz, 'left', '已在手写分数模式 → 直接返回,不动已落定的格子');
+  assert.equal(b.dz, 'den');
+  // 多出来的 ÷:当行内字形排在"后方项",横线永远是第一个
+  const bar2 = { type: DIV, sx: 0, sy: 0, w: 40, dead: false, wy: 100 };
+  ctx.divTurnOn(B, bar2);
+  assert.equal(bar2.dz, 'right');
+  assert.equal(B.div.bar, bar, '横线黏住不换');
+  // 已经在 mem 里的另一个 ÷ 一样排到后方项
+  const bar3 = { type: DIV, sx: 0, sy: 0, w: 40, dead: false, wy: 100 };
+  const barNew = { type: DIV, sx: 0, sy: 0, w: 40, dead: false, wy: 100 };
+  const C = { x: 200, y: 100, th: 0, sc: 1, mem: [bar3], massG: null };
+  ctx.divTurnOn(C, barNew);
+  assert.equal(bar3.dz, 'right');
+  // 没有落点记录(wy == null)→ 一律进分子(唯一可预测的默认)
+  const d2 = { type: 'D', sx: 0, sy: -20, dead: false };
+  const e2 = { type: 'E', sx: 0, sy: 20, dead: false };
+  const D = { x: 200, y: 100, th: 0, sc: 1, mem: [d2, e2], massG: null };
+  ctx.divTurnOn(D, { type: DIV, sx: 0, sy: 0, w: 40, dead: false });
+  assert.equal(d2.dz, 'num');
+  assert.equal(e2.dz, 'num', '没有落点记录 → 全进分子');
+  // 横线被拆走/死了 → 新的 ÷ 顶上当横线
+  const E2 = psDivBody();
+  E2.div = { on: true, bar: { type: DIV, dead: true }, hi: null };
+  const nb = { type: DIV, sx: 0, sy: 0, w: 40, dead: false, wy: 100 };
+  E2.mem.push(nb);
+  ctx.divTurnOn(E2, nb);
+  assert.equal(E2.div.bar, nb);
+  assert.equal(nb.dz, 'bar');
+});
+
+test('divInfo 结构读数:四格归属(未知格兜底分子)、空分数的 box 就是横线本身', () => {
+  const DIV = psConst('DIV');
+  const m = psandbox.indexOf('      divInfo: function (id) {');
+  assert.ok(m > 0, 'missing method divInfo');
+  const text = psandbox.slice(psandbox.indexOf('function (id) {', m), psandbox.indexOf('\n      },', m) + 8);
+  new vm.Script('var divInfo = ' + text + ';', { filename: 'psandbox:divInfo' });
+  const ctx = context(['divMembers', 'slot', 'divBarRect'].map(fnPs).concat(['var divInfo = ' + text + ';']),
+    { DIV, bodies: [] });
+  assert.equal(ctx.divInfo(0), null, '没有这个体 → null');
+  const g = (ch, dz, sx, sy) => ({ type: ch, ch, dz, sx, sy, w: 10, h: 8, dead: false });
+  const num = g('n', 'num', 0, -20), den = g('d', 'den', 0, 20), left = g('l', 'left', -40, 0);
+  const right = g('r', 'right', 40, 0), odd = g('o', 'wat', 0, -40), div2 = g(DIV, null, 45, 0);
+  const bar = { type: DIV, ch: DIV, sx: 0, sy: 0, w: 40, dead: false };
+  ctx.bodies.push({ x: 200, y: 100, th: 0, sc: 1, massG: null, mem: [num, den, left, right, odd, div2, bar],
+    div: { on: true, bar, hi: null }, st: { bar } });
+  const out = clone(ctx.divInfo(0));
+  assert.equal(out.on, true);
+  assert.deepEqual(out.bar, { cx: 200, cy: 100, left: 180, right: 220, w: 40 });
+  const chs = z => out.zones[z].map(q => q.ch);
+  assert.deepEqual(chs('num'), ['n', 'o'], 'dz 认不出来的格子一律当分子');
+  assert.deepEqual(chs('den'), ['d']);
+  assert.deepEqual(chs('left'), ['l']);
+  assert.deepEqual(chs('right'), ['r', DIV], '横线以外的 ÷ 排在后方项');
+  assert.deepEqual(out.zones.num[0], { ch: 'n', cx: 200, cy: 80, w: 10, h: 8, left: 195, right: 205, top: 76, bottom: 84 });
+  assert.deepEqual(out.box, { left: 155, top: 56, right: 250, bottom: 124 }, 'box = 各格字形并集');
+  // 空分数:一个字形都没有,box 就是横线本身(上下各 1px)—— "空分数也要占住横线的高度"
+  const empty = psDivBody();
+  ctx.bodies.push(empty);
+  const e = clone(ctx.divInfo(1));
+  assert.deepEqual(e.zones, { num: [], den: [], left: [], right: [] });
+  assert.deepEqual(e.box, { left: 180, top: 99, right: 220, bottom: 101 });
+  // 没开手写分数的体:on:false / bar:null / box:null
+  ctx.bodies.push({ x: 0, y: 0, th: 0, sc: 1, mem: [], massG: null, div: null, st: { bar: null } });
+  assert.deepEqual(clone(ctx.divInfo(2)),
+    { on: false, bar: null, zones: { num: [], den: [], left: [], right: [] }, rowW: null, box: null, sc: 1 });
+  // 缩放:读数按 sc 放大(横线 40 → 80)
+  ctx.bodies.push(psDivBody([], { sc: 2 }));
+  assert.equal(clone(ctx.divInfo(3)).bar.w, 80);
+  assert.deepEqual(clone(ctx.divInfo(3)).box, { left: 160, top: 99, right: 240, bottom: 101 });
+});
+
+test('手写分数的横线宽度:不小于 DIV_MBAR + 左右各 DIV_PAD', () => {
+  const MBAR = psConst('DIV_MBAR'), PAD = psConst('DIV_PAD');
+  // 这一条**不是**整个 layoutDiv(它依赖 hRun/ink/repairBase 一大串运行时状态,抽不动),
+  // 只把其中算横线宽度的**那一行**原样抽出来喂假分子分母 —— 来源 js/psandbox.js:1460
+  // `var barW = Math.max(numR.w, denR.w, DIV_MBAR) + DIV_PAD * 2;`
+  const line = psandbox.match(/var barW = [^;]+;/g);
+  assert.ok(line && line.length === 1, 'layoutDiv 里的横线宽度算式只有一处');
+  const ctx = context(['function barWOf(numW, denW) { var numR = { w: numW }, denR = { w: denW }; ' + line[0] + ' return barW; }'],
+    { DIV_MBAR: MBAR, DIV_PAD: PAD });
+  // 负对照(说明):把这行改成 Math.max(numR.w, denR.w) + DIV_PAD*2,第一条立刻从 48 变 14
+  assert.equal(ctx.barWOf(0, 0), MBAR + PAD * 2, '空分子/空分母也要有 ' + MBAR + 'px 横线(没它玩家没得瞄)');
+  assert.equal(ctx.barWOf(10, 4), MBAR + PAD * 2, '最宽那行比 DIV_MBAR 窄时不缩');
+  assert.equal(ctx.barWOf(100, 20), 100 + PAD * 2, '最宽那行更宽时按它 + 左右余量');
+});
+
+/* ---------- ② 箭头吸附 ---------- */
+test('箭头吸附位置 = 卡片右边缘外 2px、竖直贴体中线并夹在卡片上下沿之内', () => {
+  const GAP = psConst('ARROW_GAP');
+  assert.equal(GAP, 2, 'ARROW_GAP 就是源码里"贴着卡片右侧"那个空隙');
+  const ctx = context(['arrowSnapPos', 'arrowFindHost'].map(fnPs), { ARROW_GAP: GAP, ARROW_SNAP_R: psConst('ARROW_SNAP_R'), bodies: [] });
+  const card = { right: 300, top: 100, bottom: 140 };
+  const B = { x: 200, y: 120, hw: 40, hh: 18, sc: 1, _card: card };
+  const s = clone(ctx.arrowSnapPos(B, { w: 20, h: 30 }));
+  assert.equal(s.right, 300, '贴卡片右边缘');
+  assert.equal(s.x, 300 + GAP + 10, '再往外留 ' + GAP + 'px,并让箭头自身居中');
+  assert.equal(s.y, 120, '竖直用体的中线');
+  assert.equal(s.ah, 30);
+  // 卡片上沿天生比体中线低 ~1px:夹在 [top+2, bot-2],含端点
+  assert.equal(ctx.arrowSnapPos({ ...B, y: 90 }, { w: 20, h: 30 }).y, 102);
+  assert.equal(ctx.arrowSnapPos({ ...B, y: 101 }, { w: 20, h: 30 }).y, 102);
+  assert.equal(ctx.arrowSnapPos({ ...B, y: 138 }, { w: 20, h: 30 }).y, 138);
+  assert.equal(ctx.arrowSnapPos({ ...B, y: 200 }, { w: 20, h: 30 }).y, 138);
+  // 卡片这一帧还没画(_card 为空)→ 退回体的 AABB 右边缘,缩放照样算
+  const noCard = { x: 100, y: 50, hw: 40, hh: 18, sc: 2 };
+  assert.equal(ctx.arrowSnapPos(noCard, { w: 30, h: 30 }).x, 100 + 80 + GAP + 15);
+  assert.equal(ctx.arrowSnapPos(noCard, { w: 30, h: 30 }).y, 50);
+  assert.equal(ctx.arrowSnapPos(noCard, null).x, 100 + 80 + GAP + 15, '箭头还没量过尺寸 → 按 30 宽算');
+  assert.equal(ctx.arrowSnapPos(noCard, null).ah, 30);
+  // 吸附圈:落点离卡片矩形 ≤ ARROW_SNAP_R 才算"丢在体上/体附近",差 1px 就不吸
+  const R = psConst('ARROW_SNAP_R');
+  const host = { x: 0, y: 0, hw: 40, hh: 18, sc: 1, eq: {}, eqText: 'U=Ed', _card: { left: 0, right: 100, top: 0, bottom: 40 } };
+  ctx.bodies.push(host);
+  assert.equal(ctx.arrowFindHost(100 + R, 20), host, '正好在吸附圈边界上 → 吸');
+  assert.equal(ctx.arrowFindHost(100 + R + 1, 20), null, '出圈 1px → 不吸(恢复游离字形)');
+  assert.equal(ctx.arrowFindHost(50, 20), host, '落在卡片矩形内 → 距离 0');
+  ctx.bodies.length = 0;
+  ctx.bodies.push({ ...host, eq: null }, { ...host, kind: 'field' }, { ...host, bh: {} });
+  assert.equal(ctx.arrowFindHost(50, 20), null, '没有公式卡片的体(场体/黑洞/还没成式)不是吸附目标');
+});
+
+/* ---------- ③ 击穿空气的 BREAK_M 算术 ---------- */
+// 一次"发射":源体(0,0)、目标体(dCen,0),两个都 hw=hh=0 —— supportR 里 `B.hw || 12` 会兜到 12,
+// 所以两侧各贡献 12px;取 dCen = dGap + 24,arrowBreakdown 量出来的空气间隙就正好是 dGap(px)。
+function psBreakCtx(breakM) {
+  const events = [];
+  const ctx = context(['supportR', 'arrowBreakdown'].map(fnPs), {
+    BREAK_M: breakM === undefined ? psConst('BREAK_M') : breakM,
+    E_BREAK_AIR: psConst('E_BREAK_AIR'),
+    eqEmit: (type, B, data) => events.push({ type, data, body: B }),
+    opLog: () => {}, burstParticles: () => {}, shake: () => {}
+  });
+  ctx.events = events;
+  return ctx;
+}
+function psShoot(ctx, U, px, prev) {
+  const before = ctx.events.length;
+  const em = { x: 0, y: 0, hw: 0, hh: 0, eq: 'uniform-field', eqState: {} };
+  const target = prev ? prev.target : { y: 0, hw: 0, hh: 0 };
+  target.x = px + 24;
+  ctx.arrowBreakdown({ wx: 1, wy: 0 }, { body: target, x: target.x, y: 0 }, U, em);
+  return { fired: ctx.events.length > before, ev: ctx.events.slice(before), em, target };
+}
+
+test('BREAK_M 这把尺子:击穿判据等价于 d_px ≤ U/0.3,四条临界与两条实测边界都钉住', () => {
+  const M = psConst('BREAK_M'), EAIR = psConst('E_BREAK_AIR');
+  assert.equal(M, 1e-7, '1 屏幕像素 = 0.1 μm');
+  assert.equal(EAIR, 3e6, '空气击穿场强 3×10⁶ V/m');
+  const ctx = psBreakCtx();
+  for (const [U, px] of [[6, 20], [20, 66], [30, 100], [60, 200]]) {
+    assert.equal(Math.floor(U / (EAIR * M)), px, 'U=' + U + 'V 的临界间隙(⇔ U/0.3)');
+    assert.equal(psShoot(ctx, U, px).fired, true, U + 'V / ' + px + 'px 正好 3×10⁶ V/m → 击穿(判据含等号)');
+    assert.equal(psShoot(ctx, U, px + 1).fired, false, U + 'V / ' + (px + 1) + 'px 差一点点 → 不击穿');
+  }
+  // 第三批验收实测过的两条边界(60V)
+  const hit = psShoot(ctx, 60, 194.8);
+  assert.equal(hit.fired, true, '实测:60V / 194.8px(E=3.08×10⁶)击穿');
+  assert.equal(hit.ev[0].type, 'breakdown');
+  assert.equal(hit.ev[0].data.U, 60);
+  assert.equal(+hit.ev[0].data.d.toFixed(2), 194.8, '事件里的 d 是量出来的空气间隙(px),不是箭头到目标中心的距离');
+  assert.equal(hit.ev[0].data.E, 3.08e6, '事件里的 E = U/(d·BREAK_M)');
+  assert.equal(hit.em.eqState.d, 194.8, '卡面 d 药丸与事件共用同一个数(卡面 E 与事件逐位一致)');
+  assert.equal(psShoot(ctx, 60, 249.8).fired, false, '实测:60V / 249.8px(E=2.40×10⁶)不击穿');
+  // 重新武装:同一个目标击穿一次后不再重复触发,场掉到 80% 以下才复位
+  const t1 = psShoot(ctx, 60, 200);
+  assert.equal(t1.fired, true);
+  assert.equal(t1.target._bd, true, '击穿后目标的 _bd 立起来');
+  assert.equal(psShoot(ctx, 60, 200, t1).fired, false, '已击穿的目标不重复触发(等重新武装)');
+  assert.equal(psShoot(ctx, 60, 249.8, t1).target._bd, true, 'E=2.40×10⁶ 还在 0.8×3×10⁶ 线以上 → 不复位');
+  assert.equal(psShoot(ctx, 60, 260, t1).target._bd, false, 'E=2.31×10⁶ < 0.8×3×10⁶ → 重新武装');
+  assert.equal(psShoot(ctx, 60, 200, t1).fired, true, '重新武装后再靠近 → 又能击穿一次');
+  // 打在**游离字形**上(hit.letter、没有体)走同一套算术
+  const n0 = ctx.events.length;
+  const L = { wx: 44, wy: 0 };
+  ctx.arrowBreakdown({ wx: 1, wy: 0 }, { letter: L }, 6, { x: 0, y: 0, hw: 0, hh: 0, eq: null, eqState: null });
+  assert.equal(ctx.events.length, n0 + 1, '6V / 20px(6/(20×10⁻⁷)=3×10⁶)打在字形上 → 击穿');
+  assert.equal(L._bd, true);
+  // 负对照(真跑):把尺子换成 1e-6(1px = 1μm),同样的 6V/20px 只有 3×10⁵ V/m ——
+  // 上面那条"20px 击穿"靠的就是 BREAK_M=1e-7,尺子一改必红。
+  const ctl = psBreakCtx(1e-6);
+  assert.equal(psShoot(ctl, 6, 20).fired, false, '负对照:BREAK_M=1e-6 时 6V/20px 不击穿');
+  assert.equal(psShoot(ctl, 6, 2).fired, true, '负对照:同一把尺子要 2px 才够(6V/3×10⁶×10⁻⁶)');
+});
+
+/* ---------- ④ canMerge:箭头闸门 + divFree 例外 ---------- */
+function psCanMergeCtx(over = {}) {
+  const fns = ['isOp', 'isMass', 'sigOfToks', 'toksOfBody', 'eqCompletes', 'eqAccepts'].map(fnPs);
+  const g = { DIV_MAXL: psConst('DIV_MAXL'), ...(over.globals || {}) };
+  return context([PS_SYMBOLS, PS_EQ_TABLE, ...fns, over.src || fnPs('canMerge')], g);
+}
+
+test('canMerge:箭头永不并进体(手写分数的"收任意字母"也不例外),÷ 允许多个', () => {
+  const DIV = psConst('DIV'), ARROW = psConst('ARROW'), EQ = psConst('EQ');
+  const MINUS = psConst('MINUS'), MAXL = psConst('DIV_MAXL');
+  const ctx = psCanMergeCtx();
+  // 正对照:抽出来的确实是产品的 canMerge(不是个恒 false 的空壳)
+  assert.equal(ctx.canMerge({ mem: [], massG: null }, { type: 'm' }), true, '第一个质量字母照常能并');
+  assert.equal(ctx.canMerge({ mem: [{ type: 'm' }], massG: null }, { type: 'm' }), false, '两个相同的质量永远不能合并');
+  // ① 箭头闸门:手写分数体"四格收任意字母",但这道闸门必须先把箭头挡在外面
+  const frac = { mem: [{ type: 'Q' }, { type: 'U' }, { type: 'C' }, { type: DIV }], massG: null, family: 2, div: { on: true } };
+  assert.equal(ctx.canMerge(frac, { type: 'a' }), true, '开了手写分数(Q U C ÷)必须能收 a —— 否则拖到横线上方"什么也没发生"');
+  assert.equal(ctx.canMerge(frac, { type: ARROW }), false, '但箭头不许被吞成体里的一个字形(2026-10-01 显式挡的那一道)');
+  assert.equal(ctx.canMerge({ mem: [{ type: 'm' }], massG: null }, { type: ARROW }), false, '任何体都不收箭头');
+  // 负对照(真删行重跑):把 `if (t === ARROW) return false;` 拿掉,同一个手写分数体就会把箭头收下 ——
+  // 证明上面那条断言真的挂在那一行上,不是被别的规则顺带拒掉的。
+  const stripped = fnPs('canMerge').replace(/[ \t]*if \(t === ARROW\) return false;\n/, '');
+  assert.notEqual(stripped, fnPs('canMerge'), '负对照必须真的删掉了那一行');
+  const ctl = psCanMergeCtx({ src: stripped });
+  assert.equal(ctl.canMerge(frac, { type: ARROW }), true, '负对照:没有闸门时箭头被吞(divFree 例外漏到它身上)');
+  assert.equal(ctl.canMerge({ mem: [{ type: 'm' }], massG: null }, { type: ARROW }), false, '普通体在负对照里也仍被公式闸门拦住');
+  // ② divFree 例外:同一个体,开了 ÷ 能收"跟任何公式都不相容"的字母,没开就拒
+  const plain = { mem: [{ type: 'Q' }, { type: 'U' }, { type: 'C' }], massG: null, family: 2 };
+  assert.equal(ctx.canMerge(plain, { type: 'a' }), false, 'QUC 与任何含 a 的公式都不相容 + 不属于族 2 → 老规矩拒');
+  assert.equal(ctx.canMerge({ ...plain, div: { on: true } }, { type: 'a' }), true, '开了手写分数 → 四格必须收得下任意字母');
+  // ③ ÷ 允许多个(第一个是横线,其余当行内字形);其余运算符仍然同字符不重复
+  assert.equal(ctx.canMerge({ mem: [{ type: DIV }], massG: null }, { type: DIV }), true, '多个 ÷ 允许');
+  assert.equal(ctx.canMerge({ mem: [{ type: '+' }], massG: null }, { type: '+' }), false, '同字符不重复');
+  assert.equal(ctx.canMerge({ mem: [{ type: '+' }], massG: null }, { type: MINUS }), true, '不同运算符仍可共存');
+  // ④ 已成式的体不收 '='(它走边→边变换那条路)
+  const eqBody = { mem: [{ type: 'm' }, { type: 'v' }, { type: 'v' }], massG: null, family: 2, eq: {} };
+  assert.equal(ctx.canMerge(eqBody, { type: EQ }), false);
+  assert.equal(ctx.canMerge({ ...eqBody, eq: null }, { type: EQ }), true);
+  // ⑤ 手写分数只防病态堆叠:总字母数上限 DIV_MAXL
+  const stack = n => ({ mem: Array.from({ length: n }, () => ({ type: 'z' })), massG: null, div: { on: true } });
+  assert.equal(ctx.canMerge(stack(MAXL), { type: 'x' }), false, '到 ' + MAXL + ' 个字母就收不下了');
+  assert.equal(ctx.canMerge(stack(MAXL - 1), { type: 'x' }), true, '差一个还能收');
+});

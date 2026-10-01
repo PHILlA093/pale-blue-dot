@@ -310,7 +310,7 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
   已复核：**内嵌资源 35/35 与源码逐字节一致**（抽查 17/17，含化学 7 个与 `PINK` 修复）、安装程序载荷逐字节、
   zip 三层一致、Key 闸门 0 命中、桌面 zip 与快捷方式指向的 exe 都已换新。
   **独立验收 + 常驻闸门**：`_qa/clab_probe.js` **44/44**（50 行表 + "画到最后一笔" + **5930 组参数组合 0 崩溃** + 真点击 + 零污染 + 两个负对照）；
-  回归 `node --test` 39/39、`tpl_probe` 45/45、`qa.js` 46/46、`eng_probe` 20/20、`desk_fp_probe` 3/3。
+  回归 `node --test` **47/47**、`tpl_probe` 45/45、`qa.js` 46/46、`eng_probe` 20/20、`desk_fp_probe` 3/3。
   本次抓到并修掉的真缺陷：`precipitate-convert` 的 `isFinite(null)` 必炸、`weak-electrolyte` 的跨文件常量 `PINK`、
   `balance()` 不认 `NH3·H2O` 与多段式、常数序列的假绿 r²；顺带修掉贪婪箭头正则、减电子写法、`qgNum(null,默认值)→0`、`react()` 冒异常。
 - **历史产物（已被 0e25613 取代，留档备查）**：`穷观学习.exe` 7,452,160 B / `44784466…`（更早一版 7,276,544 / `FEE2FCAB…`，
@@ -324,14 +324,14 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 3. **物理观澜沙盒**（见 §12）：新增 `js/psandbox.js`，`demo.js`/`guanlan.html` 已改，**只在物理科目出现**。
 4. 手机版 **versionCode 6 / versionName 1.5**；桌面对外版本号仍是 **V2.4.2**（未改）。
 
-**验证体系当前基线**：`qa.js` **46/46**、`tpl_probe` 45/45、`eng_probe` 20/20、`desk_fp_probe` 3/3、`mobile_fp_probe` 6/6、物理沙盒探针 **28/28**；`node --test tests\regression.cjs tests\guanlan-window.cjs` **39/39**。
+**验证体系当前基线**：`qa.js` **46/46**、`tpl_probe` 45/45、`eng_probe` 20/20、`desk_fp_probe` 3/3、`mobile_fp_probe` 6/6、物理沙盒探针 **28/28**；`node --test tests\regression.cjs tests\guanlan-window.cjs` **52/52**（regression 47 + guanlan-window 5）。
 
 **年份检索三档（两侧均已实现并实测）**：
-- 桌面侧：`js/train.js`（`parseSearchIntent`/`pickRealN`/`yearTopic`/`yearIntentNote`/`gateRun`/素材来源卡片）+ 宿主 `Program.cs`（`QueryYearOnly`/`HasExamIntent`/`ArchiveYearRange`、**只取自身年份==目标年份的真原卷**、试卷优先排序、`MATS:` 日志新字段）。实测：`2026` → 候选 3665 段中**真原卷 536 段 / 18 份试卷**；`2050` → 0 段并如实报"档案年份 1952-2026"；`第01讲`/`4题` 不误判年份；`node --test` **34/34**。
+- 桌面侧：`js/train.js`（`parseSearchIntent`/`pickRealN`/`yearTopic`/`yearIntentNote`/`gateRun`/素材来源卡片）+ 宿主 `Program.cs`（`QueryYearOnly`/`HasExamIntent`/`ArchiveYearRange`、**只取自身年份==目标年份的真原卷**、试卷优先排序、`MATS:` 日志新字段）。实测：`2026` → 候选 3665 段中**真原卷 536 段 / 18 份试卷**；`2050` → 0 段并如实报"档案年份 1952-2026"；`第01讲`/`4题` 不误判年份；`node --test` **34/34**（历史）。
 - 手机侧：`js/corpus.js`（`parseYearIntent`/`yearSets`/`paperRank`/`expandCjkTerms`/`archiveYearRange`/`mats()` 补 `year`）+ `js/train.js`（`yearAskMode`/`buildQuery`/`resolveRealN`/`yearStatusText`/`gateRun`/`srcNames`）。离线断言 **177/177**、页面探针 **6/6**、破卷页真机探针 **30/30**（页面内真读 50 MB 语料）；并顺手修了 3 个真 bug：`mats()` 没透传年份回执会把"有素材"说成"没年份"、年份区间对象把 37k 块池引用塞进回执、`2026 函数单调性` 因年份词满足宽松门槛导致**完全不缩小**。
 - 桌面版对外版本号仍是 **V2.4.2**（未改；改它要同步标题/说明/安装程序/zip 命名，需先问用户）。
 
-**公式修复另有 A/B 实证**：构造"修前树"复现出 `404 / typesetPromise rejected / mjx-container=0 / 文本仍是 $...$`，修后同段内容 `404=0 / resolved / mjx-container=5 / 文本 a+x`，并证明新闸门在 bug 状态下**必然变红**。（上面"验证体系当前基线"那一行是最新的：`node --test` 已是 **39/39**，不再是 34/34。）
+**公式修复另有 A/B 实证**：构造"修前树"复现出 `404 / typesetPromise rejected / mjx-container=0 / 文本仍是 $...$`，修后同段内容 `404=0 / resolved / mjx-container=5 / 文本 a+x`，并证明新闸门在 bug 状态下**必然变红**。（上面"验证体系当前基线"那一行是最新的：`node --test` 已是 **47/47**，不再是 34/34 或 39/39。）
 
 **已知未解/打折**：
 - **替身宏是语义降级**：`\cancel` → 内容保留但**没有删除线**、`\boldsymbol`/`\bm` → 粗体（非粗斜体）、`\textcolor`/`\enclose` → 丢颜色/框；**`\bbox[5px]{z}` 的 `[5px]` 会以字面量漏出**（`['#1',1]` 只吃一个参数）。只影响这两个罕见宏，但若模型真用了会有瑕疵。

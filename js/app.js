@@ -1452,6 +1452,10 @@ var CAM_DROP = 6;
     searchResultsEl.innerHTML = html;
     searchResultsEl.hidden = false;
     searchResultsEl.querySelectorAll('li[data-id]').forEach(function (li) {
+      // li 不可聚焦:mousedown 的默认动作会把焦点移走(落到 body),输入框随之失焦,
+      // 于是"点一条结果、再改关键词"必须先重新点一次输入框。拦掉默认动作即可保持焦点,
+      // click 的处理逻辑完全不受影响。
+      li.addEventListener('mousedown', function (e) { if (e && e.preventDefault) e.preventDefault(); });
       li.addEventListener('click', function () {
         pickSearchResult(li.getAttribute('data-id'));
       });
@@ -1498,8 +1502,10 @@ var CAM_DROP = 6;
     if (e.key === 'Enter' && !e.isComposing) { clearTimeout(searchTimer); doSearch(); }
     if (e.key === 'Escape') { clearSearch(); searchInput.blur(); }
   });
-  searchBtn.addEventListener('click', doSearch);
-  searchClear.addEventListener('click', clearSearch);
+  // 点按钮会把焦点抢到按钮上(Windows 上 button 可聚焦)→ 点完没法接着打字,
+  // 因此显式把焦点还给输入框。Escape 那条"退出搜索并失焦"的语义不受影响(见 keydown)。
+  searchBtn.addEventListener('click', function () { doSearch(); searchInput.focus(); });
+  searchClear.addEventListener('click', function () { clearSearch(); searchInput.focus(); });
 
   /* ---------------- 板块筛选 ---------------- */
   var boardChecks = {};
@@ -1834,9 +1840,12 @@ var CAM_DROP = 6;
       var s = document.createElement('span');
       s.className = 'kw';
       s.textContent = k;
+      // 同上:span 不可聚焦,不拦 mousedown 就会把输入框的焦点弄丢
+      s.addEventListener('mousedown', function (e) { if (e && e.preventDefault) e.preventDefault(); });
       s.addEventListener('click', function () {
         searchInput.value = k;
         doSearch(true);            // true = 保留详情面板(点关键词只是想看看相关命中)
+        searchInput.focus();       // 点标签通常是"以它为词继续搜",焦点留在输入框里
       });
       kw.appendChild(s);
     });
