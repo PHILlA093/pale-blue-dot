@@ -1,0 +1,127 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace "com.philia.qiongguan"
+    compileSdk rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.philia.qiongguan"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        // Bumped for the bug-fix release: Android only installs an update over an existing
+        // app when versionCode increases, so this must move with every shipped APK.
+        // 5 / 1.4 = 修掉"公式不排版"的那一版:MathJax 的 autoload 会让 \boldsymbol 这类未内置宏
+        // 去懒加载 input/tex/extensions/*.js,而应用只内嵌了单个 mathjax-tex-svg.js → 404 →
+        // typesetPromise 整体 reject 且被 .catch 吞掉 → 整张卡片公式全显示成 $...$ 源码。
+        // 现已关闭 autoload + 给 8 个常见扩展宏做等价替身 + 提示词禁用它们(见 AGENTS.md §9.11)。
+        // 6 / 1.5 = 六科真题档案(按科目过滤) + 语料新增 2025 五科真题 419 块(50,424,693 B)。
+        // 桌面版另有"物理观澜沙盒",手机版观澜结构不同(整屏面板),那一项留待单独一轮移植与验证。
+        // 7 / 1.6 = 破卷出题口径改为"输入优先 + 显式选点才偏向"(js/train.js 92,166 → 101,391 B):
+        // 新增唯一判据 isPickedTarget()(picked/sel/board 才算选择,via:'ask' 反推出来的点不算),
+        // 无年份时检索式 = 用户输入原文(buildQuery: kw || pt,不再前置知识点名+关键词),
+        // 提示词新增 5b) 命题范围(硬约束),显式选的点进【可选偏向,不是命题范围】(要点 1600→600 字)。
+        // 8 / 1.7 = 桌面版三个实验台移植进手机版,入口放在 ☰ 侧边栏:
+        // js/psandbox.js(物理沙盒) + js/pslab.js + js/pslab/*.js(物理实验台,20 实验)
+        // + js/clab.js + js/clab/*.js(化学实验台,50 反应)共 15 个模块文件从桌面版
+        // **逐字节**复制过来,另加手机版自己的窄屏布局层 js/qlabm.js(≤768px 三栏折成
+        // "上=画布 / 下=标签页",触控热区 ≥40px)。科目门禁沿用桌面硬约束:物理科目
+        // 才出现物理沙盒/物理实验台、化学科目才出现化学实验台,非对应科目下不建任何
+        // ps-/pl-/cl- DOM、不注入对应 CSS(sync-www 后 www 文件数 32 → 48)。
+        // 9 / 1.8 = 桌面侧刚定稿的两批改动同步进手机版,并重做窄屏字形面板:
+        // js/psandbox.js 165,866 → 234,937 B(sha256 233D19E5…):
+        //   符号 15 → 45(m/M/g/a/v/r/½/μ/c/G/t/B/E/q/I + F/f/N/s/h/p/T/ω/k/η/θ/Δ/x/y/A/S/U/R/P/W/Q/ε/C/L/Φ/ρ/λ/ν/φ/n)、
+        //   每帧强制同步布局的卡顿修复(1.000 → 0.000)、pause()/resume() 真的生效
+        //   (原来 pause() 只置 running,渲染循环从不读它 = 空实现)、26 条课本公式组合、
+        //   "事件与相互作用"(碰撞动量守恒 / 弹簧振子 / 摩擦斜面 / 欧姆定律含短路断路 /
+        //   电容充电 / 安培力 / 洛伦兹力 / 法拉第电磁感应;双轨物理:老 15 个符号走原路径逐位不变)。
+        // js/clab.js + js/clab/{ions,organic,kinetics,analysis}.js 五个文件为化学实验台的
+        //   "沉淀裁剪"定稿版(metals.js / electro.js 本轮未改,别动)。
+        // js/qlabm.js 的 #qgLabMCSS:字形面板从 repeat(4,46px) 改成
+        //   repeat(8,34px) + grid-auto-rows:34px + grid-template-rows:none + max-height:42%
+        //   + overflow-y:auto。45 个字形按模块的 PAL_COLS=6 实际占 6 列 × 8 行,
+        //   390×844 实测面板 314×314(平台高 787px、42% = 330.5px)、零重叠、零滚动、
+        //   45/45 中心点命中(真触屏事件也能抓起)。
+        // 10 / 1.9 = 物理沙盒净室重写 → **移植版**(旧代码 + 新特性,权利问题解决):
+        // js/psandbox.js 234,937 → 271,887 B(sha256 329FA8EB…),符号 45 → 56
+        // (新增 + − × ÷ = ( ) ² √ · →),托盘 PAL_COLS=9(桌面)/ palCols()=8(≤768px),
+        // 26 条课本公式、= 变换器、箭头射射线升温、公式卡可拖药丸(真拖能拼出公式);
+        // 手机 dock 8 列 × 7 行全部可见;qlab_probe 判据 45 → 56(托盘恒 56、
+        // 可滚动触达 56/56、无横向滚动)。
+        // 11 / 1.10 = 移植版第二版收尾:js/psandbox.js 271,887 → 284,045 B
+        // (sha256 21D07B22…):修公式字母重叠(run 布局按真字形宽推进)、修抓取公式后
+        // 甩飞(体松手与字形同一套 THROW 语义)、新增成就面板(.ps-achv,事件徽章+
+        // 计数)与操作日志(localStorage['qg_ps_oplog'],上限 500)。
+        // 12 / 1.11 = 移植版第三批:js/psandbox.js 284,045 → 320,965 B
+        // (sha256 8A0A5D1E…):修药丸闭包 bug(buildPills 的 var p 函数作用域 →
+        // bindPillDrag(el),真 touch 拖 U 药丸只改 U)、修 VAL_DEF 希腊字母键名
+        // (ν/μ/θ/ω/η/ε/Φ/ρ/λ 不再是恒 1)、R 药丸对数刻度 0.05↔1e6、箭头击穿
+        // (U=Ed 且 E≥3×10⁶ V/m)、Q吸=Q放 与合并半径按体 AABB;托盘 56 → 62
+        // (新增 V/d/c比/p压/λ熔/E能)。
+        // 13 / 2.5.2 = 对外版本号两端统一(**本轮只改版本字符串,不含代码改动**):
+        // 桌面对外版本 V2.4.2 → V2.5.2(窗口标题 / 使用说明.txt / 安装程序 Installer.cs 的
+        // Shared.Version / 下载 zip 名一并改),手机 versionName / versionCode 一并改成同一个号。
+        // 此前手机版自走一套号(1.4 起逐版递增),与桌面版对不上,用户会拿到两个版本号。
+        // ⚠ 这一版 APK 的实际内容是 js/psandbox.js 的第三批修复 + 除号→分数结构,定稿后才重打。
+        // 14 / 2.5.2 = 同一版本号的第二次构建(versionName 不变):js/psandbox.js 347,992 B
+        // (sha256 510b4a41…):箭头吸附到"式子右边" + 击穿比例尺放宽 10 倍(1px=0.1μm,
+        // U=60 击穿窗口 200px)+ 卡面 E 与事件 E 统一(同一个 d、同一把尺)。
+        // 15 / 2.5.2 = 同一版本号的第三次构建(versionName 仍不变):手机侧 UI 抽屉化
+        // (js/qlabm.js):字母面板改成下方向上拉的抽屉(收起=只留 32px 把手、展开=浮层
+        // 不占舞台、退出自动收回);右下角垃圾桶移除出屏幕(判定区随之失效)。
+        // 16 / 2.5.2 = 同一版本号的第四次构建(versionName 仍不变):异形屏安全区
+        // (viewport-fit=cover 已在活树;styles.xml 补 cutout shortEdges + 透明状态栏;
+        // js/qlabm.js 新增 --sat/--sab/--sal/--sar,观澜标题栏/沙盒工具条/抽屉把手
+        // 与展开面板全部按安全区留边)。
+        // 17 / 2.5.2 = 同一版本号的第五次构建(versionName 仍不变):
+        //   ① 手机层门控从"宽度≤768"改为**手机壳标记**(html[data-shell=mobile]):
+        //     横屏/平板>768 时抽屉/垃圾桶移除/安全区仍然生效,宽度只留托盘 8/9 列细节;
+        //   ② 安全区四变量上移到页面级并统一消费(主界面顶栏/弹层/实验台底栏);
+        //   ③ 原生安全区桥(MainActivity WindowInsets → window.__qgInsets,
+        //     老 WebView 无 env() 时取 max(env,原生值));
+        //   ④ 白色状态栏带修复:NoActionBarLaunch 补 postSplashScreenTheme →
+        //     正式主题深色窗口底 #0A101F(此前一直停在启动主题露白底);
+        //   ⑤ 搜索焦点修复(app.js,父 agent 改:结果/关键字/按钮点击后焦点留输入框)。
+        versionCode 18
+        versionName "2.5.2"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        aaptOptions {
+             // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
+             // Default: https://android.googlesource.com/platform/frameworks/base/+/282e181b58cf72b6ca770dc7ca5f91f135444502/tools/aapt/AaptAssets.cpp#61
+            ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+repositories {
+    flatDir{
+        dirs '../capacitor-cordova-android-plugins/src/main/libs', 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
+    implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
+    implementation project(':capacitor-android')
+    testImplementation "junit:junit:$junitVersion"
+    androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
+    implementation project(':capacitor-cordova-android-plugins')
+}
+
+apply from: 'capacitor.build.gradle'
+
+try {
+    def servicesJSON = file('google-services.json')
+    if (servicesJSON.text) {
+        apply plugin: 'com.google.gms.google-services'
+    }
+} catch(Exception e) {
+    logger.info("google-services.json not found, google-services plugin not applied. Push Notifications won't work")
+}

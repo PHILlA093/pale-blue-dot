@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 2026-10-01 白色状态栏带修复:正式主题的窗口底 = 应用深色底
+         (#0A101F,与 index.html 的 theme-color / 页面背景同值,不是新造的颜色)。
+         启动图结束(postSplashScreenTheme 切换)后,状态栏区域显示这个深色。 -->
+    <color name="qg_dark">#0A101F</color>
+</resources>

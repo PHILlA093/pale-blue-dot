@@ -15,6 +15,32 @@
 <!-- 手机适配:viewport-fit=cover 让内容伸进刘海/圆角区(配合 env(safe-area-inset-*)),
      user-scalable=no 关掉双击放大(画布上双击已用于"聚焦知识点",不能被浏览器抢走) -->
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<!-- 手机壳标记(2026-10-01):整层手机适配(实验台抽屉/垃圾桶移除/安全区)以**这个标记**
+     为准,不再以视口宽度为准 —— 手机横屏/平板(宽>768)时手机层仍然生效;
+     宽度只决定排布细节(托盘 8/9 列)。桌面树没有这段,完全不受影响。 -->
+<script>document.documentElement.setAttribute('data-shell','mobile');</script>
+<!-- 页面级安全区变量(2026-10-01):四个变量统一在页面级取一次 env(safe-area-inset-*),
+     主界面(css/style.css)与实验台层(js/qlabm.js)共用同一份;不支持 env() 时降级 0px。 -->
+<style>
+:root{--sat:0px;--sab:0px;--sal:0px;--sar:0px}
+@supports (padding: env(safe-area-inset-top)){:root{
+--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}}
+</style>
+<!-- 原生安全区桥(2026-10-01):Android 宿主把状态栏/导航栏像素注入 window.__qgInsets,
+     这里取 max(env(), 原生值) —— 老 WebView 没有 env() 时也有真实数值。 -->
+<script>
+(function(){
+  function apply(ins){ if(!ins) return; var d=document.documentElement.style;
+    d.setProperty('--sat','max(env(safe-area-inset-top,0px),'+(ins.top|0)+'px)');
+    d.setProperty('--sab','max(env(safe-area-inset-bottom,0px),'+(ins.bottom|0)+'px)');
+    d.setProperty('--sal','max(env(safe-area-inset-left,0px),'+(ins.left|0)+'px)');
+    d.setProperty('--sar','max(env(safe-area-inset-right,0px),'+(ins.right|0)+'px)'); }
+  window.__qgApplyInsets=apply;
+  window.__qgInsetsCb=apply;
+  if(window.__qgInsets) apply(window.__qgInsets);
+})();
+</script>
 <title>穷观 V2.5.2 · 高中数学知识网络</title>
 <!-- 穷观 logo:与 exe 的 Win32 图标同源(favicon.ico)。桌面版由宿主内嵌下发,
      此前浏览器默认请求 /favicon.ico 一直是 404;网页版直接读同目录文件。 -->

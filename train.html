@@ -6,10 +6,37 @@
      script-src 不含 unsafe-eval;style-src 需 unsafe-inline —— 本页除自有 <style> 外,
      页脚"来源标记"三处色块是内联 style 属性。form-action 'none':本页 keyForm 的提交
      已被 train.js 的 submit 监听 preventDefault 接管,不存在真实提交。 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; form-action 'none'; base-uri 'none'; object-src 'none'">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<!-- 手机壳标记 + 页面级安全区变量 + 原生安全区桥(2026-10-01,与 index.html 同源同义) -->
+<script>document.documentElement.setAttribute('data-shell','mobile');</script>
+<style>
+:root{--sat:0px;--sab:0px;--sal:0px;--sar:0px}
+@supports (padding: env(safe-area-inset-top)){:root{
+--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}}
+</style>
+<script>
+(function(){
+  function apply(ins){ if(!ins) return; var d=document.documentElement.style;
+    d.setProperty('--sat','max(env(safe-area-inset-top,0px),'+(ins.top|0)+'px)');
+    d.setProperty('--sab','max(env(safe-area-inset-bottom,0px),'+(ins.bottom|0)+'px)');
+    d.setProperty('--sal','max(env(safe-area-inset-left,0px),'+(ins.left|0)+'px)');
+    d.setProperty('--sar','max(env(safe-area-inset-right,0px),'+(ins.right|0)+'px)'); }
+  window.__qgApplyInsets=apply;
+  window.__qgInsetsCb=apply;
+  if(window.__qgInsets) apply(window.__qgInsets);
+})();
+</script>
 <title>穷观 · 破卷</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a101f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="穷观">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
@@ -191,6 +218,25 @@
   .winctrl button.wc-x:hover { border-color: rgba(255,120,120,.55); background: rgba(255,90,90,.18); }
   .winctrl button:active { transform: scale(.94); }
 
+  /* 「← 返回知识云」:手机浏览器 / APK 里没有宿主窗口可关,这是最直接的出路。
+     做成真 <a>,即使脚本异常也仍然可点、可跳。
+     href 带 ?skip=1:跳过开场动画,落地即知识云主界面(与顶栏「⟳」重载同一约定),
+     避免"退出破卷 → 又看一遍开场黑屏"被当成黑屏故障。 */
+  #qgBack {
+    flex: none; display: none;
+    align-items: center; justify-content: center; gap: 4px;
+    min-height: 44px; min-width: 44px; padding: 0 12px;
+    border-radius: 9px; border: 1px solid rgba(79,195,247,.45);
+    background: rgba(79,195,247,.12); color: var(--accent);
+    font-size: 13px; font-weight: 600; text-decoration: none;
+  }
+  #qgBack:hover { background: rgba(79,195,247,.22); color: #fff; }
+
+  /* 「破卷已结束」全屏遮罩(#qgClosed / .qg-closed-box / #qgBackHome)已整体删除:
+     它正是"从破卷退出黑屏"的来源(整屏 rgba(5,8,15,.96) 近乎纯黑,
+     唯一出路 history.back() 在 WebView 历史为空时退不回去)。
+     手机端 ✕ / Esc 现在直接回知识云,不再需要、也不再存在这个遮罩。 */
+
   /* 无边框窗口:顶层灰色描边(覆盖层;最大化时直角) */
   .winedge {
     position: fixed; inset: 0;
@@ -208,7 +254,7 @@
      阈值取 max-height:620px(560 命中)与 max-width:800px(720 命中)双保险。 */
   @media (max-height: 620px), (max-width: 800px) {
     #top { gap: 6px; padding: 7px 10px; }
-    .winctrl button { width: 26px; height: 26px; font-size: 12px; }
+    .winctrl button { width: 44px; height: 44px; font-size: 15px; }
     .key-wrap { font-size: 11.5px; row-gap: 5px; }
     .key-wrap input { min-width: 120px; padding: 6px 9px; }
     #askInput { min-width: 150px; }
@@ -216,12 +262,92 @@
     main { padding: 8px 12px 18px; }
     .br-list { max-height: 170px; }
   }
+
+  /* ============================================================
+   * 移动端基础:动态视口高度 / 禁下拉刷新 / 安全区变量
+   * (本页不引 css/style.css,所以基础变量在这里自己定义一份)
+   * ============================================================ */
+  html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  @supports (height: 100dvh) { html, body { height: 100dvh; } }
+  /* 安全区变量改用页面级 --sat/--sab(head 里的 <style> 已定义 + 原生桥 max),
+     这里不再自己定义一份(2026-10-01)。 */
+
+  /* ============================================================
+   * 手机形态(≤768px):单列排布、触控热区 ≥44px、字号 ≥16px 防 iOS 放大
+   * 宽屏(桌面破卷窗 720×560 起)不受影响。
+   * ============================================================ */
+  @media (max-width: 768px) {
+    #top {
+      gap: 6px;
+      padding: calc(6px + var(--sat)) 10px 6px;
+    }
+    /* 手机上没有"窗口"可最小化/最大化,隐藏这两个;
+       ✕ 保留 —— 它是用户最先会点的退出入口,热区必须 ≥44px。
+       (原实现把整个 .winctrl 隐藏,等于手机上根本没有关闭/退出入口。) */
+    #winMin, #winMax { display: none; }
+    .winctrl button { width: 44px; height: 44px; font-size: 16px; border-radius: 10px; }
+    /* 常驻「← 返回知识云」:APK / 浏览器里的主要退出路径(带 ?skip=1,落地即主界面) */
+    #qgBack { display: inline-flex; }
+
+    .pills { gap: 5px; }
+    .pill { font-size: 11.5px; padding: 5px 10px; max-width: 100%; }
+
+    .row { gap: 8px; }
+    #askInput { min-width: 0; flex: 1 1 100%; min-height: 44px; font-size: 16px; padding: 10px 12px; }
+    #locateBtn { flex: 1 1 auto; min-height: 44px; font-size: 14px; }
+    #qType { flex: 1 1 auto; min-height: 44px; font-size: 14px; }
+
+    .key-wrap { font-size: 12.5px; row-gap: 8px; }
+    .key-wrap input { flex: 1 1 100%; min-width: 0; font-size: 16px; padding: 10px 12px; }
+    .key-wrap button { min-height: 44px; padding: 0 16px; font-size: 13.5px; }
+    .key-wrap a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+
+    main {
+      padding: 10px 12px calc(26px + var(--sab));
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+    #statusRow { gap: 8px; }
+    #genBtn { flex: 1 1 100%; min-height: 48px; font-size: 15px; }
+    #qDiff { flex: 1 1 100%; min-height: 44px; font-size: 14px; }
+    /* 素材偏好与难度独立成两个下拉:手机上也各占一行,保证 44px 触控热区 */
+    #qSource { flex: 1 1 100%; min-height: 44px; font-size: 14px; }
+    #status { min-width: 0; flex: 1 1 100%; font-size: 13px; }
+
+    #targetInfo { font-size: 13px; }
+
+    .q-head { gap: 8px; padding: 9px 12px; }
+    .q-src { flex: 1 1 100%; max-width: 100%; white-space: normal; }
+    .q-body { padding: 10px 12px; }
+    .q-stem { font-size: 15px; line-height: 1.9; }
+    .q-opts li {
+      display: flex; align-items: center;
+      min-height: 44px; padding: 8px; font-size: 14.5px; line-height: 1.7;
+    }
+    .q-actions { padding: 0 12px 12px; gap: 10px; }
+    .q-actions button { min-height: 44px; padding: 0 14px; font-size: 13.5px; }
+    .sol { margin: 0 12px 12px; padding: 10px 12px; }
+    .sol .an { font-size: 14px; line-height: 1.85; }
+
+    .br-head { flex-wrap: wrap; gap: 8px; }
+    .br-head .hit { margin-left: 0; }
+    .br-list { max-height: 42dvh; }
+    .br-item { min-height: 46px; padding: 10px 12px; font-size: 13.5px; }
+
+    .footnote { font-size: 11.5px; margin-top: 14px; }
+
+    /* 输入控件字号统一抬到 16px:iOS Safari 在 <16px 时聚焦会自动放大页面 */
+    input[type="text"], input[type="password"], select, textarea { font-size: 16px; }
+  }
 </style>
 </head>
 <body>
 
 <header id="top">
   <div class="pills">
+    <!-- 手机浏览器 / Capacitor APK 里没有"第二个窗口"可关,这是最直接的退出入口。
+         ?skip=1:落地直接进知识云主界面,不重播开场动画。宽屏(桌面破卷窗)由 CSS 隐藏。 -->
+    <a id="qgBack" href="index.html?skip=1" title="返回知识云" aria-label="返回知识云">← 返回知识云</a>
     <span class="pill" id="pSubject">科目:—</span>
     <span class="pill sel" id="pPoint">主系统当前:—</span>
     <span class="pill" id="pKw">搜索词:—</span>
@@ -243,6 +369,7 @@
   </div>
   <!-- 提交由 train.js 的 submit 监听 preventDefault 接管,action="javascript:void(0)"
        会被严格 CSP 的 script-src 拒绝,故直接去掉 action -->
+  <!-- 穷观破卷 · 原创工程标识 QG-20260920-5e5d5a · 作者 PHILlA093 · 未经许可不得复制本页结构与脚本 -->
   <form class="key-wrap" id="keyForm">
     <span>DeepSeek API Key</span>
     <input type="password" id="keyInput" placeholder="sk-…(保存在本机,用于 AI 联网出题)" autocomplete="off">
@@ -256,12 +383,17 @@
 <main>
   <div id="statusRow">
     <button id="genBtn" class="primary">🎯 出题训练</button>
-    <select id="qDiff" title="难度档位(同时决定真实高考真题占比:难度一 0% → 难度五 100%)">
-      <option value="1">难度一 · 真题 0%</option>
-      <option value="2">难度二 · 真题 25%</option>
-      <option value="3" selected>难度三 · 真题 50%</option>
-      <option value="4">难度四 · 真题 75%</option>
-      <option value="5">难度五 · 真题 100%</option>
+    <select id="qDiff" title="题目难度,与素材来源独立">
+      <option value="1">难度一 · 基础</option>
+      <option value="2">难度二 · 巩固</option>
+      <option value="3" selected>难度三 · 中档</option>
+      <option value="4">难度四 · 综合</option>
+      <option value="5">难度五 · 挑战</option>
+    </select>
+    <select id="qSource" title="优先采用的素材题数,不足时如实标记,不保证真题比例">
+      <option value="0">AI 原创</option>
+      <option value="2" selected>素材优先 · 目标2题</option>
+      <option value="4">素材优先 · 目标4题</option>
     </select>
     <span id="status">就绪 · 输入板块并「板块定位」,或直接在主系统点选知识点</span>
     <span id="steps"></span>
@@ -271,21 +403,43 @@
 
   <div id="qaArea"></div>
 
-  <p class="footnote">破卷说明:输入板块并「板块定位」选点(或直接在主系统点选)。系统先查本地高考真题档案(2008-2026,仅数学);不足或化学/物理/英语等科目会自动用必应<b>联网检索</b>,并强制题目组含足量真实真题。来源标记:<b style="color:#ffd54f">真题</b>=本地档案原样采用;<b style="color:#67e8f9">🌐 联网</b>=必应网页采用;<b style="color:#d8b4fe">💭 回忆</b>=模型凭知识还原(未与本地档案核对);其余为 AI 原创。答案与解析仅供参考。</p>
+  <p class="footnote">破卷说明:选择知识点、题型和难度,每批生成4题。素材偏好与难度独立;手机版可检索打进安装包里的六科真题档案(数学 2008-2026 + 语文/英语/物理/化学/生物 2010-2024),桌面版还可联网检索,网页版/手机版无宿主时使用 AI 原创。<b style="color:#ffd54f">本地原文匹配</b> / <b style="color:#67e8f9">联网原文匹配</b>表示题干与选项匹配本次检索片段;未匹配的来源显示<b style="color:#d8b4fe">待核实</b>。原文匹配不代表网页真题身份或答案已审核,答案与解析仍需核对。出题失败保留上一批。</p>
 </main>
 
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    tex: {
+      inlineMath: [['$', '$']], displayMath: [['$$', '$$']],
+      // 关键:禁用 autoload。默认开启时,遇到未内置的宏(如 \boldsymbol)会去懒加载
+      // input/tex/extensions/xxx.js —— 本应用只内嵌了一个 mathjax-tex-svg.js,那个请求
+      // 必然 404,而 typesetPromise 会因此整体 reject(还被 .catch 吞掉),结果是整张卡片
+      // 的公式全部保持 $...$ 不排版(实测踩过:2026 真题里的 \boldsymbol{a})。
+      // 关掉之后,最坏只影响那一个未知宏,同页其余公式照常渲染。
+      autoload: false,
+      // 常见的"扩展宏"给等价替身,让它们不再变成未知宏(粗体向量用内置 \mathbf 等价呈现)。
+      macros: {
+        boldsymbol: ['\\mathbf{#1}', 1],
+        bm: ['\\mathbf{#1}', 1],
+        cancel: ['#1', 1],
+        bbox: ['#1', 1],
+        unicode: ['#1', 1],
+        textcolor: ['#2', 2],
+        enclose: ['#2', 2],
+        require: ['', 1]
+      }
+    },
     startup: { typeset: false }
   };
 </script>
 <script src="vendor/mathjax-tex-svg.js"></script>
+<!-- AI 调用层:按环境自动选择「桌面宿主 / Capacitor 原生直连 / 本地 /api/ds 代理」 -->
+<script src="js/ainet.js"></script>
 <script src="js/data.js"></script>
 <script src="js/data_chem.js"></script>
 <script src="js/data-physics.js"></script>
 <script src="js/data_eng.js"></script>
 <script src="js/data_bio.js"></script>
 <script src="js/train.js"></script>
+<script src="js/pwa.js"></script>
 </body>
 </html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- 异形屏适配(2026-10-01):
+         windowLayoutInDisplayCutoutMode=shortEdges —— 没有它,窗口不会伸进刘海/挖孔区,
+         网页 viewport-fit=cover 与 env(safe-area-inset-*) 在 WebView 里读到的永远是 0,
+         整层 CSS 安全区适配等于死代码(API 28+;旧设备上该属性被忽略,降级=旧行为)。
+         statusBarColor 透明 + windowDrawsSystemBarBackgrounds —— 状态栏底色不遮挡,
+         网页才能真的画到系统栏后面(否则状态栏是不透明条,内容仍被挤在下面)。
+         ⚠ 不改 targetSdk(34),不降级。
+         2026-10-01 白色状态栏带修复(用户录屏):AndroidX SplashScreen 靠
+         postSplashScreenTheme 在启动图结束后把主题切成正式主题;缺这一行就**永远**
+         停在启动主题 → 透明状态栏后面露的是启动图的**白底** → 所有机型(含无刘海机)
+         顶部都有一条白带。这里补上切换,并把正式主题的窗口底改成与应用一致的深色
+         #0A101F(index.html theme-color 同值),于是状态栏区域永远显示深色。 -->
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/qg_dark</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+
+    <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+        <item name="android:background">@drawable/splash</item>
+        <!-- ★ 白带根因修复:启动图结束后切到正式主题(否则一直停在启动主题) -->
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+</resources>

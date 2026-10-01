@@ -7,10 +7,37 @@
      script-src 的 'unsafe-inline' 放行;不含 unsafe-eval(MathJax 的 new Function /
      eval 在本页路径下不触发);connect-src 只放行 DeepSeek 官方接口。
      frame-ancestors 在 <meta> 形式下被浏览器强制忽略,故不写。 -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; form-action 'none'; base-uri 'none'; object-src 'none'">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://api.deepseek.com; manifest-src 'self'; worker-src 'self'; form-action 'none'; base-uri 'none'; object-src 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<!-- 手机壳标记 + 页面级安全区变量(2026-10-01,与 index.html 同源同义) -->
+<script>document.documentElement.setAttribute('data-shell','mobile');</script>
+<style>
+:root{--sat:0px;--sab:0px;--sal:0px;--sar:0px}
+@supports (padding: env(safe-area-inset-top)){:root{
+--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);
+--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}}
+</style>
+<script>
+(function(){
+  function apply(ins){ if(!ins) return; var d=document.documentElement.style;
+    d.setProperty('--sat','max(env(safe-area-inset-top,0px),'+(ins.top|0)+'px)');
+    d.setProperty('--sab','max(env(safe-area-inset-bottom,0px),'+(ins.bottom|0)+'px)');
+    d.setProperty('--sal','max(env(safe-area-inset-left,0px),'+(ins.left|0)+'px)');
+    d.setProperty('--sar','max(env(safe-area-inset-right,0px),'+(ins.right|0)+'px)'); }
+  window.__qgApplyInsets=apply;
+  window.__qgInsetsCb=apply;
+  if(window.__qgInsets) apply(window.__qgInsets);
+})();
+</script>
 <title>穷观 · 观澜(AI 演示问答)</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a101f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="穷观">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="stylesheet" href="css/style.css">
 <style>
   html, body { height: 100%; overflow: hidden; background: #05080f; }
@@ -40,6 +67,26 @@
      而 index.html 与 css/style.css 都不在可改清单里 —— 为保证两个入口观感一致,
      这部分样式由 demo.js 的 injectExprCSS() 注入一次(内联 <style>,CSP 的
      style-src 'unsafe-inline' 放行)。DOM 同样由 demo.js 动态插入 #glStage。 */
+
+  /* ---------- 移动端基础 ---------- */
+  html, body { overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
+  @supports (height: 100dvh) { html, body { height: 100dvh; } }
+
+  /* ---------- 手机形态(≤768px) ----------
+     .gl-standalone #guanlan 的特异性高于 css/style.css 里的 #guanlan,
+     而本 <style> 又排在 <link> 之后,所以整屏高度必须在这里再声明一次,
+     否则会退回 100vh(手机地址栏伸缩时底部被裁)。 */
+  @media (max-width: 768px) {
+    .gl-standalone #guanlan {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      padding-top: var(--safe-t, 0px);
+      padding-bottom: var(--safe-b, 0px);
+    }
+    /* 手机上没有宿主窗口:最小化/最大化两个按钮没有意义 */
+    #glMin, #glMax { display: none; }
+  }
 </style>
 <script>
   window.__guanlanStandalone = true;   // 让 demo.js 以独立窗形态启动(隐藏标记、导入会话)
@@ -63,6 +110,7 @@
       <div id="glMsgs"></div>
       <!-- 提交由 demo.js 的 submit 监听 preventDefault 接管,故去掉 action="javascript:void(0)"
            (该写法会被严格 CSP 的 script-src 拒绝) -->
+      <!-- 观澜画布 · 穷观原创标识 QG-20260920-5e5d5a · © 2026 PHILlA093 · All rights reserved -->
       <form id="glKeyRow" class="gl-keyrow" hidden>
         <input type="password" id="glKeyInput" placeholder="DeepSeek API Key(与破卷共用,仅存本机)" autocomplete="off">
         <button type="submit" id="glKeySave">保存</button>
@@ -93,13 +141,35 @@
 
 <script>
   window.MathJax = {
-    tex: { inlineMath: [['$', '$']], displayMath: [['$$', '$$']] },
+    tex: {
+      inlineMath: [['$', '$']], displayMath: [['$$', '$$']],
+      // 关键:禁用 autoload。默认开启时,遇到未内置的宏(如 \boldsymbol)会去懒加载
+      // input/tex/extensions/xxx.js —— 本应用只内嵌了一个 mathjax-tex-svg.js,那个请求
+      // 必然 404,而 typesetPromise 会因此整体 reject(还被 .catch 吞掉),结果是整张卡片
+      // 的公式全部保持 $...$ 不排版(实测踩过:2026 真题里的 \boldsymbol{a})。
+      // 关掉之后,最坏只影响那一个未知宏,同页其余公式照常渲染。
+      autoload: false,
+      // 常见的"扩展宏"给等价替身,让它们不再变成未知宏(粗体向量用内置 \mathbf 等价呈现)。
+      macros: {
+        boldsymbol: ['\\mathbf{#1}', 1],
+        bm: ['\\mathbf{#1}', 1],
+        cancel: ['#1', 1],
+        bbox: ['#1', 1],
+        unicode: ['#1', 1],
+        textcolor: ['#2', 2],
+        enclose: ['#2', 2],
+        require: ['', 1]
+      }
+    },
     startup: { typeset: false }
   };
 </script>
 <script src="vendor/mathjax-tex-svg.js"></script>
+<!-- AI 调用层:按环境自动选择「桌面宿主 / Capacitor 原生直连 / 本地 /api/ds 代理」 -->
+<script src="js/ainet.js"></script>
 <script src="js/glcanvas.js"></script>
 <script src="js/gltemplates.js"></script>
 <script src="js/demo.js"></script>
+<script src="js/pwa.js"></script>
 </body>
 </html>

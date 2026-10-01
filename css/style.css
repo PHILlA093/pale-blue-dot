@@ -547,7 +547,7 @@ body {
   backdrop-filter: blur(12px);
   box-shadow: -10px 0 34px rgba(0, 0, 0, 0.35);
   transform: translateX(103%);
-  /* 同 #leftPanel:关闭态整棵子树不可见 → 不可聚焦,避免 Tab 进入 #detailClose / #dFocus */
+  /* 同 #leftPanel:关闭态整棵子树不可见 → 不可聚焦,避免 Tab 进入 #detailClose / #dTrain */
   visibility: hidden;
   transition: transform .34s cubic-bezier(0.3, 0.7, 0.3, 1), visibility 0s linear .34s;
   overflow: hidden;
@@ -675,19 +675,28 @@ body {
 #dLinks li:hover { border-color: var(--accent); background: rgba(79, 195, 247, 0.12); }
 #dLinks .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
 
-#dFocus {
+/* 详情抽屉底部的「🎯 破卷」入口(原 #dFocus「在网中聚焦」的位置)
+   视觉沿用原按钮:整宽胶囊渐变蓝;热区底座 46px、窄屏 48px,均 ≥44px */
+#dTrain {
   width: 100%;
+  min-height: 46px;
   padding: 10px;
   border: none;
   border-radius: 10px;
   background: linear-gradient(135deg, #2f80ed, #1e5bb8);
   color: #fff;
   font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: .5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   transition: filter .2s, transform .12s;
 }
-#dFocus:hover { filter: brightness(1.15); }
-#dFocus:active { transform: scale(0.98); }
+#dTrain:hover { filter: brightness(1.15); }
+#dTrain:active { transform: scale(0.98); }
 
 /* ---------- 滚动条 ---------- */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -840,6 +849,17 @@ html.intro-live, html.intro-live body { background: #000; }
   background: currentColor;
   animation: hintBlink 1.2s steps(2, start) 7s infinite;
 }
+/* 开场署名:唯一可见的著作者标识;字号与间距沿用 .intro-hint 一族,不新造颜色 */
+.intro-credit {
+  margin: clamp(10px, 1.6vh, 18px) 0 0;
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  color: rgba(255, 255, 255, 0.45);
+  opacity: 0;
+  animation: introHint 1.6s ease 6.4s forwards;
+}
+/* 构建指纹 QG-20260920-5e5d5a · © 2026 PHILlA093(样式表内留存,不参与渲染) */
 @keyframes introHint {
   to { opacity: 1; }
 }
@@ -861,41 +881,9 @@ html.intro-live, html.intro-live body { background: #000; }
 /* 原 @media (max-width: 860px) 已删除:主窗 MinimumSize 为 980×640、观澜独立窗为 900×620
    (桌面版/build/Program.cs:65、193),而 style.css 只被这两页引用,该断点永不命中,属死规则。 */
 
-/* ---------- 右下角「破卷」按钮(打开破卷新窗口) ---------- */
-#trainBtn {
-  position: fixed;
-  right: 18px;
-  bottom: 18px;
-  z-index: 45;                 /* 高于详情面板(40):面板打开时也要能点,否则用户点了没反应 */
-  padding: 8px 16px;
-  border-radius: 12px;         /* 长方形圆角框(非胶囊) */
-  border: 1px solid rgba(120, 160, 220, 0.22);
-  background: rgba(8, 12, 24, 0.92);   /* 深色,与主界面背景一致 */
-  backdrop-filter: blur(8px);
-  color: #b9cbe4;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(10px);
-  transition: opacity .6s ease, transform .15s, color .2s, border-color .2s, background .2s, box-shadow .2s;
-  user-select: none;
-}
-#trainBtn.show {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-#trainBtn:hover {
-  color: #dff2ff;
-  border-color: rgba(79, 195, 247, 0.45);
-  background: rgba(14, 22, 40, 0.95);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-}
-#trainBtn:active { transform: scale(0.96); }
+/* ---------- 原右下角「破卷」浮动按钮(#trainBtn)已删除 ----------
+   破卷入口移入知识点详情抽屉的「🎯 破卷」(#dTrain),主界面右下角不再有浮层遮挡。
+   原先这里的 #trainBtn / #trainBtn.show / :hover / :active 与窄屏上移规则一并移除。 */
 
 /* ---------- 顶栏「重新加载」按钮(跳过开场,保留当前科目) ---------- */
 #reloadBtn {
@@ -963,6 +951,35 @@ html.intro-live, html.intro-live body { background: #000; }
   box-shadow: 0 6px 20px rgba(47, 128, 237, 0.4);
 }
 #guanlanSec .sec-body > button#guanlanOpen:active { transform: scale(0.98); }
+
+/* ---------- 侧栏「实验台」条目(物理沙盒 / 物理实验台 / 化学实验台) ----------
+   这三个按钮与它们所在的 #qlabSec 分区由 js/demo.js 在**科目匹配时**才创建:
+   物理科目下才有前两个、化学科目下才有第三个,非对应科目下整段 section 都不存在
+   (手册红线:那种科目下不得出现任何 ps-/pl-/cl- 前缀 DOM,也不得注入模块 CSS)。
+   本节样式只认 #qlabSec 这个侧栏分区本身,与三个模块内部的 .ps-/.pl-/.cl- 类名
+   无关 —— 模块的样式一律由模块自己在 mount() 时注入,手机版不碰。 */
+#qlabSec .sec-body { display: flex; flex-direction: column; gap: 8px; }
+#qlabSec .sec-body > button {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(120, 160, 220, 0.28);
+  border-radius: 9px;
+  background: rgba(120, 160, 220, 0.08);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  letter-spacing: .5px;
+  text-align: left;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .12s;
+}
+#qlabSec .sec-body > button:hover {
+  background: rgba(79, 195, 247, 0.16);
+  border-color: rgba(79, 195, 247, 0.5);
+  color: #fff;
+}
+#qlabSec .sec-body > button:active { transform: scale(0.98); }
+#qlabSec .sec-body > .db-note { margin-top: 2px; }
 
 /* ---------- 浮动面板(居中弹层;hidden 时隐藏) ---------- */
 #guanlan {
@@ -1380,4 +1397,325 @@ html.maxed .winedge { border-radius: 0; }
 #subjectMenu [data-sub].soon .soon-tag {
   margin-left: 6px; font-size: 10px; padding: 1px 5px; border-radius: 8px;
   color: var(--text-dim); border: 1px solid var(--panel-border);
+}
+
+/* ============================================================
+ * 移动端基础(与宽度无关的少量通用规则)
+ *   1) 100dvh:手机地址栏会伸缩,100vh 会导致底部被裁/出现空白;
+ *   2) overscroll-behavior: none 关掉下拉刷新与滚动链橡皮筋;
+ *   3) 画布 touch-action: none —— 手势全部交给 OrbitControls,
+ *      否则浏览器会把单指拖动当成页面滚动而抢走旋转。
+ *   桌面(鼠标)不受影响:这几条不改变任何宽屏布局。
+ * ============================================================ */
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; }
+  #app { height: 100dvh; }
+}
+html, body { overscroll-behavior: none; }
+body { -webkit-tap-highlight-color: transparent; }
+#scene {
+  touch-action: none;                 /* 单指旋转 / 双指捏合全部归 OrbitControls */
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+/* 安全区变量:统一在这里取一次,后面的 calc 只引用 var(),
+   这样即使浏览器不支持 env() 也能拿到 0px 而不是整条声明失效。 */
+/* 安全区四变量 --sat/--sab/--sal/--sar 已上移到 index.html 页面级(<head> <style>);本文件只消费 */
+
+
+/* ============================================================
+ * 手机形态:窄屏 ≤768px
+ * 全部规则都在媒体查询内 —— 宽屏(桌面窗口 ≥980px)观感与行为保持原样。
+ * ============================================================ */
+/* ===== 手机形态:整块改为手机壳门控(2026-10-01) —— 每个选择器前缀 html[data-shell="mobile"],
+     手机横屏/平板(宽>768)时移动形态依然生效;宽度只保留 380px 那一条细节查询 ===== */
+
+  /* ---------- 顶栏:压成两行,隐藏桌面窗口按钮 ---------- */
+  :root[data-shell="mobile"] { --topbar-h: calc(106px + var(--sat)); }
+
+  html[data-shell="mobile"] #app { grid-template-rows: var(--topbar-h) 1fr; }
+
+  html[data-shell="mobile"] #topbar {
+    height: var(--topbar-h);
+    flex-wrap: wrap;
+    align-content: flex-start;
+    align-items: center;
+    gap: 6px;
+    padding: calc(6px + var(--sat)) calc(8px + var(--sar)) 6px calc(8px + var(--sal));
+  }
+
+  /* 所有可点元素 ≥44×44 触控热区 */
+  html[data-shell="mobile"] #sideToggle { width: 44px; height: 44px; border-radius: 10px; }
+  html[data-shell="mobile"] #sideToggle svg { width: 22px; height: 22px; }
+  html[data-shell="mobile"] #subjectBtn { min-height: 44px; padding: 0 12px; font-size: 14.5px; }
+  html[data-shell="mobile"] #subjectMenu { min-width: 148px; top: calc(100% + 4px); }
+  html[data-shell="mobile"] #subjectMenu button { min-height: 44px; font-size: 15px; padding: 10px 14px; }
+
+  /* 品牌区在手机上纯占地方(顶栏只有两行可用),隐藏 */
+  html[data-shell="mobile"] .brand { display: none; }
+
+  /* 搜索行独占第二行 */
+  html[data-shell="mobile"] #searchBox { order: 5; flex: 1 1 100%; max-width: none; margin: 0; gap: 6px; }
+  html[data-shell="mobile"] #searchInput { min-height: 44px; font-size: 16px; padding: 8px 12px; }
+  html[data-shell="mobile"] #searchBox button { min-height: 44px; padding: 0 14px; font-size: 14.5px; }
+  html[data-shell="mobile"] #searchBox #searchClear { min-height: 44px; padding: 0 14px; }
+  html[data-shell="mobile"] #searchResults {
+    top: calc(100% + 6px);
+    max-height: 56dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  html[data-shell="mobile"] #searchResults li { min-height: 48px; font-size: 15px; padding: 10px 14px; }
+  html[data-shell="mobile"] #searchResults .r-meta { font-size: 12.5px; }
+
+  /* 统计条压缩显示(桌面版是完整一行文字) */
+  html[data-shell="mobile"] #statBar { font-size: 10.5px; line-height: 1.3; max-width: 94px; white-space: normal; }
+
+  html[data-shell="mobile"] #reloadBtn, html[data-shell="mobile"] #resetViewBtn {
+    flex: none;
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    background: rgba(120, 160, 220, 0.08);
+    color: var(--text-dim);
+    font-size: 19px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  html[data-shell="mobile"] #reloadBtn:active, html[data-shell="mobile"] #resetViewBtn:active { transform: scale(.94); }
+
+  /* 手机上没有"窗口",三个窗口按钮全部隐藏 */
+  html[data-shell="mobile"] .winctrl { display: none; }
+
+  /* 触摸提示条(文案由 app.js 在窄屏时改写成触屏说法) */
+  html[data-shell="mobile"] #tip {
+    bottom: calc(12px + var(--sab));
+    font-size: 11px;
+    padding: 6px 12px;
+    max-width: 92vw;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* ---------- 左侧栏:全屏抽屉 ---------- */
+  html[data-shell="mobile"] #leftPanel {
+    left: 0; top: 0; bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    z-index: 70;                      /* 盖过顶栏(60),成为真正的全屏抽屉 */
+    border-right: none;
+    /* 顶部留出遮罩条高度,抽屉内容不被遮罩压住 */
+    padding-top: var(--topbar-h);
+    padding-left: var(--sal);
+    padding-right: var(--sar);
+    box-shadow: none;
+  }
+  /* 抽屉内字号整体上调,列表项拉到 44px 触控热区 */
+  html[data-shell="mobile"] .sec-head { min-height: 54px; padding: 14px 14px 14px 16px; }
+  html[data-shell="mobile"] .sec-title { font-size: 15px; }
+  html[data-shell="mobile"] .sec-toggle { width: 34px; height: 34px; font-size: 13px; }
+  html[data-shell="mobile"] .sec-body { padding: 4px 16px 18px; }
+  html[data-shell="mobile"] #boardList { gap: 6px; }
+  html[data-shell="mobile"] .board-item { min-height: 46px; padding: 8px 10px; gap: 10px; }
+  html[data-shell="mobile"] .board-item .b-name { font-size: 14.5px; }
+  html[data-shell="mobile"] .board-item input { width: 20px; height: 20px; }
+  html[data-shell="mobile"] .legend { font-size: 13.5px; gap: 10px; }
+  html[data-shell="mobile"] #newNodeForm { gap: 12px; }
+  html[data-shell="mobile"] .nn-label { font-size: 13px; gap: 7px; }
+  html[data-shell="mobile"] .nn-tip { font-size: 12px; }
+  html[data-shell="mobile"] .swatch { width: 30px; height: 30px; }
+  html[data-shell="mobile"] .link-cand { min-height: 44px; font-size: 13.5px; }
+  html[data-shell="mobile"] .link-chip { font-size: 13px; padding: 5px 10px; }
+  html[data-shell="mobile"] .link-chip b { padding: 6px; }
+  html[data-shell="mobile"] #nnSubmit { min-height: 48px; font-size: 15px; }
+  html[data-shell="mobile"] .db-row { min-height: 40px; font-size: 13px; }
+  html[data-shell="mobile"] #dbState, html[data-shell="mobile"] .db-note { font-size: 12.5px; }
+  html[data-shell="mobile"] #guanlanSec .sec-body > button#guanlanOpen { min-height: 48px; font-size: 15px; }
+  /* 侧栏实验台条目:整屏抽屉里同样是 48px 触控热区 */
+  html[data-shell="mobile"] #qlabSec .sec-body > button { min-height: 48px; font-size: 15px; }
+  html[data-shell="mobile"] .board-bulk button { min-height: 40px; font-size: 13px; }
+
+  /* 输入控件字号 ≥16px:iOS 在字号 <16px 时聚焦会自动放大页面 */
+  html[data-shell="mobile"] .nn-label > input[type="text"], html[data-shell="mobile"] #nnContent, html[data-shell="mobile"] #nnBoard, html[data-shell="mobile"] #nnKeys, html[data-shell="mobile"] #nnName, html[data-shell="mobile"] #nnLinkInput { font-size: 16px; padding: 10px 12px; }
+  html[data-shell="mobile"] .swatches { gap: 9px; }
+  html[data-shell="mobile"] .color-row input[type="color"] { width: 56px; height: 34px; }
+  html[data-shell="mobile"] #nnImp { height: 32px; }
+
+  /* ---------- 抽屉遮罩:只盖顶栏那一条 ----------
+     抽屉本身是 100% 宽度(全屏),屏幕上没有"抽屉以外"的地方可点,
+     所以把遮罩做成顶栏高度的一条,既是"点遮罩关闭"的落点,
+     也顺手提示了关闭方式;向右滑动同样可以关闭(见 app.js)。 */
+  html[data-shell="mobile"] #drawerMask { display: none; }
+  html[data-shell="mobile"] html.drawer-open #drawerMask {
+    display: block;
+    position: fixed;
+    left: 0; right: 0; top: 0;
+    height: var(--topbar-h);
+    z-index: 80;                      /* 高于抽屉(70)与顶栏(60) */
+    background: rgba(4, 7, 14, 0.78);
+    backdrop-filter: blur(3px);
+    cursor: pointer;
+  }
+  html[data-shell="mobile"] html.drawer-open #drawerMask::after {
+    content: "✕ 点这里关闭侧栏(也可向右滑动)";
+    position: absolute;
+    left: 50%; top: calc(50% + var(--sat) / 2);
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    padding: 9px 16px;
+    border: 1px solid rgba(120, 160, 220, 0.3);
+    border-radius: 22px;
+    background: rgba(8, 12, 24, 0.85);
+    color: #cfe0f5;
+    font-size: 13px;
+    letter-spacing: .5px;
+  }
+  /* 原「抽屉打开时隐藏破卷浮动按钮」规则随 #trainBtn 一并删除 */
+
+  /* ---------- 详情面板:底部抽屉(bottom sheet) ---------- */
+  html[data-shell="mobile"] #detailPanel {
+    left: 0; right: 0; bottom: 0; top: auto;
+    width: 100%;
+    height: 62vh;                                     /* 不支持 dvh 的旧浏览器兜底 */
+    height: var(--sheet-h, 62dvh);                    /* 55% ~ 70% 之间,可拖拽调整 */
+    max-height: 70dvh;
+    min-height: 45dvh;
+    z-index: 75;
+    border-left: none;
+    border-top: 1px solid var(--panel-border);
+    border-radius: 18px 18px 0 0;
+    box-shadow: 0 -14px 40px rgba(0, 0, 0, 0.55);
+    transform: translateY(105%);
+    transition: transform .3s cubic-bezier(0.3, 0.7, 0.3, 1), height .22s ease, visibility 0s linear .3s;
+    padding-bottom: var(--sab);
+  }
+  html[data-shell="mobile"] #detailPanel.open {
+    transform: translateY(0);
+    transition: transform .3s cubic-bezier(0.3, 0.7, 0.3, 1), height .22s ease, visibility 0s linear 0s;
+  }
+  /* 拖拽中的实时位移由 JS 写 translateY,此时禁用过渡 */
+  html[data-shell="mobile"] #detailPanel.sheet-drag { transition: none; }
+
+  html[data-shell="mobile"] .detail-head {
+    position: relative;
+    padding: 22px 14px 12px;
+    touch-action: none;                /* 头部整条都是拖拽手柄 */
+    cursor: grab;
+  }
+  html[data-shell="mobile"] .detail-head::before {                /* 顶部小横条:一眼看出"可以拖" */
+    content: "";
+    position: absolute;
+    left: 50%; top: 9px;
+    transform: translateX(-50%);
+    width: 44px; height: 4px;
+    border-radius: 2px;
+    background: rgba(160, 180, 210, 0.55);
+  }
+  html[data-shell="mobile"] #detailClose { width: 44px; height: 44px; font-size: 16px; border-radius: 10px; }
+  html[data-shell="mobile"] .detail-eyebrow { font-size: 11px; }
+  html[data-shell="mobile"] #dName { font-size: 18px; }
+  html[data-shell="mobile"] .detail-scroll {
+    padding: 14px 16px 22px;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;      /* 滚到底不把页面/抽屉带着一起动 */
+  }
+  html[data-shell="mobile"] #dContent { font-size: 15px; line-height: 1.95; padding: 12px 14px; }
+  html[data-shell="mobile"] #dMeta .tag { font-size: 12px; padding: 4px 10px; }
+  html[data-shell="mobile"] #dKeywords .kw { font-size: 12.5px; padding: 6px 11px; }
+  html[data-shell="mobile"] #detailPanel h3 { font-size: 14px; }
+  html[data-shell="mobile"] #dLinks li { min-height: 46px; font-size: 14px; padding: 10px 12px; }
+  html[data-shell="mobile"] #dTrain { min-height: 48px; font-size: 15px; }
+
+  /* 原右下角「破卷」浮动按钮的窄屏定位与「抽屉打开时上移」规则已随 #trainBtn 删除 */
+
+  /* ---------- 轻提示 ---------- */
+  html[data-shell="mobile"] #toast {
+    font-size: 13px;
+    padding: 10px 14px;
+    max-width: 92vw;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* 无边框窗口的描边覆盖层:手机上没有窗口,隐藏 */
+  html[data-shell="mobile"] .winedge { display: none; }
+
+  /* 开场画面:字号在窄屏下本来就由 clamp 处理,这里只收紧副语字距 */
+  html[data-shell="mobile"] .intro-quote { letter-spacing: 0.28em; text-indent: 0.28em; }
+  html[data-shell="mobile"] .intro-hint { letter-spacing: 0.42em; text-indent: 0.42em; }
+
+  /* ============================================================
+   * 观澜(主窗浮动面板):窄屏改为整屏,画布与对话上下分栏
+   * ============================================================ */
+  html[data-shell="mobile"] #guanlan {
+    left: 0; top: 0; right: 0; bottom: 0;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    height: 100vh;
+    height: 100dvh;
+    max-height: none;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding-top: var(--sat);
+    padding-bottom: var(--sab);
+    animation: qgFade .18s ease;       /* 覆盖居中缩放动画(其 transform 会打架) */
+  }
+  html[data-shell="mobile"] .gl-head { padding: 8px 10px; gap: 8px; }
+  html[data-shell="mobile"] .gl-title { font-size: 13px; letter-spacing: .5px; }
+  html[data-shell="mobile"] .gl-sub { font-size: 11px; }
+  html[data-shell="mobile"] .gl-btns { gap: 6px; }
+  html[data-shell="mobile"] .gl-btns button { min-height: 40px; padding: 0 10px; font-size: 12.5px; }
+  html[data-shell="mobile"] #glDetach { display: none; }        /* 面板已经整屏,再"拆独立窗口"没有意义 */
+
+  html[data-shell="mobile"] .gl-body { flex-direction: column-reverse; }   /* 画布在上、对话在下 */
+  html[data-shell="mobile"] .gl-chat {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    border-right: none;
+    border-top: 1px solid rgba(120, 160, 220, 0.18);
+  }
+  html[data-shell="mobile"] .gl-stage { flex: 0 0 46%; min-height: 200px; }
+
+  html[data-shell="mobile"] #glMsgs { padding: 10px 10px; gap: 8px; -webkit-overflow-scrolling: touch; }
+  html[data-shell="mobile"] .gl-msg .txt { max-width: 92%; font-size: 14px; line-height: 1.75; }
+  html[data-shell="mobile"] #glKeyRow.gl-keyrow input { height: 44px; font-size: 16px; }
+  html[data-shell="mobile"] #glKeyRow.gl-keyrow button { height: 44px; padding: 0 14px; font-size: 13.5px; }
+  html[data-shell="mobile"] .gl-inputrow { padding: 8px 10px; }
+  html[data-shell="mobile"] #glAsk { height: 44px; font-size: 16px; }
+  html[data-shell="mobile"] #glSend { height: 44px; padding: 0 18px; font-size: 14px; }
+
+  /* 画布工具条:窄屏折成两行,按钮加高到可点 */
+  html[data-shell="mobile"] .gl-toolbar {
+    top: 6px;
+    max-width: 96%;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 8px;
+    row-gap: 6px;
+  }
+  html[data-shell="mobile"] .gl-toolbar button { height: 36px; min-width: 44px; padding: 0 9px; font-size: 12px; }
+  html[data-shell="mobile"] .gl-sep { display: none; }
+  html[data-shell="mobile"] .gl-state { flex: 1 0 100%; text-align: center; font-size: 11.5px; }
+  html[data-shell="mobile"] #glStageTip { font-size: 12.5px; width: 88%; }
+  /* 工具条已出现时不再显示中间那段"怎么用"的长提示(手机画布区太小,两层文字叠一起看不清图)。
+     :has() 不支持的旧 WebView 会忽略这条,退化为原来的叠放,不影响功能。 */
+  html[data-shell="mobile"] .gl-stage:has(#glToolbar:not([hidden])) #glStageTip { display: none; }
+  html[data-shell="mobile"] #glLabels span { font-size: 12px; }
+  /* 引擎自己会给 canvas 设 touch-action:none(js/glcanvas.js),这里显式声明避免回归 */
+  html[data-shell="mobile"] #glCanvas { touch-action: none; }
+
+/* 超窄屏(≤380px,如 iPhone SE 竖屏):再压一档,保证顶栏第一行不换行 */
+@media (max-width: 380px) {
+  #statBar { max-width: 66px; font-size: 10px; }
+  #subjectBtn { padding: 0 9px; font-size: 13.5px; }
+  #dTrain { font-size: 14px; }
 }

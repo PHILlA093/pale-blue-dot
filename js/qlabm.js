@@ -38,6 +38,14 @@
     try { return !!(window.matchMedia && window.matchMedia(MQ).matches); }
     catch (e) { return false; }
   }
+  /* ★ 2026-10-01 手机壳门控:整层手机适配以**壳标记**为准,不再以视口宽度为准 ——
+     手机横屏/平板(宽 >768)时手机层(抽屉/垃圾桶移除/安全区)依然生效;
+     宽度只决定排布细节(托盘 8/9 列)。标记由手机树三个 html 在 head 里注入
+     (<html data-shell="mobile">),桌面树没有这段,完全不受影响。 */
+  function isMobileShell() {
+    try { return document.documentElement.getAttribute('data-shell') === 'mobile'; }
+    catch (e) { return false; }
+  }
   function cel(tag, cls, txt) {
     var d = document.createElement(tag);
     if (cls) d.className = cls;
@@ -46,22 +54,18 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 1) 窄屏样式(只作用于 ps- / pl- / cl- 与 .qm-* 自己的类名)          *
+   * 1) 手机壳样式(只作用于 ps- / pl- / cl- 与 .qm-* 自己的类名)        *
+   *    只在手机壳里注入;不再包 @media 宽度查询(除托盘列数这一处细节)   *
    * ------------------------------------------------------------------ */
   function cssText() {
     return [
       /* ---------- 实验台公共骨架:画布在上、下方标签页 ---------- */
-      '@media (max-width:768px){',
 
-      /* ★ 安全区变量(2026-10-01 异形屏,本层自己的四个变量):
-         探针可直接模拟 --sat:44px / --sab:34px 断言贴边元素;真机走 env()。
-         实验台模式下观澜面板的上下安全区由本层接管(#guanlan.qg-lab-on 把
-         style.css 的 --safe-t/-b padding 清零),单一来源,不会双份留白。 */
-      ':root{--sat:0px;--sab:0px;--sal:0px;--sar:0px}',
-      '@supports (padding: env(safe-area-inset-top)){:root{',
-      '--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);',
-      '--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}}',
-      '#guanlan.qg-lab-on{padding-top:0;padding-bottom:0}',
+      /* 安全区四变量 --sat/--sab/--sal/--sar 已在页面级(index.html 的 head
+         <style>)定义,本层只**消费**;实验台模式下观澜面板的上下安全区由本层
+         接管(清零 style.css 的 padding),单一来源。
+         ⚠ 特异性必须 ≥ style.css 壳门控规则的 (1,1,1),故写全 html[data-shell="mobile"]。 */
+      'html[data-shell="mobile"] #guanlan.qg-lab-on{padding-top:0;padding-bottom:0}',
       '#guanlan.qg-lab-on .gl-head{margin-top:var(--sat);padding-top:8px}',
 
       /* 观澜面板:实验台打开时对话区让位,整屏交给实验台 */
@@ -97,13 +101,15 @@
       '.qm-tab.qm-on{color:#070b14;background:#f4f1ea;border-color:#f4f1ea;font-style:italic}',
       '.qm-tab:active{transform:scale(.97)}',
 
-      /* 下方两栏:同一个位置,二选一显示;整块可滚(不再让整页滚) */
+      /* 下方两栏:同一个位置,二选一显示;整块可滚(不再让整页滚)。
+         底部吃 --sab(手势条上方,2026-10-01) */
       '#plRoot .pl-left,#clRoot .cl-left{order:3;flex:0 0 auto;width:auto;max-height:none;height:38vh;',
       'overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;',
-      'border-right:0;border-bottom:0;border-top:1px solid rgba(120,160,220,.18)}',
+      'border-right:0;border-bottom:0;border-top:1px solid rgba(120,160,220,.18);',
+      'padding-bottom:var(--sab)}',
       '#plRoot .pl-right,#clRoot .cl-right{order:3;flex:0 0 auto;width:auto;height:38vh;overflow-y:auto;',
       '-webkit-overflow-scrolling:touch;overscroll-behavior:contain;border-left:0;',
-      'border-top:1px solid rgba(120,160,220,.18)}',
+      'border-top:1px solid rgba(120,160,220,.18);padding-bottom:var(--sab)}',
       '.pl-body.qm-tab-data .pl-left{display:none}',
       '.pl-body.qm-tab-list .pl-right{display:none}',
       '.cl-body.qm-tab-data .cl-left{display:none}',
@@ -168,10 +174,12 @@
          仍是 8 列 × 34px、面板内滚动。抽屉是 absolute overlay,任何状态下
          **不参与布局**(不留 padding/高度),世界坐标零位移。 */
       '#glStage .ps-panel{top:auto;bottom:calc(var(--sab) + 32px);right:auto;left:max(6px,var(--sal));',
-      'grid-template-columns:repeat(8,34px);grid-template-rows:none;grid-auto-rows:34px;gap:4px;padding:6px;',
+      'grid-template-columns:repeat(9,34px);grid-template-rows:none;grid-auto-rows:34px;gap:4px;padding:6px;',
       'max-height:42%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;',
       '-webkit-overflow-scrolling:touch;',
       'transition:transform .18s ease;transform:translateY(calc(100% + 42px + var(--sab)))}',
+      /* 托盘列数 = 唯一的宽度细节(与模块 palCols() 的 768 断点一致):竖屏 8 列、横屏/平板 9 列 */
+      '@media (max-width:768px){#glStage .ps-panel{grid-template-columns:repeat(8,34px)}}',
       '#glStage.qm-dock-open .ps-panel{transform:translateY(0)}',
       '#qmDockHandle{position:absolute;left:max(0px,var(--sal));right:max(0px,var(--sar));',
       'bottom:var(--sab);height:32px;z-index:12;',
@@ -217,12 +225,11 @@
          药丸拖不动。手机上必须补这条(桌面 >768px 不注入本 CSS,不受影响)。 */
       '#glStage .ps-pill{touch-action:none}',
       '#glStage .ps-menu{padding:12px 20px;font-size:16px}',
-      '#glStage .ps-log{left:50%;bottom:auto;top:126px;transform:translateX(-50%);font-size:13px;padding:7px 16px}',
-      '}'
+      '#glStage .ps-log{left:50%;bottom:auto;top:126px;transform:translateX(-50%);font-size:13px;padding:7px 16px}'
     ].join('');
   }
   function ensureCSS() {
-    if (!isNarrow()) return null;
+    if (!isMobileShell()) return null;
     var st = $(CSS_ID);
     if (!st) { st = document.createElement('style'); st.id = CSS_ID; st.type = 'text/css'; }
     st.textContent = cssText();
@@ -230,6 +237,20 @@
     // 而实验台 unmount 时会把它们**移除**,下次 mount 又会重新追加到末尾 ——
     // 所以每次 attach 都要把自己的样式重新挪到末尾,才能稳定压过模块样式。
     (document.head || document.documentElement).appendChild(st);
+    // 原生安全区桥兜底(2026-10-01):window.__qgInsets 是 Android 宿主注入的
+    // 状态栏/导航栏像素,取 max(env(), 原生值) —— 老 WebView 没有 env() 时
+    // 也有真实数值(页面级脚本已做过一次,这里幂等再兜一遍)。
+    try {
+      var ins = window.__qgInsets;
+      if (ins) {
+        var d = document.documentElement.style;
+        var m = function (a, b) { return Math.max(a || 0, b || 0); };
+        d.setProperty('--sat', 'max(env(safe-area-inset-top,0px),' + m(0, ins.top) + 'px)');
+        d.setProperty('--sab', 'max(env(safe-area-inset-bottom,0px),' + m(0, ins.bottom) + 'px)');
+        d.setProperty('--sal', 'max(env(safe-area-inset-left,0px),' + m(0, ins.left) + 'px)');
+        d.setProperty('--sar', 'max(env(safe-area-inset-right,0px),' + m(0, ins.right) + 'px)');
+      }
+    } catch (e) { /* 桥失败不致命 */ }
     return st;
   }
   function dropCSS() {
@@ -278,14 +299,16 @@
 
   function syncBreakpoint() {
     if (!cur) return;
-    var narrow = isNarrow();
-    if (cur.bar) cur.bar.style.display = narrow ? 'flex' : 'none';
-    if (!narrow && cur.body) {
-      // 回到宽屏:交还给模块自带的桌面三栏布局,标签类名要清掉
+    /* 2026-10-01:手机层存在性由**壳标记**决定,不再由宽度决定;
+       宽度(窄/宽)只影响细节 —— 手机壳里恒用手机布局(标签栏 + 单栏)。 */
+    var shell = isMobileShell();
+    if (cur.bar) cur.bar.style.display = shell ? 'flex' : 'none';
+    if (!shell && cur.body) {
+      // 非手机壳:交还给模块自带的桌面三栏布局,标签类名要清掉
       cur.body.className = String(cur.body.className)
         .replace(/(^|\s)qm-tab-(list|data)(\s|$)/g, '$1')
         .replace(/\s+/g, ' ').replace(/^\s|\s$/g, '');
-    } else if (narrow && cur.body && !/qm-tab-/.test(cur.body.className)) {
+    } else if (shell && cur.body && !/qm-tab-/.test(cur.body.className)) {
       setTab(cur.tab || 'data');
     }
   }
@@ -376,6 +399,7 @@
       opts = opts || {};
       API.detach();
       if (!rootEl) return false;
+      if (!isMobileShell()) return false;   // 手机壳外不挂这一层(桌面树不加载本文件,双保险)
       cur = { kind: kind, root: rootEl, body: null, bar: null, tab: null, mq: null };
       ensureCSS();
       if (kind !== 'psandbox') {
