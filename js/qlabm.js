@@ -53,6 +53,17 @@
       /* ---------- 实验台公共骨架:画布在上、下方标签页 ---------- */
       '@media (max-width:768px){',
 
+      /* ★ 安全区变量(2026-10-01 异形屏,本层自己的四个变量):
+         探针可直接模拟 --sat:44px / --sab:34px 断言贴边元素;真机走 env()。
+         实验台模式下观澜面板的上下安全区由本层接管(#guanlan.qg-lab-on 把
+         style.css 的 --safe-t/-b padding 清零),单一来源,不会双份留白。 */
+      ':root{--sat:0px;--sab:0px;--sal:0px;--sar:0px}',
+      '@supports (padding: env(safe-area-inset-top)){:root{',
+      '--sat:env(safe-area-inset-top,0px);--sab:env(safe-area-inset-bottom,0px);',
+      '--sal:env(safe-area-inset-left,0px);--sar:env(safe-area-inset-right,0px)}}',
+      '#guanlan.qg-lab-on{padding-top:0;padding-bottom:0}',
+      '#guanlan.qg-lab-on .gl-head{margin-top:var(--sat);padding-top:8px}',
+
       /* 观澜面板:实验台打开时对话区让位,整屏交给实验台 */
       '#guanlan.qg-lab-on .gl-chat{display:none}',
       '#guanlan.qg-lab-on .gl-stage{flex:1 1 auto;min-height:0}',
@@ -156,13 +167,14 @@
          公式在整块台面上运动。展开(#glStage.qm-dock-open)滑回 bottom:32px,
          仍是 8 列 × 34px、面板内滚动。抽屉是 absolute overlay,任何状态下
          **不参与布局**(不留 padding/高度),世界坐标零位移。 */
-      '#glStage .ps-panel{top:auto;bottom:32px;right:auto;left:6px;',
+      '#glStage .ps-panel{top:auto;bottom:calc(var(--sab) + 32px);right:auto;left:max(6px,var(--sal));',
       'grid-template-columns:repeat(8,34px);grid-template-rows:none;grid-auto-rows:34px;gap:4px;padding:6px;',
       'max-height:42%;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;',
       '-webkit-overflow-scrolling:touch;',
-      'transition:transform .18s ease;transform:translateY(calc(100% + 42px))}',
+      'transition:transform .18s ease;transform:translateY(calc(100% + 42px + var(--sab)))}',
       '#glStage.qm-dock-open .ps-panel{transform:translateY(0)}',
-      '#qmDockHandle{position:absolute;left:0;right:0;bottom:0;height:32px;z-index:12;',
+      '#qmDockHandle{position:absolute;left:max(0px,var(--sal));right:max(0px,var(--sar));',
+      'bottom:var(--sab);height:32px;z-index:12;',
       'display:flex;align-items:center;justify-content:center;gap:10px;',
       'background:rgba(38,34,28,.92);color:#F4F1EA;font-family:Georgia,"Times New Roman",serif;',
       'font-size:12.5px;font-style:italic;letter-spacing:.5px;touch-action:none;',
@@ -171,6 +183,8 @@
       '#qmDockHandle .qm-txt{opacity:.85}',
       '#qmDockHandle .qm-collapse{background:transparent;border:1px solid rgba(244,241,234,.4);',
       'color:#F4F1EA;border-radius:6px;height:22px;padding:0 10px;font-size:11px;cursor:pointer}',
+      /* 沙盒工具条:左右沿给安全区让位(竖屏 --sal/--sar=0,横屏/曲面屏才生效) */
+      '#glStage .ps-bar{left:max(6px,var(--sal));right:max(6px,var(--sar))}',
       /* ★ 垃圾桶(2026-10-01 抽屉化,用户原话:右下角垃圾桶删掉):移出屏幕
          (-120,-120)而不是 display:none —— display:none 的 rect 是全 0,模块
          dropLetter 的判定是"client ∈ rect±6px",会在视口左上角(0..6,0..6)留下
