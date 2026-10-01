@@ -298,7 +298,7 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 - **手机**：`versionCode 17 → 18`、`versionName` 仍 `2.5.2`（本轮是数据修复，不是功能版本）。
 - **仓库**：`main` = `b004c56`（语料 + 新 zip，已用 `git rev-parse origin/main:<path>` vs `git hash-object` 核对一致）；`mobile-apk` 待本轮 APK 出包后推。
 - **真题档案侧本轮另有大修**（六科卷面修复、存疑卷会诊 36 卷、跨科目切题体检 135 份）：细节见
-  `穷观资料库\工作日志_2026-09-30.md` 第五、六节与 `_cutwork\`；**六份《穷观_2026高考_*.pdf》待 PDF 管线补丁（图片标记 + 溯源块信息框）合入后重排**。
+  `穷观资料库\工作日志_2026-09-30.md` 第五、六节与 `_cutwork\`；**六份《穷观_2026高考_*.pdf》已于 10-02 06:2x 全部重排交付**：语文 10 / 数学 25 / 英语 20 / 物理 27 / 化学 170 / 生物 28 页，`verify_final6.py` 六册全过；旧版归档在 `D:\OneDrive\Desktop\穷观_2026高考\_旧版_<时间戳>\`。
 **下面出现的 `V2.4.2`、`versionCode 6 / versionName 1.5`、`versionCode 9 / versionName 1.8` 都是各次发布当时的历史记录，保留不改。**
 指纹文件（`桌面版\build\_指纹.txt`、`穷观手机版\指纹.txt`、`_gaokao_work\_make_fingerprint_txt.js`）里的同名版本串属**原创指纹，一个字都不许动**；
 `_backup_*` / `_shots*` / `_qa*` / `_gaokao_work` / `_promo` 归档目录同理。
