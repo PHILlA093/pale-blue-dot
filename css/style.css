@@ -1719,3 +1719,20 @@ body { -webkit-tap-highlight-color: transparent; }
   #subjectBtn { padding: 0 9px; font-size: 13.5px; }
   #dTrain { font-size: 14px; }
 }
+
+
+/* ── 开屏交流群（2026-10-05 加；不动指纹与版权行）────────────────────────
+   复用上面已定义的 @keyframes introHint，只做渐显，不改动原有任何规则。 */
+.intro-group {
+  margin: 9px 0 0;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.60);
+  opacity: 0;
+  animation: introHint 1.4s ease 6.1s forwards;
+}
+.intro-group b {
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  color: rgba(255, 255, 255, 0.88);
+}

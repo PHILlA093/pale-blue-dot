@@ -296,6 +296,7 @@ Build ID **`QG-20260920-5e5d5a`**，位于：
 - **本轮桌面产物**：安装程序 **14,378,496 B**（`Get-AuthenticodeSignature` = **Valid**，`qg.payload.0.gz` 解压后与当前已签 exe **逐字节相同**）；
   zip **`穷观学习_桌面版_v2.5.2_安装包_r2_语料修复版.zip`**（13,661,452 B）；Key 闸门 0 命中。**exe 未重编**（语料不在 exe 内，符合 §8）。
 - **手机**：`versionCode 17 → 18`、`versionName` 仍 `2.5.2`（本轮是数据修复，不是功能版本）。
+- **手机版开屏含交流 QQ 群号（2026-10-05）**：开屏「按任意键进入」下方多一行 `交流 QQ 群：1126399720`（`.intro-group`，复用 `@keyframes introHint`，6.1s 起渐显）；APK **versionCode 19**（`versionName` 仍 2.5.2）、干净文件名 `穷观学习_安卓版v2.5.2.apk`（20,797,246 B / `B0AEBA9F2BBD21F…`）；`桌面版/build/_qa/mobile_fp_probe.js` 新增 `intro QQ group line exists` 与 `intro QQ group actually painted on screen` 两条断言（活 DOM + 计算样式，不看源码字符串），基线 **8/8**。
 - **仓库**：`main` = `b004c56`（语料 + 新 zip，已用 `git rev-parse origin/main:<path>` vs `git hash-object` 核对一致）；`mobile-apk` 待本轮 APK 出包后推。
 - **真题档案侧本轮另有大修**（六科卷面修复、存疑卷会诊 36 卷、跨科目切题体检 135 份）：细节见
   `穷观资料库\工作日志_2026-09-30.md` 第五、六节与 `_cutwork\`；**六份《穷观_2026高考_*.pdf》已于 10-02 06:2x 全部重排交付**：语文 10 / 数学 25 / 英语 20 / 物理 27 / 化学 170 / 生物 28 页，`verify_final6.py` 六册全过；旧版归档在 `D:\OneDrive\Desktop\穷观_2026高考\_旧版_<时间戳>\`。
