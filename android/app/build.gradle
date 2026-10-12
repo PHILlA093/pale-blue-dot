@@ -80,7 +80,13 @@ android {
         //   ④ 白色状态栏带修复:NoActionBarLaunch 补 postSplashScreenTheme →
         //     正式主题深色窗口底 #0A101F(此前一直停在启动主题露白底);
         //   ⑤ 搜索焦点修复(app.js,父 agent 改:结果/关键字/按钮点击后焦点留输入框)。
-        versionCode 18
+        // 27 / 2.5.2 = 接入并**订正** 2027 届模拟卷语料（46 块）
+        //   订正版语料 51,809,689 B / sha256
+        //   7D556CA89F215B26576B7FD998BAE8DFD969E605C4D4D0EEA9402D72531E7D9C（块数 37,714）:
+        //   那 46 块的 ###SRC 由抓取标题改成*文件路径* 模拟题/2027届/<科目>/<卷目录>/正文.txt,
+        //   并删掉块内夹带的构建器备注 49 行;`[图缺失]` 179 处保留。
+        //   APK: 21,117,969 B / sha256 712BB8F5E153DCD9…（本次把 versionCode 从上一版的 18 提到 27;两端 versionName 仍 2.5.2）
+        versionCode 27
         versionName "2.5.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
